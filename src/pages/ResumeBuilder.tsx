@@ -23,11 +23,67 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/components/ui/use-toast";
 
+// Define TypeScript interfaces for our resume data
+interface PersonalInfo {
+  name: string;
+  email: string;
+  phone: string;
+  location: string;
+  objective: string;
+}
+
+interface Education {
+  id: number;
+  institution: string;
+  degree: string;
+  field: string;
+  startDate: string;
+  endDate: string;
+  gpa: string;
+}
+
+interface Experience {
+  id: number;
+  company: string;
+  position: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+}
+
+interface Skill {
+  id: number;
+  name: string;
+}
+
+interface Language {
+  id: number;
+  name: string;
+  proficiency: "beginner" | "intermediate" | "advanced" | "native";
+}
+
+interface Certification {
+  id: number;
+  name: string;
+  issuer: string;
+  date: string;
+}
+
+interface ResumeData {
+  personalInfo: PersonalInfo;
+  education: Education[];
+  experience: Experience[];
+  skills: Skill[];
+  languages: Language[];
+  certifications: Certification[];
+}
+
 const ResumeBuilder = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const [resumeData, setResumeData] = useState({
+  const [resumeData, setResumeData] = useState<ResumeData>({
     personalInfo: {
       name: "",
       email: "",
@@ -54,7 +110,7 @@ const ResumeBuilder = () => {
 
   const [activeSection, setActiveSection] = useState("personalInfo");
   
-  const handleChange = (section, field, value, index = null) => {
+  const handleChange = (section: keyof ResumeData, field: string, value: string, index: number | null = null) => {
     if (index !== null) {
       setResumeData({
         ...resumeData,
@@ -73,28 +129,28 @@ const ResumeBuilder = () => {
     }
   };
 
-  const addItem = (section) => {
+  const addItem = (section: keyof Omit<ResumeData, "personalInfo">) => {
     const newId = resumeData[section].length > 0 
       ? Math.max(...resumeData[section].map(item => item.id)) + 1 
       : 1;
     
-    let newItem = { id: newId };
+    let newItem: { id: number } & Record<string, any> = { id: newId };
     
     switch(section) {
       case "education":
-        newItem = { ...newItem, institution: "", degree: "", field: "", startDate: "", endDate: "", gpa: "" };
+        newItem = { ...newItem, institution: "", degree: "", field: "", startDate: "", endDate: "", gpa: "" } as Education;
         break;
       case "experience":
-        newItem = { ...newItem, company: "", position: "", location: "", startDate: "", endDate: "", description: "" };
+        newItem = { ...newItem, company: "", position: "", location: "", startDate: "", endDate: "", description: "" } as Experience;
         break;
       case "skills":
-        newItem = { ...newItem, name: "" };
+        newItem = { ...newItem, name: "" } as Skill;
         break;
       case "languages":
-        newItem = { ...newItem, name: "", proficiency: "beginner" };
+        newItem = { ...newItem, name: "", proficiency: "beginner" } as Language;
         break;
       case "certifications":
-        newItem = { ...newItem, name: "", issuer: "", date: "" };
+        newItem = { ...newItem, name: "", issuer: "", date: "" } as Certification;
         break;
       default:
         break;
@@ -106,7 +162,7 @@ const ResumeBuilder = () => {
     });
   };
 
-  const removeItem = (section, id) => {
+  const removeItem = (section: keyof Omit<ResumeData, "personalInfo">, id: number) => {
     if (resumeData[section].length <= 1) {
       toast({
         title: "Cannot remove",
