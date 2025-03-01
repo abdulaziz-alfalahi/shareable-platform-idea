@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus, ChevronRight, User, Briefcase, Calendar, MapPin, Clock, Users, FileEdit, Trash2, Filter } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { JobMap } from "@/components/JobMap";
+import JobMap from "@/components/JobMap";
 
 const vacancies = [
   {
@@ -60,9 +59,7 @@ const vacancies = [
   }
 ];
 
-// This is a mock function to simulate an AI matching system that returns candidates matching a vacancy
 const getAIMatchedCandidates = (vacancyId: number) => {
-  // In a real application, this would call an API with AI matching logic
   return [
     { id: 101, name: "Sarah Johnson", match: 95, skills: ["UI/UX", "Figma", "Sketch", "User Research"], location: "Dubai" },
     { id: 102, name: "Mohammed Al Farsi", match: 92, skills: ["UI Design", "Adobe XD", "Prototyping"], location: "Dubai" },
@@ -77,7 +74,6 @@ const getAIMatchedCandidates = (vacancyId: number) => {
   ];
 };
 
-// Function to simulate candidate search with filters
 const searchCandidates = (query: string, filters: any) => {
   const allCandidates = [
     { id: 101, name: "Sarah Johnson", skills: ["UI/UX", "Figma", "Sketch", "User Research"], experience: 5, education: "Bachelor's in Design", location: "Dubai", availability: "Immediate" },
@@ -97,7 +93,6 @@ const searchCandidates = (query: string, filters: any) => {
     { id: 115, name: "Aisha Khalid", skills: ["UX Design", "Design Strategy", "Workshop Facilitation"], experience: 8, education: "PhD in Design", location: "Dubai", availability: "1 month" },
   ];
   
-  // Filter by search query
   let filteredCandidates = allCandidates;
   if (query) {
     const searchLower = query.toLowerCase();
@@ -107,7 +102,6 @@ const searchCandidates = (query: string, filters: any) => {
     );
   }
   
-  // Apply additional filters
   if (filters.location && filters.location !== "All") {
     filteredCandidates = filteredCandidates.filter(c => c.location === filters.location);
   }
@@ -150,7 +144,7 @@ const RecruiterDashboard = () => {
     type: "Full-time",
     requirements: [""],
     status: "Draft",
-    coordinates: { latitude: 25.2048, longitude: 55.2708 } // Default to Dubai
+    coordinates: { latitude: 25.2048, longitude: 55.2708 }
   });
 
   const filteredVacancies = vacancies.filter(vacancy => 
@@ -180,7 +174,6 @@ const RecruiterDashboard = () => {
   };
 
   const handleSubmitVacancy = () => {
-    // In a real app, this would save to a database
     console.log("New vacancy:", newVacancy);
     setIsNewVacancyDialogOpen(false);
     setNewVacancy({
@@ -211,7 +204,6 @@ const RecruiterDashboard = () => {
     });
   };
 
-  // Helper function to safely close dialogs
   const closeDialog = (selector: string) => {
     const element = document.querySelector(selector);
     if (element && 'click' in element) {
@@ -413,7 +405,6 @@ const RecruiterDashboard = () => {
         </TabsContent>
       </Tabs>
       
-      {/* New Vacancy Dialog */}
       <Dialog open={isNewVacancyDialogOpen} onOpenChange={setIsNewVacancyDialogOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -535,7 +526,6 @@ const RecruiterDashboard = () => {
         </DialogContent>
       </Dialog>
       
-      {/* View Vacancy Dialog */}
       <Dialog open={isViewVacancyDialogOpen} onOpenChange={setIsViewVacancyDialogOpen}>
         {selectedVacancy && (
           <DialogContent className="max-w-3xl">
@@ -613,7 +603,6 @@ const RecruiterDashboard = () => {
         )}
       </Dialog>
       
-      {/* AI Matches Dialog */}
       <Dialog open={isAIMatchDialogOpen} onOpenChange={setIsAIMatchDialogOpen}>
         {selectedVacancy && (
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
