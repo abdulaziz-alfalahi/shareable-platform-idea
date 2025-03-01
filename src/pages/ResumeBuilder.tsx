@@ -1,5 +1,5 @@
-
-import { useState } from "react";
+<lov-code>
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
   User, 
@@ -13,7 +13,11 @@ import {
   Download,
   ArrowLeft,
   Plus,
-  Trash2
+  Trash2,
+  Eye,
+  FileUp,
+  Linkedin,
+  FileOutput
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +26,8 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/components/ui/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Define TypeScript interfaces for our resume data
 interface PersonalInfo {
@@ -82,6 +88,7 @@ interface ResumeData {
 const ResumeBuilder = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [resumeData, setResumeData] = useState<ResumeData>({
     personalInfo: {
@@ -109,7 +116,9 @@ const ResumeBuilder = () => {
   });
 
   const [activeSection, setActiveSection] = useState("personalInfo");
-  
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [resumeTheme, setResumeTheme] = useState<"classic" | "modern" | "minimalist">("classic");
+
   const handleChange = (section: keyof ResumeData, field: string, value: string, index: number | null = null) => {
     if (index !== null) {
       // Handle array sections (education, experience, skills, languages, certifications)
@@ -211,6 +220,165 @@ const ResumeBuilder = () => {
       title: "Resume Downloaded",
       description: "Your resume has been downloaded as JSON",
     });
+  };
+
+  const exportToPdf = () => {
+    // In a real app, you would use a library like jsPDF or html2pdf
+    // For now, we'll just show a toast indicating the feature
+    toast({
+      title: "PDF Export",
+      description: "Your resume has been exported as PDF (demo functionality)",
+    });
+    
+    // Simulate downloading PDF
+    setTimeout(() => {
+      const filename = `${resumeData.personalInfo.name.replace(/\s+/g, '_')}_resume.pdf`;
+      
+      toast({
+        title: "PDF Ready",
+        description: `${filename} has been prepared for download`,
+      });
+    }, 1500);
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // In a real app, you would process the file and extract data
+    // For now, we'll simulate a file upload with a loading toast
+    toast({
+      title: "Processing Resume",
+      description: "Analyzing your resume file...",
+    });
+
+    // Simulate file processing
+    setTimeout(() => {
+      // Simulate extracted data
+      const mockExtractedData: ResumeData = {
+        personalInfo: {
+          name: "Jane Smith",
+          email: "jane.smith@example.com",
+          phone: "+971 555 123 456",
+          location: "Dubai, UAE",
+          objective: "Experienced software engineer with a passion for building innovative solutions.",
+        },
+        education: [
+          { 
+            id: 1, 
+            institution: "University of Technology", 
+            degree: "Bachelor of Science", 
+            field: "Computer Science",
+            startDate: "2015-09-01", 
+            endDate: "2019-06-30", 
+            gpa: "3.8"
+          }
+        ],
+        experience: [
+          { 
+            id: 1, 
+            company: "Tech Solutions LLC", 
+            position: "Senior Developer", 
+            location: "Dubai, UAE",
+            startDate: "2019-08-01", 
+            endDate: "2023-03-31", 
+            description: "Led development team in creating enterprise software solutions. Implemented CI/CD pipelines and improved code quality."
+          }
+        ],
+        skills: [
+          { id: 1, name: "JavaScript" },
+          { id: 2, name: "React" },
+          { id: 3, name: "Node.js" },
+          { id: 4, name: "TypeScript" }
+        ],
+        languages: [
+          { id: 1, name: "English", proficiency: "native" },
+          { id: 2, name: "Arabic", proficiency: "intermediate" }
+        ],
+        certifications: [
+          { id: 1, name: "AWS Certified Developer", issuer: "Amazon Web Services", date: "2021-05-15" }
+        ]
+      };
+
+      setResumeData(mockExtractedData);
+      
+      toast({
+        title: "Resume Processed",
+        description: "Data from your resume has been extracted successfully!",
+        className: "bg-emirati-oasisGreen text-white"
+      });
+    }, 2000);
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const extractFromLinkedIn = () => {
+    // In a real app, you would use LinkedIn API or a scraping service
+    // For now, we'll just show a toast indicating the feature
+    toast({
+      title: "LinkedIn Integration",
+      description: "Connecting to LinkedIn and extracting profile data...",
+    });
+
+    // Simulate LinkedIn data extraction
+    setTimeout(() => {
+      // Simulate extracted data
+      const mockLinkedInData: ResumeData = {
+        personalInfo: {
+          name: "Alex Johnson",
+          email: "alex.johnson@example.com",
+          phone: "+971 555 987 654",
+          location: "Abu Dhabi, UAE",
+          objective: "Dedicated project manager with a track record of delivering complex projects on time and within budget.",
+        },
+        education: [
+          { 
+            id: 1, 
+            institution: "Business School International", 
+            degree: "Master of Business Administration", 
+            field: "Project Management",
+            startDate: "2012-09-01", 
+            endDate: "2014-06-30", 
+            gpa: "3.9"
+          }
+        ],
+        experience: [
+          { 
+            id: 1, 
+            company: "Global Projects Co.", 
+            position: "Senior Project Manager", 
+            location: "Abu Dhabi, UAE",
+            startDate: "2014-08-01", 
+            endDate: "2023-01-31", 
+            description: "Managed large-scale construction projects with budgets exceeding $50M. Coordinated cross-functional teams and ensured regulatory compliance."
+          }
+        ],
+        skills: [
+          { id: 1, name: "Project Management" },
+          { id: 2, name: "Budget Planning" },
+          { id: 3, name: "Team Leadership" },
+          { id: 4, name: "Risk Management" }
+        ],
+        languages: [
+          { id: 1, name: "English", proficiency: "native" },
+          { id: 2, name: "Arabic", proficiency: "advanced" }
+        ],
+        certifications: [
+          { id: 1, name: "PMP Certification", issuer: "Project Management Institute", date: "2016-03-10" }
+        ]
+      };
+
+      setResumeData(mockLinkedInData);
+      
+      toast({
+        title: "LinkedIn Import Complete",
+        description: "Data from your LinkedIn profile has been imported successfully!",
+        className: "bg-emirati-oasisGreen text-white"
+      });
+    }, 2500);
   };
 
   const renderSection = () => {
@@ -640,101 +808,85 @@ const ResumeBuilder = () => {
     }
   };
 
-  return (
-    <div className="container mx-auto py-8 px-4 sm:px-6 md:px-8 min-h-screen bg-emirati-sandstone">
-      <div className="flex flex-col items-start mb-8">
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate("/")}
-          className="text-emirati-oasisGreen mb-4"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
-        </Button>
-        
-        <h1 className="text-3xl font-bold text-emirati-oasisGreen">Resume Builder</h1>
-        <p className="text-emirati-camelBrown mt-2">Create a professional resume to showcase your skills and experience.</p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="md:col-span-1 border-emirati-desertGold">
-          <CardContent className="p-4">
-            <nav className="space-y-2">
-              <Button
-                variant={activeSection === "personalInfo" ? "default" : "ghost"}
-                className={`w-full justify-start ${activeSection === "personalInfo" ? "bg-emirati-oasisGreen" : ""}`}
-                onClick={() => setActiveSection("personalInfo")}
-              >
-                <User className="mr-2 h-4 w-4" /> Personal Info
-              </Button>
-              
-              <Button
-                variant={activeSection === "education" ? "default" : "ghost"}
-                className={`w-full justify-start ${activeSection === "education" ? "bg-emirati-oasisGreen" : ""}`}
-                onClick={() => setActiveSection("education")}
-              >
-                <GraduationCap className="mr-2 h-4 w-4" /> Education
-              </Button>
-              
-              <Button
-                variant={activeSection === "experience" ? "default" : "ghost"}
-                className={`w-full justify-start ${activeSection === "experience" ? "bg-emirati-oasisGreen" : ""}`}
-                onClick={() => setActiveSection("experience")}
-              >
-                <Briefcase className="mr-2 h-4 w-4" /> Experience
-              </Button>
-              
-              <Button
-                variant={activeSection === "skills" ? "default" : "ghost"}
-                className={`w-full justify-start ${activeSection === "skills" ? "bg-emirati-oasisGreen" : ""}`}
-                onClick={() => setActiveSection("skills")}
-              >
-                <Award className="mr-2 h-4 w-4" /> Skills
-              </Button>
-              
-              <Button
-                variant={activeSection === "languages" ? "default" : "ghost"}
-                className={`w-full justify-start ${activeSection === "languages" ? "bg-emirati-oasisGreen" : ""}`}
-                onClick={() => setActiveSection("languages")}
-              >
-                <Book className="mr-2 h-4 w-4" /> Languages
-              </Button>
-              
-              <Button
-                variant={activeSection === "certifications" ? "default" : "ghost"}
-                className={`w-full justify-start ${activeSection === "certifications" ? "bg-emirati-oasisGreen" : ""}`}
-                onClick={() => setActiveSection("certifications")}
-              >
-                <FileText className="mr-2 h-4 w-4" /> Certifications
-              </Button>
-              
-              <Separator className="my-4" />
-              
-              <Button
-                onClick={saveResume}
-                className="w-full btn-success"
-              >
-                <Save className="mr-2 h-4 w-4" /> Save Resume
-              </Button>
-              
-              <Button
-                onClick={downloadResume}
-                variant="outline"
-                className="w-full border-emirati-desertGold text-emirati-camelBrown"
-              >
-                <Download className="mr-2 h-4 w-4" /> Download
-              </Button>
-            </nav>
-          </CardContent>
-        </Card>
-        
-        <Card className="md:col-span-3 border-emirati-desertGold">
-          <CardContent className="p-6">
-            {renderSection()}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-};
+  // Resume Preview Component
+  const ResumePreview = () => {
+    const formatDate = (dateString: string) => {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+    };
 
-export default ResumeBuilder;
+    return (
+      <div className={`p-8 max-w-4xl mx-auto bg-white shadow-lg ${
+        resumeTheme === "modern" ? "font-sans" : 
+        resumeTheme === "minimalist" ? "font-light" : "font-serif"
+      }`}>
+        <div className={`text-center mb-8 ${
+          resumeTheme === "modern" ? "border-b-4 border-emirati-oasisGreen pb-4" : 
+          resumeTheme === "minimalist" ? "border-b border-gray-200 pb-2" : "border-double border-b-4 border-emirati-camelBrown pb-4"
+        }`}>
+          <h1 className={`text-3xl font-bold ${
+            resumeTheme === "modern" ? "text-emirati-oasisGreen" : 
+            resumeTheme === "minimalist" ? "text-gray-800" : "text-emirati-camelBrown"
+          }`}>{resumeData.personalInfo.name || "Your Name"}</h1>
+          
+          <div className="flex flex-wrap justify-center gap-4 mt-2 text-sm">
+            {resumeData.personalInfo.email && (
+              <span>{resumeData.personalInfo.email}</span>
+            )}
+            {resumeData.personalInfo.phone && (
+              <span>{resumeData.personalInfo.phone}</span>
+            )}
+            {resumeData.personalInfo.location && (
+              <span>{resumeData.personalInfo.location}</span>
+            )}
+          </div>
+        </div>
+
+        {resumeData.personalInfo.objective && (
+          <div className="mb-6">
+            <h2 className={`text-xl font-semibold mb-2 ${
+              resumeTheme === "modern" ? "text-emirati-oasisGreen border-b-2 border-emirati-oasisGreen inline-block" : 
+              resumeTheme === "minimalist" ? "text-gray-700" : "text-emirati-camelBrown"
+            }`}>Professional Summary</h2>
+            <p className="text-gray-700">{resumeData.personalInfo.objective}</p>
+          </div>
+        )}
+
+        {resumeData.experience.some(exp => exp.company || exp.position) && (
+          <div className="mb-6">
+            <h2 className={`text-xl font-semibold mb-3 ${
+              resumeTheme === "modern" ? "text-emirati-oasisGreen border-b-2 border-emirati-oasisGreen inline-block" : 
+              resumeTheme === "minimalist" ? "text-gray-700" : "text-emirati-camelBrown"
+            }`}>Professional Experience</h2>
+            
+            {resumeData.experience.map((exp, index) => (
+              (exp.company || exp.position) && (
+                <div key={exp.id} className={`mb-4 ${index !== resumeData.experience.length - 1 ? "pb-4 border-b border-gray-100" : ""}`}>
+                  <div className="flex flex-wrap justify-between items-start">
+                    <div>
+                      <h3 className="font-semibold">{exp.position || "Position"}</h3>
+                      <p className="text-gray-600">{exp.company || "Company"}{exp.location ? `, ${exp.location}` : ""}</p>
+                    </div>
+                    {(exp.startDate || exp.endDate) && (
+                      <p className="text-sm text-gray-500">
+                        {formatDate(exp.startDate)} - {exp.endDate ? formatDate(exp.endDate) : "Present"}
+                      </p>
+                    )}
+                  </div>
+                  {exp.description && <p className="mt-2 text-gray-700">{exp.description}</p>}
+                </div>
+              )
+            ))}
+          </div>
+        )}
+
+        {resumeData.education.some(edu => edu.institution || edu.degree) && (
+          <div className="mb-6">
+            <h2 className={`text-xl font-semibold mb-3 ${
+              resumeTheme === "modern" ? "text-emirati-oasisGreen border-b-2 border-emirati-oasisGreen inline-block" : 
+              resumeTheme === "minimalist" ? "text-gray-700" : "text-emirati-camelBrown"
+            }`}>Education</h2>
+            
+            {resumeData.education.map((edu, index) => (
+              (edu.institution || edu
