@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -22,7 +21,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 
-// Mock data for candidates
 const initialCandidates = [
   {
     id: 1,
@@ -146,7 +144,6 @@ const initialCandidates = [
   },
 ];
 
-// Mock data for job vacancies
 const vacancies = [
   {
     id: 1,
@@ -190,7 +187,6 @@ const vacancies = [
   }
 ];
 
-// Component for the vacancy form
 const VacancyForm = ({ onSave, initialData = null }) => {
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
@@ -208,7 +204,6 @@ const VacancyForm = ({ onSave, initialData = null }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Convert requirements back to array
     const requirementsArray = formData.requirements
       .split(",")
       .map(req => req.trim())
@@ -302,7 +297,6 @@ const VacancyForm = ({ onSave, initialData = null }) => {
   );
 };
 
-// Component for displaying candidate details
 const CandidateProfile = ({ candidate }) => {
   return (
     <div className="space-y-4">
@@ -373,10 +367,8 @@ const RecruiterDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // All unique skills from candidates
   const allSkills = [...new Set(candidates.flatMap(candidate => candidate.skills))];
 
-  // Sort candidates
   useEffect(() => {
     let sortedCandidates = [...filteredCandidates];
     
@@ -395,11 +387,9 @@ const RecruiterDashboard = () => {
     setFilteredCandidates(sortedCandidates);
   }, [sortConfig]);
 
-  // Filter candidates based on search and selected skills
   useEffect(() => {
     let results = candidates;
     
-    // Filter by search term
     if (searchTerm) {
       const lowercasedSearch = searchTerm.toLowerCase();
       results = results.filter(candidate => 
@@ -410,7 +400,6 @@ const RecruiterDashboard = () => {
       );
     }
     
-    // Filter by selected skills
     if (selectedSkills.length > 0) {
       results = results.filter(candidate => 
         selectedSkills.every(skill => candidate.skills.includes(skill))
@@ -460,9 +449,7 @@ const RecruiterDashboard = () => {
   const handleViewTopCandidates = (vacancy) => {
     setActiveVacancy(vacancy);
     
-    // Simulate AI matching by recalculating match scores based on vacancy requirements
     const matchedCandidates = candidates.map(candidate => {
-      // Calculate match score based on how many requirements the candidate meets
       const matchingSkills = candidate.skills.filter(skill => 
         vacancy.requirements.some(req => skill.toLowerCase().includes(req.toLowerCase()))
       );
@@ -477,10 +464,8 @@ const RecruiterDashboard = () => {
       };
     });
     
-    // Sort by match score
     const sortedCandidates = matchedCandidates.sort((a, b) => b.matchScore - a.matchScore);
     
-    // Update candidates with new match scores
     setCandidates(sortedCandidates);
     setFilteredCandidates(sortedCandidates);
     
@@ -493,6 +478,13 @@ const RecruiterDashboard = () => {
   const handleEditVacancy = (vacancy) => {
     setActiveVacancy(vacancy);
     setIsEditingVacancy(true);
+  };
+
+  const closeDialog = (dialogSelector) => {
+    const closeButton = document.querySelector(dialogSelector);
+    if (closeButton && closeButton instanceof HTMLElement) {
+      closeButton.click();
+    }
   };
 
   return (
@@ -588,7 +580,6 @@ const RecruiterDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {/* Search and filter */}
                   <div className="flex gap-2 pb-4">
                     <div className="relative flex-1">
                       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -635,7 +626,7 @@ const RecruiterDashboard = () => {
                           <Button variant="outline" onClick={resetFilters}>
                             Reset Filters
                           </Button>
-                          <Button onClick={() => document.querySelector('[role="dialog"] button[aria-label="Close"]').click()}>
+                          <Button onClick={() => closeDialog('[role="dialog"] button[aria-label="Close"]')}>
                             Apply Filters
                           </Button>
                         </div>
@@ -643,33 +634,29 @@ const RecruiterDashboard = () => {
                     </Dialog>
                   </div>
                   
-                  {/* Filter pills */}
-                  {selectedSkills.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {selectedSkills.map(skill => (
-                        <span 
-                          key={skill} 
-                          className="bg-primary/10 text-primary text-xs rounded-full px-2.5 py-1 flex items-center"
-                        >
-                          {skill}
-                          <button 
-                            onClick={() => toggleSkillFilter(skill)}
-                            className="ml-1.5 rounded-full bg-primary/20 p-0.5"
-                          >
-                            <X size={12} />
-                          </button>
-                        </span>
-                      ))}
-                      <button 
-                        onClick={resetFilters}
-                        className="text-xs text-muted-foreground underline"
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {selectedSkills.map(skill => (
+                      <span 
+                        key={skill} 
+                        className="bg-primary/10 text-primary text-xs rounded-full px-2.5 py-1 flex items-center"
                       >
-                        Clear all
-                      </button>
-                    </div>
-                  )}
+                        {skill}
+                        <button 
+                          onClick={() => toggleSkillFilter(skill)}
+                          className="ml-1.5 rounded-full bg-primary/20 p-0.5"
+                        >
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))}
+                    <button 
+                      onClick={resetFilters}
+                      className="text-xs text-muted-foreground underline"
+                    >
+                      Clear all
+                    </button>
+                  </div>
                   
-                  {/* Candidates table */}
                   <div className="rounded-md border">
                     <div className="grid grid-cols-6 border-b bg-slate-50 px-4 py-3 text-sm font-medium">
                       <div className="flex items-center cursor-pointer" onClick={() => handleSort("name")}>
@@ -756,7 +743,6 @@ const RecruiterDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {/* Search and filter */}
                 <div className="flex gap-2 pb-4">
                   <div className="relative flex-1">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -803,7 +789,7 @@ const RecruiterDashboard = () => {
                         <Button variant="outline" onClick={resetFilters}>
                           Reset Filters
                         </Button>
-                        <Button onClick={() => document.querySelector('[role="dialog"] button[aria-label="Close"]').click()}>
+                        <Button onClick={() => closeDialog('[role="dialog"] button[aria-label="Close"]')}>
                           Apply Filters
                         </Button>
                       </div>
@@ -811,33 +797,29 @@ const RecruiterDashboard = () => {
                   </Dialog>
                 </div>
                 
-                {/* Filter pills */}
-                {selectedSkills.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {selectedSkills.map(skill => (
-                      <span 
-                        key={skill} 
-                        className="bg-primary/10 text-primary text-xs rounded-full px-2.5 py-1 flex items-center"
-                      >
-                        {skill}
-                        <button 
-                          onClick={() => toggleSkillFilter(skill)}
-                          className="ml-1.5 rounded-full bg-primary/20 p-0.5"
-                        >
-                          <X size={12} />
-                        </button>
-                      </span>
-                    ))}
-                    <button 
-                      onClick={resetFilters}
-                      className="text-xs text-muted-foreground underline"
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {selectedSkills.map(skill => (
+                    <span 
+                      key={skill} 
+                      className="bg-primary/10 text-primary text-xs rounded-full px-2.5 py-1 flex items-center"
                     >
-                      Clear all
-                    </button>
-                  </div>
-                )}
+                      {skill}
+                      <button 
+                        onClick={() => toggleSkillFilter(skill)}
+                        className="ml-1.5 rounded-full bg-primary/20 p-0.5"
+                      >
+                        <X size={12} />
+                      </button>
+                    </span>
+                  ))}
+                  <button 
+                    onClick={resetFilters}
+                    className="text-xs text-muted-foreground underline"
+                  >
+                    Clear all
+                  </button>
+                </div>
                 
-                {/* Candidates grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredCandidates.map(candidate => (
                     <Card key={candidate.id}>
@@ -908,7 +890,6 @@ const RecruiterDashboard = () => {
         </TabsContent>
       </Tabs>
       
-      {/* Add/Edit Vacancy Dialog */}
       <Dialog open={isAddingVacancy || isEditingVacancy} onOpenChange={open => {
         if (!open) {
           setIsAddingVacancy(false);
