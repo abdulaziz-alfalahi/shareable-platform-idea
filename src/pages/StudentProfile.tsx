@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { 
@@ -79,8 +78,8 @@ const StudentProfile = () => {
     }
   };
 
-  const handleSubmitFeedback = (formData: any) => {
-    console.log("Submitting feedback:", formData);
+  const handleSubmitFeedback = () => {
+    console.log("Submitting feedback:", feedbackForm);
     toast({
       title: "Feedback Added",
       description: `Feedback has been added for ${student?.name}.`
@@ -91,8 +90,8 @@ const StudentProfile = () => {
     // and refresh the student object
   };
 
-  const handleSubmitGoal = (formData: any) => {
-    console.log("Submitting goal:", formData);
+  const handleSubmitGoal = () => {
+    console.log("Submitting goal:", goalForm);
     toast({
       title: "Goal Added",
       description: `A new goal has been added for ${student?.name}.`
@@ -391,6 +390,8 @@ const StudentProfile = () => {
           student={student}
           isOpen={isAddFeedbackDialogOpen}
           onOpenChange={setIsAddFeedbackDialogOpen}
+          feedbackForm={feedbackForm}
+          setFeedbackForm={setFeedbackForm}
           onSubmit={handleSubmitFeedback}
         />
       )}
@@ -401,6 +402,8 @@ const StudentProfile = () => {
           student={student}
           isOpen={isAddGoalDialogOpen}
           onOpenChange={setIsAddGoalDialogOpen}
+          goalForm={goalForm}
+          setGoalForm={setGoalForm}
           onSubmit={handleSubmitGoal}
         />
       )}

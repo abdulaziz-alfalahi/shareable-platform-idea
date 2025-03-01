@@ -20,6 +20,7 @@ interface StudentListProps {
   setRiskFilter: (risk: string) => void;
   onAddFeedback: (student: Student) => void;
   onAddGoal: (student: Student) => void;
+  onViewStudent?: (student: Student) => void; // Add this prop
   getStatusBadgeVariant: (status: string) => string;
   getRiskBadgeVariant: (risk: string) => string;
   formatDate: (dateString: string) => string;
@@ -35,6 +36,7 @@ const StudentList: React.FC<StudentListProps> = ({
   setRiskFilter,
   onAddFeedback,
   onAddGoal,
+  onViewStudent,
   getStatusBadgeVariant,
   getRiskBadgeVariant,
   formatDate
@@ -53,7 +55,11 @@ const StudentList: React.FC<StudentListProps> = ({
   });
 
   const handleViewStudent = (student: Student) => {
-    navigate(`/student/${student.id}`);
+    if (onViewStudent) {
+      onViewStudent(student);
+    } else {
+      navigate(`/student/${student.id}`);
+    }
   };
 
   return (
