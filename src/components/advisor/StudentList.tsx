@@ -1,5 +1,6 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, ChevronRight, MessageSquare, CheckCircle, GraduationCap, BookOpen, Award, TrendingUp, Calendar } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,7 +18,6 @@ interface StudentListProps {
   setStatusFilter: (status: string) => void;
   riskFilter: string;
   setRiskFilter: (risk: string) => void;
-  onViewStudent: (student: Student) => void;
   onAddFeedback: (student: Student) => void;
   onAddGoal: (student: Student) => void;
   getStatusBadgeVariant: (status: string) => string;
@@ -33,13 +33,14 @@ const StudentList: React.FC<StudentListProps> = ({
   setStatusFilter,
   riskFilter,
   setRiskFilter,
-  onViewStudent,
   onAddFeedback,
   onAddGoal,
   getStatusBadgeVariant,
   getRiskBadgeVariant,
   formatDate
 }) => {
+  const navigate = useNavigate();
+
   const filteredStudents = students.filter(student => {
     const matchesSearch = 
       student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -50,6 +51,10 @@ const StudentList: React.FC<StudentListProps> = ({
     
     return matchesSearch && matchesStatus && matchesRisk;
   });
+
+  const handleViewStudent = (student: Student) => {
+    navigate(`/student/${student.id}`);
+  };
 
   return (
     <div>
@@ -148,8 +153,8 @@ const StudentList: React.FC<StudentListProps> = ({
                 </div>
 
                 <div className="flex flex-col gap-2 min-w-[120px]">
-                  <Button onClick={() => onViewStudent(student)}>
-                    View Details <ChevronRight className="ml-1 h-4 w-4" />
+                  <Button onClick={() => handleViewStudent(student)}>
+                    View Profile <ChevronRight className="ml-1 h-4 w-4" />
                   </Button>
                   <Button variant="outline" onClick={() => onAddFeedback(student)}>
                     <MessageSquare className="mr-1 h-4 w-4" /> Add Feedback
