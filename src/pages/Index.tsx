@@ -1,8 +1,8 @@
-import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronRight } from "lucide-react";
+import { BriefcaseIcon, ChevronRightIcon, FileTextIcon } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -25,12 +25,28 @@ const Index = () => {
               onClick={() => navigate("/resume-builder")} 
               className="w-full bg-emirati-oasisGreen hover:bg-emirati-desertGold"
             >
-              Build Your Resume <ChevronRight className="ml-2 h-4 w-4" />
+              <FileTextIcon className="mr-2 h-4 w-4" /> Build Your Resume <ChevronRightIcon className="ml-2 h-4 w-4" />
             </Button>
           </CardFooter>
         </Card>
         
-        {/* Add more cards for future features here */}
+        <Card className="border-emirati-desertGold hover:shadow-lg transition-shadow">
+          <CardHeader>
+            <CardTitle className="text-emirati-oasisGreen">Job Applications</CardTitle>
+            <CardDescription>Track and manage your job applications in one place</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-emirati-camelBrown">Keep track of your job applications, interviews, and offers with our simple tracking tool.</p>
+          </CardContent>
+          <CardFooter>
+            <Button 
+              onClick={() => navigate("/job-applications")} 
+              className="w-full bg-emirati-oasisGreen hover:bg-emirati-desertGold"
+            >
+              <BriefcaseIcon className="mr-2 h-4 w-4" /> Track Applications <ChevronRightIcon className="ml-2 h-4 w-4" />
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );
