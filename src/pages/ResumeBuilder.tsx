@@ -380,7 +380,7 @@ const ResumeBuilder = () => {
     }, 2500);
   };
 
-  // New function to handle resume theme changes
+  // Function to handle resume theme changes
   const handleThemeChange = (theme: "classic" | "modern" | "minimalist") => {
     setResumeTheme(theme);
   };
@@ -889,4 +889,4 @@ const ResumeBuilder = () => {
           <div className="mb-6">
             <h2 className={`text-xl font-semibold mb-3 ${
               resumeTheme === "modern" ? "text-emirati-oasisGreen border-b-2 border-emirati-oasisGreen inline-block" : 
-              resumeTheme === "minimalist" ? "text-gray-700
+              resumeTheme === "minimalist" ? "text-gray-700"
