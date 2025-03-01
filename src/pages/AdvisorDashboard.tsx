@@ -1,4 +1,4 @@
-<lov-code>
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -872,4 +872,72 @@ const AdvisorDashboard = () => {
                   <SelectContent>
                     <SelectItem value="Academic">Academic</SelectItem>
                     <SelectItem value="Career">Career</SelectItem>
-                    <SelectItem value
+                    <SelectItem value="Personal">Personal</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="feedback-content">Feedback Content</Label>
+                <Textarea 
+                  id="feedback-content"
+                  placeholder="Enter your feedback here..."
+                  value={feedbackForm.content}
+                  onChange={(e) => setFeedbackForm({...feedbackForm, content: e.target.value})}
+                  className="min-h-[120px]"
+                />
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsAddFeedbackDialogOpen(false)}>Cancel</Button>
+              <Button onClick={handleSubmitFeedback}>Submit Feedback</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {selectedStudent && (
+        <Dialog open={isAddGoalDialogOpen} onOpenChange={setIsAddGoalDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Goal for {selectedStudent.name}</DialogTitle>
+              <DialogDescription>
+                Set a new academic or career goal for the student
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="goal-title">Goal Title</Label>
+                <Input 
+                  id="goal-title"
+                  placeholder="Enter goal title..."
+                  value={goalForm.title}
+                  onChange={(e) => setGoalForm({...goalForm, title: e.target.value})}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="goal-deadline">Deadline</Label>
+                <Input 
+                  id="goal-deadline"
+                  type="date"
+                  value={goalForm.deadline}
+                  onChange={(e) => setGoalForm({...goalForm, deadline: e.target.value})}
+                />
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsAddGoalDialogOpen(false)}>Cancel</Button>
+              <Button onClick={handleSubmitGoal}>Add Goal</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
+  );
+};
+
+export default AdvisorDashboard;
