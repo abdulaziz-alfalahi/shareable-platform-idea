@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -889,4 +890,271 @@ const ResumeBuilder = () => {
           <div className="mb-6">
             <h2 className={`text-xl font-semibold mb-3 ${
               resumeTheme === "modern" ? "text-emirati-oasisGreen border-b-2 border-emirati-oasisGreen inline-block" : 
-              resumeTheme === "minimalist" ? "text-gray-700"
+              resumeTheme === "minimalist" ? "text-gray-700" : "text-emirati-camelBrown"
+            }`}>Education</h2>
+            
+            {resumeData.education.map((edu, index) => (
+              (edu.institution || edu.degree) && (
+                <div key={edu.id} className={`mb-4 ${index !== resumeData.education.length - 1 ? "pb-4 border-b border-gray-100" : ""}`}>
+                  <div className="flex flex-wrap justify-between items-start">
+                    <div>
+                      <h3 className="font-semibold">{edu.degree || "Degree"}{edu.field ? ` in ${edu.field}` : ""}</h3>
+                      <p className="text-gray-600">{edu.institution || "Institution"}</p>
+                    </div>
+                    {(edu.startDate || edu.endDate) && (
+                      <p className="text-sm text-gray-500">
+                        {formatDate(edu.startDate)} - {edu.endDate ? formatDate(edu.endDate) : "Present"}
+                      </p>
+                    )}
+                  </div>
+                  {edu.gpa && <p className="mt-1 text-sm text-gray-500">GPA: {edu.gpa}</p>}
+                </div>
+              )
+            ))}
+          </div>
+        )}
+
+        {resumeData.skills.some(skill => skill.name) && (
+          <div className="mb-6">
+            <h2 className={`text-xl font-semibold mb-3 ${
+              resumeTheme === "modern" ? "text-emirati-oasisGreen border-b-2 border-emirati-oasisGreen inline-block" : 
+              resumeTheme === "minimalist" ? "text-gray-700" : "text-emirati-camelBrown"
+            }`}>Skills</h2>
+            
+            <div className="flex flex-wrap gap-2">
+              {resumeData.skills.filter(skill => skill.name).map(skill => (
+                <span 
+                  key={skill.id} 
+                  className={`px-3 py-1 rounded-full text-sm ${
+                    resumeTheme === "modern" ? "bg-emirati-oasisGreen text-white" : 
+                    resumeTheme === "minimalist" ? "bg-gray-100 text-gray-800" : "bg-emirati-sandstone text-emirati-camelBrown"
+                  }`}
+                >
+                  {skill.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {resumeData.languages.some(lang => lang.name) && (
+          <div className="mb-6">
+            <h2 className={`text-xl font-semibold mb-3 ${
+              resumeTheme === "modern" ? "text-emirati-oasisGreen border-b-2 border-emirati-oasisGreen inline-block" : 
+              resumeTheme === "minimalist" ? "text-gray-700" : "text-emirati-camelBrown"
+            }`}>Languages</h2>
+            
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {resumeData.languages.filter(lang => lang.name).map(lang => (
+                <li key={lang.id} className="flex justify-between">
+                  <span>{lang.name}</span>
+                  <span className="text-gray-500 capitalize">{lang.proficiency}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {resumeData.certifications.some(cert => cert.name) && (
+          <div className="mb-6">
+            <h2 className={`text-xl font-semibold mb-3 ${
+              resumeTheme === "modern" ? "text-emirati-oasisGreen border-b-2 border-emirati-oasisGreen inline-block" : 
+              resumeTheme === "minimalist" ? "text-gray-700" : "text-emirati-camelBrown"
+            }`}>Certifications & Awards</h2>
+            
+            {resumeData.certifications.filter(cert => cert.name).map((cert, index) => (
+              <div key={cert.id} className={`mb-2 ${index !== resumeData.certifications.length - 1 ? "pb-2 border-b border-gray-100" : ""}`}>
+                <div className="flex flex-wrap justify-between">
+                  <div>
+                    <h3 className="font-medium">{cert.name}</h3>
+                    {cert.issuer && <p className="text-sm text-gray-600">{cert.issuer}</p>}
+                  </div>
+                  {cert.date && <p className="text-sm text-gray-500">{formatDate(cert.date)}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="container mx-auto py-6 px-4">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => navigate('/')}
+            className="mr-2"
+          >
+            <ArrowLeft size={16} className="mr-1" /> Back
+          </Button>
+          <h1 className="text-2xl font-bold text-emirati-oasisGreen">Resume Builder</h1>
+        </div>
+        
+        <div className="flex space-x-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={saveResume}
+          >
+            <Save size={16} className="mr-1" /> Save
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={downloadResume}
+          >
+            <Download size={16} className="mr-1" /> Export JSON
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={exportToPdf}
+          >
+            <FileOutput size={16} className="mr-1" /> Export PDF
+          </Button>
+          
+          <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                variant="default" 
+                size="sm"
+                className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90"
+              >
+                <Eye size={16} className="mr-1" /> Preview
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Resume Preview</DialogTitle>
+              </DialogHeader>
+              <Tabs defaultValue="classic" className="mt-4">
+                <div className="flex justify-between items-center mb-4">
+                  <TabsList>
+                    <TabsTrigger value="classic" onClick={() => handleThemeChange("classic")}>Classic</TabsTrigger>
+                    <TabsTrigger value="modern" onClick={() => handleThemeChange("modern")}>Modern</TabsTrigger>
+                    <TabsTrigger value="minimalist" onClick={() => handleThemeChange("minimalist")}>Minimalist</TabsTrigger>
+                  </TabsList>
+                </div>
+                
+                <TabsContent value="classic" className="mt-0">
+                  <ResumePreview />
+                </TabsContent>
+                <TabsContent value="modern" className="mt-0">
+                  <ResumePreview />
+                </TabsContent>
+                <TabsContent value="minimalist" className="mt-0">
+                  <ResumePreview />
+                </TabsContent>
+              </Tabs>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card className="md:col-span-1">
+          <CardContent className="p-4">
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-emirati-oasisGreen mb-4">Sections</h2>
+              
+              <div className="flex flex-col space-y-1">
+                <Button 
+                  variant={activeSection === "personalInfo" ? "default" : "ghost"}
+                  className={activeSection === "personalInfo" ? "bg-emirati-oasisGreen text-white justify-start" : "justify-start"}
+                  onClick={() => setActiveSection("personalInfo")}
+                >
+                  <User size={16} className="mr-2" /> Personal Info
+                </Button>
+                
+                <Button 
+                  variant={activeSection === "education" ? "default" : "ghost"}
+                  className={activeSection === "education" ? "bg-emirati-oasisGreen text-white justify-start" : "justify-start"}
+                  onClick={() => setActiveSection("education")}
+                >
+                  <GraduationCap size={16} className="mr-2" /> Education
+                </Button>
+                
+                <Button 
+                  variant={activeSection === "experience" ? "default" : "ghost"}
+                  className={activeSection === "experience" ? "bg-emirati-oasisGreen text-white justify-start" : "justify-start"}
+                  onClick={() => setActiveSection("experience")}
+                >
+                  <Briefcase size={16} className="mr-2" /> Experience
+                </Button>
+                
+                <Button 
+                  variant={activeSection === "skills" ? "default" : "ghost"}
+                  className={activeSection === "skills" ? "bg-emirati-oasisGreen text-white justify-start" : "justify-start"}
+                  onClick={() => setActiveSection("skills")}
+                >
+                  <Award size={16} className="mr-2" /> Skills
+                </Button>
+                
+                <Button 
+                  variant={activeSection === "languages" ? "default" : "ghost"}
+                  className={activeSection === "languages" ? "bg-emirati-oasisGreen text-white justify-start" : "justify-start"}
+                  onClick={() => setActiveSection("languages")}
+                >
+                  <Book size={16} className="mr-2" /> Languages
+                </Button>
+                
+                <Button 
+                  variant={activeSection === "certifications" ? "default" : "ghost"}
+                  className={activeSection === "certifications" ? "bg-emirati-oasisGreen text-white justify-start" : "justify-start"}
+                  onClick={() => setActiveSection("certifications")}
+                >
+                  <FileText size={16} className="mr-2" /> Certifications
+                </Button>
+              </div>
+            </div>
+            
+            <Separator className="my-4" />
+            
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-emirati-oasisGreen">Import Data</h2>
+              
+              <div className="space-y-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start" 
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <FileUp size={16} className="mr-2" /> Upload Resume
+                </Button>
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  className="hidden" 
+                  accept=".pdf,.doc,.docx,.json"
+                  onChange={handleFileUpload}
+                />
+                
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={extractFromLinkedIn}
+                >
+                  <Linkedin size={16} className="mr-2" /> Import from LinkedIn
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="md:col-span-3">
+          <CardContent className="p-4">
+            {renderSection()}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default ResumeBuilder;
