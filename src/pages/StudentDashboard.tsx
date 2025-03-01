@@ -1,4 +1,4 @@
-<lov-code>
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
@@ -12,7 +12,7 @@ import {
   Award,
   RefreshCw,
   GraduationCap,
-  FileText as FileIcon,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -582,7 +582,7 @@ const StudentDashboard = () => {
                   <Card>
                     <CardContent className="pt-6">
                       <div className="flex flex-col items-center text-center">
-                        <FileIcon size={32} className="text-emirati-oasisGreen mb-2" />
+                        <FileText size={32} className="text-emirati-oasisGreen mb-2" />
                         <h4 className="font-medium">Update Your Resume</h4>
                         <p className="text-sm text-muted-foreground mt-1">
                           Tailor your resume to highlight relevant skills
@@ -717,7 +717,7 @@ const StudentDashboard = () => {
                               strokeWidth={2}
                               dot={{ r: 4 }}
                               activeDot={{ r: 6 }}
-                              strokeDasharray={selectedPathway.marketData.map(d => d.projected ? "5 5" : "0 0")}
+                              strokeDasharray="0 0"
                             />
                           </LineChart>
                         </ResponsiveContainer>
@@ -754,4 +754,64 @@ const StudentDashboard = () => {
                     <Legend />
                     <Bar dataKey="demand2023" name="Demand 2023" fill="#8b5e34" />
                     <Bar dataKey="demand2024" name="Demand 2024" fill="#2c4a2e" />
-                    <
+                    <Bar dataKey="projected2025" name="Projected 2025" fill="#4f8a10" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Top Skills by Industry</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {futureRequirements.map((category, index) => (
+                    <Card key={index}>
+                      <CardHeader>
+                        <CardTitle className="text-base">{category.category}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {category.skills.map((skill, skillIndex) => (
+                          <div key={skillIndex} className="space-y-1">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium">{skill.name}</span>
+                              <span className="text-xs text-muted-foreground">{skill.importance}%</span>
+                            </div>
+                            <Progress value={skill.importance} />
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <h3 className="text-lg font-semibold mb-3">Key Insights for Students</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start space-x-2">
+                    <div className="mt-1 bg-emirati-oasisGreen/20 text-emirati-oasisGreen rounded-full p-1">
+                      <CheckCircle size={14} />
+                    </div>
+                    <span>Technical skills remain in highest demand across industries, with AI and data-related roles seeing the fastest growth.</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <div className="mt-1 bg-emirati-oasisGreen/20 text-emirati-oasisGreen rounded-full p-1">
+                      <CheckCircle size={14} />
+                    </div>
+                    <span>Hybrid skills that combine technical knowledge with domain expertise are increasingly valuable.</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <div className="mt-1 bg-emirati-oasisGreen/20 text-emirati-oasisGreen rounded-full p-1">
+                      <CheckCircle size={14} />
+                    </div>
+                    <span>Despite automation, soft skills like communication and adaptability remain critical for career advancement.</span>
+                  </li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default StudentDashboard;
