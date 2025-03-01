@@ -1,4 +1,3 @@
-<lov-code>
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -379,6 +378,11 @@ const ResumeBuilder = () => {
         className: "bg-emirati-oasisGreen text-white"
       });
     }, 2500);
+  };
+
+  // New function to handle resume theme changes
+  const handleThemeChange = (theme: "classic" | "modern" | "minimalist") => {
+    setResumeTheme(theme);
   };
 
   const renderSection = () => {
@@ -885,8 +889,4 @@ const ResumeBuilder = () => {
           <div className="mb-6">
             <h2 className={`text-xl font-semibold mb-3 ${
               resumeTheme === "modern" ? "text-emirati-oasisGreen border-b-2 border-emirati-oasisGreen inline-block" : 
-              resumeTheme === "minimalist" ? "text-gray-700" : "text-emirati-camelBrown"
-            }`}>Education</h2>
-            
-            {resumeData.education.map((edu, index) => (
-              (edu.institution || edu
+              resumeTheme === "minimalist" ? "text-gray-700
