@@ -1,4 +1,4 @@
-
+<lov-code>
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
@@ -11,7 +11,8 @@ import {
   CheckCircle,
   Award,
   RefreshCw,
-  GraduationCap 
+  GraduationCap,
+  FileText as FileIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -581,7 +582,7 @@ const StudentDashboard = () => {
                   <Card>
                     <CardContent className="pt-6">
                       <div className="flex flex-col items-center text-center">
-                        <FileText size={32} className="text-emirati-oasisGreen mb-2" />
+                        <FileIcon size={32} className="text-emirati-oasisGreen mb-2" />
                         <h4 className="font-medium">Update Your Resume</h4>
                         <p className="text-sm text-muted-foreground mt-1">
                           Tailor your resume to highlight relevant skills
@@ -716,7 +717,7 @@ const StudentDashboard = () => {
                               strokeWidth={2}
                               dot={{ r: 4 }}
                               activeDot={{ r: 6 }}
-                              strokeDasharray={(d) => d.projected ? "5 5" : "0"}
+                              strokeDasharray={(d) => d.projected ? "5 5" : "0 0"}
                             />
                           </LineChart>
                         </ResponsiveContainer>
@@ -753,85 +754,4 @@ const StudentDashboard = () => {
                     <Legend />
                     <Bar dataKey="demand2023" name="Demand 2023" fill="#8b5e34" />
                     <Bar dataKey="demand2024" name="Demand 2024" fill="#2c4a2e" />
-                    <Bar dataKey="projected2025" name="Projected 2025" fill="#d4a373" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <Separator />
-              
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Future Skill Requirements</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {futureRequirements.map((category, idx) => (
-                    <Card key={idx} className="border-emirati-desertGold">
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-lg">{category.category}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        {category.skills.map((skill, index) => (
-                          <div key={index} className="space-y-1">
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm font-medium">{skill.name}</span>
-                              <span className="text-xs text-muted-foreground">{skill.importance}%</span>
-                            </div>
-                            <Progress value={skill.importance} className="h-2" />
-                          </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-              
-              <Separator />
-              
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Emerging Technologies & Skills</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <h4 className="font-medium">Short-term Impact (1-2 years)</h4>
-                    <ul className="space-y-2">
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle size={16} className="mt-1 text-emirati-oasisGreen" />
-                        <span><strong>Advanced Data Analytics:</strong> Growing demand for professionals who can interpret complex data sets and provide actionable insights.</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle size={16} className="mt-1 text-emirati-oasisGreen" />
-                        <span><strong>DevOps & Cloud Engineering:</strong> Continued evolution of cloud infrastructure requiring specialized skills in management and optimization.</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle size={16} className="mt-1 text-emirati-oasisGreen" />
-                        <span><strong>Digital Marketing Specialists:</strong> Focus on omnichannel approaches and leveraging AI for targeted campaigns.</span>
-                      </li>
-                    </ul>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <h4 className="font-medium">Long-term Trends (3-5 years)</h4>
-                    <ul className="space-y-2">
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle size={16} className="mt-1 text-emirati-oasisGreen" />
-                        <span><strong>AI Ethics & Governance:</strong> Emerging roles focused on ethical implementation and regulation of AI technologies.</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle size={16} className="mt-1 text-emirati-oasisGreen" />
-                        <span><strong>Sustainable Technology:</strong> Growing focus on environmental impact and sustainable practices across all industries.</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle size={16} className="mt-1 text-emirati-oasisGreen" />
-                        <span><strong>Extended Reality Specialists:</strong> Increased demand for AR/VR expertise as these technologies become more mainstream in business applications.</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default StudentDashboard;
+                    <Bar dataKey="projected20
