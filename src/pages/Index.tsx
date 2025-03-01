@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { BriefcaseIcon, ChevronRightIcon, FileTextIcon } from "lucide-react";
+import { BriefcaseIcon, ChevronRightIcon, FileTextIcon, MapPinIcon } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -44,6 +44,24 @@ const Index = () => {
               className="w-full bg-emirati-oasisGreen hover:bg-emirati-desertGold"
             >
               <BriefcaseIcon className="mr-2 h-4 w-4" /> Track Applications <ChevronRightIcon className="ml-2 h-4 w-4" />
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <Card className="border-emirati-desertGold hover:shadow-lg transition-shadow">
+          <CardHeader>
+            <CardTitle className="text-emirati-oasisGreen">Job Location Matching</CardTitle>
+            <CardDescription>Find jobs near you using our interactive map</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-emirati-camelBrown">Discover job opportunities in your area with our location-based job matching tool.</p>
+          </CardContent>
+          <CardFooter>
+            <Button 
+              onClick={() => navigate("/job-location-matching")} 
+              className="w-full bg-emirati-oasisGreen hover:bg-emirati-desertGold"
+            >
+              <MapPinIcon className="mr-2 h-4 w-4" /> Find Nearby Jobs <ChevronRightIcon className="ml-2 h-4 w-4" />
             </Button>
           </CardFooter>
         </Card>

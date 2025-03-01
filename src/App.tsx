@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import JobApplications from "./pages/JobApplications";
+import JobLocationMatching from "./pages/JobLocationMatching";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/resume-builder" element={<ResumeBuilder />} />
           <Route path="/job-applications" element={<JobApplications />} />
+          <Route path="/job-location-matching" element={<JobLocationMatching />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
