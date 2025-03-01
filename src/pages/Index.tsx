@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { FileText, Briefcase, MapPin, Award } from "lucide-react";
+import { FileText, Briefcase, MapPin, Award, GraduationCap } from "lucide-react";
 
 const Index = () => {
   return (
@@ -12,7 +12,7 @@ const Index = () => {
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <Link 
           to="/resume-builder" 
           className="flex flex-col bg-white rounded-lg border border-emirati-desertGold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
@@ -77,6 +77,23 @@ const Index = () => {
             </h5>
             <p className="font-normal text-emirati-camelBrown">
               Track your progress, earn points, and celebrate your job search milestones
+            </p>
+          </div>
+        </Link>
+        
+        <Link 
+          to="/student-dashboard" 
+          className="flex flex-col bg-white rounded-lg border border-emirati-desertGold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
+        >
+          <div className="bg-emirati-oasisGreen p-4 rounded-t-lg flex items-center justify-center">
+            <GraduationCap className="text-white h-8 w-8" />
+          </div>
+          <div className="p-6 flex-grow">
+            <h5 className="mb-2 text-xl font-bold tracking-tight text-emirati-oasisGreen">
+              Student Dashboard
+            </h5>
+            <p className="font-normal text-emirati-camelBrown">
+              Take career quizzes, explore pathways, and discover skills needed for future jobs
             </p>
           </div>
         </Link>
