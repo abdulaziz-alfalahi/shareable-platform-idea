@@ -112,20 +112,26 @@ const ResumeBuilder = () => {
   
   const handleChange = (section: keyof ResumeData, field: string, value: string, index: number | null = null) => {
     if (index !== null) {
-      setResumeData({
-        ...resumeData,
-        [section]: resumeData[section].map((item, i) => 
-          i === index ? { ...item, [field]: value } : item
-        )
-      });
+      // Handle array sections (education, experience, skills, languages, certifications)
+      if (section !== "personalInfo") {
+        setResumeData({
+          ...resumeData,
+          [section]: resumeData[section as keyof Omit<ResumeData, "personalInfo">].map((item: any, i: number) => 
+            i === index ? { ...item, [field]: value } : item
+          )
+        });
+      }
     } else {
-      setResumeData({
-        ...resumeData,
-        [section]: {
-          ...resumeData[section],
-          [field]: value
-        }
-      });
+      // Handle personalInfo section (which is an object, not an array)
+      if (section === "personalInfo") {
+        setResumeData({
+          ...resumeData,
+          personalInfo: {
+            ...resumeData.personalInfo,
+            [field]: value
+          }
+        });
+      }
     }
   };
 
