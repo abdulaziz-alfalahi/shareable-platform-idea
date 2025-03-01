@@ -1,3 +1,4 @@
+<lov-code>
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,9 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Search, Plus, ChevronRight, User, Briefcase, Calendar, MapPin, Clock, Users, FileEdit, Trash2, Filter } from "lucide-react";
+import { Search, Plus, ChevronRight, User, Briefcase, Calendar, MapPin, Clock, Users, FileEdit, Trash2, Filter, Clipboard, GraduationCap, Building, ArrowRight } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import JobMap from "@/components/JobMap";
+import { useToast } from "@/hooks/use-toast";
 
 const vacancies = [
   {
@@ -124,13 +126,54 @@ const searchCandidates = (query: string, filters: any) => {
   return filteredCandidates;
 };
 
+// Interns data
+const interns = [
+  { id: 1, name: "Ahmed Khan", university: "American University of Sharjah", major: "Computer Science", gpa: 3.8, year: "Senior", skills: ["Python", "Data Analysis", "Web Development"], status: "Unassigned" },
+  { id: 2, name: "Sara Al Nasser", university: "UAE University", major: "Business Administration", gpa: 3.5, year: "Junior", skills: ["Marketing", "Social Media", "Content Creation"], status: "Assigned", company: "Digital Marketing Agency", position: "Marketing Intern" },
+  { id: 3, name: "Mohammed Al Hashimi", university: "Zayed University", major: "Finance", gpa: 3.7, year: "Senior", skills: ["Financial Analysis", "Excel", "Investment Research"], status: "Assigned", company: "Abu Dhabi Investment Authority", position: "Finance Intern" },
+  { id: 4, name: "Fatima Al Zaabi", university: "Khalifa University", major: "Electrical Engineering", gpa: 3.9, year: "Senior", skills: ["Circuit Design", "MATLAB", "Project Management"], status: "Unassigned" },
+  { id: 5, name: "Reem Al Suwaidi", university: "New York University Abu Dhabi", major: "Psychology", gpa: 3.6, year: "Junior", skills: ["Research", "Data Collection", "Statistical Analysis"], status: "Unassigned" },
+  { id: 6, name: "Ali Al Mansoori", university: "UAE University", major: "Marketing", gpa: 3.4, year: "Senior", skills: ["Digital Marketing", "Market Research", "Brand Strategy"], status: "Assigned", company: "Etisalat", position: "Marketing Intern" },
+  { id: 7, name: "Noura Al Shamsi", university: "Zayed University", major: "Information Systems", gpa: 3.5, year: "Junior", skills: ["Database Management", "System Analysis", "SQL"], status: "Unassigned" },
+  { id: 8, name: "Hassan Al Balushi", university: "Khalifa University", major: "Mechanical Engineering", gpa: 3.7, year: "Senior", skills: ["CAD", "Thermodynamics", "Fluid Mechanics"], status: "Unassigned" },
+];
+
+// Available companies for internship placement
+const companies = [
+  { id: 1, name: "Abu Dhabi National Oil Company (ADNOC)", industry: "Energy", location: "Abu Dhabi", openPositions: 3 },
+  { id: 2, name: "Emirates Airlines", industry: "Aviation", location: "Dubai", openPositions: 2 },
+  { id: 3, name: "Etisalat", industry: "Telecommunications", location: "Dubai", openPositions: 4 },
+  { id: 4, name: "Dubai Holding", industry: "Investment", location: "Dubai", openPositions: 2 },
+  { id: 5, name: "Mubadala Investment Company", industry: "Investment", location: "Abu Dhabi", openPositions: 3 },
+  { id: 6, name: "DP World", industry: "Logistics", location: "Dubai", openPositions: 1 },
+  { id: 7, name: "National Bank of Abu Dhabi", industry: "Banking", location: "Abu Dhabi", openPositions: 2 },
+  { id: 8, name: "Emaar Properties", industry: "Real Estate", location: "Dubai", openPositions: 2 },
+];
+
+// Internship tracks data
+const internshipTracks = [
+  { id: 1, name: "Software Development", department: "IT", duration: "12 weeks", companies: ["Etisalat", "Emirates Airlines", "ADNOC"], skills: ["Programming", "Web Development", "App Development"] },
+  { id: 2, name: "Finance & Accounting", department: "Finance", duration: "10 weeks", companies: ["National Bank of Abu Dhabi", "Mubadala", "ADNOC"], skills: ["Financial Analysis", "Accounting", "Excel"] },
+  { id: 3, name: "Marketing & Communications", department: "Marketing", duration: "8 weeks", companies: ["Etisalat", "Emirates Airlines", "Emaar Properties"], skills: ["Digital Marketing", "Content Creation", "Market Research"] },
+  { id: 4, name: "Engineering", department: "Engineering", duration: "16 weeks", companies: ["ADNOC", "DP World", "Emaar Properties"], skills: ["CAD", "Engineering Design", "Project Management"] },
+];
+
 const RecruiterDashboard = () => {
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("vacancies");
   const [isNewVacancyDialogOpen, setIsNewVacancyDialogOpen] = useState(false);
   const [isViewVacancyDialogOpen, setIsViewVacancyDialogOpen] = useState(false);
   const [isAIMatchDialogOpen, setIsAIMatchDialogOpen] = useState(false);
+  const [isAssignInternDialogOpen, setIsAssignInternDialogOpen] = useState(false);
+  const [isNewInternDialogOpen, setIsNewInternDialogOpen] = useState(false);
+  const [isViewCompanyDialogOpen, setIsViewCompanyDialogOpen] = useState(false);
   const [selectedVacancy, setSelectedVacancy] = useState<any>(null);
+  const [selectedIntern, setSelectedIntern] = useState<any>(null);
+  const [selectedCompany, setSelectedCompany] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [internSearchQuery, setInternSearchQuery] = useState("");
+  const [companySearchQuery, setCompanySearchQuery] = useState("");
+  const [internFilter, setInternFilter] = useState("All");
   const [candidateFilters, setCandidateFilters] = useState({
     location: "All",
     experience: "All",
@@ -145,6 +188,23 @@ const RecruiterDashboard = () => {
     requirements: [""],
     status: "Draft",
     coordinates: { latitude: 25.2048, longitude: 55.2708 }
+  });
+  const [newIntern, setNewIntern] = useState({
+    name: "",
+    university: "",
+    major: "",
+    gpa: "",
+    year: "Freshman",
+    skills: [""],
+    status: "Unassigned"
+  });
+  const [assignmentDetails, setAssignmentDetails] = useState({
+    company: "",
+    position: "",
+    startDate: "",
+    endDate: "",
+    supervisor: "",
+    notes: ""
   });
 
   const filteredVacancies = vacancies.filter(vacancy => 
@@ -173,6 +233,24 @@ const RecruiterDashboard = () => {
     setNewVacancy({ ...newVacancy, requirements: updatedRequirements });
   };
 
+  const handleNewInternSkillChange = (index: number, value: string) => {
+    const updatedSkills = [...newIntern.skills];
+    updatedSkills[index] = value;
+    setNewIntern({ ...newIntern, skills: updatedSkills });
+  };
+
+  const addInternSkillField = () => {
+    setNewIntern({
+      ...newIntern,
+      skills: [...newIntern.skills, ""]
+    });
+  };
+
+  const removeInternSkillField = (index: number) => {
+    const updatedSkills = newIntern.skills.filter((_, i) => i !== index);
+    setNewIntern({ ...newIntern, skills: updatedSkills });
+  };
+
   const handleSubmitVacancy = () => {
     console.log("New vacancy:", newVacancy);
     setIsNewVacancyDialogOpen(false);
@@ -195,6 +273,51 @@ const RecruiterDashboard = () => {
   const handleShowAIMatches = (vacancy: any) => {
     setSelectedVacancy(vacancy);
     setIsAIMatchDialogOpen(true);
+  };
+
+  const handleSubmitIntern = () => {
+    console.log("New intern:", newIntern);
+    toast({
+      title: "Success!",
+      description: `${newIntern.name} has been added to the system.`,
+    });
+    setIsNewInternDialogOpen(false);
+    setNewIntern({
+      name: "",
+      university: "",
+      major: "",
+      gpa: "",
+      year: "Freshman",
+      skills: [""],
+      status: "Unassigned"
+    });
+  };
+
+  const handleViewCompany = (company: any) => {
+    setSelectedCompany(company);
+    setIsViewCompanyDialogOpen(true);
+  };
+
+  const handleAssignIntern = (intern: any) => {
+    setSelectedIntern(intern);
+    setAssignmentDetails({
+      company: "",
+      position: "",
+      startDate: "",
+      endDate: "",
+      supervisor: "",
+      notes: ""
+    });
+    setIsAssignInternDialogOpen(true);
+  };
+
+  const handleSubmitAssignment = () => {
+    console.log("Assignment details:", { intern: selectedIntern, ...assignmentDetails });
+    toast({
+      title: "Intern Assigned!",
+      description: `${selectedIntern.name} has been assigned to ${assignmentDetails.company}.`,
+    });
+    setIsAssignInternDialogOpen(false);
   };
 
   const handleLocationUpdate = (updatedJobs: any[]) => {
@@ -242,16 +365,36 @@ const RecruiterDashboard = () => {
     }
   }] : [];
 
+  const filteredInterns = interns.filter(intern => {
+    const matchesSearch = intern.name.toLowerCase().includes(internSearchQuery.toLowerCase()) ||
+      intern.university.toLowerCase().includes(internSearchQuery.toLowerCase()) ||
+      intern.major.toLowerCase().includes(internSearchQuery.toLowerCase()) ||
+      intern.skills.some(skill => skill.toLowerCase().includes(internSearchQuery.toLowerCase()));
+    
+    const matchesFilter = internFilter === "All" || intern.status === internFilter;
+    
+    return matchesSearch && matchesFilter;
+  });
+
+  const filteredCompanies = companies.filter(company => 
+    company.name.toLowerCase().includes(companySearchQuery.toLowerCase()) ||
+    company.industry.toLowerCase().includes(companySearchQuery.toLowerCase()) ||
+    company.location.toLowerCase().includes(companySearchQuery.toLowerCase())
+  );
+
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-8">Recruiter Dashboard</h1>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="vacancies">Vacancy Management</TabsTrigger>
           <TabsTrigger value="candidates">Candidate Search</TabsTrigger>
+          <TabsTrigger value="interns">Intern Tracking</TabsTrigger>
+          <TabsTrigger value="companies">Company Partners</TabsTrigger>
         </TabsList>
         
+        {/* Vacancies Tab */}
         <TabsContent value="vacancies" className="mt-6">
           <div className="flex justify-between items-center mb-6">
             <div className="relative w-full max-w-sm">
@@ -313,6 +456,7 @@ const RecruiterDashboard = () => {
           </div>
         </TabsContent>
         
+        {/* Candidates Tab */}
         <TabsContent value="candidates" className="mt-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <div className="relative w-full md:max-w-sm">
@@ -434,268 +578,65 @@ const RecruiterDashboard = () => {
             ))}
           </div>
         </TabsContent>
-      </Tabs>
-      
-      <Dialog open={isNewVacancyDialogOpen} onOpenChange={setIsNewVacancyDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Create New Vacancy</DialogTitle>
-          </DialogHeader>
-          
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Job Title</Label>
-                <Input
-                  id="title"
-                  value={newVacancy.title}
-                  onChange={(e) => setNewVacancy({ ...newVacancy, title: e.target.value })}
-                  placeholder="e.g. Senior Software Engineer"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="department">Department</Label>
-                <Input
-                  id="department"
-                  value={newVacancy.department}
-                  onChange={(e) => setNewVacancy({ ...newVacancy, department: e.target.value })}
-                  placeholder="e.g. Engineering"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  value={newVacancy.location}
-                  onChange={(e) => setNewVacancy({ ...newVacancy, location: e.target.value })}
-                  placeholder="e.g. Dubai, UAE"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="type">Employment Type</Label>
-                <Select
-                  value={newVacancy.type}
-                  onValueChange={(value) => setNewVacancy({ ...newVacancy, type: value })}
-                >
-                  <SelectTrigger id="type">
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Full-time">Full-time</SelectItem>
-                    <SelectItem value="Part-time">Part-time</SelectItem>
-                    <SelectItem value="Contract">Contract</SelectItem>
-                    <SelectItem value="Freelance">Freelance</SelectItem>
-                    <SelectItem value="Internship">Internship</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  value={newVacancy.status}
-                  onValueChange={(value) => setNewVacancy({ ...newVacancy, status: value })}
-                >
-                  <SelectTrigger id="status">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Draft">Draft</SelectItem>
-                    <SelectItem value="Open">Open</SelectItem>
-                    <SelectItem value="Closed">Closed</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+        
+        {/* Interns Tab */}
+        <TabsContent value="interns" className="mt-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div className="relative w-full md:max-w-sm">
+              <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search interns..."
+                value={internSearchQuery}
+                onChange={(e) => setInternSearchQuery(e.target.value)}
+                className="pl-8"
+              />
             </div>
-            
-            <div className="space-y-2">
-              <Label>Location on Map</Label>
-              <div className="h-[300px] border rounded-md overflow-hidden">
-                <JobMap 
-                  jobs={createWorkplaceJob(
-                    newVacancy.coordinates.latitude,
-                    newVacancy.coordinates.longitude,
-                    newVacancy.location
-                  )}
-                  onLocationUpdate={handleLocationUpdate}
-                />
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Click on the map to set the workplace location or search for an address
-              </p>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label>Requirements</Label>
-                <Button type="button" variant="outline" size="sm" onClick={addRequirementField}>
-                  Add Requirement
-                </Button>
-              </div>
-              
-              {newVacancy.requirements.map((req, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    value={req}
-                    onChange={(e) => handleNewRequirementChange(index, e.target.value)}
-                    placeholder={`Requirement ${index + 1}`}
-                  />
-                  {newVacancy.requirements.length > 1 && (
-                    <Button type="button" variant="destructive" size="icon" onClick={() => removeRequirementField(index)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
+            <div className="flex flex-wrap gap-2">
+              <Select
+                value={internFilter}
+                onValueChange={setInternFilter}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All">All Interns</SelectItem>
+                  <SelectItem value="Assigned">Assigned</SelectItem>
+                  <SelectItem value="Unassigned">Unassigned</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button onClick={() => setIsNewInternDialogOpen(true)}>
+                <Plus className="mr-2 h-4 w-4" /> Add Intern
+              </Button>
             </div>
           </div>
           
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsNewVacancyDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleSubmitVacancy}>Create Vacancy</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      
-      <Dialog open={isViewVacancyDialogOpen} onOpenChange={setIsViewVacancyDialogOpen}>
-        {selectedVacancy && (
-          <DialogContent className="max-w-3xl">
-            <DialogHeader>
-              <DialogTitle className="flex justify-between items-center">
-                <span>{selectedVacancy.title}</span>
-                <Badge variant={
-                  selectedVacancy.status === "Open" ? "default" :
-                  selectedVacancy.status === "Draft" ? "secondary" : "destructive"
-                }>
-                  {selectedVacancy.status}
-                </Badge>
-              </DialogTitle>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm font-medium mb-1">Department</p>
-                  <p>{selectedVacancy.department}</p>
-                </div>
-                
-                <div>
-                  <p className="text-sm font-medium mb-1">Location</p>
-                  <p>{selectedVacancy.location}</p>
-                </div>
-                
-                <div>
-                  <p className="text-sm font-medium mb-1">Employment Type</p>
-                  <p>{selectedVacancy.type}</p>
-                </div>
-                
-                <div>
-                  <p className="text-sm font-medium mb-1">Date Posted</p>
-                  <p>{selectedVacancy.datePosted}</p>
-                </div>
-              </div>
-              
-              <div>
-                <p className="text-sm font-medium mb-2">Location on Map</p>
-                <div className="h-[300px] border rounded-md overflow-hidden">
-                  <JobMap 
-                    jobs={selectedVacancyJobs}
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <p className="text-sm font-medium mb-2">Requirements</p>
-                <ul className="list-disc list-inside space-y-1">
-                  {selectedVacancy.requirements.map((req: string, index: number) => (
-                    <li key={index}>{req}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            
-            <DialogFooter>
-              <Button variant="outline" onClick={() => closeDialog('[data-dialog-close]')}>
-                Close
-              </Button>
-              <Button 
-                onClick={() => {
-                  closeDialog('[data-dialog-close]');
-                  setTimeout(() => handleShowAIMatches(selectedVacancy), 100);
-                }}
-                disabled={selectedVacancy.status !== "Open"}
-              >
-                <Users className="mr-2 h-4 w-4" /> View AI Matches
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        )}
-      </Dialog>
-      
-      <Dialog open={isAIMatchDialogOpen} onOpenChange={setIsAIMatchDialogOpen}>
-        {selectedVacancy && (
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>AI Matched Candidates for {selectedVacancy.title}</DialogTitle>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                The AI has identified these candidates as the best matches for this position based on skills, experience, and location.
-              </p>
-              
-              {getAIMatchedCandidates(selectedVacancy.id).map((candidate) => (
-                <Card key={candidate.id}>
-                  <CardContent className="p-6">
-                    <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-                      <div>
-                        <h3 className="text-xl font-semibold flex items-center">
-                          <User className="mr-2 h-5 w-5" /> {candidate.name}
-                        </h3>
-                        <div className="flex items-center mt-1">
-                          <MapPin className="mr-1 h-4 w-4 text-muted-foreground" /> 
-                          <span className="text-sm text-muted-foreground">{candidate.location}</span>
+          <div className="grid grid-cols-1 gap-4">
+            {filteredInterns.map((intern) => (
+              <Card key={intern.id} className="overflow-hidden">
+                <CardContent className="p-6">
+                  <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                    <div>
+                      <h3 className="text-xl font-semibold flex items-center">
+                        <User className="mr-2 h-5 w-5" /> {intern.name}
+                        <Badge className="ml-2" variant={intern.status === "Assigned" ? "default" : "secondary"}>
+                          {intern.status}
+                        </Badge>
+                      </h3>
+                      <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 mt-2 text-sm text-muted-foreground">
+                        <div className="flex items-center">
+                          <GraduationCap className="mr-1 h-4 w-4" /> {intern.university}
                         </div>
+                        <div className="flex items-center">
+                          <Clipboard className="mr-1 h-4 w-4" /> {intern.major}
+                        </div>
+                        <div>GPA: {intern.gpa}</div>
+                        <div>{intern.year} Year</div>
                       </div>
-                      
-                      <Badge className="text-lg px-3 py-1">
-                        {candidate.match}% Match
-                      </Badge>
-                    </div>
-                    
-                    <div className="mt-4">
-                      <p className="text-sm font-medium mb-2">Skills</p>
-                      <div className="flex flex-wrap gap-2">
-                        {candidate.skills.map((skill: string, index: number) => (
-                          <Badge key={index} variant="secondary">{skill}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 flex justify-end">
-                      <Button variant="outline" size="sm">
-                        Contact Candidate
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            
-            <DialogFooter>
-              <Button variant="outline" onClick={() => closeDialog('[data-dialog-close]')}>
-                Close
-              </Button>
-              <Button>Contact All Candidates</Button>
-            </DialogFooter>
-          </DialogContent>
-        )}
-      </Dialog>
-    </div>
-  );
-};
-
-export default RecruiterDashboard;
+                      {intern.status === "Assigned" && intern.company && (
+                        <div className="mt-3 p-3 bg-muted rounded-md">
+                          <p className="font-medium">Currently Assigned To:</p>
+                          <div className="flex items-center text-sm mt-1">
+                            <Building className="mr-1 h-4 w-4" /> {intern.company}
+                          </div>
+                          <div className="text-sm">Position: {intern.position}
