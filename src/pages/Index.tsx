@@ -1,17 +1,93 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
-// Mock data
 const users = [
   { email: "ahmed@uaeu.example.com", role: "student", points: 150, resume: "Ahmed | Skills: Coding", quiz: "Tech", home: "25.2048,55.2708", university: "uaeu", education: "BSc IT", project: "App Dev", internStatus: null },
   { email: "fatima@khalifa.example.com", role: "student", points: 200, resume: "Fatima | Skills: Design", quiz: "Arts", home: "24.4539,54.3773", university: "khalifa", education: "BA Design", project: "Portfolio Site", internStatus: null }
 ];
+
+const quizzes = {
+  interests: {
+    title: "Career Interest Assessment",
+    description: "Discover which career paths align with your interests and strengths.",
+    questions: [
+      {
+        id: 1,
+        question: "Which activity would you enjoy most in your free time?",
+        options: [
+          { id: "a", text: "Building or fixing things", category: "Technical" },
+          { id: "b", text: "Creating art or design projects", category: "Creative" },
+          { id: "c", text: "Analyzing data and solving puzzles", category: "Analytical" },
+          { id: "d", text: "Organizing events or leading groups", category: "Leadership" }
+        ]
+      },
+      {
+        id: 2,
+        question: "In a group project, which role do you naturally take?",
+        options: [
+          { id: "a", text: "The problem solver who addresses technical challenges", category: "Technical" },
+          { id: "b", text: "The creative who comes up with new ideas", category: "Creative" },
+          { id: "c", text: "The planner who researches and organizes information", category: "Analytical" },
+          { id: "d", text: "The coordinator who manages the team", category: "Leadership" }
+        ]
+      },
+      {
+        id: 3,
+        question: "Which work environment appeals to you most?",
+        options: [
+          { id: "a", text: "A workshop or laboratory with specialized equipment", category: "Technical" },
+          { id: "b", text: "A creative studio with freedom to express ideas", category: "Creative" },
+          { id: "c", text: "A structured environment with clear processes", category: "Analytical" },
+          { id: "d", text: "A collaborative space with team interactions", category: "Leadership" }
+        ]
+      },
+      {
+        id: 4,
+        question: "What type of challenge energizes you?",
+        options: [
+          { id: "a", text: "Building or improving something concrete", category: "Technical" },
+          { id: "b", text: "Designing something visually impressive", category: "Creative" },
+          { id: "c", text: "Solving a complex problem with data", category: "Analytical" },
+          { id: "d", text: "Influencing others and building consensus", category: "Leadership" }
+        ]
+      },
+      {
+        id: 5,
+        question: "Which achievement would make you most proud?",
+        options: [
+          { id: "a", text: "Creating an innovative product or system", category: "Technical" },
+          { id: "b", text: "Having your creative work recognized", category: "Creative" },
+          { id: "c", text: "Finding an efficient solution to a complex problem", category: "Analytical" },
+          { id: "d", text: "Successfully leading a team to achieve goals", category: "Leadership" }
+        ]
+      }
+    ]
+  },
+  skills: {
+    title: "Skills Assessment",
+    description: "Identify your strongest skills and areas for development.",
+    questions: [
+      {
+        id: 1,
+        question: "How comfortable are you with learning new technologies?",
+        options: [
+          { id: "a", text: "Very comfortable - I enjoy learning new tech", category: "Technical" },
+          { id: "b", text: "Somewhat comfortable", category: "Mixed" },
+          { id: "c", text: "Neutral", category: "Neutral" },
+          { id: "d", text: "Prefer familiar technologies", category: "Non-Technical" }
+        ]
+      }
+    ]
+  }
+};
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,6 +101,12 @@ const Index = () => {
   const [quizResult, setQuizResult] = useState("");
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
+  const [activeQuiz, setActiveQuiz] = useState("");
+  const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizResults, setQuizResults] = useState<Record<string, number>>({});
+  const [recommendedPaths, setRecommendedPaths] = useState<string[]>([]);
 
   const handleLogin = () => {
     if (email && password) {
@@ -32,7 +114,6 @@ const Index = () => {
       setUserName(email.split("@")[0]);
       setUserRole(role);
       
-      // Find user or create new one
       const user = users.find(u => u.email === email);
       if (user) {
         setPoints(user.points);
@@ -73,6 +154,214 @@ const Index = () => {
     setPoints(newPoints);
     setQuizResult(`You'd excel in ${choice}! Consider studying ${choice}-related fields.`);
     updateBadge(newPoints);
+  };
+
+  const startQuiz = (quizType: string) => {
+    setActiveQuiz(quizType);
+    setCurrentQuestion(1);
+    setAnswers({});
+    setQuizCompleted(false);
+    setQuizResults({});
+    setRecommendedPaths([]);
+  };
+
+  const handleQuizAnswer = (questionId: number, answerId: string) => {
+    setAnswers((prev) => ({
+      ...prev,
+      [questionId]: answerId
+    }));
+  };
+
+  const goToNextQuestion = () => {
+    if (activeQuiz && quizzes[activeQuiz as keyof typeof quizzes]) {
+      const quiz = quizzes[activeQuiz as keyof typeof quizzes];
+      if (currentQuestion < quiz.questions.length) {
+        setCurrentQuestion(currentQuestion + 1);
+      } else {
+        calculateQuizResults();
+      }
+    }
+  };
+
+  const goToPreviousQuestion = () => {
+    if (currentQuestion > 1) {
+      setCurrentQuestion(currentQuestion - 1);
+    }
+  };
+
+  const calculateQuizResults = () => {
+    const quiz = quizzes[activeQuiz as keyof typeof quizzes];
+    const results: Record<string, number> = {};
+    
+    Object.values(quiz.questions).forEach(question => {
+      question.options.forEach(option => {
+        if (!results[option.category]) {
+          results[option.category] = 0;
+        }
+      });
+    });
+    
+    Object.entries(answers).forEach(([questionId, answerId]) => {
+      const question = quiz.questions.find(q => q.id === parseInt(questionId));
+      if (question) {
+        const selectedOption = question.options.find(opt => opt.id === answerId);
+        if (selectedOption) {
+          results[selectedOption.category] = (results[selectedOption.category] || 0) + 1;
+        }
+      }
+    });
+    
+    setQuizResults(results);
+    
+    const sortedCategories = Object.entries(results)
+      .sort((a, b) => b[1] - a[1])
+      .map(([category]) => category);
+    
+    const recommendations: string[] = [];
+    
+    if (sortedCategories[0] === "Technical") {
+      recommendations.push("Software Development", "IT Security", "Network Engineering");
+    } else if (sortedCategories[0] === "Creative") {
+      recommendations.push("UX/UI Design", "Digital Marketing", "Media Production");
+    } else if (sortedCategories[0] === "Analytical") {
+      recommendations.push("Data Analysis", "Business Intelligence", "Financial Analysis");
+    } else if (sortedCategories[0] === "Leadership") {
+      recommendations.push("Project Management", "Business Administration", "Human Resources");
+    }
+    
+    setRecommendedPaths(recommendations);
+    setQuizCompleted(true);
+    
+    const newPoints = points + 100;
+    setPoints(newPoints);
+    updateBadge(newPoints);
+    
+    toast({
+      title: "Quiz Completed!",
+      description: `You've earned 100 Heritage Points for completing the ${quiz.title}.`,
+    });
+  };
+
+  const renderActiveQuestion = () => {
+    if (!activeQuiz || !quizzes[activeQuiz as keyof typeof quizzes]) return null;
+    
+    const quiz = quizzes[activeQuiz as keyof typeof quizzes];
+    const question = quiz.questions.find(q => q.id === currentQuestion);
+    
+    if (!question) return null;
+    
+    return (
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-xl font-semibold">{question.question}</h3>
+          <Progress 
+            value={(currentQuestion / quiz.questions.length) * 100} 
+            className="h-2 w-full"
+          />
+          <p className="text-sm text-gray-500">Question {currentQuestion} of {quiz.questions.length}</p>
+        </div>
+        
+        <RadioGroup 
+          value={answers[question.id] || ""}
+          onValueChange={(value) => handleQuizAnswer(question.id, value)}
+          className="space-y-2"
+        >
+          {question.options.map((option) => (
+            <div key={option.id} className="flex items-center space-x-2 border p-3 rounded-md hover:bg-[#f5e8c7]">
+              <RadioGroupItem value={option.id} id={`option-${option.id}`} />
+              <Label htmlFor={`option-${option.id}`} className="flex-1 cursor-pointer">
+                {option.text}
+              </Label>
+            </div>
+          ))}
+        </RadioGroup>
+        
+        <div className="flex justify-between pt-4">
+          <Button
+            variant="outline"
+            onClick={goToPreviousQuestion}
+            disabled={currentQuestion === 1}
+            className="border-[#d4a373] text-[#2c4a2e]"
+          >
+            Previous
+          </Button>
+          
+          <Button
+            onClick={goToNextQuestion}
+            disabled={!answers[question.id]}
+            className="bg-[#2c4a2e] hover:bg-[#3d6b40]"
+          >
+            {currentQuestion === quiz.questions.length ? "Complete Quiz" : "Next Question"}
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderQuizResults = () => {
+    if (!activeQuiz || !quizCompleted) return null;
+    
+    const quiz = quizzes[activeQuiz as keyof typeof quizzes];
+    const totalQuestions = quiz.questions.length;
+    const sortedResults = Object.entries(quizResults)
+      .sort((a, b) => b[1] - a[1])
+      .map(([category, count]) => ({
+        category,
+        count,
+        percentage: Math.round((count / totalQuestions) * 100)
+      }));
+    
+    return (
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-xl font-bold">Your Results</h3>
+          <p className="text-gray-600">Based on your answers, here's a breakdown of your profile:</p>
+        </div>
+        
+        <div className="space-y-4">
+          {sortedResults.map((result) => (
+            <div key={result.category} className="space-y-1">
+              <div className="flex justify-between">
+                <span className="font-medium">{result.category}</span>
+                <span>{result.percentage}%</span>
+              </div>
+              <Progress value={result.percentage} className="h-2 w-full" />
+            </div>
+          ))}
+        </div>
+        
+        <div className="space-y-2 bg-[#f5e8c7] p-4 rounded-lg border border-[#d4a373]">
+          <h4 className="font-bold">Recommended Career Paths</h4>
+          <ul className="list-disc list-inside space-y-1">
+            {recommendedPaths.map((path) => (
+              <li key={path}>{path}</li>
+            ))}
+          </ul>
+        </div>
+        
+        <div className="flex justify-between pt-4">
+          <Button 
+            variant="outline" 
+            onClick={() => setActiveQuiz("")}
+            className="border-[#d4a373] text-[#2c4a2e]"
+          >
+            Back to Quizzes
+          </Button>
+          <Button 
+            onClick={() => {
+              setActiveQuiz("");
+              toast({
+                title: "Results Saved",
+                description: "Your quiz results have been saved to your profile."
+              });
+            }}
+            className="bg-[#2c4a2e] hover:bg-[#3d6b40]"
+          >
+            Save Results
+          </Button>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -232,70 +521,108 @@ const Index = () => {
               <div className="p-4 bg-white border-2 border-[#d4a373] border-t-0 rounded-b-lg">
                 <TabsContent value="student-tab">
                   <p className="mb-4">Heritage Points: <span className="font-semibold">{points}</span> | <span>{badge}</span></p>
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                    <div className="md:col-span-8">
-                      <Card className="mb-6 border-2 border-[#d4a373]">
-                        <CardContent className="p-6">
-                          <h3 className="text-xl font-bold mb-2">Interest Quiz</h3>
-                          <p className="mb-2">Discover your path:</p>
-                          <div className="flex flex-wrap gap-2">
-                            <Button 
-                              className="bg-[#8b5e34] hover:bg-[#a67447]"
-                              onClick={() => answerQuiz("Tech")}
-                            >
-                              Tech
-                            </Button>
-                            <Button 
-                              className="bg-[#8b5e34] hover:bg-[#a67447]"
-                              onClick={() => answerQuiz("Business")}
-                            >
-                              Business
-                            </Button>
-                            <Button 
-                              className="bg-[#8b5e34] hover:bg-[#a67447]"
-                              onClick={() => answerQuiz("Arts")}
-                            >
-                              Arts
-                            </Button>
+                  
+                  {!activeQuiz ? (
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                      <div className="md:col-span-8">
+                        <Card className="mb-6 border-2 border-[#d4a373]">
+                          <CardHeader>
+                            <CardTitle>Career Exploration</CardTitle>
+                            <CardDescription>Discover your strengths and ideal career paths</CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            {quizzes.interests && (
+                              <Card className="overflow-hidden">
+                                <div className="bg-[#f5e8c7] p-4">
+                                  <h3 className="text-lg font-bold">{quizzes.interests.title}</h3>
+                                  <p className="text-sm">{quizzes.interests.description}</p>
+                                </div>
+                                <CardContent className="p-4">
+                                  <p className="mb-2 text-sm">5 questions • Approximately 3-5 minutes</p>
+                                  <Button 
+                                    onClick={() => startQuiz("interests")}
+                                    className="w-full bg-[#2c4a2e] hover:bg-[#3d6b40]"
+                                  >
+                                    Start Quiz
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            )}
+                            
+                            {quizzes.skills && (
+                              <Card className="overflow-hidden">
+                                <div className="bg-[#f5e8c7] p-4">
+                                  <h3 className="text-lg font-bold">{quizzes.skills.title}</h3>
+                                  <p className="text-sm">{quizzes.skills.description}</p>
+                                </div>
+                                <CardContent className="p-4">
+                                  <p className="mb-2 text-sm">Coming soon</p>
+                                  <Button 
+                                    disabled
+                                    className="w-full bg-gray-400"
+                                  >
+                                    Coming Soon
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            )}
+                            
+                            <div className="bg-[#f5e8c7] p-4 rounded-lg border border-[#d4a373]">
+                              <h3 className="font-semibold">Why Take Career Assessments?</h3>
+                              <ul className="list-disc list-inside mt-2 text-sm space-y-1">
+                                <li>Discover your natural strengths and interests</li>
+                                <li>Find careers that match your personality</li>
+                                <li>Earn Heritage Points for your journey</li>
+                                <li>Get personalized recommendations</li>
+                              </ul>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card className="mb-6 border-2 border-[#d4a373]">
+                          <CardHeader>
+                            <CardTitle>Workshops & Awareness</CardTitle>
+                            <CardDescription>Expand your knowledge with expert-led sessions</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <ul className="bg-[#f5e8c7] rounded-lg divide-y divide-[#d4a373] overflow-hidden">
+                              <li className="p-3 hover:bg-[#e8d5a8]">
+                                <a href="#" className="text-[#2c4a2e] hover:underline">Tech Careers 2025 (TechCorp)</a>
+                              </li>
+                              <li className="p-3 hover:bg-[#e8d5a8]">
+                                <a href="#" className="text-[#2c4a2e] hover:underline">Business Trends in UAE (BizInst)</a>
+                              </li>
+                              <li className="p-3 hover:bg-[#e8d5a8]">
+                                <a href="#" className="text-[#2c4a2e] hover:underline">Creative Futures (ArtCo)</a>
+                              </li>
+                            </ul>
+                            <p className="mt-4">More sessions coming soon!</p>
+                          </CardContent>
+                        </Card>
+                      </div>
+                      
+                      <div className="md:col-span-4">
+                        <h3 className="text-xl font-bold mb-4">Your Journey</h3>
+                        <div className="h-[300px] border-2 border-[#d4a373] rounded-lg bg-gray-100">
+                          <div className="flex items-center justify-center h-full">
+                            <p className="text-center text-gray-500">Map visualization coming soon</p>
                           </div>
-                          {quizResult && (
-                            <p className="mt-4 font-medium">{quizResult}</p>
-                          )}
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="mb-6 border-2 border-[#d4a373]">
-                        <CardContent className="p-6">
-                          <h3 className="text-xl font-bold mb-2">Workshops & Awareness</h3>
-                          <p className="mb-2">Watch recorded sessions from our partners:</p>
-                          <ul className="bg-[#f5e8c7] rounded-lg divide-y divide-[#d4a373] overflow-hidden">
-                            <li className="p-3 hover:bg-[#e8d5a8]">
-                              <a href="#" className="text-[#2c4a2e] hover:underline">Tech Careers 2025 (TechCorp)</a>
-                            </li>
-                            <li className="p-3 hover:bg-[#e8d5a8]">
-                              <a href="#" className="text-[#2c4a2e] hover:underline">Business Trends in UAE (BizInst)</a>
-                            </li>
-                            <li className="p-3 hover:bg-[#e8d5a8]">
-                              <a href="#" className="text-[#2c4a2e] hover:underline">Creative Futures (ArtCo)</a>
-                            </li>
-                          </ul>
-                          <p className="mt-4">More sessions coming soon!</p>
-                        </CardContent>
-                      </Card>
-                      
-                      {/* We'll add additional student tab content in the next implementation phase */}
-                    </div>
-                    
-                    <div className="md:col-span-4">
-                      <h3 className="text-xl font-bold mb-4">Your Journey</h3>
-                      <div className="h-[300px] border-2 border-[#d4a373] rounded-lg bg-gray-100">
-                        {/* Map will be implemented in the next phase */}
-                        <div className="flex items-center justify-center h-full">
-                          <p className="text-center text-gray-500">Map visualization coming soon</p>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <Card className="border-2 border-[#d4a373]">
+                      <CardHeader>
+                        <CardTitle>{quizzes[activeQuiz as keyof typeof quizzes]?.title}</CardTitle>
+                        <CardDescription>
+                          {quizzes[activeQuiz as keyof typeof quizzes]?.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        {quizCompleted ? renderQuizResults() : renderActiveQuestion()}
+                      </CardContent>
+                    </Card>
+                  )}
                 </TabsContent>
                 
                 <TabsContent value="parent-tab">
