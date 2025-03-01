@@ -21,14 +21,21 @@ interface JobLocation {
   distance?: number;
 }
 
-const JobMap = ({ jobs = [] }: { jobs: JobLocation[] }) => {
+interface JobMapProps {
+  jobs: JobLocation[];
+  onLocationUpdate?: (jobs: JobLocation[]) => void;
+}
+
+const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const marker = useRef<mapboxgl.Marker | null>(null);
   const [mapboxToken, setMapboxToken] = useState<string>('');
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [searchRadius, setSearchRadius] = useState<number>(10); // in kilometers
   const [nearbyJobs, setNearbyJobs] = useState<JobLocation[]>([]);
   const [tokenSubmitted, setTokenSubmitted] = useState<boolean>(false);
+  const [locationSearch, setLocationSearch] = useState<string>('');
   const { toast } = useToast();
 
   // Initialize map when token is submitted
@@ -41,7 +48,7 @@ const JobMap = ({ jobs = [] }: { jobs: JobLocation[] }) => {
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/streets-v11',
-        center: userLocation || [0, 0],
+        center: userLocation || [55.2708, 25.2048], // Default to Dubai
         zoom: 11
       });
 
@@ -88,16 +95,48 @@ const JobMap = ({ jobs = [] }: { jobs: JobLocation[] }) => {
       // Add job markers
       jobs.forEach(job => {
         if (map.current && job.location) {
-          new mapboxgl.Marker({ color: '#f59e0b' })
-            .setLngLat([job.location.longitude, job.location.latitude])
-            .setPopup(
-              new mapboxgl.Popup().setHTML(
-                `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address}</p>`
+          if (job.id === "workplace" && onLocationUpdate) {
+            // Create a draggable marker for the workplace
+            marker.current = new mapboxgl.Marker({ color: '#f59e0b', draggable: true })
+              .setLngLat([job.location.longitude, job.location.latitude])
+              .setPopup(
+                new mapboxgl.Popup().setHTML(
+                  `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || "Drag to set location"}</p>`
+                )
               )
-            )
-            .addTo(map.current);
+              .addTo(map.current);
+            
+            // Update job location when marker is dragged
+            marker.current.on('dragend', () => {
+              if (marker.current) {
+                const lngLat = marker.current.getLngLat();
+                // Reverse geocode to get address
+                reverseGeocode(lngLat.lat, lngLat.lng);
+              }
+            });
+          } else {
+            // Regular non-draggable marker
+            new mapboxgl.Marker({ color: '#f59e0b' })
+              .setLngLat([job.location.longitude, job.location.latitude])
+              .setPopup(
+                new mapboxgl.Popup().setHTML(
+                  `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address}</p>`
+                )
+              )
+              .addTo(map.current);
+          }
         }
       });
+
+      // Add click handler to set location if we're in edit mode
+      if (onLocationUpdate) {
+        map.current.on('click', (e) => {
+          if (marker.current) {
+            marker.current.setLngLat([e.lngLat.lng, e.lngLat.lat]);
+            reverseGeocode(e.lngLat.lat, e.lngLat.lng);
+          }
+        });
+      }
     } catch (error) {
       console.error('Error initializing map:', error);
       toast({
@@ -111,6 +150,99 @@ const JobMap = ({ jobs = [] }: { jobs: JobLocation[] }) => {
       map.current?.remove();
     };
   }, [tokenSubmitted, jobs, mapboxToken]);
+
+  // Reverse geocode to get address from coordinates
+  const reverseGeocode = async (lat: number, lng: number) => {
+    if (!mapboxToken) return;
+    
+    try {
+      const response = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxToken}`
+      );
+      const data = await response.json();
+      
+      if (data.features && data.features.length > 0) {
+        const address = data.features[0].place_name;
+        
+        // Update the job data with new coordinates and address
+        const updatedJobs = jobs.map(job => 
+          job.id === "workplace" 
+            ? { 
+                ...job, 
+                location: { 
+                  ...job.location, 
+                  latitude: lat, 
+                  longitude: lng, 
+                  address 
+                } 
+              } 
+            : job
+        );
+        
+        // Call the callback with updated job data
+        if (onLocationUpdate) {
+          onLocationUpdate(updatedJobs);
+        }
+      }
+    } catch (error) {
+      console.error('Error in reverse geocoding:', error);
+    }
+  };
+
+  // Search for a location
+  const searchLocation = async () => {
+    if (!locationSearch || !mapboxToken || !map.current) return;
+    
+    try {
+      const response = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(locationSearch)}.json?access_token=${mapboxToken}`
+      );
+      const data = await response.json();
+      
+      if (data.features && data.features.length > 0) {
+        const [lng, lat] = data.features[0].center;
+        const address = data.features[0].place_name;
+        
+        // Fly to the location
+        map.current.flyTo({
+          center: [lng, lat],
+          zoom: 14
+        });
+        
+        // Move the marker if in edit mode
+        if (marker.current && onLocationUpdate) {
+          marker.current.setLngLat([lng, lat]);
+          
+          // Update the job data
+          const updatedJobs = jobs.map(job => 
+            job.id === "workplace" 
+              ? { 
+                  ...job, 
+                  location: { 
+                    ...job.location, 
+                    latitude: lat, 
+                    longitude: lng, 
+                    address 
+                  } 
+                } 
+              : job
+          );
+          
+          if (onLocationUpdate) {
+            onLocationUpdate(updatedJobs);
+          }
+        }
+      } else {
+        toast({
+          title: 'Location Not Found',
+          description: 'Could not find the specified location.',
+          variant: 'destructive'
+        });
+      }
+    } catch (error) {
+      console.error('Error searching location:', error);
+    }
+  };
 
   // Find jobs within the search radius
   const findNearbyJobs = (latitude: number, longitude: number) => {
@@ -193,6 +325,26 @@ const JobMap = ({ jobs = [] }: { jobs: JobLocation[] }) => {
         </Card>
       ) : (
         <>
+          {onLocationUpdate && (
+            <div className="mb-4">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Search for a location..."
+                  value={locationSearch}
+                  onChange={(e) => setLocationSearch(e.target.value)}
+                  className="flex-1"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') searchLocation();
+                  }}
+                />
+                <Button onClick={searchLocation}>Search</Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Search for a location or click on the map to place the marker. Drag the marker to adjust the position.
+              </p>
+            </div>
+          )}
+          
           <div className="flex items-center gap-4 mb-4">
             <MapPinIcon className="text-emirati-oasisGreen" />
             <div className="flex-1">
