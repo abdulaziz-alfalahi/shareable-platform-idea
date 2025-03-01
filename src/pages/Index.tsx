@@ -1,102 +1,90 @@
 
-import { Link } from "react-router-dom";
-import { FileText, Briefcase, MapPin, Award, GraduationCap } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { 
+  GraduationCap, 
+  FileText, 
+  MapPin, 
+  Award, 
+  BookOpen,
+  User,
+  Users
+} from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
+
+  const applications = [
+    {
+      title: "Resume Builder",
+      description: "Create professional resumes tailored to your dream job",
+      icon: <FileText className="h-5 w-5" />,
+      path: "/resume-builder",
+    },
+    {
+      title: "Job Applications",
+      description: "Track and manage your job applications in one place",
+      icon: <BookOpen className="h-5 w-5" />,
+      path: "/job-applications",
+    },
+    {
+      title: "Job Location Matching",
+      description: "Find jobs that match your preferred locations",
+      icon: <MapPin className="h-5 w-5" />,
+      path: "/job-location-matching",
+    },
+    {
+      title: "Achievements",
+      description: "Showcase your personal and academic achievements",
+      icon: <Award className="h-5 w-5" />,
+      path: "/achievements",
+    },
+    {
+      title: "Student Dashboard",
+      description: "View your academic progress and career opportunities",
+      icon: <GraduationCap className="h-5 w-5" />,
+      path: "/student-dashboard",
+    },
+    {
+      title: "Recruiter Dashboard",
+      description: "Manage job vacancies and find top matching candidates",
+      icon: <Users className="h-5 w-5" />,
+      path: "/recruiter-dashboard",
+    },
+  ];
+
   return (
-    <div className="container mx-auto py-8 px-4 bg-emirati-sandstone min-h-screen">
+    <div className="container mx-auto px-4 py-8 md:py-12 md:px-6 lg:py-16">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-3 text-emirati-oasisGreen">Job Search Assistant</h1>
-        <p className="text-lg text-emirati-camelBrown max-w-2xl mx-auto">
-          Your all-in-one platform for managing job applications, building professional resumes, and tracking your career progress.
+        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-2">
+          Career Services Platform
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Empowering students and graduates to build their careers and connect with employers
         </p>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        <Link 
-          to="/resume-builder" 
-          className="flex flex-col bg-white rounded-lg border border-emirati-desertGold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
-        >
-          <div className="bg-emirati-oasisGreen p-4 rounded-t-lg flex items-center justify-center">
-            <FileText className="text-white h-8 w-8" />
-          </div>
-          <div className="p-6 flex-grow">
-            <h5 className="mb-2 text-xl font-bold tracking-tight text-emirati-oasisGreen">
-              Resume Builder
-            </h5>
-            <p className="font-normal text-emirati-camelBrown">
-              Create professional resumes with templates, export to PDF, and import from existing sources
-            </p>
-          </div>
-        </Link>
-        
-        <Link 
-          to="/job-applications" 
-          className="flex flex-col bg-white rounded-lg border border-emirati-desertGold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
-        >
-          <div className="bg-emirati-oasisGreen p-4 rounded-t-lg flex items-center justify-center">
-            <Briefcase className="text-white h-8 w-8" />
-          </div>
-          <div className="p-6 flex-grow">
-            <h5 className="mb-2 text-xl font-bold tracking-tight text-emirati-oasisGreen">
-              Job Applications
-            </h5>
-            <p className="font-normal text-emirati-camelBrown">
-              Track and manage your job applications, deadlines, and interview status
-            </p>
-          </div>
-        </Link>
-        
-        <Link 
-          to="/job-location-matching" 
-          className="flex flex-col bg-white rounded-lg border border-emirati-desertGold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
-        >
-          <div className="bg-emirati-oasisGreen p-4 rounded-t-lg flex items-center justify-center">
-            <MapPin className="text-white h-8 w-8" />
-          </div>
-          <div className="p-6 flex-grow">
-            <h5 className="mb-2 text-xl font-bold tracking-tight text-emirati-oasisGreen">
-              Location Matching
-            </h5>
-            <p className="font-normal text-emirati-camelBrown">
-              Find jobs in your preferred locations with interactive map visualization
-            </p>
-          </div>
-        </Link>
-        
-        <Link 
-          to="/achievements" 
-          className="flex flex-col bg-white rounded-lg border border-emirati-desertGold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
-        >
-          <div className="bg-emirati-oasisGreen p-4 rounded-t-lg flex items-center justify-center">
-            <Award className="text-white h-8 w-8" />
-          </div>
-          <div className="p-6 flex-grow">
-            <h5 className="mb-2 text-xl font-bold tracking-tight text-emirati-oasisGreen">
-              Achievements
-            </h5>
-            <p className="font-normal text-emirati-camelBrown">
-              Track your progress, earn points, and celebrate your job search milestones
-            </p>
-          </div>
-        </Link>
-        
-        <Link 
-          to="/student-dashboard" 
-          className="flex flex-col bg-white rounded-lg border border-emirati-desertGold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
-        >
-          <div className="bg-emirati-oasisGreen p-4 rounded-t-lg flex items-center justify-center">
-            <GraduationCap className="text-white h-8 w-8" />
-          </div>
-          <div className="p-6 flex-grow">
-            <h5 className="mb-2 text-xl font-bold tracking-tight text-emirati-oasisGreen">
-              Student Dashboard
-            </h5>
-            <p className="font-normal text-emirati-camelBrown">
-              Take career quizzes, explore pathways, and discover skills needed for future jobs
-            </p>
-          </div>
-        </Link>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {applications.map((app, index) => (
+          <Card key={index} className="hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center gap-4">
+              <div className="bg-primary/10 p-2 rounded-full">{app.icon}</div>
+              <div>
+                <CardTitle>{app.title}</CardTitle>
+                <CardDescription className="mt-1.5">{app.description}</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Button
+                className="w-full"
+                onClick={() => navigate(app.path)}
+              >
+                Access
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );
