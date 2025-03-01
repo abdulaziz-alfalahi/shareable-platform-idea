@@ -197,11 +197,18 @@ const RecruiterDashboard = () => {
     setIsAIMatchDialogOpen(true);
   };
 
-  const handleLocationSelect = (coordinates: { latitude: number; longitude: number }) => {
-    setNewVacancy({
-      ...newVacancy,
-      coordinates: coordinates
-    });
+  const handleLocationUpdate = (updatedJobs: any[]) => {
+    if (updatedJobs.length > 0 && updatedJobs[0].id === "workplace") {
+      const workplaceJob = updatedJobs[0];
+      setNewVacancy({
+        ...newVacancy,
+        location: workplaceJob.location.address || "",
+        coordinates: {
+          latitude: workplaceJob.location.latitude,
+          longitude: workplaceJob.location.longitude
+        }
+      });
+    }
   };
 
   const closeDialog = (selector: string) => {
@@ -210,6 +217,30 @@ const RecruiterDashboard = () => {
       (element as HTMLElement).click();
     }
   };
+
+  const createWorkplaceJob = (latitude: number, longitude: number, address: string = "") => {
+    return [{
+      id: "workplace",
+      title: "Workplace Location",
+      company: newVacancy.title || "New Position",
+      location: {
+        latitude,
+        longitude,
+        address: address || newVacancy.location || "Workplace Location"
+      }
+    }];
+  };
+
+  const selectedVacancyJobs = selectedVacancy ? [{
+    id: selectedVacancy.id.toString(),
+    title: selectedVacancy.title,
+    company: selectedVacancy.department,
+    location: {
+      latitude: selectedVacancy.coordinates.latitude,
+      longitude: selectedVacancy.coordinates.longitude,
+      address: selectedVacancy.location
+    }
+  }] : [];
 
   return (
     <div className="container mx-auto py-8">
@@ -484,9 +515,12 @@ const RecruiterDashboard = () => {
               <Label>Location on Map</Label>
               <div className="h-[300px] border rounded-md overflow-hidden">
                 <JobMap 
-                  center={newVacancy.coordinates}
-                  onLocationSelect={handleLocationSelect}
-                  mapboxAccessToken="pk.eyJ1IjoibG92YWJsZSIsImEiOiJjbHpvN2ZidjcwYzl1MmtwN3J4Z3R0azNpIn0.ixdpyOQCH2Jh-KgiIOjpuA"
+                  jobs={createWorkplaceJob(
+                    newVacancy.coordinates.latitude,
+                    newVacancy.coordinates.longitude,
+                    newVacancy.location
+                  )}
+                  onLocationUpdate={handleLocationUpdate}
                 />
               </div>
               <p className="text-sm text-muted-foreground">
@@ -568,9 +602,7 @@ const RecruiterDashboard = () => {
                 <p className="text-sm font-medium mb-2">Location on Map</p>
                 <div className="h-[300px] border rounded-md overflow-hidden">
                   <JobMap 
-                    center={selectedVacancy.coordinates}
-                    readonly={true}
-                    mapboxAccessToken="pk.eyJ1IjoibG92YWJsZSIsImEiOiJjbHpvN2ZidjcwYzl1MmtwN3J4Z3R0azNpIn0.ixdpyOQCH2Jh-KgiIOjpuA"
+                    jobs={selectedVacancyJobs}
                   />
                 </div>
               </div>
