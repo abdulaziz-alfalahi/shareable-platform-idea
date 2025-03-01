@@ -1,4 +1,4 @@
-
+<lov-code>
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
@@ -12,7 +12,7 @@ import {
   Award,
   RefreshCw,
   GraduationCap,
-  FileText,
+  FileText as FileIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -582,7 +582,7 @@ const StudentDashboard = () => {
                   <Card>
                     <CardContent className="pt-6">
                       <div className="flex flex-col items-center text-center">
-                        <FileText size={32} className="text-emirati-oasisGreen mb-2" />
+                        <FileIcon size={32} className="text-emirati-oasisGreen mb-2" />
                         <h4 className="font-medium">Update Your Resume</h4>
                         <p className="text-sm text-muted-foreground mt-1">
                           Tailor your resume to highlight relevant skills
@@ -717,7 +717,7 @@ const StudentDashboard = () => {
                               strokeWidth={2}
                               dot={{ r: 4 }}
                               activeDot={{ r: 6 }}
-                              strokeDasharray={(d) => d.projected ? "5 5" : "0 0"}
+                              strokeDasharray={selectedPathway.marketData.map(d => d.projected ? "5 5" : "0 0")}
                             />
                           </LineChart>
                         </ResponsiveContainer>
@@ -754,84 +754,4 @@ const StudentDashboard = () => {
                     <Legend />
                     <Bar dataKey="demand2023" name="Demand 2023" fill="#8b5e34" />
                     <Bar dataKey="demand2024" name="Demand 2024" fill="#2c4a2e" />
-                    <Bar dataKey="projected2025" name="Projected 2025" fill="#2c4a2e" opacity={0.6} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {futureRequirements.map((category, index) => (
-                  <Card key={index}>
-                    <CardHeader>
-                      <CardTitle className="text-lg">{category.category}</CardTitle>
-                      <CardDescription>
-                        Future importance ratings
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {category.skills.map((skill, idx) => (
-                        <div key={idx} className="space-y-1">
-                          <div className="flex justify-between">
-                            <span className="text-sm font-medium">{skill.name}</span>
-                            <span className="text-sm text-muted-foreground">{skill.importance}%</span>
-                          </div>
-                          <Progress value={skill.importance} className="h-2" />
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Emerging Skills by Industry</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-slate-100">
-                        <th className="text-left p-3 border">Skill</th>
-                        <th className="text-left p-3 border">Demand Growth</th>
-                        <th className="text-left p-3 border">Top Industries</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {marketTrends.map((trend, index) => (
-                        <tr key={index} className="border-b hover:bg-slate-50">
-                          <td className="p-3 border font-medium">{trend.skill}</td>
-                          <td className="p-3 border">
-                            <div className="flex items-center">
-                              <span className="text-green-600 font-medium">
-                                +{trend.projected2025 - trend.demand2023}% 
-                              </span>
-                              <span className="ml-2 text-xs text-muted-foreground">
-                                (2023-2025)
-                              </span>
-                            </div>
-                          </td>
-                          <td className="p-3 border">
-                            <div className="flex flex-wrap gap-1">
-                              {trend.industries.map((industry, idx) => (
-                                <span 
-                                  key={idx} 
-                                  className="inline-block px-2 py-1 text-xs bg-slate-100 rounded-full"
-                                >
-                                  {industry}
-                                </span>
-                              ))}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default StudentDashboard;
+                    <
