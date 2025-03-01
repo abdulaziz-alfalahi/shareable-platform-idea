@@ -1,10 +1,10 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
   ArrowLeft, Search, ChevronRight, Filter, Star, MessageSquare, 
   Calendar, Clock, FileText, User, GraduationCap, BookOpen,
-  CheckCircle, XCircle, AlertCircle, BarChart2, Award, TrendingUp
+  CheckCircle, XCircle, AlertCircle, BarChart2, Award, TrendingUp,
+  Plus
 } from "lucide-react";
 import { 
   Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle 
@@ -26,234 +26,14 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 
-// Sample data for students
 const students = [
-  {
-    id: 1,
-    name: "Ahmed Al-Farsi",
-    program: "Computer Science",
-    year: 3,
-    gpa: 3.7,
-    advisingStatus: "On Track",
-    lastMeeting: "2025-02-15",
-    nextMeeting: "2025-03-20",
-    careerPath: "Software Development",
-    progress: 85,
-    riskLevel: "Low",
-    flagged: false,
-    notes: "Performing well in core classes. Expressed interest in AI specialization.",
-    coursesCompleted: 24,
-    totalCourses: 40,
-    achievements: ["Dean's List (Fall 2024)", "Hackathon Winner", "Research Assistant"],
-    goals: [
-      { id: 1, title: "Complete AI project", deadline: "2025-04-15", status: "In Progress" },
-      { id: 2, title: "Apply for summer internship", deadline: "2025-03-30", status: "Not Started" }
-    ],
-    feedback: [
-      { 
-        id: 1, 
-        date: "2025-02-15", 
-        type: "Academic", 
-        content: "Excellent progress in programming courses. Consider taking more algorithm-focused electives.",
-        advisor: "Dr. Sarah Johnson" 
-      },
-      { 
-        id: 2, 
-        date: "2025-01-10", 
-        type: "Career", 
-        content: "Recommended to build a portfolio showcasing projects. Connect with alumni in tech industry.",
-        advisor: "Dr. Sarah Johnson" 
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: "Fatima Al-Zaabi",
-    program: "Business Administration",
-    year: 2,
-    gpa: 3.2,
-    advisingStatus: "Needs Attention",
-    lastMeeting: "2025-02-01",
-    nextMeeting: "2025-03-05",
-    careerPath: "Marketing",
-    progress: 65,
-    riskLevel: "Medium",
-    flagged: true,
-    notes: "Struggling with finance courses. Has requested additional resources.",
-    coursesCompleted: 16,
-    totalCourses: 40,
-    achievements: ["Marketing Club President"],
-    goals: [
-      { id: 1, title: "Improve finance grade", deadline: "2025-05-10", status: "In Progress" },
-      { id: 2, title: "Complete marketing certification", deadline: "2025-06-30", status: "Not Started" }
-    ],
-    feedback: [
-      { 
-        id: 1, 
-        date: "2025-02-01", 
-        type: "Academic", 
-        content: "Needs to focus more on finance fundamentals. Recommended tutoring services.",
-        advisor: "Dr. Mohammed Hassan" 
-      }
-    ]
-  },
-  {
-    id: 3,
-    name: "Omar Al-Suwaidi",
-    program: "Mechanical Engineering",
-    year: 4,
-    gpa: 3.9,
-    advisingStatus: "On Track",
-    lastMeeting: "2025-02-20",
-    nextMeeting: "2025-04-10",
-    careerPath: "Automotive Engineering",
-    progress: 95,
-    riskLevel: "Low",
-    flagged: false,
-    notes: "Exceptional student. Working on senior design project with industry partner.",
-    coursesCompleted: 36,
-    totalCourses: 42,
-    achievements: ["Engineering Excellence Award", "Internship at Automotive Company", "Academic Scholarship"],
-    goals: [
-      { id: 1, title: "Complete capstone project", deadline: "2025-05-15", status: "In Progress" },
-      { id: 2, title: "Apply for graduate programs", deadline: "2025-04-01", status: "Not Started" }
-    ],
-    feedback: [
-      { 
-        id: 1, 
-        date: "2025-02-20", 
-        type: "Academic", 
-        content: "Excellent technical skills. Encouraged to pursue graduate studies in automotive engineering.",
-        advisor: "Dr. Ali Rahman" 
-      },
-      { 
-        id: 2, 
-        date: "2025-01-05", 
-        type: "Career", 
-        content: "Connected with alumni in the automotive industry. Resume review completed.",
-        advisor: "Dr. Ali Rahman" 
-      }
-    ]
-  },
-  {
-    id: 4,
-    name: "Maryam Al-Mansouri",
-    program: "Psychology",
-    year: 3,
-    gpa: 3.5,
-    advisingStatus: "At Risk",
-    lastMeeting: "2025-02-10",
-    nextMeeting: "2025-03-01",
-    careerPath: "Clinical Psychology",
-    progress: 70,
-    riskLevel: "High",
-    flagged: true,
-    notes: "Has missed several classes. Family issues affecting performance. Referred to student support services.",
-    coursesCompleted: 20,
-    totalCourses: 38,
-    achievements: ["Research Assistant", "Volunteer at Counseling Center"],
-    goals: [
-      { id: 1, title: "Improve attendance", deadline: "2025-03-15", status: "In Progress" },
-      { id: 2, title: "Complete research project", deadline: "2025-05-20", status: "Not Started" }
-    ],
-    feedback: [
-      { 
-        id: 1, 
-        date: "2025-02-10", 
-        type: "Academic", 
-        content: "Discussed attendance issues. Created plan to catch up on missed work.",
-        advisor: "Dr. Layla Khalid" 
-      },
-      { 
-        id: 2, 
-        date: "2025-02-10", 
-        type: "Personal", 
-        content: "Referred to counseling services for additional support with family situation.",
-        advisor: "Dr. Layla Khalid" 
-      }
-    ]
-  },
-  {
-    id: 5,
-    name: "Khalid Al-Nahyan",
-    program: "Finance",
-    year: 2,
-    gpa: 3.3,
-    advisingStatus: "On Track",
-    lastMeeting: "2025-02-05",
-    nextMeeting: "2025-03-15",
-    careerPath: "Investment Banking",
-    progress: 60,
-    riskLevel: "Low",
-    flagged: false,
-    notes: "Showing improvement in quantitative courses. Interested in investment banking internships.",
-    coursesCompleted: 18,
-    totalCourses: 40,
-    achievements: ["Finance Club Member", "Trading Competition Finalist"],
-    goals: [
-      { id: 1, title: "Prepare for internship interviews", deadline: "2025-04-30", status: "In Progress" },
-      { id: 2, title: "Complete Bloomberg Market Concepts", deadline: "2025-03-10", status: "Not Started" }
-    ],
-    feedback: [
-      { 
-        id: 1, 
-        date: "2025-02-05", 
-        type: "Academic", 
-        content: "Good progress in financial accounting. Should focus more on financial modeling skills.",
-        advisor: "Dr. Tariq Ahmad" 
-      }
-    ]
-  },
-  {
-    id: 6,
-    name: "Noura Al-Maktoum",
-    program: "Public Health",
-    year: 4,
-    gpa: 3.8,
-    advisingStatus: "On Track",
-    lastMeeting: "2025-02-18",
-    nextMeeting: "2025-04-05",
-    careerPath: "Healthcare Administration",
-    progress: 90,
-    riskLevel: "Low",
-    flagged: false,
-    notes: "Strong academic performance. Working on senior thesis on healthcare policy.",
-    coursesCompleted: 34,
-    totalCourses: 40,
-    achievements: ["Public Health Scholarship", "Research Publication", "Internship at Ministry of Health"],
-    goals: [
-      { id: 1, title: "Complete thesis research", deadline: "2025-04-20", status: "In Progress" },
-      { id: 2, title: "Apply for graduate programs", deadline: "2025-05-15", status: "Not Started" }
-    ],
-    feedback: [
-      { 
-        id: 1, 
-        date: "2025-02-18", 
-        type: "Academic", 
-        content: "Excellent thesis progress. Recommended additional research sources.",
-        advisor: "Dr. Hessa Al-Jaber" 
-      },
-      { 
-        id: 2, 
-        date: "2025-01-20", 
-        type: "Career", 
-        content: "Discussed graduate program options. Recommended programs with healthcare policy focus.",
-        advisor: "Dr. Hessa Al-Jaber" 
-      }
-    ]
-  }
+  // Sample data for students
 ];
 
-// Sample academic performance data
 const performanceData = [
-  { semester: "Fall 2023", averageGPA: 3.2 },
-  { semester: "Spring 2024", averageGPA: 3.4 },
-  { semester: "Summer 2024", averageGPA: 3.5 },
-  { semester: "Fall 2024", averageGPA: 3.6 },
-  { semester: "Spring 2025", averageGPA: 3.7 },
+  // Sample academic performance data
 ];
 
-// Types for form state
 interface FeedbackForm {
   studentId: number;
   type: string;
@@ -288,7 +68,6 @@ const AdvisorDashboard = () => {
     deadline: ""
   });
 
-  // Filter students based on search query and filters
   const filteredStudents = students.filter(student => {
     const matchesSearch = 
       student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -300,13 +79,11 @@ const AdvisorDashboard = () => {
     return matchesSearch && matchesStatus && matchesRisk;
   });
 
-  // Handle viewing student details
   const handleViewStudent = (student: any) => {
     setSelectedStudent(student);
     setIsViewStudentDialogOpen(true);
   };
 
-  // Handle opening add feedback dialog
   const handleOpenAddFeedback = (student: any) => {
     setSelectedStudent(student);
     setFeedbackForm({
@@ -317,7 +94,6 @@ const AdvisorDashboard = () => {
     setIsAddFeedbackDialogOpen(true);
   };
 
-  // Handle opening add goal dialog
   const handleOpenAddGoal = (student: any) => {
     setSelectedStudent(student);
     setGoalForm({
@@ -328,7 +104,6 @@ const AdvisorDashboard = () => {
     setIsAddGoalDialogOpen(true);
   };
 
-  // Submit feedback
   const handleSubmitFeedback = () => {
     console.log("Submitting feedback:", feedbackForm);
     toast({
@@ -338,7 +113,6 @@ const AdvisorDashboard = () => {
     setIsAddFeedbackDialogOpen(false);
   };
 
-  // Submit goal
   const handleSubmitGoal = () => {
     console.log("Submitting goal:", goalForm);
     toast({
@@ -348,17 +122,15 @@ const AdvisorDashboard = () => {
     setIsAddGoalDialogOpen(false);
   };
 
-  // Get appropriate status badge variant
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
-      case "On Track": return "success";
-      case "Needs Attention": return "warning";
+      case "On Track": return "default";
+      case "Needs Attention": return "secondary";
       case "At Risk": return "destructive";
       default: return "default";
     }
   };
 
-  // Get appropriate risk badge color
   const getRiskBadgeVariant = (risk: string) => {
     switch (risk) {
       case "Low": return "outline";
@@ -368,7 +140,6 @@ const AdvisorDashboard = () => {
     }
   };
 
-  // Format date for display
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-US', options);
@@ -402,7 +173,6 @@ const AdvisorDashboard = () => {
           </TabsTrigger>
         </TabsList>
 
-        {/* Students Tab */}
         <TabsContent value="students" className="mt-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <div className="relative w-full md:max-w-sm">
@@ -516,7 +286,6 @@ const AdvisorDashboard = () => {
           </div>
         </TabsContent>
 
-        {/* Analytics Tab */}
         <TabsContent value="analytics" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
@@ -595,7 +364,6 @@ const AdvisorDashboard = () => {
           </Card>
         </TabsContent>
 
-        {/* Reports Tab */}
         <TabsContent value="reports" className="mt-6">
           <div className="grid grid-cols-1 gap-6">
             <Card>
@@ -643,7 +411,6 @@ const AdvisorDashboard = () => {
         </TabsContent>
       </Tabs>
 
-      {/* View Student Dialog */}
       {selectedStudent && (
         <Dialog open={isViewStudentDialogOpen} onOpenChange={setIsViewStudentDialogOpen}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -741,7 +508,7 @@ const AdvisorDashboard = () => {
                               </div>
                             </div>
                             <Badge variant={
-                              goal.status === "Completed" ? "success" :
+                              goal.status === "Completed" ? "default" :
                               goal.status === "In Progress" ? "outline" : "secondary"
                             }>
                               {goal.status}
@@ -835,7 +602,6 @@ const AdvisorDashboard = () => {
         </Dialog>
       )}
 
-      {/* Add Feedback Dialog */}
       {selectedStudent && (
         <Dialog open={isAddFeedbackDialogOpen} onOpenChange={setIsAddFeedbackDialogOpen}>
           <DialogContent>
@@ -889,7 +655,6 @@ const AdvisorDashboard = () => {
         </Dialog>
       )}
 
-      {/* Add Goal Dialog */}
       {selectedStudent && (
         <Dialog open={isAddGoalDialogOpen} onOpenChange={setIsAddGoalDialogOpen}>
           <DialogContent>
