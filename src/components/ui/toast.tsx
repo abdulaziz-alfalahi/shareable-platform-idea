@@ -30,10 +30,28 @@ const toastVariants = cva(
         default: "border bg-background text-foreground",
         destructive:
           "destructive group border-destructive bg-destructive text-destructive-foreground",
+        advisor: "border-blue-500 bg-blue-50 text-blue-800 dark:bg-blue-900 dark:text-blue-100",
+        recruiter: "border-purple-500 bg-purple-50 text-purple-800 dark:bg-purple-900 dark:text-purple-100",
+        student: "border-green-500 bg-green-50 text-green-800 dark:bg-green-900 dark:text-green-100",
+        success: "border-green-500 bg-green-50 text-green-800 dark:bg-green-900 dark:text-green-100",
+        error: "border-red-500 bg-red-50 text-red-800 dark:bg-red-900 dark:text-red-100",
+        warning: "border-yellow-500 bg-yellow-50 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100",
+        info: "border-blue-500 bg-blue-50 text-blue-800 dark:bg-blue-900 dark:text-blue-100",
+      },
+      type: {
+        default: "",
+        advisor: "border-l-4 border-l-blue-500",
+        recruiter: "border-l-4 border-l-purple-500",
+        student: "border-l-4 border-l-green-500",
+        success: "border-l-4 border-l-green-500",
+        error: "border-l-4 border-l-red-500",
+        warning: "border-l-4 border-l-yellow-500",
+        info: "border-l-4 border-l-blue-500",
       },
     },
     defaultVariants: {
       variant: "default",
+      type: "default",
     },
   }
 )
@@ -41,12 +59,14 @@ const toastVariants = cva(
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => {
+    VariantProps<typeof toastVariants> & {
+      type?: "default" | "advisor" | "recruiter" | "student" | "success" | "error" | "warning" | "info";
+    }
+>(({ className, variant, type = "default", ...props }, ref) => {
   return (
     <ToastPrimitives.Root
       ref={ref}
-      className={cn(toastVariants({ variant }), className)}
+      className={cn(toastVariants({ variant: type as any || variant, type: type as any }), className)}
       {...props}
     />
   )

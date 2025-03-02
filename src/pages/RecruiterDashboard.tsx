@@ -1,15 +1,17 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Bell } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { notifyRecruiter, notifySuccess } from "@/utils/notification";
+
 import VacancyManagement from "@/components/recruiter/VacancyManagement";
 import CandidateSearch from "@/components/recruiter/CandidateSearch";
 import InterviewCalendar from "@/components/recruiter/InterviewCalendar";
 import InternTracking from "@/components/recruiter/InternTracking";
 import CompanyPartners from "@/components/recruiter/CompanyPartners";
 import ScheduleInterviewDialog from "@/components/recruiter/ScheduleInterviewDialog";
-import { useToast } from "@/hooks/use-toast";
 
-// Sample data for vacancies
 const vacancies = [
   {
     id: 1,
@@ -58,22 +60,92 @@ const vacancies = [
 ];
 
 const RecruiterDashboard = () => {
-  const { toast } = useToast();
+  const { toasts, markAsRead } = useToast();
   const [activeTab, setActiveTab] = useState("vacancies");
   const [isScheduleInterviewDialogOpen, setIsScheduleInterviewDialogOpen] = useState(false);
+  const [showNotificationsPanel, setShowNotificationsPanel] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      notifyRecruiter({
+        title: "New Application",
+        description: "Sarah Johnson has applied for UI/UX Designer position",
+      });
+    }, 2500);
+
+    setTimeout(() => {
+      notifyRecruiter({
+        title: "Upcoming Interview",
+        description: "Interview with Michael Brown in 30 minutes",
+      });
+    }, 4500);
+  }, []);
 
   const handleScheduleInterview = (interviewData: any) => {
     console.log("Scheduling interview:", interviewData);
-    toast({
+    notifySuccess({
       title: "Interview Scheduled",
       description: `Interview with ${interviewData.candidateName} for ${interviewData.position} scheduled on ${interviewData.date.toLocaleDateString()} at ${interviewData.time}.`,
     });
     setIsScheduleInterviewDialogOpen(false);
   };
 
+  const unreadNotificationsCount = toasts.filter(toast => !toast.read).length;
+
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Recruiter Dashboard</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Recruiter Dashboard</h1>
+        
+        <div className="relative">
+          <Button 
+            variant="outline"
+            size="icon"
+            className="relative"
+            onClick={() => setShowNotificationsPanel(!showNotificationsPanel)}
+          >
+            <Bell className="h-5 w-5" />
+            {unreadNotificationsCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {unreadNotificationsCount}
+              </span>
+            )}
+          </Button>
+          
+          {showNotificationsPanel && (
+            <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 shadow-lg rounded-md border z-50">
+              <div className="p-3 border-b">
+                <h3 className="font-medium">Notifications</h3>
+              </div>
+              <div className="max-h-96 overflow-y-auto">
+                {toasts.length > 0 ? (
+                  <div className="divide-y">
+                    {toasts.map((notification) => (
+                      <div 
+                        key={notification.id} 
+                        className={`p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer ${!notification.read ? 'bg-purple-50 dark:bg-purple-900/20' : ''}`}
+                        onClick={() => markAsRead(notification.id)}
+                      >
+                        <div className="flex items-center gap-2">
+                          {!notification.read && <span className="h-2 w-2 rounded-full bg-purple-500"></span>}
+                          <h4 className="font-medium">{notification.title}</h4>
+                        </div>
+                        {notification.description && (
+                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{notification.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-3 text-center text-gray-500">
+                    No notifications
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-5">

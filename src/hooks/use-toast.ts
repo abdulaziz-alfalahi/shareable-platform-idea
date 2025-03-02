@@ -1,3 +1,4 @@
+
 import * as React from "react"
 
 import type {
@@ -5,14 +6,16 @@ import type {
   ToastProps,
 } from "@/components/ui/toast"
 
-const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_LIMIT = 5
+const TOAST_REMOVE_DELAY = 5000
 
 type ToasterToast = ToastProps & {
   id: string
   title?: React.ReactNode
   description?: React.ReactNode
   action?: ToastActionElement
+  type?: "default" | "advisor" | "recruiter" | "student" | "success" | "error" | "warning" | "info"
+  read?: boolean
 }
 
 const actionTypes = {
@@ -20,6 +23,7 @@ const actionTypes = {
   UPDATE_TOAST: "UPDATE_TOAST",
   DISMISS_TOAST: "DISMISS_TOAST",
   REMOVE_TOAST: "REMOVE_TOAST",
+  MARK_AS_READ: "MARK_AS_READ",
 } as const
 
 let count = 0
@@ -47,6 +51,10 @@ type Action =
   | {
       type: ActionType["REMOVE_TOAST"]
       toastId?: ToasterToast["id"]
+    }
+  | {
+      type: ActionType["MARK_AS_READ"]
+      toastId: ToasterToast["id"]
     }
 
 interface State {
@@ -123,6 +131,13 @@ export const reducer = (state: State, action: Action): State => {
         ...state,
         toasts: state.toasts.filter((t) => t.id !== action.toastId),
       }
+    case "MARK_AS_READ":
+      return {
+        ...state,
+        toasts: state.toasts.map((t) =>
+          t.id === action.toastId ? { ...t, read: true } : t
+        ),
+      }
   }
 }
 
@@ -148,6 +163,7 @@ function toast({ ...props }: Toast) {
       toast: { ...props, id },
     })
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
+  const markAsRead = () => dispatch({ type: "MARK_AS_READ", toastId: id })
 
   dispatch({
     type: "ADD_TOAST",
@@ -155,6 +171,7 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
+      read: false,
       onOpenChange: (open) => {
         if (!open) dismiss()
       },
@@ -165,6 +182,7 @@ function toast({ ...props }: Toast) {
     id: id,
     dismiss,
     update,
+    markAsRead,
   }
 }
 
@@ -185,6 +203,7 @@ function useToast() {
     ...state,
     toast,
     dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+    markAsRead: (toastId: string) => dispatch({ type: "MARK_AS_READ", toastId }),
   }
 }
 
