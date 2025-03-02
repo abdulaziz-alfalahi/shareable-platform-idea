@@ -12,7 +12,7 @@ export const notify = (options: NotificationOptions, type: ToastType = "default"
   return toast({
     title: options.title,
     description: options.description,
-    type: type,
+    type,
     className: options.className
   });
 };

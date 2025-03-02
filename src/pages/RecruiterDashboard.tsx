@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Bell } from "lucide-react";
+import { Bell, BarChart2 } from "lucide-react";
 import { useToast } from "@/hooks/toast";
 import { notifyRecruiter, notifySuccess } from "@/utils/notification";
 
@@ -12,6 +12,7 @@ import InterviewCalendar from "@/components/recruiter/InterviewCalendar";
 import InternTracking from "@/components/recruiter/InternTracking";
 import CompanyPartners from "@/components/recruiter/CompanyPartners";
 import ScheduleInterviewDialog from "@/components/recruiter/ScheduleInterviewDialog";
+import MonitoringDashboard from "@/components/recruiter/MonitoringDashboard";
 
 const vacancies = [
   {
@@ -149,12 +150,15 @@ const RecruiterDashboard = () => {
       </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="vacancies">Vacancy Management</TabsTrigger>
           <TabsTrigger value="candidates">Candidate Search</TabsTrigger>
           <TabsTrigger value="interviews">Interviews</TabsTrigger>
           <TabsTrigger value="interns">Intern Tracking</TabsTrigger>
           <TabsTrigger value="companies">Company Partners</TabsTrigger>
+          <TabsTrigger value="monitoring" className="flex items-center gap-1">
+            <BarChart2 className="h-4 w-4" /> Monitoring
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="vacancies" className="mt-6">
@@ -177,6 +181,10 @@ const RecruiterDashboard = () => {
         
         <TabsContent value="companies" className="mt-6">
           <CompanyPartners />
+        </TabsContent>
+
+        <TabsContent value="monitoring" className="mt-6">
+          <MonitoringDashboard />
         </TabsContent>
       </Tabs>
       
