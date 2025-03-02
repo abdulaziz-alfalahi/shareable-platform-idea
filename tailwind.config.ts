@@ -74,6 +74,13 @@ export default {
 					linkedinBlue: '#0077b5',
 					subtleRed: '#a94442',
 					deepBrown: '#3c2f2f',
+					// New colors inspired by the Dubai image
+					gold: '#ffc857',         // Golden color for the circular structure
+					deepBlue: '#1a2238',     // Dark blue from the night sky
+					skyBlue: '#0ea5e9',      // Light blue for accents
+					teal: '#0d7e83',         // Teal color from buildings
+					sand: '#e6ccb2',         // Sand color for desert tones
+					sunset: '#ff7e5f',       // Sunset orange
 				}
 			},
 			borderRadius: {
@@ -123,7 +130,15 @@ export default {
 						opacity: '1'
 					},
 					'50%': {
-						opacity: '0.5'
+						opacity: '0.8'
+					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'50%': {
+						transform: 'translateY(-10px)'
 					}
 				}
 			},
@@ -132,7 +147,8 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.6s ease-out',
 				'slide-in': 'slide-in 0.6s ease-out',
-				'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+				'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'float': 'float 3s ease-in-out infinite'
 			}
 		}
 	},
