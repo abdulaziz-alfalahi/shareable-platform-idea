@@ -1,195 +1,110 @@
-import { Link } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Backpack, FileText, FileEdit, MapPin, Award, Users, GraduationCap } from "lucide-react";
+
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/context/AuthContext';
 
 const Index = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
+
+  const handleGetStarted = () => {
+    if (isAuthenticated) {
+      // Redirect to appropriate dashboard based on role
+      switch (user?.role) {
+        case 'student':
+          navigate('/student-dashboard');
+          break;
+        case 'advisor':
+          navigate('/advisor-dashboard');
+          break;
+        case 'recruiter':
+          navigate('/recruiter-dashboard');
+          break;
+        default:
+          navigate('/login');
+      }
+    } else {
+      navigate('/register');
+    }
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-emirati-sandstone">
-      <header className="bg-emirati-oasisGreen p-4 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-white">Emirati Employment Gateway</h1>
-          <nav className="space-x-4">
-            <Link to="/" className="text-white hover:underline">
-              Home
-            </Link>
-            <a href="#" className="text-white hover:underline">
-              About
-            </a>
-            <a href="#" className="text-white hover:underline">
-              Services
-            </a>
-            <a href="#" className="text-white hover:underline">
-              Contact
-            </a>
-          </nav>
-        </div>
-      </header>
-
-      <main className="flex-1 container mx-auto py-12 px-4">
-        <section className="text-center mb-12">
-          <h2 className="text-4xl font-extrabold text-emirati-oasisGreen mb-4">
-            Empowering Emirati Careers
-          </h2>
-          <p className="text-lg text-gray-700">
-            Your gateway to employment opportunities, career development resources, and professional growth in the UAE.
-          </p>
+    <div className="flex min-h-screen flex-col">
+      <main className="flex-1">
+        <section className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
+              <div className="space-y-4">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  Your pathway to career success in the UAE
+                </h1>
+                <p className="text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Connecting students, advisors, and recruiters for seamless career development and job placement.
+                </p>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button onClick={handleGetStarted} size="lg">
+                    {isAuthenticated ? 'Go to Dashboard' : 'Get Started'}
+                  </Button>
+                  {!isAuthenticated && (
+                    <Button variant="outline" size="lg" onClick={() => navigate('/login')}>
+                      Sign In
+                    </Button>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <img
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop"
+                  alt="Team collaboration"
+                  className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                  width={550}
+                  height={310}
+                />
+              </div>
+            </div>
+          </div>
         </section>
-
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Link to="/student-dashboard" className="no-underline">
-            <Card className="h-full transition-transform hover:scale-[1.02]">
-              <CardHeader className="bg-emirati-oasisGreen/10 border-b">
-                <CardTitle className="text-emirati-oasisGreen flex items-center gap-2">
-                  <Backpack />
-                  Student Dashboard
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <p className="text-muted-foreground">
-                  Explore career pathways, assess your skills, and discover personalized job recommendations.
+        
+        <section className="w-full bg-gray-100 py-12 md:py-24 lg:py-32">
+          <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-3 lg:gap-10">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Key Features</h2>
+              <p className="text-gray-500">
+                Our platform offers a comprehensive set of tools for students, advisors, and recruiters.
+              </p>
+            </div>
+            <div className="grid gap-6 lg:col-span-2 lg:grid-cols-2">
+              <div className="space-y-2 rounded-lg border bg-white p-4 shadow-sm">
+                <h3 className="text-xl font-bold">For Students</h3>
+                <p className="text-gray-500">
+                  Resume building, job applications, skill development tracking, and personalized career guidance.
                 </p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/job-applications" className="no-underline">
-            <Card className="h-full transition-transform hover:scale-[1.02]">
-              <CardHeader className="bg-emirati-oasisGreen/10 border-b">
-                <CardTitle className="text-emirati-oasisGreen flex items-center gap-2">
-                  <FileText />
-                  Job Applications
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <p className="text-muted-foreground">
-                  Apply for jobs, track your applications, and receive status updates in real-time.
+              </div>
+              <div className="space-y-2 rounded-lg border bg-white p-4 shadow-sm">
+                <h3 className="text-xl font-bold">For Advisors</h3>
+                <p className="text-gray-500">
+                  Student progress monitoring, performance analytics, and efficient communication tools.
                 </p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/resume-builder" className="no-underline">
-            <Card className="h-full transition-transform hover:scale-[1.02]">
-              <CardHeader className="bg-emirati-oasisGreen/10 border-b">
-                <CardTitle className="text-emirati-oasisGreen flex items-center gap-2">
-                  <FileEdit />
-                  Resume Builder
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <p className="text-muted-foreground">
-                  Create and customize your professional resume with templates designed for UAE employers.
+              </div>
+              <div className="space-y-2 rounded-lg border bg-white p-4 shadow-sm">
+                <h3 className="text-xl font-bold">For Recruiters</h3>
+                <p className="text-gray-500">
+                  Vacancy management, candidate search, interview scheduling, and intern tracking.
                 </p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/job-location-matching" className="no-underline">
-            <Card className="h-full transition-transform hover:scale-[1.02]">
-              <CardHeader className="bg-emirati-oasisGreen/10 border-b">
-                <CardTitle className="text-emirati-oasisGreen flex items-center gap-2">
-                  <MapPin />
-                  Job Location Matching
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <p className="text-muted-foreground">
-                  Find jobs near your preferred locations throughout the UAE with our interactive map tool.
+              </div>
+              <div className="space-y-2 rounded-lg border bg-white p-4 shadow-sm">
+                <h3 className="text-xl font-bold">UAE Pass Integration</h3>
+                <p className="text-gray-500">
+                  Seamless authentication and identity verification using the UAE's digital identity platform (coming soon).
                 </p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/achievements" className="no-underline">
-            <Card className="h-full transition-transform hover:scale-[1.02]">
-              <CardHeader className="bg-emirati-oasisGreen/10 border-b">
-                <CardTitle className="text-emirati-oasisGreen flex items-center gap-2">
-                  <Award />
-                  Achievements
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <p className="text-muted-foreground">
-                  Track your career milestones, skills development progress, and earn recognition badges.
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/recruiter-dashboard" className="no-underline">
-            <Card className="h-full transition-transform hover:scale-[1.02]">
-              <CardHeader className="bg-emirati-oasisGreen/10 border-b">
-                <CardTitle className="text-emirati-oasisGreen flex items-center gap-2">
-                  <Users />
-                  Recruiter Portal
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <p className="text-muted-foreground">
-                  For employers to post jobs, review applications, and find qualified Emirati candidates.
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/advisor-dashboard" className="no-underline">
-            <Card className="h-full transition-transform hover:scale-[1.02]">
-              <CardHeader className="bg-emirati-oasisGreen/10 border-b">
-                <CardTitle className="text-emirati-oasisGreen flex items-center gap-2">
-                  <GraduationCap />
-                  Advisor Dashboard
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <p className="text-muted-foreground">
-                  For academic advisors and career coaches to track student progress and provide feedback.
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
-        </section>
-
-        <section className="mt-12 text-center">
-          <h2 className="text-3xl font-bold text-emirati-oasisGreen mb-4">
-            Featured Resources
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Career Counseling</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Connect with experienced career counselors for personalized guidance and support.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Skills Training Programs</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Enhance your skills with industry-recognized training programs and workshops.
-                </CardDescription>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </section>
       </main>
-
-      <footer className="bg-emirati-deepBrown text-white py-8">
-        <div className="container mx-auto text-center">
-          <p>&copy; 2024 Emirati Employment Gateway. All rights reserved.</p>
-          <nav className="mt-4 space-x-4">
-            <a href="#" className="text-white hover:underline">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-white hover:underline">
-              Terms of Service
-            </a>
-          </nav>
-        </div>
+      <footer className="flex w-full items-center border-t px-4 py-6 md:px-6">
+        <p className="text-sm text-gray-500">© 2023 CareerLink UAE. All rights reserved.</p>
       </footer>
     </div>
   );
