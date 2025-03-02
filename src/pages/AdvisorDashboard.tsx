@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { User, BarChart2, FileText, Bell } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/toast";
 import { notifyAdvisor, notifySuccess } from "@/utils/notification";
 
 // Import custom components

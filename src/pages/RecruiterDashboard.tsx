@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/toast";
 import { notifyRecruiter, notifySuccess } from "@/utils/notification";
 
 import VacancyManagement from "@/components/recruiter/VacancyManagement";
