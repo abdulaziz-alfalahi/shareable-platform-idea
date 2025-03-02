@@ -46,6 +46,7 @@ const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const timeSlots = [
     "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
@@ -72,6 +73,14 @@ const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
     setDate(undefined);
     setTime("");
     setNotes("");
+    setIsCalendarOpen(false);
+  };
+
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    setDate(selectedDate);
+    if (selectedDate) {
+      setIsCalendarOpen(false); // Close the calendar after selection
+    }
   };
 
   return (
@@ -89,7 +98,7 @@ const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="date">Date</Label>
-            <Popover>
+            <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -104,7 +113,7 @@ const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={setDate}
+                  onSelect={handleDateSelect}
                   disabled={(date) => {
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);

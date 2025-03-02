@@ -55,6 +55,7 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
   const [candidateName, setCandidateName] = useState("");
   const [position, setPosition] = useState("");
   const [notes, setNotes] = useState("");
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const timeSlots = [
     "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
@@ -99,6 +100,14 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
     setCandidateName("");
     setPosition("");
     setNotes("");
+    setIsCalendarOpen(false);
+  };
+
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    setDate(selectedDate);
+    if (selectedDate) {
+      setIsCalendarOpen(false); // Close the calendar after selection
+    }
   };
 
   return (
@@ -136,7 +145,7 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
 
           <div className="grid gap-2">
             <Label htmlFor="date">Date</Label>
-            <Popover>
+            <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -151,7 +160,7 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={setDate}
+                  onSelect={handleDateSelect}
                   disabled={(date) => {
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
