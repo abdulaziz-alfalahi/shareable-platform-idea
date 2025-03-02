@@ -104,9 +104,11 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
   };
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
+    console.log("Date selected:", selectedDate);
     setDate(selectedDate);
+    // Only close calendar if a date was actually selected
     if (selectedDate) {
-      setIsCalendarOpen(false); // Close the calendar after selection
+      setTimeout(() => setIsCalendarOpen(false), 100);
     }
   };
 
