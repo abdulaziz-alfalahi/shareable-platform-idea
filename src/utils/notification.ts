@@ -1,47 +1,24 @@
 
-import { toast } from "@/hooks/toast"
-import type { ToastType } from "@/hooks/toast/types"
+import { ToastType } from "@/hooks/toast/types";
 
-interface NotificationOptions {
-  title: string
+export const notifySuccess = (
+  title: string, 
   description?: string
-  type?: ToastType
-  duration?: number
-}
-
-export const notify = ({ title, description, duration, type = "default" }: NotificationOptions) => {
-  return toast({
+): ToastType => {
+  return {
     title,
     description,
-    duration,
-    type,
-  })
-}
+    variant: "default",
+  };
+};
 
-export const notifyAdvisor = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "advisor" })
-}
-
-export const notifyRecruiter = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "recruiter" })
-}
-
-export const notifyStudent = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "student" })
-}
-
-export const notifySuccess = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "success" })
-}
-
-export const notifyError = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "error" })
-}
-
-export const notifyWarning = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "warning" })
-}
-
-export const notifyInfo = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "info" })
-}
+export const notifyError = (
+  title: string, 
+  description?: string
+): ToastType => {
+  return {
+    title,
+    description,
+    variant: "destructive",
+  };
+};

@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Student } from "@/types/student";
 import { getStatusBadgeVariant, getRiskBadgeVariant } from "@/utils/advisorUtils";
 import ScheduleMeetingDialog from "@/components/advisor/ScheduleMeetingDialog";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/toast";
 import { format } from "date-fns";
 
 interface ProfileHeaderProps {
