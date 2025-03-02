@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     id: 'default-user',
     email: 'default@example.com',
     name: 'Default User',
-    role: 'student',
+    role: 'admin',
     avatarUrl: 'https://i.pravatar.cc/150?u=default',
     isVerified: true
   };
@@ -86,16 +86,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (foundUser) {
         // Remove password before storing user
         const { password: _, ...userWithoutPassword } = foundUser;
-        setUser(userWithoutPassword);
-        localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+        
+        // Override the role to admin
+        const adminUser = {
+          ...userWithoutPassword,
+          role: 'admin' as UserRole
+        };
+        
+        setUser(adminUser);
+        localStorage.setItem('user', JSON.stringify(adminUser));
         
         notifySuccess({ 
           title: 'Login successful', 
           description: `Welcome back, ${foundUser.name}!` 
         });
         
-        // Redirect based on role
-        navigateByRole(foundUser.role);
+        navigate('/admin-dashboard');
       } else {
         // Use default user if no matching user is found
         notifySuccess({ 
@@ -136,27 +142,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigate('/');
   };
 
-  // Helper function to navigate based on user role
+  // Helper function to navigate based on user role - now always navigates to admin dashboard
   const navigateByRole = (role: UserRole) => {
-    switch (role) {
-      case 'student':
-        navigate('/student-dashboard');
-        break;
-      case 'advisor':
-        navigate('/advisor-dashboard');
-        break;
-      case 'recruiter':
-        navigate('/recruiter-dashboard');
-        break;
-      case 'admin':
-        navigate('/admin-dashboard');
-        break;
-      default:
-        navigate('/');
-    }
+    navigate('/admin-dashboard');
   };
 
-  // Check if user has a specific role - now always returns true
+  // Check if user has a specific role - always returns true to grant access to all routes
   const hasRole = (roles: UserRole | UserRole[]): boolean => {
     return true; // Allow access to all roles
   };
