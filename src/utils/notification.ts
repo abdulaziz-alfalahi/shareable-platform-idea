@@ -14,7 +14,7 @@ export const notify = ({ title, description, type = "info", duration }: Notifica
   return toast({
     title,
     description,
-    type,
+    type: type as any, // Force type compatibility
     duration,
   })
 }
