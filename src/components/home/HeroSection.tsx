@@ -11,8 +11,8 @@ const HeroSection = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center z-0" 
         style={{ 
-          backgroundImage: "url('https://images.unsplash.com/photo-1466442929976-97f336a657be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')",
-          filter: "brightness(0.4)"
+          backgroundImage: "url('/lovable-uploads/42552cb8-f738-45aa-802e-6e8257629907.png')",
+          filter: "brightness(0.6)"
         }}
       />
       
