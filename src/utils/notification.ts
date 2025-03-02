@@ -1,5 +1,6 @@
 
-import { toast, ToastType } from "@/hooks/toast"
+import { toast } from "@/hooks/toast"
+import type { ToastType } from "@/hooks/toast/types"
 
 interface NotificationOptions {
   title: string
