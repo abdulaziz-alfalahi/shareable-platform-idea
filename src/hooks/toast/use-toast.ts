@@ -1,7 +1,7 @@
 
 import * as React from "react"
 import { dispatch, genId, memoryState, subscribe } from "./store"
-import type { Toast, ToasterToast } from "./types"
+import type { Toast, ToasterToast, ToastType } from "./types"
 
 function toast({ ...props }: Toast) {
   const id = genId()
