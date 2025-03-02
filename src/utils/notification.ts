@@ -1,3 +1,4 @@
+
 import { toast, ToastType } from "@/hooks/use-toast"
 
 type NotificationType = ToastType
@@ -14,7 +15,7 @@ export const notify = ({ title, description, type = "info", duration }: Notifica
     title,
     description,
     duration,
-    type,
+    type: type as ToastType, // Explicitly cast to ensure type compatibility
   })
 }
 
