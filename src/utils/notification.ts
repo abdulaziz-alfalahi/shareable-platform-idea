@@ -13,7 +13,7 @@ export const notify = (options: NotificationOptions, type: ToastType = "default"
     title: options.title,
     description: options.description,
     type: type,
-    className: options.className
+    className: options.className || ""
   });
 };
 

@@ -1,6 +1,7 @@
+
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Backpack, FileText, FileEdit, MapPin, Award, Users, GraduationCap } from "lucide-react";
+import { Backpack, FileText, FileEdit, MapPin, Award, Users, GraduationCap, School, Clipboard } from "lucide-react";
 
 const Index = () => {
   return (
@@ -127,6 +128,38 @@ const Index = () => {
               <CardContent className="pt-6">
                 <p className="text-muted-foreground">
                   For employers to post jobs, review applications, and find qualified Emirati candidates.
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/training-centers" className="no-underline">
+            <Card className="h-full transition-transform hover:scale-[1.02]">
+              <CardHeader className="bg-emirati-oasisGreen/10 border-b">
+                <CardTitle className="text-emirati-oasisGreen flex items-center gap-2">
+                  <School />
+                  Training Centers
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <p className="text-muted-foreground">
+                  Discover specialized training programs to enhance your skills and career prospects.
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/assessment-centers" className="no-underline">
+            <Card className="h-full transition-transform hover:scale-[1.02]">
+              <CardHeader className="bg-emirati-oasisGreen/10 border-b">
+                <CardTitle className="text-emirati-oasisGreen flex items-center gap-2">
+                  <Clipboard />
+                  Assessment Centers
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <p className="text-muted-foreground">
+                  Evaluate your skills and competencies through professional assessment services.
                 </p>
               </CardContent>
             </Card>
