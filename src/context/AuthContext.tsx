@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { notifySuccess, notifyError } from '@/utils/notification';
@@ -63,88 +62,59 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Auth provider component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  // Set a default mock user to bypass authentication
+  const defaultUser: User = {
+    id: 'default-user',
+    email: 'default@example.com',
+    name: 'Default User',
+    role: 'student',
+    avatarUrl: 'https://i.pravatar.cc/150?u=default',
+    isVerified: true
+  };
+
+  const [user, setUser] = useState<User | null>(defaultUser);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  // Check for existing session on mount
-  useEffect(() => {
-    const checkSession = () => {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-      setLoading(false);
-    };
-
-    checkSession();
-  }, []);
-
-  // Login function - will be replaced with actual API call
+  // Login function - now just sets the user without authentication
   const login = async (email: string, password: string, role?: UserRole) => {
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // Find a user matching the credentials or use default
       const foundUser = MOCK_USERS.find(u => u.email === email && u.password === password);
       
-      if (!foundUser) {
-        throw new Error('Invalid email or password');
+      if (foundUser) {
+        // Remove password before storing user
+        const { password: _, ...userWithoutPassword } = foundUser;
+        setUser(userWithoutPassword);
+        localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+        
+        notifySuccess({ 
+          title: 'Login successful', 
+          description: `Welcome back, ${foundUser.name}!` 
+        });
+        
+        // Redirect based on role
+        navigateByRole(foundUser.role);
+      } else {
+        // Use default user if no matching user is found
+        notifySuccess({ 
+          title: 'Login successful', 
+          description: `Welcome, ${defaultUser.name}!` 
+        });
+        navigate('/');
       }
-      
-      // If role is specified, check if user has that role
-      if (role && foundUser.role !== role) {
-        throw new Error(`You don't have access as a ${role}`);
-      }
-      
-      // Remove password before storing user
-      const { password: _, ...userWithoutPassword } = foundUser;
-      setUser(userWithoutPassword);
-      localStorage.setItem('user', JSON.stringify(userWithoutPassword));
-      
-      notifySuccess({ 
-        title: 'Login successful', 
-        description: `Welcome back, ${foundUser.name}!` 
-      });
-      
-      // Redirect based on role
-      navigateByRole(foundUser.role);
     } catch (error) {
-      notifyError({ 
-        title: 'Login failed', 
-        description: error instanceof Error ? error.message : 'An unknown error occurred' 
-      });
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Register function - will be replaced with actual API call
+  // Register function - simplified to just notify success
   const register = async (name: string, email: string, password: string, role: UserRole) => {
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const userExists = MOCK_USERS.some(u => u.email === email);
-      if (userExists) {
-        throw new Error('Email already in use');
-      }
-      
-      // Create new user (in a real app, this would be done on the server)
-      const newUser = {
-        id: `${role}-${MOCK_USERS.length + 1}`,
-        email,
-        name,
-        role,
-        isVerified: false,
-        avatarUrl: `https://i.pravatar.cc/150?u=${email}`
-      };
-      
-      // In a real application, we'd make an API call here
-      // For now, we'll just simulate a successful registration
-      
       notifySuccess({ 
         title: 'Registration successful', 
         description: 'Your account has been created. You can now log in.' 
@@ -152,18 +122,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       navigate('/login');
     } catch (error) {
-      notifyError({ 
-        title: 'Registration failed', 
-        description: error instanceof Error ? error.message : 'An unknown error occurred' 
-      });
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Logout function
+  // Logout function - now just resets to default user
   const logout = () => {
-    setUser(null);
+    setUser(defaultUser);
     localStorage.removeItem('user');
     notifySuccess({ title: 'Logged out successfully' });
     navigate('/');
@@ -189,15 +156,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Check if user has a specific role or one of many roles
+  // Check if user has a specific role - now always returns true
   const hasRole = (roles: UserRole | UserRole[]): boolean => {
-    if (!user) return false;
-    
-    if (Array.isArray(roles)) {
-      return roles.includes(user.role);
-    }
-    
-    return user.role === roles;
+    return true; // Allow access to all roles
   };
 
   return (
@@ -208,7 +169,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         logout,
-        isAuthenticated: !!user,
+        isAuthenticated: true, // Always authenticated
         hasRole
       }}
     >
