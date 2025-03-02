@@ -1,50 +1,18 @@
+export type NotificationType = "success" | "error" | "warning" | "info";
 
-import { toast } from "@/hooks/toast"
-import type { ToastType } from "@/hooks/toast/types"
-
-interface NotificationOptions {
-  title: string;
-  description?: string;
-  className?: string;
-}
-
-export const notify = (options: NotificationOptions, type: ToastType = "default") => {
-  return toast({
-    title: options.title,
-    description: options.description,
-    type: type,
-    className: options.className || ""
-  });
-};
-
-export const notifyAdvisor = (options: NotificationOptions) => {
-  return notify(options, "advisor");
-};
-
-export const notifyRecruiter = (options: NotificationOptions) => {
-  return notify(options, "recruiter");
-};
-
-export const notifyStudent = (options: NotificationOptions) => {
-  return notify(options, "student");
-};
-
-export const notifyAdmin = (options: NotificationOptions) => {
-  return notify(options, "warning");
-};
-
-export const notifySuccess = (options: NotificationOptions) => {
-  return notify(options, "success");
-};
-
-export const notifyError = (options: NotificationOptions) => {
-  return notify(options, "error");
-};
-
-export const notifyWarning = (options: NotificationOptions) => {
-  return notify(options, "warning");
-};
-
-export const notifyInfo = (options: NotificationOptions) => {
-  return notify(options, "info");
+export const getNotificationClassNames = (type: NotificationType): string => {
+  const baseClasses = "flex items-center p-3 mb-3 text-sm rounded-md";
+  
+  switch (type) {
+    case "success":
+      return `${baseClasses} bg-green-100 text-green-800`;
+    case "error":
+      return `${baseClasses} bg-red-100 text-red-800`;
+    case "warning":
+      return `${baseClasses} bg-yellow-100 text-yellow-800`;
+    case "info":
+      return `${baseClasses} bg-blue-100 text-blue-800`;
+    default:
+      return baseClasses;
+  }
 };
