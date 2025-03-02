@@ -1,12 +1,10 @@
 
 import { toast, ToastType } from "@/hooks/use-toast"
 
-type NotificationType = ToastType
-
 interface NotificationOptions {
   title: string
   description?: string
-  type?: NotificationType
+  type?: ToastType
   duration?: number
 }
 
@@ -15,7 +13,7 @@ export const notify = ({ title, description, type = "info", duration }: Notifica
     title,
     description,
     duration,
-    type, // Now the type from NotificationOptions is directly compatible with ToastType
+    type,
   })
 }
 
