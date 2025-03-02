@@ -31,6 +31,16 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   calendarView,
   setCalendarView
 }) => {
+  const handleDateSelect = (newDate: Date | undefined) => {
+    console.log("Calendar date selected in header:", newDate);
+    if (newDate) {
+      setDate(newDate);
+      setTimeout(() => {
+        setCalendarView(false);
+      }, 100);
+    }
+  };
+
   return (
     <div className="flex items-center justify-between">
       <h2 className="text-2xl font-bold">Interview Schedule</h2>
@@ -46,13 +56,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(newDate) => {
-                console.log("Calendar date selected in header:", newDate);
-                if (newDate) {
-                  setDate(newDate);
-                  setCalendarView(false);
-                }
-              }}
+              onSelect={handleDateSelect}
               initialFocus
             />
           </PopoverContent>

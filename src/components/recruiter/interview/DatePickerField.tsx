@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,21 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   calendarOpen,
   setCalendarOpen,
 }) => {
+  // Force close popover after selection
+  useEffect(() => {
+    if (date) {
+      const timer = setTimeout(() => {
+        setCalendarOpen(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [date, setCalendarOpen]);
+
+  const handleSelect = (selectedDate: Date | undefined) => {
+    console.log("DatePickerField selected date:", selectedDate);
+    onDateSelect(selectedDate);
+  };
+
   return (
     <div className="grid gap-2">
       <Label htmlFor="date">Date</Label>
@@ -42,10 +57,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
           <Calendar
             mode="single"
             selected={date}
-            onSelect={(newDate) => {
-              console.log("Calendar date selected:", newDate);
-              onDateSelect(newDate);
-            }}
+            onSelect={handleSelect}
             disabled={(date) => {
               const today = new Date();
               today.setHours(0, 0, 0, 0);
