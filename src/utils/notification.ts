@@ -9,13 +9,18 @@ export interface NotificationOptions {
   duration?: number;
 }
 
-export const notify = ({ title, description, duration = 5000, type = "default" }: NotificationOptions) => {
+export const notify = ({
+  title,
+  description,
+  duration = 5000,
+  type = "default" as ToastType, // Explicitly type the default value
+}: NotificationOptions) => {
   try {
     return toast({
       title,
       description,
       duration,
-      type: type as ToastType, // Explicitly cast to ToastType
+      type,
     });
   } catch (error) {
     console.error("Failed to display toast:", error);
