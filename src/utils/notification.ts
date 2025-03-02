@@ -15,7 +15,7 @@ export const notify = ({ title, description, duration = 5000, type = "default" }
       title,
       description,
       duration,
-      type,
+      type: type as ToastType, // Explicitly cast to ToastType
     });
   } catch (error) {
     console.error("Failed to display toast:", error);
@@ -24,29 +24,29 @@ export const notify = ({ title, description, duration = 5000, type = "default" }
 };
 
 export const notifyAdvisor = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "advisor" as const });
+  return notify({ ...options, type: "advisor" as ToastType });
 };
 
 export const notifyRecruiter = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "recruiter" as const });
+  return notify({ ...options, type: "recruiter" as ToastType });
 };
 
 export const notifyStudent = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "student" as const });
+  return notify({ ...options, type: "student" as ToastType });
 };
 
 export const notifySuccess = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "success" as const });
+  return notify({ ...options, type: "success" as ToastType });
 };
 
 export const notifyError = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "error" as const });
+  return notify({ ...options, type: "error" as ToastType });
 };
 
 export const notifyWarning = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "warning" as const });
+  return notify({ ...options, type: "warning" as ToastType });
 };
 
 export const notifyInfo = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "info" as const });
+  return notify({ ...options, type: "info" as ToastType });
 };
