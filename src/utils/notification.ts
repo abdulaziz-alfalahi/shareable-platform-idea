@@ -1,57 +1,50 @@
 
-export type NotificationType = "success" | "error" | "warning" | "info";
+import { toast } from "@/hooks/toast"
+import type { ToastType } from "@/hooks/toast/types"
 
-export const getNotificationClassNames = (type: NotificationType): string => {
-  const baseClasses = "flex items-center p-3 mb-3 text-sm rounded-md";
-  
-  switch (type) {
-    case "success":
-      return `${baseClasses} bg-green-100 text-green-800`;
-    case "error":
-      return `${baseClasses} bg-red-100 text-red-800`;
-    case "warning":
-      return `${baseClasses} bg-yellow-100 text-yellow-800`;
-    case "info":
-      return `${baseClasses} bg-blue-100 text-blue-800`;
-    default:
-      return baseClasses;
-  }
-};
-
-// Common notification functions for different user types
-export interface NotificationData {
+interface NotificationOptions {
   title: string;
   description?: string;
+  className?: string;
 }
 
-// Function to create a success notification for any user type
-export const notifySuccess = (data: NotificationData) => {
-  console.log("Success notification:", data);
-  // This would typically use the toast hook to display a notification
-  // For now, we're just logging it
-  return { type: "success" as NotificationType, ...data };
+export const notify = (options: NotificationOptions, type: ToastType = "default") => {
+  return toast({
+    title: options.title,
+    description: options.description,
+    type: type,
+    className: options.className || ""
+  });
 };
 
-// Function to create a notification for recruiters
-export const notifyRecruiter = (data: NotificationData) => {
-  console.log("Recruiter notification:", data);
-  // This would typically use the toast hook to display a notification
-  // For now, we're just logging it
-  return { type: "info" as NotificationType, ...data };
+export const notifyAdvisor = (options: NotificationOptions) => {
+  return notify(options, "advisor");
 };
 
-// Function to create a notification for advisors
-export const notifyAdvisor = (data: NotificationData) => {
-  console.log("Advisor notification:", data);
-  // This would typically use the toast hook to display a notification
-  // For now, we're just logging it
-  return { type: "info" as NotificationType, ...data };
+export const notifyRecruiter = (options: NotificationOptions) => {
+  return notify(options, "recruiter");
 };
 
-// Function to create a notification for students
-export const notifyStudent = (data: NotificationData) => {
-  console.log("Student notification:", data);
-  // This would typically use the toast hook to display a notification
-  // For now, we're just logging it
-  return { type: "info" as NotificationType, ...data };
+export const notifyStudent = (options: NotificationOptions) => {
+  return notify(options, "student");
+};
+
+export const notifyAdmin = (options: NotificationOptions) => {
+  return notify(options, "warning");
+};
+
+export const notifySuccess = (options: NotificationOptions) => {
+  return notify(options, "success");
+};
+
+export const notifyError = (options: NotificationOptions) => {
+  return notify(options, "error");
+};
+
+export const notifyWarning = (options: NotificationOptions) => {
+  return notify(options, "warning");
+};
+
+export const notifyInfo = (options: NotificationOptions) => {
+  return notify(options, "info");
 };

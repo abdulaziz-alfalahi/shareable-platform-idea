@@ -11,27 +11,24 @@ const HeroSection = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center z-0" 
         style={{ 
-          backgroundImage: "url('/og-image.png')",  // Using the og-image.png which is available in public folder
-          filter: "brightness(0.6)"
+          backgroundImage: "url('https://images.unsplash.com/photo-1466442929976-97f336a657be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')",
+          filter: "brightness(0.4)"
         }}
       />
       
-      {/* Decorative gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 z-1"></div>
-      
       {/* Hero content */}
-      <div className="container mx-auto px-4 py-24 md:py-36 relative z-10">
+      <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white animate-fade-in">
-            <span className="text-emirati-gold">Emirati</span> Employment Gateway
+            Shape Your Future in the UAE
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-white/90 animate-fade-in" style={{ animationDelay: "0.2s" }}>
             Your gateway to employment opportunities, career development, and professional growth
-            from school to retirement in the United Arab Emirates.
+            from school to retirement.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             <Link to="/student-dashboard">
-              <Button size="lg" className="bg-emirati-gold hover:bg-emirati-gold/90 text-emirati-deepBlue">
+              <Button size="lg" className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90 text-white">
                 Start Your Journey <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -43,9 +40,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-      
-      {/* Curved bottom shape */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-emirati-sandstone rounded-t-[50%] z-10"></div>
     </div>
   );
 };
