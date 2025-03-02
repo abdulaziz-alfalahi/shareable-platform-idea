@@ -8,7 +8,7 @@ interface NotificationOptions {
   duration?: number
 }
 
-export const notify = ({ title, description, type = "info", duration }: NotificationOptions) => {
+export const notify = ({ title, description, duration, type = "default" }: NotificationOptions) => {
   return toast({
     title,
     description,
