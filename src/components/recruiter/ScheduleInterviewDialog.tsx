@@ -55,7 +55,7 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
   const [candidateName, setCandidateName] = useState("");
   const [position, setPosition] = useState("");
   const [notes, setNotes] = useState("");
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   const timeSlots = [
     "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
@@ -100,15 +100,18 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
     setCandidateName("");
     setPosition("");
     setNotes("");
-    setIsCalendarOpen(false);
+    setCalendarOpen(false);
   };
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     console.log("Date selected:", selectedDate);
-    setDate(selectedDate);
-    // Only close calendar if a date was actually selected
     if (selectedDate) {
-      setTimeout(() => setIsCalendarOpen(false), 100);
+      setDate(selectedDate);
+      // Use a setTimeout to avoid immediate closing of the calendar
+      // which can interfere with the click event
+      setTimeout(() => {
+        setCalendarOpen(false);
+      }, 150);
     }
   };
 
@@ -147,7 +150,7 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
 
           <div className="grid gap-2">
             <Label htmlFor="date">Date</Label>
-            <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
