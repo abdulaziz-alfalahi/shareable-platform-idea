@@ -1,9 +1,6 @@
 
 import React, { useState } from "react";
-import { format } from "date-fns";
-import { CalendarIcon, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -12,36 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
-interface ScheduleInterviewDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSchedule: (data: InterviewData) => void;
-}
-
-interface InterviewData {
-  candidateName: string;
-  position: string;
-  date: Date;
-  time: string;
-  duration: string;
-  notes: string;
-}
+import { InterviewData, ScheduleInterviewDialogProps } from "@/types/interview";
+import CandidateFields from "./interview/CandidateFields";
+import DatePickerField from "./interview/DatePickerField";
+import TimeAndDurationFields from "./interview/TimeAndDurationFields";
 
 const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
   open,
@@ -56,20 +30,6 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
   const [position, setPosition] = useState("");
   const [notes, setNotes] = useState("");
   const [calendarOpen, setCalendarOpen] = useState(false);
-
-  const timeSlots = [
-    "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-    "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM",
-    "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM"
-  ];
-
-  const durations = [
-    { value: "30", label: "30 minutes" },
-    { value: "45", label: "45 minutes" },
-    { value: "60", label: "1 hour" },
-    { value: "90", label: "1.5 hours" },
-    { value: "120", label: "2 hours" },
-  ];
 
   const handleSchedule = () => {
     if (!date || !time || !candidateName || !position) {
@@ -128,97 +88,26 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="candidateName">Candidate Name</Label>
-            <Input
-              id="candidateName"
-              value={candidateName}
-              onChange={(e) => setCandidateName(e.target.value)}
-              placeholder="Enter candidate name"
-            />
-          </div>
+          <CandidateFields 
+            candidateName={candidateName}
+            setCandidateName={setCandidateName}
+            position={position}
+            setPosition={setPosition}
+          />
 
-          <div className="grid gap-2">
-            <Label htmlFor="position">Position</Label>
-            <Input
-              id="position"
-              value={position}
-              onChange={(e) => setPosition(e.target.value)}
-              placeholder="Enter position title"
-            />
-          </div>
+          <DatePickerField 
+            date={date}
+            onDateSelect={handleDateSelect}
+            calendarOpen={calendarOpen}
+            setCalendarOpen={setCalendarOpen}
+          />
 
-          <div className="grid gap-2">
-            <Label htmlFor="date">Date</Label>
-            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal"
-                  id="date"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : <span>Select a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={handleDateSelect}
-                  disabled={(date) => {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    return date < today || date.getDay() === 0 || date.getDay() === 6;
-                  }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="time">Time</Label>
-              <Select value={time} onValueChange={setTime}>
-                <SelectTrigger id="time" className="w-full">
-                  <SelectValue placeholder="Select time">
-                    {time ? (
-                      <div className="flex items-center">
-                        <Clock className="mr-2 h-4 w-4" />
-                        {time}
-                      </div>
-                    ) : (
-                      "Select time"
-                    )}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {timeSlots.map((slot) => (
-                    <SelectItem key={slot} value={slot}>
-                      {slot}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="duration">Duration</Label>
-              <Select value={duration} onValueChange={setDuration}>
-                <SelectTrigger id="duration">
-                  <SelectValue placeholder="Select duration" />
-                </SelectTrigger>
-                <SelectContent>
-                  {durations.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <TimeAndDurationFields 
+            time={time}
+            setTime={setTime}
+            duration={duration}
+            setDuration={setDuration}
+          />
 
           <div className="grid gap-2">
             <Label htmlFor="notes">Interview Notes (Optional)</Label>
