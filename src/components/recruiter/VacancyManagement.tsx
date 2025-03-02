@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -252,8 +251,7 @@ const VacancyManagement: React.FC<VacancyManagementProps> = ({ vacancies }) => {
               <div className="h-[200px] rounded-md overflow-hidden">
                 <JobMap 
                   jobs={createWorkplaceJob(newVacancy.coordinates.latitude, newVacancy.coordinates.longitude)}
-                  onJobsUpdate={handleLocationUpdate}
-                  draggable
+                  onLocationUpdate={handleLocationUpdate}
                 />
               </div>
               <Input
@@ -368,7 +366,6 @@ const VacancyManagement: React.FC<VacancyManagementProps> = ({ vacancies }) => {
                 <div className="h-[200px] rounded-md overflow-hidden mt-2">
                   <JobMap 
                     jobs={selectedVacancyJobs}
-                    draggable={false}
                   />
                 </div>
               </div>
