@@ -1,58 +1,47 @@
 
-import { toast } from "@/hooks/toast/use-toast";
-import type { ToastType } from "@/hooks/toast/types";
+import { toast } from "@/hooks/toast"
+import type { ToastType } from "@/hooks/toast/types"
 
-export interface NotificationOptions {
-  title: string;
-  description?: string;
-  type?: ToastType;
-  duration?: number;
+interface NotificationOptions {
+  title: string
+  description?: string
+  type?: ToastType
+  duration?: number
 }
 
-export const notify = ({
-  title,
-  description,
-  duration = 5000,
-  type = "default" as ToastType, // Explicitly type the default value
-}: NotificationOptions) => {
-  console.log("Type being passed to toast:", type); // Debugging
-  try {
-    return toast({
-      title,
-      description,
-      duration,
-      type: type as ToastType, // Explicitly assert the type here
-    });
-  } catch (error) {
-    console.error("Failed to display toast:", error);
-    // Optionally, you could provide a fallback notification mechanism here
-  }
-};
+export const notify = ({ title, description, duration, type = "default" }: NotificationOptions) => {
+  return toast({
+    title,
+    description,
+    duration,
+    type,
+  })
+}
 
 export const notifyAdvisor = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "advisor" as ToastType });
-};
+  return notify({ ...options, type: "advisor" })
+}
 
 export const notifyRecruiter = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "recruiter" as ToastType });
-};
+  return notify({ ...options, type: "recruiter" })
+}
 
 export const notifyStudent = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "student" as ToastType });
-};
+  return notify({ ...options, type: "student" })
+}
 
 export const notifySuccess = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "success" as ToastType });
-};
+  return notify({ ...options, type: "success" })
+}
 
 export const notifyError = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "error" as ToastType });
-};
+  return notify({ ...options, type: "error" })
+}
 
 export const notifyWarning = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "warning" as ToastType });
-};
+  return notify({ ...options, type: "warning" })
+}
 
 export const notifyInfo = (options: Omit<NotificationOptions, "type">) => {
-  return notify({ ...options, type: "info" as ToastType });
-};
+  return notify({ ...options, type: "info" })
+}
