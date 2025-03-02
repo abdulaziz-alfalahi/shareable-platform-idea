@@ -1,8 +1,10 @@
-
-import React from "react";
+import React, { useState } from "react";
+import { format } from "date-fns";
 import { Calendar, CheckCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Student } from "@/types/student";
+import ScheduleMeetingDialog from "./ScheduleMeetingDialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface MeetingScheduleProps {
   student: Student;
@@ -10,6 +12,22 @@ interface MeetingScheduleProps {
 }
 
 const MeetingSchedule: React.FC<MeetingScheduleProps> = ({ student, formatDate }) => {
+  const [open, setOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleScheduleMeeting = (studentId: string, date: Date, time: string, notes: string) => {
+    // In a real application, this would call an API to save the meeting
+    console.log("Scheduling meeting:", { studentId, date, time, notes });
+    
+    // Show success toast
+    toast({
+      title: "Meeting scheduled",
+      description: `Meeting with ${student.name} scheduled for ${format(date, "MMMM d, yyyy")} at ${time}.`,
+    });
+    
+    setOpen(false);
+  };
+
   return (
     <div>
       <h3 className="font-medium">Meeting Schedule</h3>
@@ -44,10 +62,17 @@ const MeetingSchedule: React.FC<MeetingScheduleProps> = ({ student, formatDate }
           </div>
         </div>
         
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full" onClick={() => setOpen(true)}>
           <Calendar className="mr-1 h-4 w-4" /> Schedule New Meeting
         </Button>
       </div>
+
+      <ScheduleMeetingDialog
+        student={student}
+        open={open}
+        onOpenChange={setOpen}
+        onSchedule={handleScheduleMeeting}
+      />
     </div>
   );
 };

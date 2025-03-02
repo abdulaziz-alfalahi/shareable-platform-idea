@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, MessageSquare, CheckCircle, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Student } from "@/types/student";
 import { getStatusBadgeVariant, getRiskBadgeVariant } from "@/utils/advisorUtils";
+import ScheduleMeetingDialog from "@/components/advisor/ScheduleMeetingDialog";
+import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
 
 interface ProfileHeaderProps {
   student: Student;
@@ -20,6 +23,21 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onAddGoal
 }) => {
   const navigate = useNavigate();
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleScheduleMeeting = (studentId: string, date: Date, time: string, notes: string) => {
+    // In a real application, this would call an API to save the meeting
+    console.log("Scheduling meeting:", { studentId, date, time, notes });
+    
+    // Show success toast
+    toast({
+      title: "Meeting scheduled",
+      description: `Meeting with ${student.name} scheduled for ${format(date, "MMMM d, yyyy")} at ${time}.`,
+    });
+    
+    setScheduleDialogOpen(false);
+  };
 
   return (
     <>
@@ -61,13 +79,20 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               <Button variant="outline" onClick={onAddGoal}>
                 <CheckCircle className="mr-1 h-4 w-4" /> Add Goal
               </Button>
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => setScheduleDialogOpen(true)}>
                 <Calendar className="mr-1 h-4 w-4" /> Schedule Meeting
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      <ScheduleMeetingDialog
+        student={student}
+        open={scheduleDialogOpen}
+        onOpenChange={setScheduleDialogOpen}
+        onSchedule={handleScheduleMeeting}
+      />
     </>
   );
 };
