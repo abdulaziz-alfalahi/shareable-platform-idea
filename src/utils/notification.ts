@@ -1,7 +1,7 @@
 
 import { toast } from "@/hooks/use-toast"
 
-type NotificationType = "advisor" | "recruiter" | "student" | "success" | "error" | "warning" | "info"
+type NotificationType = "advisor" | "recruiter" | "student" | "success" | "error" | "warning" | "info" | "default"
 
 interface NotificationOptions {
   title: string
