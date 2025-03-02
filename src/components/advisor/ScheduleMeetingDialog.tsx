@@ -23,6 +23,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Student } from "@/types/student";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface ScheduleMeetingDialogProps {
   student: Student;
@@ -58,7 +63,8 @@ const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
       return;
     }
 
-    onSchedule(student.id, date, time, notes);
+    // Convert student.id to string to ensure type compatibility
+    onSchedule(student.id.toString(), date, time, notes);
     resetForm();
   };
 
@@ -83,23 +89,46 @@ const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="date">Date</Label>
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              disabled={(date) => {
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                return date < today || date.getDay() === 0 || date.getDay() === 6;
-              }}
-              initialFocus
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left font-normal"
+                  id="date"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : <span>Select a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  disabled={(date) => {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    return date < today || date.getDay() === 0 || date.getDay() === 6;
+                  }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="time">Time</Label>
             <Select value={time} onValueChange={setTime}>
               <SelectTrigger id="time" className="w-full">
-                <SelectValue placeholder="Select a time slot" />
+                <SelectValue placeholder="Select a time slot">
+                  {time ? (
+                    <div className="flex items-center">
+                      <Clock className="mr-2 h-4 w-4" />
+                      {time}
+                    </div>
+                  ) : (
+                    "Select a time slot"
+                  )}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {timeSlots.map((slot) => (
