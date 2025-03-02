@@ -1,7 +1,6 @@
+import { toast, ToastType } from "@/hooks/use-toast"
 
-import { toast } from "@/hooks/use-toast"
-
-type NotificationType = "default" | "advisor" | "recruiter" | "student" | "success" | "error" | "warning" | "info"
+type NotificationType = ToastType
 
 interface NotificationOptions {
   title: string
@@ -15,7 +14,7 @@ export const notify = ({ title, description, type = "info", duration }: Notifica
     title,
     description,
     duration,
-    type: type as any, // Using type assertion to fix compatibility issue
+    type,
   })
 }
 

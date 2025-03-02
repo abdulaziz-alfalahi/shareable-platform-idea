@@ -8,12 +8,14 @@ import type {
 const TOAST_LIMIT = 5
 const TOAST_REMOVE_DELAY = 5000
 
+export type ToastType = "default" | "advisor" | "recruiter" | "student" | "success" | "error" | "warning" | "info"
+
 type ToasterToast = ToastProps & {
   id: string
   title?: React.ReactNode
   description?: React.ReactNode
   action?: ToastActionElement
-  type?: "default" | "advisor" | "recruiter" | "student" | "success" | "error" | "warning" | "info"
+  type?: ToastType
   read?: boolean
 }
 
