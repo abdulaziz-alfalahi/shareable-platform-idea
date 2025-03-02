@@ -15,7 +15,7 @@ export const notify = ({ title, description, type = "info", duration }: Notifica
     title,
     description,
     duration,
-    type: type as ToastType, // Explicitly cast to ensure type compatibility
+    type, // Now the type from NotificationOptions is directly compatible with ToastType
   })
 }
 
