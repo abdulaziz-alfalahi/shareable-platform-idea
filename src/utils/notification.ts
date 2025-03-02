@@ -15,12 +15,13 @@ export const notify = ({
   duration = 5000,
   type = "default" as ToastType, // Explicitly type the default value
 }: NotificationOptions) => {
+  console.log("Type being passed to toast:", type); // Debugging
   try {
     return toast({
       title,
       description,
       duration,
-      type,
+      type: type as ToastType, // Explicitly assert the type here
     });
   } catch (error) {
     console.error("Failed to display toast:", error);
