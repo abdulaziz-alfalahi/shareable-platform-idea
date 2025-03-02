@@ -15,7 +15,7 @@ export const notify = ({ title, description, type = "info", duration }: Notifica
     title,
     description,
     duration,
-    type,
+    type: type as any, // Using type assertion to fix compatibility issue
   })
 }
 
