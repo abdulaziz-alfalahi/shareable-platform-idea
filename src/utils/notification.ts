@@ -1,7 +1,7 @@
 
 import { toast } from "@/hooks/use-toast"
 
-type NotificationType = "advisor" | "recruiter" | "student" | "success" | "error" | "warning" | "info" | "default"
+type NotificationType = "default" | "advisor" | "recruiter" | "student" | "success" | "error" | "warning" | "info"
 
 interface NotificationOptions {
   title: string
@@ -14,8 +14,8 @@ export const notify = ({ title, description, type = "info", duration }: Notifica
   return toast({
     title,
     description,
-    type: type as any, // Force type compatibility
     duration,
+    type,
   })
 }
 
