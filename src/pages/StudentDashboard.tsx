@@ -1,4 +1,4 @@
-
+<lov-code>
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
@@ -13,6 +13,12 @@ import {
   RefreshCw,
   GraduationCap,
   FileText,
+  BookOpen,
+  Brain,
+  Lightbulb,
+  Users,
+  Building,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +28,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Quiz questions and answers
 const quizQuestions = [
@@ -265,19 +274,151 @@ const futureRequirements = [
   }
 ];
 
+// Grade 10 specialization options
+const grade10Specializations = [
+  {
+    id: "stem",
+    name: "Science, Technology, Engineering & Mathematics",
+    description: "Focus on advanced math, physics, chemistry, biology, and computer science. Prepares for careers in engineering, medicine, research, and technology.",
+    subjects: ["Advanced Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"],
+    careerPaths: ["Engineer", "Doctor", "Scientist", "Software Developer", "Mathematician"],
+    universities: ["UAE University", "Khalifa University", "American University of Sharjah"],
+    icon: Brain
+  },
+  {
+    id: "business",
+    name: "Business & Economics",
+    description: "Focus on economics, accounting, business studies, and mathematics. Prepares for careers in business, finance, entrepreneurship, and management.",
+    subjects: ["Business Studies", "Economics", "Accounting", "Mathematics", "Statistics"],
+    careerPaths: ["Business Analyst", "Accountant", "Entrepreneur", "Financial Advisor", "Marketing Specialist"],
+    universities: ["Zayed University", "American University in Dubai", "Higher Colleges of Technology"],
+    icon: Building
+  },
+  {
+    id: "humanities",
+    name: "Humanities & Social Sciences",
+    description: "Focus on history, geography, psychology, sociology, and literature. Prepares for careers in law, education, journalism, and public service.",
+    subjects: ["History", "Geography", "Psychology", "Sociology", "Literature"],
+    careerPaths: ["Lawyer", "Teacher", "Journalist", "Diplomat", "Social Worker"],
+    universities: ["United Arab Emirates University", "American University of Sharjah", "Paris-Sorbonne University Abu Dhabi"],
+    icon: Users
+  },
+  {
+    id: "arts",
+    name: "Arts & Design",
+    description: "Focus on visual arts, design, music, drama, and creative writing. Prepares for careers in design, media, entertainment, and creative industries.",
+    subjects: ["Visual Arts", "Design", "Media Studies", "Drama", "Creative Writing"],
+    careerPaths: ["Graphic Designer", "Media Producer", "Architect", "Fashion Designer", "Film Director"],
+    universities: ["American University in Dubai", "Zayed University", "Canadian University Dubai"],
+    icon: Lightbulb
+  }
+];
+
+// Grade 10 counseling resources
+const resourcesData = [
+  {
+    title: "Understanding UAE Education Pathways",
+    description: "Comprehensive guide to educational pathways in the UAE, from high school to higher education.",
+    type: "Article",
+    link: "#article-1"
+  },
+  {
+    title: "Choosing the Right Specialization",
+    description: "Interactive workshop with career advisors to help students identify their strengths and interests.",
+    type: "Workshop",
+    link: "#workshop-1"
+  },
+  {
+    title: "Career Exploration Series",
+    description: "Video interviews with professionals in various fields sharing their educational and career journeys.",
+    type: "Video Series",
+    link: "#video-1"
+  },
+  {
+    title: "University Admission Requirements",
+    description: "Overview of admission requirements for popular universities in UAE and abroad.",
+    type: "Guide",
+    link: "#guide-1"
+  },
+  {
+    title: "Skill Assessment Tools",
+    description: "Interactive assessments to help identify your natural aptitudes and strengths.",
+    type: "Assessment",
+    link: "#assessment-1"
+  }
+];
+
+// Grade 10 student self-assessment questionnaire
+const selfAssessmentQuestions = [
+  {
+    question: "Which subjects do you enjoy studying the most?",
+    options: [
+      { id: "a", text: "Mathematics and Sciences", specialization: "stem" },
+      { id: "b", text: "Business and Economics", specialization: "business" },
+      { id: "c", text: "History, Languages, and Social Studies", specialization: "humanities" },
+      { id: "d", text: "Art, Design, and Creative Subjects", specialization: "arts" }
+    ]
+  },
+  {
+    question: "How do you prefer to solve problems?",
+    options: [
+      { id: "a", text: "Using logical reasoning and analysis", specialization: "stem" },
+      { id: "b", text: "Considering practical implications and efficiency", specialization: "business" },
+      { id: "c", text: "Exploring different perspectives and social factors", specialization: "humanities" },
+      { id: "d", text: "Finding creative and innovative solutions", specialization: "arts" }
+    ]
+  },
+  {
+    question: "What type of activities do you enjoy in your free time?",
+    options: [
+      { id: "a", text: "Building things, experimenting, or programming", specialization: "stem" },
+      { id: "b", text: "Planning events, managing resources, or entrepreneurial activities", specialization: "business" },
+      { id: "c", text: "Reading, writing, debating, or community service", specialization: "humanities" },
+      { id: "d", text: "Drawing, designing, performing, or creating", specialization: "arts" }
+    ]
+  },
+  {
+    question: "What type of work environment appeals to you most?",
+    options: [
+      { id: "a", text: "Laboratory, research center, or technical setting", specialization: "stem" },
+      { id: "b", text: "Office, boardroom, or entrepreneurial environment", specialization: "business" },
+      { id: "c", text: "Classroom, courtroom, or community-oriented setting", specialization: "humanities" },
+      { id: "d", text: "Studio, design agency, or creative space", specialization: "arts" }
+    ]
+  },
+  {
+    question: "What skills would you like to develop further?",
+    options: [
+      { id: "a", text: "Technical, analytical, and problem-solving skills", specialization: "stem" },
+      { id: "b", text: "Leadership, management, and financial skills", specialization: "business" },
+      { id: "c", text: "Communication, research, and critical thinking skills", specialization: "humanities" },
+      { id: "d", text: "Creative, visual, and design skills", specialization: "arts" }
+    ]
+  }
+];
+
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [activeTab, setActiveTab] = useState("quiz");
+  const [activeTab, setActiveTab] = useState("grade10");
   const [selectedCareerPath, setSelectedCareerPath] = useState("tech");
   const [quizResults, setQuizResults] = useState<{
     topPathways: string[];
     recommendedSkills: string[];
     strengthAreas: string[];
     developmentAreas: string[];
+  } | null>(null);
+  const [studentGrade, setStudentGrade] = useState("10");
+  const [selectedSpecialization, setSelectedSpecialization] = useState("stem");
+  const [selfAssessmentCurrentQuestion, setSelfAssessmentCurrentQuestion] = useState(0);
+  const [selfAssessmentAnswers, setSelfAssessmentAnswers] = useState<Record<number, string>>({});
+  const [selfAssessmentCompleted, setSelfAssessmentCompleted] = useState(false);
+  const [selfAssessmentResults, setSelfAssessmentResults] = useState<{
+    topSpecialization: string;
+    matchPercentages: Record<string, number>;
   } | null>(null);
 
   // Handle answer selection
@@ -398,8 +539,88 @@ const StudentDashboard = () => {
     setQuizResults(null);
   };
 
+  // Handle self-assessment answer selection
+  const handleSelfAssessmentSelect = (questionIndex: number, answerId: string) => {
+    setSelfAssessmentAnswers({
+      ...selfAssessmentAnswers,
+      [questionIndex]: answerId
+    });
+  };
+
+  // Handle next question for self-assessment
+  const handleSelfAssessmentNext = () => {
+    if (selfAssessmentCurrentQuestion < selfAssessmentQuestions.length - 1) {
+      setSelfAssessmentCurrentQuestion(selfAssessmentCurrentQuestion + 1);
+    } else {
+      processSelfAssessmentResults();
+    }
+  };
+
+  // Process self-assessment results
+  const processSelfAssessmentResults = () => {
+    // Count specialization matches
+    const specializationCounts: Record<string, number> = {
+      stem: 0,
+      business: 0,
+      humanities: 0,
+      arts: 0
+    };
+
+    // Calculate matches
+    Object.entries(selfAssessmentAnswers).forEach(([questionIndex, answerId]) => {
+      const question = selfAssessmentQuestions[parseInt(questionIndex)];
+      const selectedOption = question.options.find(option => option.id === answerId);
+      
+      if (selectedOption) {
+        specializationCounts[selectedOption.specialization] += 1;
+      }
+    });
+
+    // Calculate percentages
+    const totalQuestions = selfAssessmentQuestions.length;
+    const matchPercentages: Record<string, number> = {};
+    Object.entries(specializationCounts).forEach(([specialization, count]) => {
+      matchPercentages[specialization] = Math.round((count / totalQuestions) * 100);
+    });
+
+    // Find top specialization
+    const topSpecialization = Object.entries(specializationCounts)
+      .sort((a, b) => b[1] - a[1])
+      .map(entry => entry[0])[0];
+
+    // Set results
+    setSelfAssessmentResults({
+      topSpecialization,
+      matchPercentages
+    });
+
+    // Set selected specialization to top match
+    setSelectedSpecialization(topSpecialization);
+    
+    // Mark self-assessment as completed
+    setSelfAssessmentCompleted(true);
+    
+    // Show toast notification
+    toast({
+      title: "Self-Assessment Completed!",
+      description: "Your specialization recommendation is ready to view.",
+      className: "bg-emirati-oasisGreen text-white"
+    });
+  };
+
+  // Reset self-assessment
+  const resetSelfAssessment = () => {
+    setSelfAssessmentCurrentQuestion(0);
+    setSelfAssessmentAnswers({});
+    setSelfAssessmentCompleted(false);
+    setSelfAssessmentResults(null);
+  };
+
   // Find the selected career pathway
   const selectedPathway = careerPathways.find(path => path.id === selectedCareerPath);
+  
+  // Find the selected specialization
+  const selectedSpec = grade10Specializations.find(spec => spec.id === selectedSpecialization);
 
   return (
     <div className="container mx-auto py-8 px-4 bg-emirati-sandstone min-h-screen">
@@ -415,403 +636,119 @@ const StudentDashboard = () => {
           <h1 className="text-3xl font-bold text-emirati-oasisGreen">Student Dashboard</h1>
         </div>
         
-        <div className="flex gap-4">
-          <Button 
-            variant={activeTab === "quiz" ? "default" : "outline"} 
-            onClick={() => setActiveTab("quiz")}
-            className="flex items-center gap-2"
-          >
-            <CheckCircle size={18} /> Career Quiz
-          </Button>
-          <Button 
-            variant={activeTab === "results" ? "default" : "outline"} 
-            onClick={() => setActiveTab("results")}
-            className="flex items-center gap-2"
-            disabled={!quizCompleted}
-          >
-            <Award size={18} /> Results
-          </Button>
-          <Button 
-            variant={activeTab === "pathways" ? "default" : "outline"} 
-            onClick={() => setActiveTab("pathways")}
-            className="flex items-center gap-2"
-          >
-            <TrendingUp size={18} /> Career Pathways
-          </Button>
-          <Button 
-            variant={activeTab === "trends" ? "default" : "outline"} 
-            onClick={() => setActiveTab("trends")}
-            className="flex items-center gap-2"
-          >
-            <BarChart2 size={18} /> Market Trends
-          </Button>
+        <div className="flex items-center gap-4">
+          <Select value={studentGrade} onValueChange={setStudentGrade}>
+            <SelectTrigger className="w-32">
+              <SelectValue placeholder="Select Grade" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">Grade 10</SelectItem>
+              <SelectItem value="11">Grade 11</SelectItem>
+              <SelectItem value="12">Grade 12</SelectItem>
+              <SelectItem value="university">University</SelectItem>
+              <SelectItem value="graduate">Graduate</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          {studentGrade === "10" ? (
+            <div className="flex gap-4">
+              <Button 
+                variant={activeTab === "grade10" ? "default" : "outline"} 
+                onClick={() => setActiveTab("grade10")}
+                className="flex items-center gap-2"
+              >
+                <BookOpen size={18} /> Specializations
+              </Button>
+              <Button 
+                variant={activeTab === "assessment" ? "default" : "outline"} 
+                onClick={() => setActiveTab("assessment")}
+                className="flex items-center gap-2"
+              >
+                <Brain size={18} /> Self-Assessment
+              </Button>
+              <Button 
+                variant={activeTab === "resources" ? "default" : "outline"} 
+                onClick={() => setActiveTab("resources")}
+                className="flex items-center gap-2"
+              >
+                <GraduationCap size={18} /> Resources
+              </Button>
+            </div>
+          ) : (
+            <div className="flex gap-4">
+              <Button 
+                variant={activeTab === "quiz" ? "default" : "outline"} 
+                onClick={() => setActiveTab("quiz")}
+                className="flex items-center gap-2"
+              >
+                <CheckCircle size={18} /> Career Quiz
+              </Button>
+              <Button 
+                variant={activeTab === "results" ? "default" : "outline"} 
+                onClick={() => setActiveTab("results")}
+                className="flex items-center gap-2"
+                disabled={!quizCompleted}
+              >
+                <Award size={18} /> Results
+              </Button>
+              <Button 
+                variant={activeTab === "pathways" ? "default" : "outline"} 
+                onClick={() => setActiveTab("pathways")}
+                className="flex items-center gap-2"
+              >
+                <TrendingUp size={18} /> Career Pathways
+              </Button>
+              <Button 
+                variant={activeTab === "trends" ? "default" : "outline"} 
+                onClick={() => setActiveTab("trends")}
+                className="flex items-center gap-2"
+              >
+                <BarChart2 size={18} /> Market Trends
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
-      {activeTab === "quiz" && (
-        <Card className="bg-white shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>Career Pathway Quiz</span>
-              <span className="text-sm text-muted-foreground">
-                Question {currentQuestionIndex + 1} of {quizQuestions.length}
-              </span>
-            </CardTitle>
-            <CardDescription>
-              Answer these questions to help determine your ideal career pathway.
-            </CardDescription>
-            <Progress value={(currentQuestionIndex / quizQuestions.length) * 100} className="mt-2" />
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="text-lg font-medium mb-4">
-              {quizQuestions[currentQuestionIndex].question}
-            </div>
-            
-            <RadioGroup
-              value={answers[quizQuestions[currentQuestionIndex].id] || ""}
-              onValueChange={(value) => handleAnswerSelect(quizQuestions[currentQuestionIndex].id, value)}
-              className="space-y-3"
-            >
-              {quizQuestions[currentQuestionIndex].options.map((option) => (
-                <div key={option.id} className="flex items-center space-x-2 p-3 rounded-md border hover:bg-slate-50">
-                  <RadioGroupItem value={option.id} id={`option-${option.id}`} />
-                  <Label htmlFor={`option-${option.id}`} className="flex-1 cursor-pointer">
-                    {option.text}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
-            
-            <div className="flex justify-end mt-6">
-              <Button 
-                onClick={handleNextQuestion}
-                disabled={!answers[quizQuestions[currentQuestionIndex].id]}
-                className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90"
-              >
-                {currentQuestionIndex < quizQuestions.length - 1 ? (
-                  <>Next Question <ChevronRight size={16} /></>
-                ) : (
-                  <>Submit Quiz <CheckCircle size={16} /></>
-                )}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {activeTab === "results" && quizResults && (
+      {/* Grade 10 Specialization Explorer */}
+      {activeTab === "grade10" && (
         <div className="space-y-6">
+          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 className="text-2xl font-semibold text-emirati-oasisGreen mb-3">Choosing Your Educational Path</h2>
+            <p className="text-gray-700 mb-4">
+              Grade 10 is an important time to start thinking about your future education and career path. 
+              The specialization you choose now will help shape your future opportunities in higher education and beyond.
+            </p>
+            <Alert>
+              <Star className="h-4 w-4" />
+              <AlertTitle>Why this matters</AlertTitle>
+              <AlertDescription>
+                Your choice of specialization can influence your university options, scholarship opportunities, and future career paths.
+              </AlertDescription>
+            </Alert>
+          </div>
+          
           <Card className="bg-white shadow-lg">
             <CardHeader>
-              <CardTitle className="text-emirati-oasisGreen">Your Career Pathway Results</CardTitle>
+              <CardTitle className="text-emirati-oasisGreen">Specialization Options</CardTitle>
               <CardDescription>
-                Based on your responses, here are your personalized career insights
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">Top Career Pathways</h3>
-                  <div className="space-y-4">
-                    {quizResults.topPathways.map((pathwayId, index) => {
-                      const pathway = careerPathways.find(p => p.id === pathwayId);
-                      if (!pathway) return null;
-                      
-                      return (
-                        <div key={pathwayId} className="flex items-center space-x-3">
-                          <div className={`
-                            w-8 h-8 rounded-full flex items-center justify-center 
-                            ${index === 0 ? 'bg-yellow-100 text-yellow-800' : 
-                              index === 1 ? 'bg-gray-100 text-gray-800' : 
-                              index === 2 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-800'}
-                          `}>
-                            {index + 1}
-                          </div>
-                          <div>
-                            <div className="font-medium">{pathway.name}</div>
-                            <div className="text-sm text-muted-foreground">Match strength: {100 - (index * 15)}%</div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">Recommended Skills to Develop</h3>
-                  <ul className="space-y-2">
-                    {quizResults.recommendedSkills.map((skill, index) => (
-                      <li key={index} className="flex items-center space-x-2">
-                        <CheckCircle size={16} className="text-emirati-oasisGreen" />
-                        <span>{skill}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              
-              <Separator />
-              
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Next Steps</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex flex-col items-center text-center">
-                        <GraduationCap size={32} className="text-emirati-oasisGreen mb-2" />
-                        <h4 className="font-medium">Explore Learning Paths</h4>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Discover courses and programs in your top career pathways
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex flex-col items-center text-center">
-                        <Briefcase size={32} className="text-emirati-oasisGreen mb-2" />
-                        <h4 className="font-medium">Job Market Analysis</h4>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Check trending jobs in your recommended fields
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex flex-col items-center text-center">
-                        <FileText size={32} className="text-emirati-oasisGreen mb-2" />
-                        <h4 className="font-medium">Update Your Resume</h4>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Tailor your resume to highlight relevant skills
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-              
-              <div className="flex justify-end">
-                <Button 
-                  onClick={resetQuiz} 
-                  variant="outline" 
-                  className="flex items-center gap-2"
-                >
-                  <RefreshCw size={16} /> Retake Quiz
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {activeTab === "pathways" && (
-        <div className="space-y-6">
-          <Card className="bg-white shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-emirati-oasisGreen">Career Pathway Explorer</CardTitle>
-              <CardDescription>
-                Explore different career pathways and their future prospects
+                Explore different specialization tracks available for high school students in the UAE
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs 
-                defaultValue={selectedCareerPath} 
-                value={selectedCareerPath}
-                onValueChange={setSelectedCareerPath}
+                defaultValue={selectedSpecialization} 
+                value={selectedSpecialization}
+                onValueChange={setSelectedSpecialization}
                 className="space-y-4"
               >
                 <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
-                  {careerPathways.map(pathway => (
-                    <TabsTrigger key={pathway.id} value={pathway.id}>
-                      {pathway.name}
+                  {grade10Specializations.map(spec => (
+                    <TabsTrigger key={spec.id} value={spec.id}>
+                      {spec.name.split(' ')[0]}
                     </TabsTrigger>
                   ))}
                 </TabsList>
                 
-                {selectedPathway && (
-                  <TabsContent value={selectedPathway.id} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div className="md:col-span-2">
-                        <div className="space-y-4">
-                          <h3 className="text-xl font-semibold text-emirati-oasisGreen">{selectedPathway.name}</h3>
-                          <p>{selectedPathway.description}</p>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                            <div>
-                              <h4 className="font-medium mb-2">Common Job Titles</h4>
-                              <ul className="list-disc list-inside space-y-1">
-                                {selectedPathway.jobTitles.map((title, index) => (
-                                  <li key={index}>{title}</li>
-                                ))}
-                              </ul>
-                            </div>
-                            
-                            <div>
-                              <h4 className="font-medium mb-2">Key Skills</h4>
-                              <ul className="list-disc list-inside space-y-1">
-                                {selectedPathway.skills.map((skill, index) => (
-                                  <li key={index}>{skill}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                            <div className="bg-slate-50 p-4 rounded-md">
-                              <h4 className="font-medium mb-1">Market Demand</h4>
-                              <div className="flex items-center space-x-2">
-                                <Progress value={selectedPathway.marketDemand} className="flex-1" />
-                                <span className="text-sm font-medium">{selectedPathway.marketDemand}%</span>
-                              </div>
-                            </div>
-                            
-                            <div className="bg-slate-50 p-4 rounded-md">
-                              <h4 className="font-medium mb-1">Salary Range</h4>
-                              <p className="text-emirati-camelBrown font-medium">{selectedPathway.salaryRange}</p>
-                            </div>
-                            
-                            <div className="bg-slate-50 p-4 rounded-md">
-                              <h4 className="font-medium mb-1">Growth Rate</h4>
-                              <p className="text-green-600 font-medium">{selectedPathway.growthRate}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-medium mb-3">Career Progression Timeline</h4>
-                        <div className="relative">
-                          {selectedPathway.timeline.map((milestone, index) => (
-                            <div key={index} className="ml-6 mb-8 relative">
-                              <div className="absolute -left-6 mt-1.5 w-4 h-4 rounded-full bg-emirati-oasisGreen"></div>
-                              {index < selectedPathway.timeline.length - 1 && (
-                                <div className="absolute -left-4.5 mt-3 bottom-0 top-0 w-0.5 bg-emirati-oasisGreen/20"></div>
-                              )}
-                              <div className="font-medium">{milestone.year}</div>
-                              <div className="text-emirati-camelBrown">{milestone.role}</div>
-                              <div className="text-sm text-muted-foreground">Focus: {milestone.skills}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Job Market Trends</h3>
-                      <div className="h-80">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={selectedPathway.marketData}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="year" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Line 
-                              type="monotone" 
-                              dataKey="jobs" 
-                              stroke="#2c4a2e" 
-                              name="Job Opportunities"
-                              strokeWidth={2}
-                              dot={{ r: 4 }}
-                              activeDot={{ r: 6 }}
-                              strokeDasharray="0 0"
-                            />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </div>
-                      <p className="text-sm text-center text-muted-foreground mt-2">
-                        Job opportunities by year (dashed line indicates projected growth)
-                      </p>
-                    </div>
-                  </TabsContent>
-                )}
-              </Tabs>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {activeTab === "trends" && (
-        <div className="space-y-6">
-          <Card className="bg-white shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-emirati-oasisGreen">Workforce Market Trends</CardTitle>
-              <CardDescription>
-                Explore current and projected market trends for in-demand skills
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={marketTrends}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="skill" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="demand2023" name="Demand 2023" fill="#8b5e34" />
-                    <Bar dataKey="demand2024" name="Demand 2024" fill="#2c4a2e" />
-                    <Bar dataKey="projected2025" name="Projected 2025" fill="#4f8a10" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Top Skills by Industry</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {futureRequirements.map((category, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-base">{category.category}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        {category.skills.map((skill, skillIndex) => (
-                          <div key={skillIndex} className="space-y-1">
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm font-medium">{skill.name}</span>
-                              <span className="text-xs text-muted-foreground">{skill.importance}%</span>
-                            </div>
-                            <Progress value={skill.importance} />
-                          </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="bg-slate-50 p-6 rounded-lg border border-slate-200">
-                <h3 className="text-lg font-semibold mb-3">Key Insights for Students</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start space-x-2">
-                    <div className="mt-1 bg-emirati-oasisGreen/20 text-emirati-oasisGreen rounded-full p-1">
-                      <CheckCircle size={14} />
-                    </div>
-                    <span>Technical skills remain in highest demand across industries, with AI and data-related roles seeing the fastest growth.</span>
-                  </li>
-                  <li className="flex items-start space-x-2">
-                    <div className="mt-1 bg-emirati-oasisGreen/20 text-emirati-oasisGreen rounded-full p-1">
-                      <CheckCircle size={14} />
-                    </div>
-                    <span>Hybrid skills that combine technical knowledge with domain expertise are increasingly valuable.</span>
-                  </li>
-                  <li className="flex items-start space-x-2">
-                    <div className="mt-1 bg-emirati-oasisGreen/20 text-emirati-oasisGreen rounded-full p-1">
-                      <CheckCircle size={14} />
-                    </div>
-                    <span>Despite automation, soft skills like communication and adaptability remain critical for career advancement.</span>
-                  </li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default StudentDashboard;
+                {selectedSpec && (
+                  <TabsContent value={selectedSpec.id
