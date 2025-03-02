@@ -1,17 +1,19 @@
 
 import { toast } from "@/hooks/toast"
-import type { Toast } from "@/hooks/toast/types"
+import type { ToastType } from "@/hooks/toast/types"
 
 interface NotificationOptions {
   title: string;
   description?: string;
+  className?: string;
 }
 
-export const notify = (options: NotificationOptions, type: string = "default") => {
+export const notify = (options: NotificationOptions, type: ToastType = "default") => {
   return toast({
     title: options.title,
     description: options.description,
-    type: type as any,
+    type: type,
+    className: options.className
   });
 };
 
