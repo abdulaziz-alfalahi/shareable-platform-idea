@@ -127,7 +127,6 @@ const searchCandidates = (query: string, filters: any) => {
   return filteredCandidates;
 };
 
-// Interns data
 const interns = [
   { id: 1, name: "Ahmed Khan", university: "American University of Sharjah", major: "Computer Science", gpa: 3.8, year: "Senior", skills: ["Python", "Data Analysis", "Web Development"], status: "Unassigned" },
   { id: 2, name: "Sara Al Nasser", university: "UAE University", major: "Business Administration", gpa: 3.5, year: "Junior", skills: ["Marketing", "Social Media", "Content Creation"], status: "Assigned", company: "Digital Marketing Agency", position: "Marketing Intern" },
@@ -139,7 +138,6 @@ const interns = [
   { id: 8, name: "Hassan Al Balushi", university: "Khalifa University", major: "Mechanical Engineering", gpa: 3.7, year: "Senior", skills: ["CAD", "Thermodynamics", "Fluid Mechanics"], status: "Unassigned" },
 ];
 
-// Available companies for internship placement
 const companies = [
   { id: 1, name: "Abu Dhabi National Oil Company (ADNOC)", industry: "Energy", location: "Abu Dhabi", openPositions: 3 },
   { id: 2, name: "Emirates Airlines", industry: "Aviation", location: "Dubai", openPositions: 2 },
@@ -151,7 +149,6 @@ const companies = [
   { id: 8, name: "Emaar Properties", industry: "Real Estate", location: "Dubai", openPositions: 2 },
 ];
 
-// Internship tracks data
 const internshipTracks = [
   { id: 1, name: "Software Development", department: "IT", duration: "12 weeks", companies: ["Etisalat", "Emirates Airlines", "ADNOC"], skills: ["Programming", "Web Development", "App Development"] },
   { id: 2, name: "Finance & Accounting", department: "Finance", duration: "10 weeks", companies: ["National Bank of Abu Dhabi", "Mubadala", "ADNOC"], skills: ["Financial Analysis", "Accounting", "Excel"] },
@@ -406,7 +403,6 @@ const RecruiterDashboard = () => {
           <TabsTrigger value="companies">Company Partners</TabsTrigger>
         </TabsList>
         
-        {/* Vacancies Tab */}
         <TabsContent value="vacancies" className="mt-6">
           <div className="flex justify-between items-center mb-6">
             <div className="relative w-full max-w-sm">
@@ -468,7 +464,6 @@ const RecruiterDashboard = () => {
           </div>
         </TabsContent>
         
-        {/* Candidates Tab */}
         <TabsContent value="candidates" className="mt-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <div className="relative w-full md:max-w-sm">
@@ -591,14 +586,12 @@ const RecruiterDashboard = () => {
           </div>
         </TabsContent>
         
-        {/* Interviews Tab (New) */}
         <TabsContent value="interviews" className="mt-6">
           <InterviewCalendar 
             onScheduleInterview={() => setIsScheduleInterviewDialogOpen(true)} 
           />
         </TabsContent>
         
-        {/* Interns Tab */}
         <TabsContent value="interns" className="mt-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <div className="relative w-full md:max-w-sm">
@@ -642,4 +635,72 @@ const RecruiterDashboard = () => {
                           {intern.status}
                         </Badge>
                       </h3>
-                      <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 mt-2 text-
+                      <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 mt-2 text-sm text-muted-foreground">
+                        <div className="flex items-center">
+                          <GraduationCap className="mr-1 h-4 w-4" /> {intern.university}
+                        </div>
+                        <div className="flex items-center">
+                          <Briefcase className="mr-1 h-4 w-4" /> {intern.major}
+                        </div>
+                        <div className="flex items-center">
+                          <User className="mr-1 h-4 w-4" /> {intern.year}
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4">
+                        <p className="text-sm font-medium mb-2">Skills</p>
+                        <div className="flex flex-wrap gap-2">
+                          {intern.skills.map((skill, index) => (
+                            <Badge key={index} variant="outline">{skill}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {intern.status === "Assigned" && (
+                        <div className="mt-4">
+                          <p className="text-sm font-medium">Assignment</p>
+                          <div className="mt-1">
+                            <p className="text-sm">
+                              <span className="font-medium">Company:</span> {intern.company}
+                            </p>
+                            <p className="text-sm">
+                              <span className="font-medium">Position:</span> {intern.position}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div>
+                      {intern.status === "Unassigned" ? (
+                        <Button onClick={() => handleAssignIntern(intern)}>
+                          Assign Intern <ArrowRight className="ml-1 h-4 w-4" />
+                        </Button>
+                      ) : (
+                        <Button variant="outline" size="sm">
+                          View Details <ChevronRight className="ml-1 h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="companies" className="mt-6">
+          {/* Companies Tab Content */}
+        </TabsContent>
+      </Tabs>
+      
+      <ScheduleInterviewDialog
+        open={isScheduleInterviewDialogOpen}
+        onOpenChange={setIsScheduleInterviewDialogOpen}
+        onSchedule={handleScheduleInterview}
+      />
+    </div>
+  );
+};
+
+export default RecruiterDashboard;
