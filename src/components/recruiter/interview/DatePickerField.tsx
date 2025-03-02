@@ -42,7 +42,10 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
           <Calendar
             mode="single"
             selected={date}
-            onSelect={onDateSelect}
+            onSelect={(newDate) => {
+              console.log("Calendar date selected:", newDate);
+              onDateSelect(newDate);
+            }}
             disabled={(date) => {
               const today = new Date();
               today.setHours(0, 0, 0, 0);

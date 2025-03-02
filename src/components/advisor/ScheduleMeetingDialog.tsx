@@ -77,10 +77,8 @@ const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
   };
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
+    console.log("Meeting date selected:", selectedDate);
     setDate(selectedDate);
-    if (selectedDate) {
-      setIsCalendarOpen(false); // Close the calendar after selection
-    }
   };
 
   return (
@@ -113,7 +111,10 @@ const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={handleDateSelect}
+                  onSelect={(newDate) => {
+                    handleDateSelect(newDate);
+                    setIsCalendarOpen(false);
+                  }}
                   disabled={(date) => {
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);

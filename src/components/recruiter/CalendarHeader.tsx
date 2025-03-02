@@ -47,6 +47,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
               mode="single"
               selected={date}
               onSelect={(newDate) => {
+                console.log("Calendar date selected in header:", newDate);
                 if (newDate) {
                   setDate(newDate);
                   setCalendarView(false);
