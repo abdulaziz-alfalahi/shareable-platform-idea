@@ -11,7 +11,7 @@ const HeroSection = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center z-0" 
         style={{ 
-          backgroundImage: "url('/lovable-uploads/38a6b9b8-c2f7-4177-853d-e9b3350fe616.png')",
+          backgroundImage: "url('/og-image.png')",  // Using the og-image.png which is available in public folder
           filter: "brightness(0.6)"
         }}
       />
