@@ -5,8 +5,8 @@ import { Student } from "@/types/student";
 
 interface ProgramDetailsProps {
   student: Student;
-  getStatusBadgeVariant: (status: string) => string;
-  getRiskBadgeVariant: (risk: string) => string;
+  getStatusBadgeVariant: (status: string) => "default" | "secondary" | "destructive" | "outline";
+  getRiskBadgeVariant: (risk: string) => "default" | "secondary" | "destructive" | "outline";
 }
 
 const ProgramDetails: React.FC<ProgramDetailsProps> = ({ 
@@ -32,13 +32,13 @@ const ProgramDetails: React.FC<ProgramDetailsProps> = ({
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">Status:</span>
-          <Badge variant={getStatusBadgeVariant(student.advisingStatus) as any}>
+          <Badge variant={getStatusBadgeVariant(student.advisingStatus)}>
             {student.advisingStatus}
           </Badge>
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">Risk Level:</span>
-          <Badge variant={getRiskBadgeVariant(student.riskLevel) as any}>
+          <Badge variant={getRiskBadgeVariant(student.riskLevel)}>
             {student.riskLevel}
           </Badge>
         </div>
