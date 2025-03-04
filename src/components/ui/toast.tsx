@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { ToastType } from "@/hooks/use-toast"
+import { ToastType } from "@/hooks/toast/types"
 
 const ToastProvider = ToastPrimitives.Provider
 
@@ -34,6 +34,7 @@ const toastVariants = cva(
         advisor: "border-blue-500 bg-blue-50 text-blue-800 dark:bg-blue-900 dark:text-blue-100",
         recruiter: "border-purple-500 bg-purple-50 text-purple-800 dark:bg-purple-900 dark:text-purple-100",
         student: "border-green-500 bg-green-50 text-green-800 dark:bg-green-900 dark:text-green-100",
+        admin: "border-amber-500 bg-amber-50 text-amber-800 dark:bg-amber-900 dark:text-amber-100",
         success: "border-green-500 bg-green-50 text-green-800 dark:bg-green-900 dark:text-green-100",
         error: "border-red-500 bg-red-50 text-red-800 dark:bg-red-900 dark:text-red-100",
         warning: "border-yellow-500 bg-yellow-50 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100",
@@ -44,6 +45,7 @@ const toastVariants = cva(
         advisor: "border-l-4 border-l-blue-500",
         recruiter: "border-l-4 border-l-purple-500",
         student: "border-l-4 border-l-green-500",
+        admin: "border-l-4 border-l-amber-500",
         success: "border-l-4 border-l-green-500",
         error: "border-l-4 border-l-red-500",
         warning: "border-l-4 border-l-yellow-500",

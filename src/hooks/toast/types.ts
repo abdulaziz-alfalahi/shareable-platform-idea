@@ -6,7 +6,7 @@ import type {
 import * as React from "react"
 
 // Toast type definitions
-export type ToastType = "default" | "advisor" | "recruiter" | "student" | "success" | "error" | "warning" | "info"
+export type ToastType = "default" | "advisor" | "recruiter" | "student" | "admin" | "success" | "error" | "warning" | "info"
 
 export type ToasterToast = ToastProps & {
   id: string
