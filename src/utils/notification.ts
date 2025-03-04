@@ -21,7 +21,7 @@ export const notifySuccess = ({ title, description }: { title: string; descripti
   toast({
     title,
     description,
-    type: "success" as ToastType,
+    type: "success",
   });
 };
 
@@ -29,7 +29,7 @@ export const notifyError = ({ title, description }: { title: string; description
   toast({
     title,
     description,
-    type: "error" as ToastType,
+    type: "error",
   });
 };
 
@@ -37,7 +37,7 @@ export const notifyWarning = ({ title, description }: { title: string; descripti
   toast({
     title,
     description,
-    type: "warning" as ToastType,
+    type: "warning",
   });
 };
 
@@ -45,7 +45,7 @@ export const notifyInfo = ({ title, description }: { title: string; description:
   toast({
     title,
     description,
-    type: "info" as ToastType,
+    type: "info",
   });
 };
 
@@ -53,7 +53,7 @@ export const notifyAdmin = ({ title, description }: { title: string; description
   toast({
     title,
     description,
-    type: "admin" as ToastType,
+    type: "admin",
   });
 };
 
@@ -61,7 +61,7 @@ export const notifyAdvisor = ({ title, description }: { title: string; descripti
   toast({
     title,
     description,
-    type: "advisor" as ToastType,
+    type: "advisor",
   });
 };
 
@@ -69,7 +69,7 @@ export const notifyStudent = ({ title, description }: { title: string; descripti
   toast({
     title,
     description,
-    type: "student" as ToastType,
+    type: "student",
   });
 };
 
@@ -77,7 +77,7 @@ export const notifyRecruiter = ({ title, description }: { title: string; descrip
   toast({
     title,
     description,
-    type: "recruiter" as ToastType,
+    type: "recruiter",
   });
 };
 
@@ -91,6 +91,6 @@ export const showNotification = (
   toastHook.toast({
     title,
     description,
-    type: type as ToastType,
+    type,
   });
 };
