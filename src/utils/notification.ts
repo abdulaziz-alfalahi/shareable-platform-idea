@@ -1,6 +1,6 @@
 
 import { ToastType } from "@/hooks/toast/types";
-import { useToast, toast } from "@/hooks/toast";
+import { toast } from "@/hooks/toast";
 
 // Helper function to create a notification
 export const createNotification = (
@@ -21,7 +21,7 @@ export const notifySuccess = ({ title, description }: { title: string; descripti
   toast({
     title,
     description,
-    type: "success",
+    type: "success" as ToastType,
   });
 };
 
@@ -29,7 +29,7 @@ export const notifyError = ({ title, description }: { title: string; description
   toast({
     title,
     description,
-    type: "error",
+    type: "error" as ToastType,
   });
 };
 
@@ -37,7 +37,7 @@ export const notifyWarning = ({ title, description }: { title: string; descripti
   toast({
     title,
     description,
-    type: "warning",
+    type: "warning" as ToastType,
   });
 };
 
@@ -45,7 +45,7 @@ export const notifyInfo = ({ title, description }: { title: string; description:
   toast({
     title,
     description,
-    type: "info",
+    type: "info" as ToastType,
   });
 };
 
@@ -53,7 +53,7 @@ export const notifyAdmin = ({ title, description }: { title: string; description
   toast({
     title,
     description,
-    type: "admin",
+    type: "admin" as ToastType,
   });
 };
 
@@ -61,7 +61,7 @@ export const notifyAdvisor = ({ title, description }: { title: string; descripti
   toast({
     title,
     description,
-    type: "advisor",
+    type: "advisor" as ToastType,
   });
 };
 
@@ -69,7 +69,7 @@ export const notifyStudent = ({ title, description }: { title: string; descripti
   toast({
     title,
     description,
-    type: "student",
+    type: "student" as ToastType,
   });
 };
 
@@ -77,13 +77,13 @@ export const notifyRecruiter = ({ title, description }: { title: string; descrip
   toast({
     title,
     description,
-    type: "recruiter",
+    type: "recruiter" as ToastType,
   });
 };
 
 // Function to show a notification using toast hook (for components)
 export const showNotification = (
-  toastHook: ReturnType<typeof useToast>,
+  toastHook: any,
   title: string,
   description: string,
   type: ToastType = "default"
@@ -91,6 +91,6 @@ export const showNotification = (
   toastHook.toast({
     title,
     description,
-    type,
+    type: type as ToastType,
   });
 };
