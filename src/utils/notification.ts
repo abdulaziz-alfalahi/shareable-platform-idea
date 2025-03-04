@@ -30,7 +30,7 @@ export const notifyStudent = (options: NotificationOptions) => {
 };
 
 export const notifyAdmin = (options: NotificationOptions) => {
-  return notify(options, "warning");
+  return notify(options, "admin");
 };
 
 export const notifySuccess = (options: NotificationOptions) => {
