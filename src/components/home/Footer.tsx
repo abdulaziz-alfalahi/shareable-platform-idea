@@ -100,7 +100,7 @@ const Footer = () => {
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 mr-2 mt-0.5 text-emirati-desertGold" />
                 <span className="text-white/80">
-                  Ministry of Human Resources<br />
+                  Emirati Human Resources Development Council<br />
                   Abu Dhabi, United Arab Emirates
                 </span>
               </li>
