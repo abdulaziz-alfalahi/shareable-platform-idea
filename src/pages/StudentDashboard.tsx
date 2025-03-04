@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
@@ -348,51 +347,96 @@ const resourcesData = [
   }
 ];
 
-// Grade 10 student self-assessment questionnaire
+// Grade 10 student self-assessment questionnaire - expanded to 10 questions
 const selfAssessmentQuestions = [
   {
-    question: "Which subjects do you enjoy studying the most?",
+    question: "Which subjects do you consistently perform well in and enjoy studying?",
     options: [
-      { id: "a", text: "Mathematics and Sciences", specialization: "stem" },
-      { id: "b", text: "Business and Economics", specialization: "business" },
-      { id: "c", text: "History, Languages, and Social Studies", specialization: "humanities" },
-      { id: "d", text: "Art, Design, and Creative Subjects", specialization: "arts" }
+      { id: "a", text: "Mathematics, Physics, or Computer Science", specialization: "stem" },
+      { id: "b", text: "Business Studies, Economics, or Accounting", specialization: "business" },
+      { id: "c", text: "Languages, History, or Social Studies", specialization: "humanities" },
+      { id: "d", text: "Visual Arts, Design, or Music", specialization: "arts" }
     ]
   },
   {
-    question: "How do you prefer to solve problems?",
+    question: "How do you prefer to approach problem-solving?",
     options: [
-      { id: "a", text: "Using logical reasoning and analysis", specialization: "stem" },
-      { id: "b", text: "Considering practical implications and efficiency", specialization: "business" },
-      { id: "c", text: "Exploring different perspectives and social factors", specialization: "humanities" },
-      { id: "d", text: "Finding creative and innovative solutions", specialization: "arts" }
+      { id: "a", text: "Using logical reasoning, formulas, and systematic analysis", specialization: "stem" },
+      { id: "b", text: "Evaluating practical implications, resources, and financial feasibility", specialization: "business" },
+      { id: "c", text: "Considering different perspectives, historical context, and social impacts", specialization: "humanities" },
+      { id: "d", text: "Finding creative and innovative solutions through design thinking", specialization: "arts" }
     ]
   },
   {
-    question: "What type of activities do you enjoy in your free time?",
+    question: "What type of projects or activities do you enjoy most in your free time?",
     options: [
-      { id: "a", text: "Building things, experimenting, or programming", specialization: "stem" },
-      { id: "b", text: "Planning events, managing resources, or entrepreneurial activities", specialization: "business" },
-      { id: "c", text: "Reading, writing, debating, or community service", specialization: "humanities" },
-      { id: "d", text: "Drawing, designing, performing, or creating", specialization: "arts" }
+      { id: "a", text: "Building things, programming, or conducting experiments", specialization: "stem" },
+      { id: "b", text: "Managing resources, planning events, or entrepreneurial activities", specialization: "business" },
+      { id: "c", text: "Reading, writing essays, debating, or volunteering", specialization: "humanities" },
+      { id: "d", text: "Drawing, photography, performance, or creating digital content", specialization: "arts" }
     ]
   },
   {
-    question: "What type of work environment appeals to you most?",
+    question: "What role do you typically take in group projects?",
     options: [
-      { id: "a", text: "Laboratory, research center, or technical setting", specialization: "stem" },
-      { id: "b", text: "Office, boardroom, or entrepreneurial environment", specialization: "business" },
-      { id: "c", text: "Classroom, courtroom, or community-oriented setting", specialization: "humanities" },
-      { id: "d", text: "Studio, design agency, or creative space", specialization: "arts" }
+      { id: "a", text: "Technical specialist who handles complex problems", specialization: "stem" },
+      { id: "b", text: "Leader who organizes the workflow and manages the team", specialization: "business" },
+      { id: "c", text: "Researcher who gathers information and writes content", specialization: "humanities" },
+      { id: "d", text: "Creative contributor who handles design and presentation", specialization: "arts" }
     ]
   },
   {
-    question: "What skills would you like to develop further?",
+    question: "Which career achievements would bring you the most satisfaction?",
     options: [
-      { id: "a", text: "Technical, analytical, and problem-solving skills", specialization: "stem" },
-      { id: "b", text: "Leadership, management, and financial skills", specialization: "business" },
-      { id: "c", text: "Communication, research, and critical thinking skills", specialization: "humanities" },
-      { id: "d", text: "Creative, visual, and design skills", specialization: "arts" }
+      { id: "a", text: "Making a scientific discovery or technological breakthrough", specialization: "stem" },
+      { id: "b", text: "Building a successful business or managing a large organization", specialization: "business" },
+      { id: "c", text: "Making a positive impact on society or influencing public policy", specialization: "humanities" },
+      { id: "d", text: "Creating influential artistic works or innovative designs", specialization: "arts" }
+    ]
+  },
+  {
+    question: "When learning something new, how do you prefer to approach it?",
+    options: [
+      { id: "a", text: "Through technical manuals, practical experimentation, and logic", specialization: "stem" },
+      { id: "b", text: "Through case studies, real-world examples, and best practices", specialization: "business" },
+      { id: "c", text: "Through reading literature, discussions, and critical analysis", specialization: "humanities" },
+      { id: "d", text: "Through visual demonstrations, creative exploration, and practice", specialization: "arts" }
+    ]
+  },
+  {
+    question: "What type of work environment would you thrive in?",
+    options: [
+      { id: "a", text: "High-tech laboratory, research center, or engineering firm", specialization: "stem" },
+      { id: "b", text: "Corporate office, financial institution, or entrepreneurial setting", specialization: "business" },
+      { id: "c", text: "Educational institution, government agency, or non-profit organization", specialization: "humanities" },
+      { id: "d", text: "Design studio, media production house, or creative agency", specialization: "arts" }
+    ]
+  },
+  {
+    question: "Which topics do you find yourself researching or reading about in your spare time?",
+    options: [
+      { id: "a", text: "Scientific discoveries, technology trends, or mathematical concepts", specialization: "stem" },
+      { id: "b", text: "Business news, investment strategies, or management techniques", specialization: "business" },
+      { id: "c", text: "Current events, historical topics, philosophy, or psychology", specialization: "humanities" },
+      { id: "d", text: "Art movements, design principles, or creative techniques", specialization: "arts" }
+    ]
+  },
+  {
+    question: "What types of challenges energize rather than drain you?",
+    options: [
+      { id: "a", text: "Complex technical problems requiring analytical thinking", specialization: "stem" },
+      { id: "b", text: "Strategic decisions involving resources and competitive analysis", specialization: "business" },
+      { id: "c", text: "Understanding complex social issues and human behavior", specialization: "humanities" },
+      { id: "d", text: "Expressing ideas through creative and artistic mediums", specialization: "arts" }
+    ]
+  },
+  {
+    question: "If you could choose one skill to master instantly, what would it be?",
+    options: [
+      { id: "a", text: "Advanced programming, engineering, or scientific research", specialization: "stem" },
+      { id: "b", text: "Financial analysis, strategic planning, or negotiation", specialization: "business" },
+      { id: "c", text: "Persuasive writing, critical analysis, or foreign languages", specialization: "humanities" },
+      { id: "d", text: "Professional-level artistic skills or multimedia production", specialization: "arts" }
     ]
   }
 ];
@@ -603,7 +647,7 @@ const StudentDashboard = () => {
     // Show toast notification
     toast({
       title: "Self-Assessment Completed!",
-      description: "Your specialization recommendation is ready to view.",
+      description: "Your comprehensive specialization recommendation is ready to view.",
       type: "success"
     });
   };
@@ -902,7 +946,7 @@ const StudentDashboard = () => {
                     <div className="mb-6">
                       <h3 className="text-lg font-medium mb-2">Your Top Match: <span className="text-emirati-oasisGreen font-semibold">{grade10Specializations.find(s => s.id === selfAssessmentResults?.topSpecialization)?.name}</span></h3>
                       <p className="text-gray-700">
-                        This specialization appears to align well with your interests, preferences, and learning style.
+                        This specialization appears to align well with your interests, preferences, and learning style based on your detailed responses.
                       </p>
                     </div>
                     
@@ -913,7 +957,7 @@ const StudentDashboard = () => {
                         return (
                           <div key={specId} className="space-y-1">
                             <div className="flex justify-between">
-                              <span className="font-medium">{spec?.name.split(' ')[0]}</span>
+                              <span className="font-medium">{spec?.name}</span>
                               <span>{percentage}%</span>
                             </div>
                             <Progress value={percentage} className="h-2" />
