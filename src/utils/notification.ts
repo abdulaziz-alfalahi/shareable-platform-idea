@@ -1,50 +1,103 @@
 
-import { toast } from "@/hooks/toast"
-import type { ToastType } from "@/hooks/toast/types"
+// Update imports and fix TypeScript issues
+import { ToastType } from "@/hooks/toast/types";
+import { useToast } from "@/hooks/toast";
 
-interface NotificationOptions {
-  title: string;
-  description?: string;
-  className?: string;
-}
-
-export const notify = (options: NotificationOptions, type: ToastType = "default") => {
-  return toast({
-    title: options.title,
-    description: options.description,
+// Helper function to create a notification
+export const createNotification = (
+  title: string,
+  description: string,
+  type: ToastType = "default"
+) => {
+  return {
+    title,
+    description,
     type,
-    className: options.className || ""
+  };
+};
+
+// Function to show a notification using toast
+export const showNotification = (
+  toast: ReturnType<typeof useToast>,
+  title: string,
+  description: string,
+  type: ToastType = "default"
+) => {
+  toast({
+    title,
+    description,
+    type,
   });
 };
 
-export const notifyAdvisor = (options: NotificationOptions) => {
-  return notify(options, "advisor");
+// Function to show an admin notification
+export const showAdminNotification = (
+  toast: ReturnType<typeof useToast>,
+  title: string,
+  description: string
+) => {
+  showNotification(toast, title, description, "admin");
 };
 
-export const notifyRecruiter = (options: NotificationOptions) => {
-  return notify(options, "recruiter");
+// Function to show an advisor notification
+export const showAdvisorNotification = (
+  toast: ReturnType<typeof useToast>,
+  title: string,
+  description: string
+) => {
+  showNotification(toast, title, description, "advisor");
 };
 
-export const notifyStudent = (options: NotificationOptions) => {
-  return notify(options, "student");
+// Function to show a student notification
+export const showStudentNotification = (
+  toast: ReturnType<typeof useToast>,
+  title: string,
+  description: string
+) => {
+  showNotification(toast, title, description, "student");
 };
 
-export const notifyAdmin = (options: NotificationOptions) => {
-  return notify(options, "admin");
+// Function to show a recruiter notification
+export const showRecruiterNotification = (
+  toast: ReturnType<typeof useToast>,
+  title: string,
+  description: string
+) => {
+  showNotification(toast, title, description, "recruiter");
 };
 
-export const notifySuccess = (options: NotificationOptions) => {
-  return notify(options, "success");
+// Function to show a success notification
+export const showSuccessNotification = (
+  toast: ReturnType<typeof useToast>,
+  title: string,
+  description: string
+) => {
+  showNotification(toast, title, description, "success");
 };
 
-export const notifyError = (options: NotificationOptions) => {
-  return notify(options, "error");
+// Function to show an error notification
+export const showErrorNotification = (
+  toast: ReturnType<typeof useToast>,
+  title: string,
+  description: string
+) => {
+  showNotification(toast, title, description, "error");
 };
 
-export const notifyWarning = (options: NotificationOptions) => {
-  return notify(options, "warning");
+// Function to show a warning notification
+export const showWarningNotification = (
+  toast: ReturnType<typeof useToast>,
+  title: string,
+  description: string
+) => {
+  showNotification(toast, title, description, "warning");
 };
 
-export const notifyInfo = (options: NotificationOptions) => {
-  return notify(options, "info");
+// Function to show an info notification
+export const showInfoNotification = (
+  toast: ReturnType<typeof useToast>,
+  title: string,
+  description: string
+) => {
+  showNotification(toast, title, description, "info");
 };
