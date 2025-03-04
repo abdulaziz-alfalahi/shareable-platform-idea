@@ -1,7 +1,6 @@
 
-// Update imports and fix TypeScript issues
 import { ToastType } from "@/hooks/toast/types";
-import { useToast } from "@/hooks/toast";
+import { useToast, toast } from "@/hooks/toast";
 
 // Helper function to create a notification
 export const createNotification = (
@@ -16,88 +15,82 @@ export const createNotification = (
   };
 };
 
-// Function to show a notification using toast
+// Higher-order functions that return notification functions
+// These can be used without requiring the useToast hook directly
+export const notifySuccess = ({ title, description }: { title: string; description: string }) => {
+  toast({
+    title,
+    description,
+    type: "success",
+  });
+};
+
+export const notifyError = ({ title, description }: { title: string; description: string }) => {
+  toast({
+    title,
+    description,
+    type: "error",
+  });
+};
+
+export const notifyWarning = ({ title, description }: { title: string; description: string }) => {
+  toast({
+    title,
+    description,
+    type: "warning",
+  });
+};
+
+export const notifyInfo = ({ title, description }: { title: string; description: string }) => {
+  toast({
+    title,
+    description,
+    type: "info",
+  });
+};
+
+export const notifyAdmin = ({ title, description }: { title: string; description: string }) => {
+  toast({
+    title,
+    description,
+    type: "admin",
+  });
+};
+
+export const notifyAdvisor = ({ title, description }: { title: string; description: string }) => {
+  toast({
+    title,
+    description,
+    type: "advisor",
+  });
+};
+
+export const notifyStudent = ({ title, description }: { title: string; description: string }) => {
+  toast({
+    title,
+    description,
+    type: "student",
+  });
+};
+
+export const notifyRecruiter = ({ title, description }: { title: string; description: string }) => {
+  toast({
+    title,
+    description,
+    type: "recruiter",
+  });
+};
+
+// Function to show a notification using toast hook (for components)
 export const showNotification = (
-  toast: ReturnType<typeof useToast>,
+  toastHook: ReturnType<typeof useToast>,
   title: string,
   description: string,
   type: ToastType = "default"
 ) => {
-  toast({
+  toastHook.toast({
     title,
     description,
     type,
   });
-};
-
-// Function to show an admin notification
-export const showAdminNotification = (
-  toast: ReturnType<typeof useToast>,
-  title: string,
-  description: string
-) => {
-  showNotification(toast, title, description, "admin");
-};
-
-// Function to show an advisor notification
-export const showAdvisorNotification = (
-  toast: ReturnType<typeof useToast>,
-  title: string,
-  description: string
-) => {
-  showNotification(toast, title, description, "advisor");
-};
-
-// Function to show a student notification
-export const showStudentNotification = (
-  toast: ReturnType<typeof useToast>,
-  title: string,
-  description: string
-) => {
-  showNotification(toast, title, description, "student");
-};
-
-// Function to show a recruiter notification
-export const showRecruiterNotification = (
-  toast: ReturnType<typeof useToast>,
-  title: string,
-  description: string
-) => {
-  showNotification(toast, title, description, "recruiter");
-};
-
-// Function to show a success notification
-export const showSuccessNotification = (
-  toast: ReturnType<typeof useToast>,
-  title: string,
-  description: string
-) => {
-  showNotification(toast, title, description, "success");
-};
-
-// Function to show an error notification
-export const showErrorNotification = (
-  toast: ReturnType<typeof useToast>,
-  title: string,
-  description: string
-) => {
-  showNotification(toast, title, description, "error");
-};
-
-// Function to show a warning notification
-export const showWarningNotification = (
-  toast: ReturnType<typeof useToast>,
-  title: string,
-  description: string
-) => {
-  showNotification(toast, title, description, "warning");
-};
-
-// Function to show an info notification
-export const showInfoNotification = (
-  toast: ReturnType<typeof useToast>,
-  title: string,
-  description: string
-) => {
-  showNotification(toast, title, description, "info");
 };
