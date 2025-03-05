@@ -19,6 +19,7 @@ export interface Student {
   name: string;
   program: string;
   year: number;
+  gradeLevel: "grade-10" | "grade-11" | "grade-12" | "university-1" | "university-2" | "university-3" | "university-4";
   gpa: number;
   advisingStatus: string;
   riskLevel: string;

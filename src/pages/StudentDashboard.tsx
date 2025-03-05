@@ -9,14 +9,31 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/toast";
 import { notifySuccess } from "@/utils/notification";
+import { getEducationLevel, getGradeLevelDisplay } from "@/utils/advisorUtils";
 
 const StudentDashboard = () => {
+  // Mock student data - in a real app, this would come from an API or context
+  const [studentData] = useState({
+    id: 1,
+    name: "Ahmed Al Mansouri",
+    gradeLevel: "university-2", // This would dynamically change based on the student
+    program: "Computer Science",
+    gpa: 3.7,
+    progress: 65,
+    skillsProgress: 72,
+    certificationsProgress: 40
+  });
+
   // State management for self-assessment
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [assessmentComplete, setAssessmentComplete] = useState(false);
   const { toast } = useToast();
+
+  // Get education level (school or university)
+  const educationLevel = getEducationLevel(studentData.gradeLevel);
+  const gradeLevelDisplay = getGradeLevelDisplay(studentData.gradeLevel);
 
   // Self-assessment questions
   const assessmentQuestions = [
@@ -87,6 +104,56 @@ const StudentDashboard = () => {
     }
   ];
 
+  // School-specific programs
+  const schoolPrograms = [
+    {
+      title: "Career Exploration Workshop",
+      description: "Discover different career paths through interactive sessions with professionals from various fields.",
+      date: "Every Wednesday",
+      status: "Open for Registration"
+    },
+    {
+      title: "University Application Guide",
+      description: "Learn how to prepare compelling university applications and navigate the admissions process.",
+      date: "Starts Next Month",
+      status: "Coming Soon"
+    },
+    {
+      title: "Study Skills Development",
+      description: "Master effective study techniques to improve academic performance and retention.",
+      date: "Mondays and Thursdays",
+      status: "In Progress"
+    }
+  ];
+
+  // University-specific internship opportunities
+  const internshipOpportunities = [
+    {
+      company: "Emirates Technology Solutions",
+      position: "Junior Developer Intern",
+      duration: "3 months",
+      location: "Dubai",
+      remote: false,
+      application: "Open"
+    },
+    {
+      company: "Abu Dhabi Investment Authority",
+      position: "Data Analysis Intern",
+      duration: "6 months",
+      location: "Abu Dhabi",
+      remote: true,
+      application: "Closing Soon"
+    },
+    {
+      company: "Etihad Airways",
+      position: "Business Operations Intern",
+      duration: "4 months",
+      location: "Abu Dhabi",
+      remote: false,
+      application: "Open"
+    }
+  ];
+
   // Handle assessment interaction
   const handleOptionSelect = (option: string) => {
     const newAnswers = [...answers];
@@ -128,23 +195,30 @@ const StudentDashboard = () => {
   const progressPercentage = Math.round(((currentQuestionIndex + (answers[currentQuestionIndex] ? 1 : 0)) / assessmentQuestions.length) * 100);
 
   // Mock progress data
-  const courseProgress = 65;
-  const skillsProgress = 72;
-  const certificationsProgress = 40;
+  const courseProgress = studentData.progress;
+  const skillsProgress = studentData.skillsProgress;
+  const certificationsProgress = studentData.certificationsProgress;
 
   return (
     <div className="container mx-auto py-6 px-4 sm:px-6 max-w-7xl">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-primary">Student Dashboard</h1>
-        <p className="text-muted-foreground">Track your progress and explore career options</p>
+        <p className="text-muted-foreground">
+          Track your progress as a {gradeLevelDisplay} student and explore educational opportunities
+        </p>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+        <TabsList className="grid grid-cols-5 w-full max-w-3xl">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="assessment">Self-Assessment</TabsTrigger>
           <TabsTrigger value="courses">My Courses</TabsTrigger>
           <TabsTrigger value="career">Career Path</TabsTrigger>
+          {educationLevel === "school" ? (
+            <TabsTrigger value="guidance">Guidance Programs</TabsTrigger>
+          ) : (
+            <TabsTrigger value="internships">Internship Opportunities</TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="overview">
@@ -215,6 +289,89 @@ const StudentDashboard = () => {
                   <div className="flex justify-between items-center">
                     <span>Cloud Architecture</span>
                     <Badge variant="outline">Not Started</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>{educationLevel === "school" ? "School Progress" : "University Progress"}</CardTitle>
+                <CardDescription>
+                  Track your current {educationLevel === "school" ? "grade" : "year"} performance and goals
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold">Current Level: {gradeLevelDisplay}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {educationLevel === "school" 
+                        ? "Focus on building a strong academic foundation and exploring potential career paths." 
+                        : "Develop specialized skills and gain practical experience through projects and internships."}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div className="border rounded-lg p-4">
+                      <h4 className="font-medium mb-2">Academic Performance</h4>
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-sm">GPA</span>
+                        <span className="font-medium">{studentData.gpa}</span>
+                      </div>
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-sm">Class Rank</span>
+                        <span className="font-medium">Top 15%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">Attendance</span>
+                        <span className="font-medium">98%</span>
+                      </div>
+                    </div>
+
+                    <div className="border rounded-lg p-4">
+                      <h4 className="font-medium mb-2">Current Focus Areas</h4>
+                      <ul className="text-sm space-y-1 list-disc list-inside">
+                        {educationLevel === "school" ? (
+                          <>
+                            <li>Mathematics and Sciences</li>
+                            <li>Research and Critical Thinking</li>
+                            <li>Communication Skills</li>
+                            <li>Digital Literacy</li>
+                          </>
+                        ) : (
+                          <>
+                            <li>Core {studentData.program} Courses</li>
+                            <li>Research Methodology</li>
+                            <li>Professional Skills Development</li>
+                            <li>Industry Certifications</li>
+                          </>
+                        )}
+                      </ul>
+                    </div>
+
+                    <div className="border rounded-lg p-4">
+                      <h4 className="font-medium mb-2">Next Steps</h4>
+                      <ul className="text-sm space-y-1 list-disc list-inside">
+                        {educationLevel === "school" ? (
+                          <>
+                            <li>Complete Course Selection for Next Term</li>
+                            <li>Attend University Information Sessions</li>
+                            <li>Prepare for Standardized Tests</li>
+                            <li>Participate in Extracurricular Activities</li>
+                          </>
+                        ) : (
+                          <>
+                            <li>Apply for Summer Internships</li>
+                            <li>Select Specialization Courses</li>
+                            <li>Join Research Projects</li>
+                            <li>Attend Industry Networking Events</li>
+                          </>
+                        )}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -333,7 +490,9 @@ const StudentDashboard = () => {
               <div className="space-y-5">
                 <div className="border rounded-lg p-4 space-y-3">
                   <div className="flex justify-between items-center">
-                    <h4 className="font-semibold">Introduction to Programming</h4>
+                    <h4 className="font-semibold">
+                      {educationLevel === "school" ? "Advanced Mathematics" : "Introduction to Programming"}
+                    </h4>
                     <Badge>In Progress</Badge>
                   </div>
                   <Progress value={75} className="h-2" />
@@ -346,7 +505,9 @@ const StudentDashboard = () => {
 
                 <div className="border rounded-lg p-4 space-y-3">
                   <div className="flex justify-between items-center">
-                    <h4 className="font-semibold">Data Analysis Fundamentals</h4>
+                    <h4 className="font-semibold">
+                      {educationLevel === "school" ? "Physics" : "Data Analysis Fundamentals"}
+                    </h4>
                     <Badge>In Progress</Badge>
                   </div>
                   <Progress value={40} className="h-2" />
@@ -359,7 +520,9 @@ const StudentDashboard = () => {
 
                 <div className="border rounded-lg p-4 space-y-3">
                   <div className="flex justify-between items-center">
-                    <h4 className="font-semibold">Professional Communication Skills</h4>
+                    <h4 className="font-semibold">
+                      {educationLevel === "school" ? "Business Studies" : "Professional Communication Skills"}
+                    </h4>
                     <Badge variant="outline">Not Started</Badge>
                   </div>
                   <Progress value={0} className="h-2" />
@@ -392,34 +555,62 @@ const StudentDashboard = () => {
                   
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-medium">Current Stage: Foundation Building</h4>
-                      <p className="text-sm text-muted-foreground">Complete core programming courses and begin specialization</p>
+                      <h4 className="font-medium">Current Stage: {educationLevel === "school" ? "Exploration & Foundation" : "Specialization & Application"}</h4>
+                      <p className="text-sm text-muted-foreground">{educationLevel === "school" ? "Discovering interests and building core skills" : "Developing specialized skills and gaining practical experience"}</p>
                     </div>
                     
                     <div className="space-y-2">
                       <h4 className="font-medium">Next Steps:</h4>
                       <div className="space-y-2 text-sm">
-                        <div className="flex items-start gap-2">
-                          <div className="rounded-full h-5 w-5 bg-primary flex items-center justify-center text-primary-foreground text-xs">1</div>
-                          <div>
-                            <p className="font-medium">Complete "Advanced Programming Concepts" course</p>
-                            <p className="text-muted-foreground">Estimated time: 2 months</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <div className="rounded-full h-5 w-5 bg-primary flex items-center justify-center text-primary-foreground text-xs">2</div>
-                          <div>
-                            <p className="font-medium">Begin "Web Development Frameworks" specialization</p>
-                            <p className="text-muted-foreground">Estimated time: 3 months</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <div className="rounded-full h-5 w-5 bg-primary flex items-center justify-center text-primary-foreground text-xs">3</div>
-                          <div>
-                            <p className="font-medium">Apply for summer internship program</p>
-                            <p className="text-muted-foreground">Application deadline: March 15</p>
-                          </div>
-                        </div>
+                        {educationLevel === "school" ? (
+                          <>
+                            <div className="flex items-start gap-2">
+                              <div className="rounded-full h-5 w-5 bg-primary flex items-center justify-center text-primary-foreground text-xs">1</div>
+                              <div>
+                                <p className="font-medium">Strengthen mathematics and logic skills</p>
+                                <p className="text-muted-foreground">Focus on algebra, statistics, and logical reasoning</p>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <div className="rounded-full h-5 w-5 bg-primary flex items-center justify-center text-primary-foreground text-xs">2</div>
+                              <div>
+                                <p className="font-medium">Begin introductory programming courses</p>
+                                <p className="text-muted-foreground">Try Python or JavaScript online courses</p>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <div className="rounded-full h-5 w-5 bg-primary flex items-center justify-center text-primary-foreground text-xs">3</div>
+                              <div>
+                                <p className="font-medium">Research university programs in Computer Science</p>
+                                <p className="text-muted-foreground">Identify top programs and requirements</p>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex items-start gap-2">
+                              <div className="rounded-full h-5 w-5 bg-primary flex items-center justify-center text-primary-foreground text-xs">1</div>
+                              <div>
+                                <p className="font-medium">Complete "Advanced Programming Concepts" course</p>
+                                <p className="text-muted-foreground">Estimated time: 2 months</p>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <div className="rounded-full h-5 w-5 bg-primary flex items-center justify-center text-primary-foreground text-xs">2</div>
+                              <div>
+                                <p className="font-medium">Begin "Web Development Frameworks" specialization</p>
+                                <p className="text-muted-foreground">Estimated time: 3 months</p>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <div className="rounded-full h-5 w-5 bg-primary flex items-center justify-center text-primary-foreground text-xs">3</div>
+                              <div>
+                                <p className="font-medium">Apply for summer internship program</p>
+                                <p className="text-muted-foreground">Application deadline: March 15</p>
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                     
@@ -473,6 +664,91 @@ const StudentDashboard = () => {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="guidance">
+          {educationLevel === "school" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Awareness & Guidance Programs</CardTitle>
+                <CardDescription>
+                  Programs designed to help school students develop skills and prepare for their future
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {schoolPrograms.map((program, index) => (
+                    <div key={index} className="border rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-semibold">{program.title}</h3>
+                          <p className="text-sm text-muted-foreground mt-1">{program.description}</p>
+                        </div>
+                        <Badge>{program.status}</Badge>
+                      </div>
+                      <div className="flex justify-between items-center mt-4">
+                        <div className="text-sm">
+                          <span className="font-medium">Schedule:</span> {program.date}
+                        </div>
+                        <Button size="sm">
+                          {program.status === "Open for Registration" ? "Register" : program.status === "Coming Soon" ? "Notify Me" : "View Details"}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="internships">
+          {educationLevel === "university" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Internship Opportunities</CardTitle>
+                <CardDescription>
+                  Available internships matching your skills and educational background
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-5">
+                  {internshipOpportunities.map((internship, index) => (
+                    <div key={index} className="border rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-semibold">{internship.position}</h3>
+                          <p className="text-sm font-medium mt-1">{internship.company}</p>
+                        </div>
+                        <Badge variant={internship.application === "Open" ? "default" : "secondary"}>
+                          {internship.application}
+                        </Badge>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2 mt-3 text-sm">
+                        <div>
+                          <span className="text-muted-foreground">Duration:</span> {internship.duration}
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Location:</span> {internship.location}
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Remote:</span> {internship.remote ? "Yes" : "No"}
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Match:</span> High
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4 flex justify-end">
+                        <Button size="sm">Apply Now</Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
     </div>

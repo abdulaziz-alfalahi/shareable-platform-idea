@@ -1,23 +1,13 @@
 
-import { ToastType } from "@/hooks/toast/types";
 import { toast } from "@/hooks/toast";
+import { ToastType } from "@/hooks/toast/types";
 
-// Helper function to create a notification
-export const createNotification = (
-  title: string,
-  description: string,
-  type: ToastType = "default"
-) => {
-  return {
-    title,
-    description,
-    type,
-  };
-};
+interface ToastProps {
+  title: string;
+  description: string;
+}
 
-// Higher-order functions that return notification functions
-// These can be used without requiring the useToast hook directly
-export const notifySuccess = ({ title, description }: { title: string; description: string }) => {
+export const notifySuccess = ({ title, description }: ToastProps) => {
   toast({
     title,
     description,
@@ -25,7 +15,7 @@ export const notifySuccess = ({ title, description }: { title: string; descripti
   });
 };
 
-export const notifyError = ({ title, description }: { title: string; description: string }) => {
+export const notifyError = ({ title, description }: ToastProps) => {
   toast({
     title,
     description,
@@ -33,7 +23,7 @@ export const notifyError = ({ title, description }: { title: string; description
   });
 };
 
-export const notifyWarning = ({ title, description }: { title: string; description: string }) => {
+export const notifyWarning = ({ title, description }: ToastProps) => {
   toast({
     title,
     description,
@@ -41,7 +31,7 @@ export const notifyWarning = ({ title, description }: { title: string; descripti
   });
 };
 
-export const notifyInfo = ({ title, description }: { title: string; description: string }) => {
+export const notifyInfo = ({ title, description }: ToastProps) => {
   toast({
     title,
     description,
@@ -49,48 +39,34 @@ export const notifyInfo = ({ title, description }: { title: string; description:
   });
 };
 
-export const notifyAdmin = ({ title, description }: { title: string; description: string }) => {
+export const notifyDefault = ({ title, description }: ToastProps) => {
   toast({
     title,
     description,
-    type: "admin" as ToastType,
+    type: "default" as ToastType,
   });
 };
 
-export const notifyAdvisor = ({ title, description }: { title: string; description: string }) => {
+export const notifyDescriptive = ({ title, description }: ToastProps) => {
   toast({
     title,
     description,
-    type: "advisor" as ToastType,
+    type: "descriptive" as ToastType,
   });
 };
 
-export const notifyStudent = ({ title, description }: { title: string; description: string }) => {
+export const notifyDestructive = ({ title, description }: ToastProps) => {
   toast({
     title,
     description,
-    type: "student" as ToastType,
+    type: "destructive" as ToastType,
   });
 };
 
-export const notifyRecruiter = ({ title, description }: { title: string; description: string }) => {
+export const notifyAction = ({ title, description }: ToastProps) => {
   toast({
     title,
     description,
-    type: "recruiter" as ToastType,
-  });
-};
-
-// Function to show a notification using toast hook (for components)
-export const showNotification = (
-  toastHook: any,
-  title: string,
-  description: string,
-  type: ToastType = "default"
-) => {
-  toastHook.toast({
-    title,
-    description,
-    type,
+    type: "action" as ToastType,
   });
 };
