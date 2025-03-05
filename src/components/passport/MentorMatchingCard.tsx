@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { UserCheck, Award, MessageCircle } from "lucide-react";
 import { Student } from "@/types/student";
-import { checkMentorEligibility, findPotentialMentors } from "@/utils/careerUtils";
-import { notifySuccess } from "@/utils/notification";
+import { 
+  checkMentorEligibility, 
+  findPotentialMentors, 
+  connectWithMentor 
+} from "@/services/mentor/mentorService";
 
 interface MentorMatchingCardProps {
   student: Student;
@@ -34,10 +37,7 @@ const MentorMatchingCard: React.FC<MentorMatchingCardProps> = ({ student }) => {
   };
   
   const handleConnectWithMentor = (mentorId: number, mentorName: string) => {
-    notifySuccess({
-      title: "Mentor Request Sent",
-      description: `Your mentor request has been sent to ${mentorName}. They will respond shortly.`
-    });
+    connectWithMentor(student.id, mentorId, mentorName);
   };
   
   return (

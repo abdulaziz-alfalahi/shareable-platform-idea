@@ -46,18 +46,19 @@ const getLevelBadgeColor = (level: string): string => {
   }
 };
 
-// Map icon name to component
-const getIconComponent = (iconName: string) => {
-  const icons: Record<string, React.ReactNode> = {
-    award: <Award className="h-5 w-5" />,
-    star: <Star className="h-5 w-5" />,
-    map: <Map className="h-5 w-5" />,
-    briefcase: <Briefcase className="h-5 w-5" />,
-    "graduation-cap": <GraduationCap className="h-5 w-5" />,
-    code: <Code className="h-5 w-5" />
-  };
+// Cached icon components to improve performance
+const IconComponents = {
+  award: <Award className="h-5 w-5" />,
+  star: <Star className="h-5 w-5" />,
+  map: <Map className="h-5 w-5" />,
+  briefcase: <Briefcase className="h-5 w-5" />,
+  "graduation-cap": <GraduationCap className="h-5 w-5" />,
+  code: <Code className="h-5 w-5" />
+};
 
-  return icons[iconName] || <Award className="h-5 w-5" />;
+// Get icon component with fallback
+const getIconComponent = (iconName: string) => {
+  return IconComponents[iconName as keyof typeof IconComponents] || IconComponents.award;
 };
 
 const InteractivePassportStamp: React.FC<InteractivePassportStampProps> = ({ stamp }) => {
@@ -89,10 +90,16 @@ const InteractivePassportStamp: React.FC<InteractivePassportStampProps> = ({ sta
     animate: { scale: [1, 1.2, 1], rotate: [0, -10, 0], transition: { duration: 0.5 } }
   };
 
+  // Memoized category color for better performance
+  const categoryColor = React.useMemo(() => getCategoryColor(stamp.category), [stamp.category]);
+  
+  // Memoized level badge color for better performance
+  const levelBadgeColor = React.useMemo(() => getLevelBadgeColor(stamp.level), [stamp.level]);
+
   return (
     <>
       <motion.div
-        className={`border-2 rounded-lg p-4 flex items-start space-x-3 cursor-pointer transition-shadow hover:shadow-md ${getCategoryColor(stamp.category)}`}
+        className={`border-2 rounded-lg p-4 flex items-start space-x-3 cursor-pointer transition-shadow hover:shadow-md ${categoryColor}`}
         onClick={handleStampClick}
         variants={stampVariants}
         initial="initial"
@@ -106,7 +113,7 @@ const InteractivePassportStamp: React.FC<InteractivePassportStampProps> = ({ sta
         <div className="flex-1">
           <div className="flex justify-between items-start">
             <h4 className="font-semibold">{stamp.title}</h4>
-            <span className={`px-2 py-0.5 rounded-full text-xs text-white ${getLevelBadgeColor(stamp.level)}`}>
+            <span className={`px-2 py-0.5 rounded-full text-xs text-white ${levelBadgeColor}`}>
               {stamp.level}
             </span>
           </div>
@@ -127,12 +134,12 @@ const InteractivePassportStamp: React.FC<InteractivePassportStampProps> = ({ sta
           </DialogHeader>
           
           <div className="flex items-start space-x-4 mt-4">
-            <div className={`p-3 rounded-full ${getCategoryColor(stamp.category)}`}>
+            <div className={`p-3 rounded-full ${categoryColor}`}>
               {getIconComponent(stamp.iconName)}
             </div>
             <div>
               <div className="mb-2">
-                <span className={`px-2 py-0.5 rounded-full text-xs text-white ${getLevelBadgeColor(stamp.level)}`}>
+                <span className={`px-2 py-0.5 rounded-full text-xs text-white ${levelBadgeColor}`}>
                   {stamp.level} Level
                 </span>
                 <span className="ml-2 text-sm text-muted-foreground">{stamp.category}</span>
@@ -208,4 +215,5 @@ const InteractivePassportStamp: React.FC<InteractivePassportStampProps> = ({ sta
   );
 };
 
-export default InteractivePassportStamp;
+// Use React.memo to prevent unnecessary re-renders
+export default React.memo(InteractivePassportStamp);

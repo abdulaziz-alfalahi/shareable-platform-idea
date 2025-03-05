@@ -1,88 +1,101 @@
 
-import { toast } from "@/hooks/toast";
-import { ToastType } from "@/hooks/toast/types";
+import { toast } from "sonner";
 
-interface ToastProps {
+type ToastType = "default" | "success" | "error" | "warning" | "info";
+
+interface NotificationOptions {
   title: string;
-  description: string;
+  description?: string;
+  duration?: number;
+  variant?: "default" | "destructive";
 }
 
-export const notifySuccess = ({ title, description }: ToastProps) => {
-  toast({
-    title,
-    description,
-    type: "success" as ToastType,
+export const notifyDefault = (options: NotificationOptions) => {
+  toast(options.title, {
+    description: options.description,
+    duration: options.duration || 5000,
+    variant: options.variant || "default",
+    type: "default" as ToastType, // Add explicit type cast
   });
 };
 
-export const notifyError = ({ title, description }: ToastProps) => {
-  toast({
-    title,
-    description,
-    type: "error" as ToastType,
+export const notifySuccess = (options: NotificationOptions) => {
+  toast(options.title, {
+    description: options.description,
+    duration: options.duration || 5000,
+    variant: options.variant || "default",
+    type: "success" as ToastType, // Add explicit type cast
   });
 };
 
-export const notifyWarning = ({ title, description }: ToastProps) => {
-  toast({
-    title,
-    description,
-    type: "warning" as ToastType,
+export const notifyError = (options: NotificationOptions) => {
+  toast(options.title, {
+    description: options.description,
+    duration: options.duration || 5000,
+    variant: options.variant || "destructive",
+    type: "error" as ToastType, // Add explicit type cast
   });
 };
 
-export const notifyInfo = ({ title, description }: ToastProps) => {
-  toast({
-    title,
-    description,
-    type: "info" as ToastType,
+export const notifyWarning = (options: NotificationOptions) => {
+  toast(options.title, {
+    description: options.description,
+    duration: options.duration || 5000,
+    variant: options.variant || "default",
+    type: "warning" as ToastType, // Add explicit type cast
   });
 };
 
-export const notifyDefault = ({ title, description }: ToastProps) => {
-  toast({
-    title,
-    description,
-    type: "default" as ToastType,
+export const notifyInfo = (options: NotificationOptions) => {
+  toast(options.title, {
+    description: options.description,
+    duration: options.duration || 5000,
+    variant: options.variant || "default",
+    type: "info" as ToastType, // Add explicit type cast
   });
 };
 
-export const notifyDescriptive = ({ title, description }: ToastProps) => {
-  toast({
-    title,
-    description,
-    type: "descriptive" as ToastType,
+export const notifyNearMilestone = (options: NotificationOptions) => {
+  toast(options.title, {
+    description: options.description,
+    duration: options.duration || 7000, // Longer duration for milestone notifications
+    variant: options.variant || "default",
+    type: "info" as ToastType, // Add explicit type cast
   });
 };
 
-export const notifyDestructive = ({ title, description }: ToastProps) => {
-  toast({
-    title,
-    description,
-    type: "destructive" as ToastType,
+export const notifyAchievement = (options: NotificationOptions) => {
+  toast(options.title, {
+    description: options.description,
+    duration: options.duration || 7000, // Longer duration for achievement notifications
+    variant: options.variant || "default",
+    type: "success" as ToastType, // Add explicit type cast
   });
 };
 
-export const notifyAction = ({ title, description }: ToastProps) => {
-  toast({
-    title,
-    description,
-    type: "action" as ToastType,
+export const notifySocialShare = (options: NotificationOptions) => {
+  toast(options.title, {
+    description: options.description,
+    duration: options.duration || 5000,
+    variant: options.variant || "default",
+    type: "info" as ToastType, // Add explicit type cast
   });
 };
 
-export const notifyAdvisor = ({ title, description }: ToastProps) => {
-  toast({
-    title,
-    description,
-    type: "advisor" as ToastType,
+export const notifyMentorMatch = (options: NotificationOptions) => {
+  toast(options.title, {
+    description: options.description,
+    duration: options.duration || 7000, // Longer duration for mentor notifications
+    variant: options.variant || "default",
+    type: "success" as ToastType, // Add explicit type cast
   });
 };
 
-export const notifyRecruiter = ({ title, description }: ToastProps) => {
-  toast({
-    title,
-    description,
-    type: "recruiter" as ToastType,
+export const notifyMentorRequest = (options: NotificationOptions) => {
+  toast(options.title, {
+    description: options.description,
+    duration: options.duration || 7000, // Longer duration for mentor notifications
+    variant: options.variant || "default",
+    type: "info" as ToastType, // Add explicit type cast
   });
 };
