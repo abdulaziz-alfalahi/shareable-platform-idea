@@ -1,134 +1,80 @@
+import { Student, CareerMilestone, PassportStamp } from '@/types/student';
+import { notifySuccess, notifyInfo } from './notification';
 
-import { supabase } from "@/integrations/supabase/client";
-import { PassportStamp, Student } from "@/types/student";
-import { Vacancy } from "@/components/jobs/MatchingVacanciesTab";
-import { notifySuccess } from "./notification";
-
-/**
- * Checks user progress and awards stamps/achievements when thresholds are met
- */
-export async function checkMilestones(userId: number, currentProgress: number, serviceType: string): Promise<boolean> {
-  // In a real app with Supabase, this would query the database
-  // For demo purposes, we'll use a simple threshold check
-  if (currentProgress === 100) {
-    // Award a new stamp
-    const newStamp: PassportStamp = {
-      id: Date.now(),
-      title: `${serviceType} Master`,
-      description: `Completed all ${serviceType.toLowerCase()} requirements`,
-      category: serviceType as "Workshop" | "Assessment" | "Training" | "Employment" | "Education" | "Skills",
-      iconName: serviceType.toLowerCase(),
-      dateEarned: new Date().toISOString().split('T')[0],
-      level: "Gold",
-      featured: true
+// Career milestone achievement check functions
+export const checkMilestones = async (userId: string, progress: number, serviceType: string): Promise<boolean> => {
+  // This would normally be a server API call
+  // Simulating backend logic here
+  console.log(`Checking milestones for ${userId} with ${progress}% progress in ${serviceType}`);
+  
+  // Simple logic - award milestone if progress is 100%
+  if (progress === 100) {
+    // Create a new milestone
+    const milestone: CareerMilestone = {
+      id: Math.floor(Math.random() * 10000),
+      title: `${serviceType} Mastery`,
+      description: `Completed all ${serviceType.toLowerCase()} requirements with excellence`,
+      dateAchieved: new Date().toISOString().split('T')[0],
+      points: 100,
+      badgeUrl: `/badges/${serviceType.toLowerCase()}.png`
     };
     
-    // In a real app, this would insert into Supabase
-    // For now, we'll just notify the user
-    notifySuccess({
-      title: "New Achievement Unlocked!",
-      description: `You've earned the "${newStamp.title}" badge!`
-    });
+    // Simulate adding to database
+    console.log('New milestone awarded:', milestone);
     
+    // Return true to indicate a milestone was awarded
     return true;
   }
   
-  // For 50% completion, award a silver badge
-  if (currentProgress >= 50 && currentProgress < 100) {
-    notifyInfo({
-      title: "Progress Milestone",
-      description: `You're halfway to earning the ${serviceType} Master badge!`
-    });
-  }
-  
   return false;
-}
+};
 
-/**
- * Calculates similarity between user skills and job requirements
- * Uses a simple Jaccard similarity coefficient
- */
-function calculateSimilarity(userSkills: string[], jobSkills: string[]): number {
-  // Convert all skills to lowercase for case-insensitive comparison
-  const normalizedUserSkills = userSkills.map(skill => skill.toLowerCase());
-  const normalizedJobSkills = jobSkills.map(skill => skill.toLowerCase());
+// Award a passport stamp
+export const awardPassportStamp = async (userId: string, category: string): Promise<PassportStamp | null> => {
+  // This would be a server call in production
+  console.log(`Awarding ${category} stamp to user ${userId}`);
   
-  // Find intersection (skills in both sets)
-  const intersection = normalizedUserSkills.filter(skill => 
-    normalizedJobSkills.includes(skill)
-  );
-  
-  // Find union (all unique skills)
-  const union = [...new Set([...normalizedUserSkills, ...normalizedJobSkills])];
-  
-  // Calculate Jaccard similarity: size of intersection / size of union
-  return union.length === 0 ? 0 : intersection.length / union.length;
-}
-
-/**
- * Recommends jobs based on user skills using similarity matching
- */
-export function recommendJobs(student: Student, availableJobs: Vacancy[]): Vacancy[] {
-  // Extract skills from student profile
-  // In a real app, this would come from the student's profile
-  const userSkills = [
-    student.program,
-    ...student.achievements,
-    ...(student.passportStamps?.map(stamp => stamp.category) || [])
-  ];
-  
-  // Calculate similarity scores and sort jobs
-  return [...availableJobs].sort((jobA, jobB) => {
-    const similarityA = calculateSimilarity(userSkills, [...jobA.requiredSkills, ...jobA.missingSkills]);
-    const similarityB = calculateSimilarity(userSkills, [...jobB.requiredSkills, ...jobB.missingSkills]);
-    
-    // Sort by descending similarity (highest match first)
-    return similarityB - similarityA;
-  });
-}
-
-/**
- * Tracks user progress for specific service/activity
- */
-export function trackProgress(userId: number, serviceId: string, progressPercentage: number): void {
-  // In a real app with Supabase, this would be:
-  // await supabase.from('user_progress').upsert({
-  //   user_id: userId,
-  //   service_id: serviceId,
-  //   progress_percentage: progressPercentage,
-  //   updated_at: new Date()
-  // });
-  
-  // For demo, we'll log and check milestones
-  console.log(`User ${userId} progress for ${serviceId}: ${progressPercentage}%`);
-  
-  // Check if this progress update should trigger a milestone
-  const serviceType = serviceId.split('-')[0]; // Extract service type from id
-  checkMilestones(userId, progressPercentage, serviceType);
-}
-
-/**
- * Sets up real-time subscription for passport updates
- * In a real app with Supabase, this would use the Supabase real-time API
- */
-export function subscribeToPassportUpdates(userId: number, callback: (newStamp: PassportStamp) => void): () => void {
-  // Mock implementation for demo
-  console.log(`Subscribed to passport updates for user ${userId}`);
-  
-  // In a real app with Supabase, this would be:
-  // const subscription = supabase
-  //   .from('passport_stamps')
-  //   .on('INSERT', payload => {
-  //     if (payload.new.user_id === userId) {
-  //       callback(payload.new);
-  //     }
-  //   })
-  //   .subscribe();
-  
-  // Return unsubscribe function
-  return () => {
-    console.log(`Unsubscribed from passport updates for user ${userId}`);
-    // In a real app with Supabase, this would be:
-    // supabase.removeSubscription(subscription);
+  // Create a new stamp
+  const stamp: PassportStamp = {
+    id: Math.floor(Math.random() * 10000),
+    title: `${category} Explorer`,
+    description: `Demonstrated excellence in ${category}`,
+    category: category as any, // Using type assertion for demo
+    iconName: category.toLowerCase(),
+    dateEarned: new Date().toISOString().split('T')[0],
+    level: "Bronze", // Start with bronze
+    featured: false
   };
-}
+  
+  // Notify user of new stamp
+  notifyInfo({
+    title: "New Passport Stamp!",
+    description: `You've earned the ${stamp.title} stamp for your Career Passport.`
+  });
+  
+  return stamp;
+};
+
+// Simple job recommendation function based on skills
+export const recommendJobs = (userSkills: string[], jobs: any[]): any[] => {
+  // Calculate similarity between user skills and job requirements
+  const scoredJobs = jobs.map(job => {
+    const matchingSkills = userSkills.filter(skill => 
+      job.skills.some((jobSkill: string) => 
+        jobSkill.toLowerCase().includes(skill.toLowerCase()) || 
+        skill.toLowerCase().includes(jobSkill.toLowerCase())
+      )
+    );
+    
+    const similarityScore = matchingSkills.length / Math.max(userSkills.length, job.skills.length);
+    
+    return {
+      ...job,
+      similarityScore,
+      matchingSkills
+    };
+  });
+  
+  // Sort by similarity score
+  return scoredJobs.sort((a, b) => b.similarityScore - a.similarityScore);
+};
