@@ -75,7 +75,7 @@ export const notifyAdvisor = ({ title, description }: ToastProps) => {
   toast({
     title,
     description,
-    type: "info" as ToastType,
+    type: "advisor" as ToastType,
   });
 };
 
@@ -83,6 +83,6 @@ export const notifyRecruiter = ({ title, description }: ToastProps) => {
   toast({
     title,
     description,
-    type: "info" as ToastType,
+    type: "recruiter" as ToastType,
   });
 };

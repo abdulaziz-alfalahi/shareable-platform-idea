@@ -26,6 +26,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { notifySuccess } from "@/utils/notification";
+import InteractivePassportStamp from "./InteractivePassportStamp";
+import ProgressTrackingTable from "./ProgressTrackingTable";
 
 interface CareerPassportProps {
   student: Student;
@@ -51,44 +53,24 @@ const getCategoryColor = (category: string): string => {
   }
 };
 
-// Map level to badge color
-const getLevelBadgeColor = (level: string): string => {
-  switch (level) {
-    case "Bronze":
-      return "bg-amber-500";
-    case "Silver":
-      return "bg-slate-400";
-    case "Gold":
-      return "bg-yellow-500";
-    default:
-      return "bg-gray-500";
-  }
-};
-
-// Map icon name to Lucide icon component
-const getIconComponent = (iconName: string) => {
-  const icons: Record<string, React.ReactNode> = {
-    award: <Award className="h-5 w-5" />,
-    star: <Star className="h-5 w-5" />,
-    map: <Map className="h-5 w-5" />,
-    briefcase: <Briefcase className="h-5 w-5" />,
-    "graduation-cap": <GraduationCap className="h-5 w-5" />,
-    code: <Code className="h-5 w-5" />,
-    users: <Users className="h-5 w-5" />,
-    "file-text": <FileText className="h-5 w-5" />,
-    rocket: <Rocket className="h-5 w-5" />,
-    settings: <Settings className="h-5 w-5" />,
-    "bar-chart": <BarChart className="h-5 w-5" />,
-    landmark: <Landmark className="h-5 w-5" />
-  };
-
-  return icons[iconName] || <Award className="h-5 w-5" />;
-};
-
 // Get next milestone points required
 const getNextLevelPoints = (currentLevel: number): number => {
   const baseLine = 500;
   return baseLine * (currentLevel + 1);
+};
+
+// Sample progress items for the tracking table
+const getProgressItems = (stamps: PassportStamp[]) => {
+  // Create progress items based on passport stamps
+  return stamps.map(stamp => ({
+    id: stamp.id.toString(),
+    category: stamp.category,
+    title: stamp.title,
+    progress: Math.floor(Math.random() * 100), // In a real app, this would come from the user_progress table
+    lastUpdated: stamp.dateEarned,
+    nextMilestone: `Level ${stamp.level === "Bronze" ? "Silver" : stamp.level === "Silver" ? "Gold" : "Mastery"}`,
+    status: Math.random() > 0.3 ? 'In Progress' : (Math.random() > 0.5 ? 'Completed' : 'Not Started') as 'In Progress' | 'Completed' | 'Not Started'
+  }));
 };
 
 const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
@@ -98,14 +80,8 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
   const nextLevelPoints = getNextLevelPoints(student.passportLevel);
   const progressToNextLevel = Math.min(Math.round((student.totalPoints / nextLevelPoints) * 100), 100);
   
-  const handleShareAchievement = (stamp: PassportStamp) => {
-    // In a real app, this would open a social sharing dialog
-    console.log("Sharing achievement:", stamp.title);
-    notifySuccess({
-      title: "Achievement Shared",
-      description: `You've shared your "${stamp.title}" achievement with your network.`
-    });
-  };
+  // Generate progress items for the tracking table
+  const progressItems = getProgressItems(student.passportStamps);
 
   return (
     <div className="space-y-6">
@@ -123,73 +99,51 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
           </div>
         </CardHeader>
         <CardContent>
-          {/* Progress to next level */}
+          {/* Progress to next level with UAE-themed colors */}
           <div className="mb-6">
             <div className="flex justify-between text-sm mb-2">
               <span>Progress to Level {student.passportLevel + 1}</span>
               <span>{student.totalPoints} / {nextLevelPoints} points</span>
             </div>
-            <Progress value={progressToNextLevel} className="h-2" />
+            <Progress 
+              value={progressToNextLevel} 
+              className="h-2" 
+              // Add UAE-themed color gradient for progress bars
+              style={{
+                background: 'linear-gradient(to right, #f5e8c7, #f5e8c7)',
+              }}
+              // The actual progress indicator with UAE-inspired green
+              indicatorStyle={{
+                background: 'linear-gradient(to right, #2c4a2e, #4a7c31)',
+              }}
+            />
           </div>
 
-          {/* Featured achievements - displayed with more prominence */}
+          {/* Featured achievements with interactive stamps */}
           {featuredStamps.length > 0 && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-3">Featured Achievements</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {featuredStamps.map((stamp) => (
-                  <div 
-                    key={stamp.id} 
-                    className={`border-2 rounded-lg p-4 flex items-start space-x-4 ${getCategoryColor(stamp.category)}`}
-                  >
-                    <div className={`p-2 rounded-full bg-white`}>
-                      {getIconComponent(stamp.iconName)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start">
-                        <h4 className="font-semibold">{stamp.title}</h4>
-                        <Badge className={getLevelBadgeColor(stamp.level)}>{stamp.level}</Badge>
-                      </div>
-                      <p className="text-sm mt-1">{stamp.description}</p>
-                      <div className="flex justify-between items-center mt-3">
-                        <span className="text-xs">{stamp.dateEarned}</span>
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
-                          className="text-xs h-7 px-2"
-                          onClick={() => handleShareAchievement(stamp)}
-                        >
-                          <Share2 className="h-3 w-3 mr-1" /> Share
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+                  <InteractivePassportStamp key={stamp.id} stamp={stamp} />
                 ))}
               </div>
             </div>
           )}
 
+          {/* Progress tracking table */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-3">Progress Tracking</h3>
+            <ProgressTrackingTable progressItems={progressItems} />
+          </div>
+
           {/* Other achievements - displayed more compactly */}
           {otherStamps.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold mb-3">All Achievements</h3>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {otherStamps.map((stamp) => (
-                  <div 
-                    key={stamp.id} 
-                    className="border rounded-lg p-3 flex items-center space-x-3"
-                  >
-                    <div className={`p-1.5 rounded-full ${getCategoryColor(stamp.category)}`}>
-                      {getIconComponent(stamp.iconName)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center">
-                        <h4 className="font-medium">{stamp.title}</h4>
-                        <Badge variant="outline" className="text-xs">{stamp.category}</Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-0.5">{stamp.dateEarned}</p>
-                    </div>
-                  </div>
+                  <InteractivePassportStamp key={stamp.id} stamp={stamp} />
                 ))}
               </div>
             </div>
