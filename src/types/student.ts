@@ -1,4 +1,3 @@
-
 export interface StudentGoal {
   id: number;
   title: string;
@@ -58,6 +57,8 @@ export interface Student {
   careerMilestones: CareerMilestone[];
   passportLevel: number;
   totalPoints: number;
+  skillsProgress?: number;
+  certificationsProgress?: number;
 }
 
 export interface FeedbackForm {

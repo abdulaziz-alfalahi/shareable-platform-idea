@@ -19,7 +19,7 @@ import {
   Users, 
   FileText, 
   Rocket, 
-  Tool, 
+  Settings, 
   BarChart, 
   Landmark, 
   Share2
@@ -77,7 +77,7 @@ const getIconComponent = (iconName: string) => {
     users: <Users className="h-5 w-5" />,
     "file-text": <FileText className="h-5 w-5" />,
     rocket: <Rocket className="h-5 w-5" />,
-    tool: <Tool className="h-5 w-5" />,
+    settings: <Settings className="h-5 w-5" />,
     "bar-chart": <BarChart className="h-5 w-5" />,
     landmark: <Landmark className="h-5 w-5" />
   };
