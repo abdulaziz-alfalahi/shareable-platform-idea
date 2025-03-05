@@ -1,114 +1,112 @@
+
 import { Student, PassportStamp, Challenge } from "@/types/student";
 import { passportCache } from "@/utils/cacheUtils";
-import { notifyAchievement } from "@/utils/notification";
+import { 
+  awardPassportStamp, 
+  checkMilestones, 
+  shareAchievementToSocial,
+  getActiveChallenges,
+  getLeaderboardData,
+  checkMilestoneEligibility 
+} from "@/utils/careerUtils";
 
 /**
- * Service for handling passport-related functionality
- * This is part of a modular microservice architecture
+ * Service for managing career passport functionality
  */
 export class PassportService {
-  /**
-   * Get a student's passport data with caching
-   */
-  async getStudentPassport(studentId: number): Promise<{
-    stamps: PassportStamp[],
-    totalPoints: number,
-    level: number
-  }> {
+  async getPassport(studentId: number) {
+    // Use the cache-aside pattern to get passport data
     return passportCache.getOrSet(
-      `passport:${studentId}`, 
+      `passport:${studentId}`,
       async () => {
-        // In production, this would fetch from Supabase
-        // For this demo, we're using mock data
-        const { students } = await import("@/data/mockData");
-        const student = students.find(s => s.id === studentId);
-        
-        if (!student) {
-          throw new Error(`Student with ID ${studentId} not found`);
-        }
+        // In production this would fetch from Supabase
+        // For demo, simulate delay and return mock data
+        await new Promise(resolve => setTimeout(resolve, 300));
         
         return {
-          stamps: student.passportStamps,
-          totalPoints: student.totalPoints,
-          level: student.passportLevel
+          stamps: [
+            { 
+              id: 1, 
+              title: "Workshop Expert", 
+              description: "Completed advanced workshop series", 
+              category: "Workshop", 
+              iconName: "award", 
+              dateEarned: "2023-04-15", 
+              level: "Silver", 
+              featured: true 
+            },
+            { 
+              id: 2, 
+              title: "Job Application Master", 
+              description: "Applied to 10+ positions", 
+              category: "Employment", 
+              iconName: "briefcase", 
+              dateEarned: "2023-03-22", 
+              level: "Gold", 
+              featured: true 
+            }
+          ],
+          totalPoints: 450,
+          level: 3
         };
-      },
-      { ttl: 600 } // Cache for 10 minutes
-    );
-  }
-
-  /**
-   * Award a new stamp to a student
-   */
-  async awardStamp(studentId: number, stamp: Omit<PassportStamp, "id">): Promise<PassportStamp> {
-    // In production, this would insert into Supabase
-    // For this demo, we'll just return a mock result
-    
-    // Create a new stamp with an ID
-    const newStamp: PassportStamp = {
-      id: Date.now(), // Use timestamp as a simple ID generator
-      ...stamp
-    };
-
-    // Invalidate cache so the new stamp appears
-    passportCache.delete(`passport:${studentId}`);
-    
-    // Notify the user
-    notifyAchievement({
-      title: "New Achievement!",
-      description: `You've earned the "${newStamp.title}" stamp!`
-    });
-    
-    return newStamp;
-  }
-
-  /**
-   * Get active challenges for a student with caching
-   */
-  async getActiveChallenges(studentId: number): Promise<Challenge[]> {
-    return passportCache.getOrSet(
-      `challenges:${studentId}`,
-      async () => {
-        // In production, this would fetch from Supabase
-        const { getActiveChallenges } = await import("@/utils/careerUtils");
-        return getActiveChallenges(studentId);
       },
       { ttl: 300 } // Cache for 5 minutes
     );
   }
-
-  /**
-   * Check and award milestones based on student progress
-   */
-  async checkAndAwardMilestone(student: Student): Promise<PassportStamp | null> {
-    // This functionality could be moved to its own service
-    // For now, we'll keep it here
-    const { checkMilestoneEligibility } = await import("@/utils/careerUtils");
-    const eligibleMilestone = checkMilestoneEligibility(student);
+  
+  async awardStamp(studentId: number, category: string, level: "Bronze" | "Silver" | "Gold" = "Bronze"): Promise<PassportStamp | null> {
+    // Call the utility function to award the stamp
+    const newStamp = await awardPassportStamp(studentId, category, level);
     
-    if (eligibleMilestone) {
-      // Invalidate cache
-      passportCache.delete(`passport:${student.id}`);
-      
-      return eligibleMilestone;
-    }
+    // Invalidate cache since the passport has been updated
+    passportCache.delete(`passport:${studentId}`);
     
-    return null;
+    return newStamp;
+  }
+  
+  async shareToSocial(studentId: number, stampTitle: string, platform: "twitter" | "linkedin" | "facebook"): Promise<boolean> {
+    // Call the utility function to share
+    shareAchievementToSocial(stampTitle, platform);
+    return true;
+  }
+  
+  async getActiveChallenges(studentId: number): Promise<Challenge[]> {
+    // Convert the challenges from careerUtils to the Student Challenge type
+    const challenges = getActiveChallenges(studentId);
+    return challenges;
+  }
+  
+  async getLeaderboard(limit: number = 10): Promise<{name: string, score: number}[]> {
+    return passportCache.getOrSet(
+      'leaderboard',
+      async () => getLeaderboardData(undefined, limit),
+      { ttl: 600 } // Cache for 10 minutes
+    );
+  }
+  
+  async checkMilestoneEligibility(student: Student, serviceType: string): Promise<boolean> {
+    return checkMilestoneEligibility(student, serviceType);
   }
 }
 
-// Export a singleton instance for easy import
+// Export a singleton instance
 export const passportService = new PassportService();
 
 // Helper functions for direct imports
-export const getStudentPassport = (studentId: number) => 
-  passportService.getStudentPassport(studentId);
+export const getPassport = (studentId: number) => 
+  passportService.getPassport(studentId);
 
-export const awardStamp = (studentId: number, stamp: Omit<PassportStamp, "id">) => 
-  passportService.awardStamp(studentId, stamp);
+export const awardStamp = (studentId: number, category: string, level: "Bronze" | "Silver" | "Gold" = "Bronze") => 
+  passportService.awardStamp(studentId, category, level);
+
+export const shareToSocial = (studentId: number, stampTitle: string, platform: "twitter" | "linkedin" | "facebook") => 
+  passportService.shareToSocial(studentId, stampTitle, platform);
 
 export const getActiveChallenges = (studentId: number) => 
   passportService.getActiveChallenges(studentId);
 
-export const checkAndAwardMilestone = (student: Student) => 
-  passportService.checkAndAwardMilestone(student);
+export const getLeaderboard = (limit: number = 10) => 
+  passportService.getLeaderboard(limit);
+
+export const checkMilestoneEligibility = (student: Student, serviceType: string) => 
+  passportService.checkMilestoneEligibility(student, serviceType);
