@@ -5,9 +5,9 @@ import {
   awardPassportStamp, 
   checkMilestones, 
   shareAchievementToSocial,
-  getActiveChallenges,
+  getActiveChallenges as fetchActiveChallenges,
   getLeaderboardData,
-  checkMilestoneEligibility 
+  checkMilestoneEligibility as checkEligibilityForMilestone
 } from "@/utils/careerUtils";
 
 /**
@@ -71,9 +71,8 @@ export class PassportService {
   }
   
   async getActiveChallenges(studentId: number): Promise<Challenge[]> {
-    // Convert the challenges from careerUtils to the Student Challenge type
-    const challenges = getActiveChallenges(studentId);
-    return challenges;
+    // Use the renamed function to avoid naming conflicts
+    return fetchActiveChallenges(studentId);
   }
   
   async getLeaderboard(limit: number = 10): Promise<{name: string, score: number}[]> {
@@ -85,7 +84,7 @@ export class PassportService {
   }
   
   async checkMilestoneEligibility(student: Student, serviceType: string): Promise<boolean> {
-    return checkMilestoneEligibility(student, serviceType);
+    return checkEligibilityForMilestone(student, serviceType);
   }
 }
 

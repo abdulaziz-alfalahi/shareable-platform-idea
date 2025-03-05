@@ -12,23 +12,20 @@ export const notifyDefault = (options: NotificationOptions) => {
   toast(options.title, {
     description: options.description,
     duration: options.duration || 5000,
-    type: "default" as ToastType,
   });
 };
 
 export const notifySuccess = (options: NotificationOptions) => {
-  toast(options.title, {
+  toast.success(options.title, {
     description: options.description,
     duration: options.duration || 5000,
-    type: "success" as ToastType,
   });
 };
 
 export const notifyError = (options: NotificationOptions) => {
-  toast(options.title, {
+  toast.error(options.title, {
     description: options.description,
     duration: options.duration || 5000,
-    type: "error" as ToastType,
   });
 };
 
@@ -36,55 +33,49 @@ export const notifyWarning = (options: NotificationOptions) => {
   toast(options.title, {
     description: options.description,
     duration: options.duration || 5000,
-    type: "warning" as ToastType,
+    style: { backgroundColor: "var(--warning)", color: "var(--warning-foreground)" }
   });
 };
 
 export const notifyInfo = (options: NotificationOptions) => {
-  toast(options.title, {
+  toast.info(options.title, {
     description: options.description,
     duration: options.duration || 5000,
-    type: "info" as ToastType,
   });
 };
 
 export const notifyNearMilestone = (options: NotificationOptions) => {
-  toast(options.title, {
+  toast.info(options.title, {
     description: options.description,
     duration: options.duration || 7000, // Longer duration for milestone notifications
-    type: "info" as ToastType,
   });
 };
 
 export const notifyAchievement = (options: NotificationOptions) => {
-  toast(options.title, {
+  toast.success(options.title, {
     description: options.description,
     duration: options.duration || 7000, // Longer duration for achievement notifications
-    type: "success" as ToastType,
   });
 };
 
 export const notifySocialShare = (options: NotificationOptions) => {
-  toast(options.title, {
+  toast.info(options.title, {
     description: options.description,
     duration: options.duration || 5000,
-    type: "info" as ToastType,
   });
 };
 
 export const notifyMentorMatch = (options: NotificationOptions) => {
-  toast(options.title, {
+  toast.success(options.title, {
     description: options.description,
     duration: options.duration || 7000, // Longer duration for mentor notifications
-    type: "success" as ToastType,
   });
 };
 
 export const notifyMentorRequest = (options: NotificationOptions) => {
-  toast(options.title, {
+  toast.info(options.title, {
     description: options.description,
     duration: options.duration || 7000, // Longer duration for mentor notifications
-    type: "info" as ToastType,
   });
 };
 
@@ -93,7 +84,7 @@ export const notifyRecruiter = (options: NotificationOptions) => {
   toast(options.title, {
     description: options.description,
     duration: options.duration || 5000,
-    type: "recruiter" as ToastType,
+    style: { borderLeft: "4px solid var(--purple-500)" }
   });
 };
 
@@ -101,7 +92,7 @@ export const notifyAdvisor = (options: NotificationOptions) => {
   toast(options.title, {
     description: options.description,
     duration: options.duration || 5000,
-    type: "advisor" as ToastType,
+    style: { borderLeft: "4px solid var(--blue-500)" }
   });
 };
 
@@ -109,7 +100,7 @@ export const notifyStudent = (options: NotificationOptions) => {
   toast(options.title, {
     description: options.description,
     duration: options.duration || 5000,
-    type: "student" as ToastType,
+    style: { borderLeft: "4px solid var(--green-500)" }
   });
 };
 
@@ -117,6 +108,6 @@ export const notifyAdmin = (options: NotificationOptions) => {
   toast(options.title, {
     description: options.description,
     duration: options.duration || 5000,
-    type: "admin" as ToastType,
+    style: { borderLeft: "4px solid var(--amber-500)" }
   });
 };

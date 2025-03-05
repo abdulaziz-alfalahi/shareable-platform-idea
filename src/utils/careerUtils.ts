@@ -1,8 +1,8 @@
-import { Student, CareerMilestone, PassportStamp } from '@/types/student';
+import { Student, CareerMilestone, PassportStamp, Challenge } from '@/types/student';
 import { notifySuccess, notifyInfo, notifyWarning } from './notification';
 
-// Define a Challenge type for time-bound challenges
-export interface Challenge {
+// Define a Challenge type for time-bound challenges that aligns with the Challenge type in student.ts
+export interface ChallengeBase {
   id: number;
   title: string;
   description: string;
@@ -12,7 +12,6 @@ export interface Challenge {
   endDate: string;
   rewardTitle: string;
   rewardLevel: "Bronze" | "Silver" | "Gold";
-  progress?: number;
 }
 
 // Simplified Vacancy type for job matching
@@ -250,48 +249,48 @@ export const recommendJobs = (student: Student, jobs: Vacancy[]): Vacancy[] => {
     .map(({ matchScore, ...job }) => job as Vacancy);
 };
 
-// Get active challenges for a user
+// Get active challenges for a user - maintaining the correct single implementation
 export const getActiveChallenges = (userId: number): Challenge[] => {
   // In a real app, this would fetch from a database
   const today = new Date().toISOString().split('T')[0];
   
-  // Return mock challenges
+  // Return mock challenges with the correct property names
   return [
     {
       id: 1,
       title: "Desert Trailblazer",
       description: "Complete 3 workshops in the current month",
       requiredCount: 3,
+      currentProgress: 1,
       category: "Workshop",
       startDate: "2023-03-01",
       endDate: "2023-03-31",
       rewardTitle: "Desert Trailblazer",
-      rewardLevel: "Silver",
-      progress: 1
+      rewardLevel: "Silver"
     },
     {
       id: 2,
       title: "Falcon's Rise",
       description: "Apply to 5 job opportunities within two weeks",
       requiredCount: 5,
+      currentProgress: 2,
       category: "Employment",
       startDate: "2023-03-15",
       endDate: "2023-03-29",
       rewardTitle: "Career Hunter",
-      rewardLevel: "Bronze",
-      progress: 2
+      rewardLevel: "Bronze"
     },
     {
       id: 3,
       title: "Pearl Diver",
       description: "Complete all assessments with 80%+ score",
       requiredCount: 5,
+      currentProgress: 3,
       category: "Assessment",
       startDate: "2023-02-01",
       endDate: "2023-04-30",
       rewardTitle: "Assessment Master",
-      rewardLevel: "Gold",
-      progress: 3
+      rewardLevel: "Gold"
     }
   ];
 };
@@ -415,65 +414,4 @@ export const checkMilestoneEligibility = (student: any, serviceType: string): bo
   
   // Example logic: If student has at least 3 stamps in this category, they're eligible
   return relevantStamps.length >= 3;
-};
-
-// Make sure the Challenge type here matches the student.ts Challenge type
-// by adding the currentProgress property
-export interface Challenge {
-  id: number;
-  title: string;
-  description: string;
-  requiredCount: number;
-  currentProgress: number;
-  category: string;
-  startDate: string;
-  endDate: string;
-  rewardTitle: string;
-  rewardLevel: "Bronze" | "Silver" | "Gold";
-}
-
-// Update the getActiveChallenges function to match the correct Challenge interface
-export const getActiveChallenges = (userId: number): Challenge[] => {
-  // In a real app, this would fetch from a database
-  const today = new Date().toISOString().split('T')[0];
-  
-  // Return mock challenges with the currentProgress property
-  return [
-    {
-      id: 1,
-      title: "Desert Trailblazer",
-      description: "Complete 3 workshops in the current month",
-      requiredCount: 3,
-      currentProgress: 1,
-      category: "Workshop",
-      startDate: "2023-03-01",
-      endDate: "2023-03-31",
-      rewardTitle: "Desert Trailblazer",
-      rewardLevel: "Silver"
-    },
-    {
-      id: 2,
-      title: "Falcon's Rise",
-      description: "Apply to 5 job opportunities within two weeks",
-      requiredCount: 5,
-      currentProgress: 2,
-      category: "Employment",
-      startDate: "2023-03-15",
-      endDate: "2023-03-29",
-      rewardTitle: "Career Hunter",
-      rewardLevel: "Bronze"
-    },
-    {
-      id: 3,
-      title: "Pearl Diver",
-      description: "Complete all assessments with 80%+ score",
-      requiredCount: 5,
-      currentProgress: 3,
-      category: "Assessment",
-      startDate: "2023-02-01",
-      endDate: "2023-04-30",
-      rewardTitle: "Assessment Master",
-      rewardLevel: "Gold"
-    }
-  ];
 };
