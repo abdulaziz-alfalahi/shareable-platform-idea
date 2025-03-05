@@ -6,6 +6,6 @@ export const showStudentToast = (title: string, description: string, type: Toast
   toast({
     title,
     description,
-    type,
+    type: type as ToastType,
   });
 };

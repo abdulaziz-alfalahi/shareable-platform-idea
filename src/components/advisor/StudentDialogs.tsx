@@ -19,8 +19,8 @@ interface StudentDialogsProps {
   setGoalForm: React.Dispatch<React.SetStateAction<GoalForm>>;
   handleSubmitFeedback: () => void;
   handleSubmitGoal: () => void;
-  getStatusBadgeVariant: (status: string) => string;
-  getRiskBadgeVariant: (risk: string) => string;
+  getStatusBadgeVariant: (status: string) => "default" | "secondary" | "destructive" | "outline";
+  getRiskBadgeVariant: (risk: string) => "default" | "secondary" | "destructive" | "outline";
   formatDate: (dateString: string) => string;
   onAddFeedback: (student: Student) => void;
   onAddGoal: (student: Student) => void;
