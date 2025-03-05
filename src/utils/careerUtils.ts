@@ -1,4 +1,3 @@
-
 import { Student, CareerMilestone, PassportStamp } from '@/types/student';
 import { notifySuccess, notifyInfo } from './notification';
 
@@ -53,6 +52,17 @@ export const checkMilestones = async (userId: number, progress: number, serviceT
   }
   
   return false;
+};
+
+// Track progress for a specific user and service
+export const trackProgress = (userId: number, serviceId: string, progress: number): void => {
+  // This would be a server call to update the user_progress table
+  console.log(`Tracking progress for user ${userId}, service ${serviceId}: ${progress}%`);
+  
+  // Simulate database update
+  setTimeout(() => {
+    console.log('Progress updated successfully');
+  }, 500);
 };
 
 // Award a passport stamp with tiered levels (Bronze, Silver, Gold)
@@ -127,17 +137,6 @@ const getCategoryIcon = (category: string): string => {
     default:
       return "award";
   }
-};
-
-// Track progress for a specific user and service
-export const trackProgress = (userId: number, serviceId: string, progress: number): void => {
-  // This would be a server call to update the user_progress table
-  console.log(`Tracking progress for user ${userId}, service ${serviceId}: ${progress}%`);
-  
-  // Simulate database update
-  setTimeout(() => {
-    console.log('Progress updated successfully');
-  }, 500);
 };
 
 // Subscribe to passport updates (real-time)

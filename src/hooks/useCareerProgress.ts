@@ -1,10 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { Student, PassportStamp } from '@/types/student';
 import { 
-  trackProgress, 
-  subscribeToPassportUpdates, 
-  awardPassportStamp 
+  awardPassportStamp,
+  checkMilestones
 } from '@/utils/careerUtils';
 import { notifySuccess } from '@/utils/notification';
 
@@ -18,7 +16,7 @@ interface CareerProgressState {
 /**
  * Hook to track and manage student career progress
  */
-export const useCareerProgress = (studentId: number) => {
+export const useCareerProgress = ({ student }: { student: Student }) => {
   const [state, setState] = useState<CareerProgressState>({
     loading: true,
     stamps: [],
@@ -28,12 +26,12 @@ export const useCareerProgress = (studentId: number) => {
 
   // Track a new service completion
   const trackServiceProgress = (serviceId: string, progress: number) => {
-    // Update progress in the backend
-    trackProgress(studentId, serviceId, progress);
+    // In a real app this would update progress in the backend
+    console.log(`Tracking progress for service ${serviceId}: ${progress}%`);
     
     // If 100% completion, award a stamp
     if (progress === 100) {
-      awardPassportStamp(studentId, serviceId, "Bronze").then(stamp => {
+      awardPassportStamp(student.id, serviceId, "Bronze").then(stamp => {
         if (stamp) {
           // Add the stamp to state
           setState(prevState => ({
@@ -53,6 +51,11 @@ export const useCareerProgress = (studentId: number) => {
     }
   };
 
+  // Check if a milestone should be awarded and award it if needed
+  const checkAndAwardMilestone = async (serviceType: string, progress: number): Promise<boolean> => {
+    return await checkMilestones(student.id, progress, serviceType);
+  };
+
   // Get points based on stamp level
   const getLevelPoints = (level: "Bronze" | "Silver" | "Gold"): number => {
     switch (level) {
@@ -63,7 +66,7 @@ export const useCareerProgress = (studentId: number) => {
     }
   };
 
-  // Load initial data and subscribe to updates
+  // Load initial data
   useEffect(() => {
     setState(prevState => ({ ...prevState, loading: true }));
     
@@ -78,22 +81,15 @@ export const useCareerProgress = (studentId: number) => {
       });
     }, 1000);
     
-    // Subscribe to real-time updates
-    const unsubscribe = subscribeToPassportUpdates(studentId, (newStamp) => {
-      setState(prevState => ({
-        ...prevState,
-        stamps: [...prevState.stamps, newStamp],
-        recentStamp: newStamp,
-        totalPoints: prevState.totalPoints + getLevelPoints(newStamp.level)
-      }));
-    });
-    
-    // Cleanup subscription
-    return unsubscribe;
-  }, [studentId]);
+    // No need for subscription in this demo version, but keeping the pattern:
+    return () => {
+      console.log("Cleaning up career progress hook");
+    };
+  }, [student.id]);
 
   return {
     ...state,
-    trackServiceProgress
+    trackServiceProgress,
+    checkAndAwardMilestone
   };
 };

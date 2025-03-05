@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useCareerProgress } from '@/hooks/useCareerProgress';
 import { Student } from '@/types/student';
@@ -7,6 +6,16 @@ import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Trophy, Award, Calendar, CheckCircle } from 'lucide-react';
 import ProgressTrackingTable from './ProgressTrackingTable';
+
+interface ProgressItem {
+  id: string;
+  category: string;
+  title: string;
+  progress: number;
+  lastUpdated: string;
+  nextMilestone: string;
+  status: "Completed" | "In Progress" | "Not Started";
+}
 
 interface ProgressTrackingProps {
   student: Student;
@@ -22,7 +31,7 @@ const ProgressTracking: React.FC<ProgressTrackingProps> = ({ student }) => {
   });
   
   // Sample progress items for the table with proper status types
-  const progressItems = [
+  const progressItems: ProgressItem[] = [
     {
       id: "skills-101",
       category: "Skills",
@@ -30,7 +39,7 @@ const ProgressTracking: React.FC<ProgressTrackingProps> = ({ student }) => {
       progress: skillsProgress,
       lastUpdated: "2023-05-15",
       nextMilestone: "Complete Assessment",
-      status: skillsProgress === 100 ? 'Completed' : 'In Progress' as 'Completed' | 'In Progress' | 'Not Started'
+      status: skillsProgress === 100 ? 'Completed' : 'In Progress'
     },
     {
       id: "workshop-202",
@@ -39,7 +48,7 @@ const ProgressTracking: React.FC<ProgressTrackingProps> = ({ student }) => {
       progress: workshopProgress,
       lastUpdated: "2023-06-10",
       nextMilestone: "Group Presentation",
-      status: workshopProgress === 100 ? 'Completed' : 'In Progress' as 'Completed' | 'In Progress' | 'Not Started'
+      status: workshopProgress === 100 ? 'Completed' : 'In Progress'
     },
     {
       id: "assessment-303",
@@ -48,7 +57,7 @@ const ProgressTracking: React.FC<ProgressTrackingProps> = ({ student }) => {
       progress: assessmentProgress,
       lastUpdated: "2023-07-22",
       nextMilestone: "Final Submission",
-      status: assessmentProgress === 100 ? 'Completed' : 'In Progress' as 'Completed' | 'In Progress' | 'Not Started'
+      status: assessmentProgress === 100 ? 'Completed' : 'In Progress'
     },
     {
       id: "training-404",
@@ -57,7 +66,7 @@ const ProgressTracking: React.FC<ProgressTrackingProps> = ({ student }) => {
       progress: 10,
       lastUpdated: "2023-08-05",
       nextMilestone: "Module 1 Completion",
-      status: 'Not Started' as 'Completed' | 'In Progress' | 'Not Started'
+      status: 'Not Started'
     }
   ];
   
