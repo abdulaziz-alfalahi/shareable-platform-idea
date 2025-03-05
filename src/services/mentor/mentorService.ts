@@ -25,7 +25,7 @@ export class MentorService {
       async () => {
         // In production, this would fetch from Supabase
         // For this demo, we're using the existing function
-        const { findPotentialMentors } = await import("@/utils/careerUtils");
+        const { findPotentialMentors } = await import("@/utils/career");
         return findPotentialMentors(student);
       },
       { ttl: 1800 } // Cache for 30 minutes since mentor data changes less frequently

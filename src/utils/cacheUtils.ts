@@ -1,4 +1,3 @@
-
 /**
  * Simple in-memory cache implementation for the Career Passport data
  * In a production environment, this would be replaced with Redis, Supabase Edge Functions, 
@@ -94,14 +93,13 @@ export const getCachedPassportData = async (studentId: number) => {
       
       // Fetch from our mock data source
       // In production, this would be a call to Supabase or another data source
-      const { fetchStudentPassportData } = await import('./careerUtils');
+      const { fetchStudentPassportData } = await import('./career');
       return fetchStudentPassportData(studentId);
     },
     { ttl: 600 } // Cache for 10 minutes
   );
 };
 
-// Helper to check if we should notify about near milestones
 export const checkAndNotifyNearMilestone = (progress: number, milestoneTitle: string) => {
   if (progress >= 90 && progress < 100) {
     const { notifyNearMilestone } = require('./notification');

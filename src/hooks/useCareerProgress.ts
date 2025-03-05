@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Student, PassportStamp } from '@/types/student';
 import {
@@ -6,7 +5,7 @@ import {
   subscribeToPassportUpdates,
   awardPassportStamp,
   checkMilestones
-} from '@/utils/careerUtils';
+} from '@/utils/career';
 
 interface UseCareerProgressResult {
   trackServiceProgress: (serviceId: string, progress: number) => void;

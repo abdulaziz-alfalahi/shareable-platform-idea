@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Award, Star, Map, Briefcase, GraduationCap, Code, Share2, Twitter, Linkedin, Facebook } from "lucide-react";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { PassportStamp } from "@/types/student";
 import { notifySuccess } from "@/utils/notification";
-import { shareAchievementToSocial } from "@/utils/careerUtils";
+import { shareAchievementToSocial } from "@/utils/career";
 
 interface InteractivePassportStampProps {
   stamp: PassportStamp;
