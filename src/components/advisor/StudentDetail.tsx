@@ -20,8 +20,8 @@ interface StudentDetailProps {
   onOpenChange: (open: boolean) => void;
   onAddFeedback: (student: Student) => void;
   onAddGoal: (student: Student) => void;
-  getStatusBadgeVariant: (status: string) => string;
-  getRiskBadgeVariant: (risk: string) => string;
+  getStatusBadgeVariant: (status: string) => "default" | "secondary" | "destructive" | "outline";
+  getRiskBadgeVariant: (risk: string) => "default" | "secondary" | "destructive" | "outline";
   formatDate: (dateString: string) => string;
 }
 

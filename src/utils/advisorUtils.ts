@@ -1,5 +1,5 @@
 
-export const getStatusBadgeVariant = (status: string): string => {
+export const getStatusBadgeVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
   switch (status) {
     case "On Track": return "default";
     case "Needs Attention": return "secondary";
@@ -8,7 +8,7 @@ export const getStatusBadgeVariant = (status: string): string => {
   }
 };
 
-export const getRiskBadgeVariant = (risk: string): string => {
+export const getRiskBadgeVariant = (risk: string): "default" | "secondary" | "destructive" | "outline" => {
   switch (risk) {
     case "Low": return "outline";
     case "Medium": return "secondary";
