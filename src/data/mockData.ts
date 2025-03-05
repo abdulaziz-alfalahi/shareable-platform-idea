@@ -7,7 +7,7 @@ export const students: Student[] = [
     name: "Alex Johnson",
     program: "Computer Science",
     year: 3,
-    gradeLevel: "university-3", // Added missing gradeLevel
+    gradeLevel: "university-3",
     gpa: 3.78,
     advisingStatus: "On Track",
     riskLevel: "Low",
@@ -46,14 +46,64 @@ export const students: Student[] = [
         content: "Strong performance in algorithm analysis. Should consider taking advanced AI courses next semester.",
         advisor: "Dr. Smith"
       }
-    ]
+    ],
+    passportStamps: [
+      {
+        id: 1,
+        title: "Workshop Explorer",
+        description: "Completed 3 career development workshops",
+        category: "Workshop",
+        iconName: "award",
+        dateEarned: "2023-08-15",
+        level: "Silver",
+        featured: true
+      },
+      {
+        id: 2,
+        title: "Skills Master",
+        description: "Achieved proficiency in 5 programming languages",
+        category: "Skills",
+        iconName: "code",
+        dateEarned: "2023-07-22",
+        level: "Gold",
+        featured: true
+      },
+      {
+        id: 3,
+        title: "Internship Ready",
+        description: "Successfully completed internship preparation program",
+        category: "Training",
+        iconName: "briefcase",
+        dateEarned: "2023-09-05",
+        level: "Bronze",
+        featured: false
+      }
+    ],
+    careerMilestones: [
+      {
+        id: 1,
+        title: "First Internship",
+        description: "Secured summer internship at Tech Solutions Inc.",
+        dateAchieved: "2023-06-10",
+        points: 250
+      },
+      {
+        id: 2,
+        title: "Project Leadership",
+        description: "Led team of 5 in developing mobile application",
+        dateAchieved: "2023-04-15",
+        points: 150
+      }
+    ],
+    passportLevel: 3,
+    totalPoints: 750
   },
   {
     id: 2,
     name: "Taylor Rivera",
     program: "Business Administration",
     year: 2,
-    gradeLevel: "university-2", // Added missing gradeLevel
+    gradeLevel: "university-2",
     gpa: 3.25,
     advisingStatus: "Needs Attention",
     riskLevel: "Medium",
@@ -98,14 +148,47 @@ export const students: Student[] = [
         content: "Discussed work-life balance strategies. Taylor is overcommitted to extracurriculars.",
         advisor: "Prof. Johnson"
       }
-    ]
+    ],
+    passportStamps: [
+      {
+        id: 4,
+        title: "Networking Pro",
+        description: "Connected with 10+ industry professionals",
+        category: "Skills",
+        iconName: "users",
+        dateEarned: "2023-08-10",
+        level: "Silver",
+        featured: true
+      },
+      {
+        id: 5,
+        title: "Presentation Ace",
+        description: "Delivered outstanding presentation at business forum",
+        category: "Skills",
+        iconName: "presentation",
+        dateEarned: "2023-05-18",
+        level: "Bronze",
+        featured: false
+      }
+    ],
+    careerMilestones: [
+      {
+        id: 3,
+        title: "Club Leadership",
+        description: "Elected president of Marketing Club",
+        dateAchieved: "2023-03-20",
+        points: 175
+      }
+    ],
+    passportLevel: 2,
+    totalPoints: 350
   },
   {
     id: 3,
     name: "Jordan Chen",
     program: "Mechanical Engineering",
     year: 4,
-    gradeLevel: "university-4", // Added missing gradeLevel
+    gradeLevel: "university-4",
     gpa: 3.91,
     advisingStatus: "On Track",
     riskLevel: "Low",
@@ -144,14 +227,64 @@ export const students: Student[] = [
         content: "Discussed job offers and career trajectory. Provided guidance on evaluating compensation packages.",
         advisor: "Dr. Martinez"
       }
-    ]
+    ],
+    passportStamps: [
+      {
+        id: 6,
+        title: "Research Excellence",
+        description: "Published paper in peer-reviewed journal",
+        category: "Education",
+        iconName: "file-text",
+        dateEarned: "2023-07-30",
+        level: "Gold",
+        featured: true
+      },
+      {
+        id: 7,
+        title: "Industry Internship",
+        description: "Completed prestigious internship at NASA",
+        category: "Employment",
+        iconName: "rocket",
+        dateEarned: "2023-08-25",
+        level: "Gold",
+        featured: true
+      },
+      {
+        id: 8,
+        title: "Technical Mastery",
+        description: "Demonstrated advanced proficiency in CAD software",
+        category: "Skills",
+        iconName: "tool",
+        dateEarned: "2023-04-12",
+        level: "Silver",
+        featured: false
+      }
+    ],
+    careerMilestones: [
+      {
+        id: 4,
+        title: "Research Publication",
+        description: "First author on aerospace engineering journal paper",
+        dateAchieved: "2023-07-30",
+        points: 300
+      },
+      {
+        id: 5,
+        title: "NASA Internship",
+        description: "Selected from 500+ applicants for prestigious position",
+        dateAchieved: "2022-06-15",
+        points: 400
+      }
+    ],
+    passportLevel: 5,
+    totalPoints: 1200
   },
   {
     id: 4,
     name: "Morgan Williams",
     program: "Psychology",
     year: 1,
-    gradeLevel: "university-1", // Added missing gradeLevel
+    gradeLevel: "university-1",
     gpa: 2.45,
     advisingStatus: "At Risk",
     riskLevel: "High",
@@ -193,14 +326,29 @@ export const students: Student[] = [
         content: "Discussed personal challenges affecting academics. Referred to university counseling services.",
         advisor: "Dr. Patel"
       }
-    ]
+    ],
+    passportStamps: [
+      {
+        id: 9,
+        title: "First Steps",
+        description: "Completed university orientation program",
+        category: "Education",
+        iconName: "map",
+        dateEarned: "2023-09-01",
+        level: "Bronze",
+        featured: false
+      }
+    ],
+    careerMilestones: [],
+    passportLevel: 1,
+    totalPoints: 50
   },
   {
     id: 5,
     name: "Jamie Lee",
     program: "Finance",
     year: 3,
-    gradeLevel: "university-3", // Added missing gradeLevel
+    gradeLevel: "university-3",
     gpa: 3.67,
     advisingStatus: "On Track",
     riskLevel: "Low",
@@ -238,7 +386,57 @@ export const students: Student[] = [
         content: "Excellent progress on career development. Discussed post-graduation options and MBA possibilities.",
         advisor: "Dr. Rodriguez"
       }
-    ]
+    ],
+    passportStamps: [
+      {
+        id: 10,
+        title: "Financial Analyst",
+        description: "Won university-wide financial analysis competition",
+        category: "Skills",
+        iconName: "bar-chart",
+        dateEarned: "2023-06-15",
+        level: "Gold",
+        featured: true
+      },
+      {
+        id: 11,
+        title: "Leadership Role",
+        description: "Elected as Investment Club Treasurer",
+        category: "Skills",
+        iconName: "landmark",
+        dateEarned: "2023-04-05",
+        level: "Silver",
+        featured: false
+      },
+      {
+        id: 12,
+        title: "Interview Ready",
+        description: "Completed finance industry interview preparation program",
+        category: "Training",
+        iconName: "briefcase",
+        dateEarned: "2023-09-10",
+        level: "Bronze",
+        featured: false
+      }
+    ],
+    careerMilestones: [
+      {
+        id: 6,
+        title: "Investment Competition",
+        description: "First place in university investment challenge",
+        dateAchieved: "2023-06-15",
+        points: 225
+      },
+      {
+        id: 7,
+        title: "Club Leadership",
+        description: "Managed $10,000 budget as Investment Club Treasurer",
+        dateAchieved: "2023-04-05",
+        points: 175
+      }
+    ],
+    passportLevel: 4,
+    totalPoints: 850
   }
 ];
 

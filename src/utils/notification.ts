@@ -71,7 +71,6 @@ export const notifyAction = ({ title, description }: ToastProps) => {
   });
 };
 
-// Add the missing notification functions
 export const notifyAdvisor = ({ title, description }: ToastProps) => {
   toast({
     title,

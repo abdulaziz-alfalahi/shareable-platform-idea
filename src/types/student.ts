@@ -14,6 +14,26 @@ export interface StudentFeedback {
   advisor: string;
 }
 
+export interface PassportStamp {
+  id: number;
+  title: string;
+  description: string;
+  category: "Workshop" | "Assessment" | "Training" | "Employment" | "Education" | "Skills";
+  iconName: string;
+  dateEarned: string;
+  level: "Bronze" | "Silver" | "Gold";
+  featured: boolean;
+}
+
+export interface CareerMilestone {
+  id: number;
+  title: string;
+  description: string;
+  dateAchieved: string;
+  points: number;
+  badgeUrl?: string;
+}
+
 export interface Student {
   id: number;
   name: string;
@@ -34,6 +54,10 @@ export interface Student {
   notes: string;
   goals: StudentGoal[];
   feedback: StudentFeedback[];
+  passportStamps: PassportStamp[];
+  careerMilestones: CareerMilestone[];
+  passportLevel: number;
+  totalPoints: number;
 }
 
 export interface FeedbackForm {

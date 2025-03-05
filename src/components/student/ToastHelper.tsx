@@ -2,10 +2,18 @@
 import { toast } from "@/hooks/toast";
 import { ToastType } from "@/hooks/toast/types";
 
-export const showToast = (title: string, description: string, type: string) => {
+export const showSuccessToast = (title: string, message: string) => {
   toast({
     title,
-    description,
-    type: type as ToastType,
+    description: message,
+    type: "success" as ToastType
+  });
+};
+
+export const showErrorToast = (title: string, message: string) => {
+  toast({
+    title,
+    description: message,
+    type: "error" as ToastType
   });
 };

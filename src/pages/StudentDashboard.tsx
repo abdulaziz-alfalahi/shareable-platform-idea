@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,19 +9,16 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/toast";
 import { notifySuccess } from "@/utils/notification";
 import { getEducationLevel, getGradeLevelDisplay } from "@/utils/advisorUtils";
+import PassportWidget from "@/components/passport/PassportWidget";
+import { useNavigate } from "react-router-dom";
+import { students } from "@/data/mockData";
 
 const StudentDashboard = () => {
+  const navigate = useNavigate();
+  
   // Mock student data - in a real app, this would come from an API or context
-  const [studentData] = useState({
-    id: 1,
-    name: "Ahmed Al Mansouri",
-    gradeLevel: "university-2", // This would dynamically change based on the student
-    program: "Computer Science",
-    gpa: 3.7,
-    progress: 65,
-    skillsProgress: 72,
-    certificationsProgress: 40
-  });
+  // For demo purposes, we'll use the first student from the mock data
+  const [studentData] = useState(students[0]);
 
   // State management for self-assessment
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -196,8 +192,8 @@ const StudentDashboard = () => {
 
   // Mock progress data
   const courseProgress = studentData.progress;
-  const skillsProgress = studentData.skillsProgress;
-  const certificationsProgress = studentData.certificationsProgress;
+  const skillsProgress = studentData.skillsProgress || 72; // Default fallback value
+  const certificationsProgress = studentData.certificationsProgress || 40; // Default fallback value
 
   return (
     <div className="container mx-auto py-6 px-4 sm:px-6 max-w-7xl">
@@ -209,15 +205,16 @@ const StudentDashboard = () => {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid grid-cols-5 w-full max-w-3xl">
+        <TabsList className="grid grid-cols-6 w-full max-w-4xl">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="assessment">Self-Assessment</TabsTrigger>
           <TabsTrigger value="courses">My Courses</TabsTrigger>
           <TabsTrigger value="career">Career Path</TabsTrigger>
+          <TabsTrigger value="passport">Passport</TabsTrigger>
           {educationLevel === "school" ? (
-            <TabsTrigger value="guidance">Guidance Programs</TabsTrigger>
+            <TabsTrigger value="guidance">Guidance</TabsTrigger>
           ) : (
-            <TabsTrigger value="internships">Internship Opportunities</TabsTrigger>
+            <TabsTrigger value="internships">Internships</TabsTrigger>
           )}
         </TabsList>
 
@@ -264,35 +261,7 @@ const StudentDashboard = () => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Certifications</CardTitle>
-                <CardDescription>Professional certifications progress</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <Progress value={certificationsProgress} className="h-2" />
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Progress</span>
-                    <span className="font-medium">{certificationsProgress}%</span>
-                  </div>
-                </div>
-                <div className="mt-4 space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span>Web Development Basics</span>
-                    <Badge variant="outline">Complete</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Data Science Fundamentals</span>
-                    <Badge variant="outline">In Progress</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Cloud Architecture</span>
-                    <Badge variant="outline">Not Started</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <PassportWidget student={studentData} />
           </div>
 
           <div className="mt-6">
@@ -660,6 +629,71 @@ const StudentDashboard = () => {
                     </div>
                   </div>
                   <Button className="mt-4" variant="outline" size="sm">View Recommended Courses</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="passport">
+          <Card>
+            <CardHeader>
+              <CardTitle>Career Passport</CardTitle>
+              <CardDescription>Track your achievements, milestones, and progress</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between items-center p-4 bg-muted rounded-lg">
+                <div>
+                  <h3 className="font-semibold">Level {studentData.passportLevel}</h3>
+                  <p className="text-sm text-muted-foreground">{studentData.totalPoints} total points earned</p>
+                </div>
+                <Button onClick={() => navigate(`/career-passport/${studentData.id}`)}>
+                  View Full Passport
+                </Button>
+              </div>
+              
+              <div>
+                <h3 className="font-semibold mb-3">Your Latest Achievements</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {studentData.passportStamps.slice(0, 4).map((stamp) => (
+                    <div key={stamp.id} className="border rounded-lg p-3 space-y-1">
+                      <div className="flex justify-between items-start">
+                        <h4 className="font-medium">{stamp.title}</h4>
+                        <Badge variant="outline">{stamp.level}</Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{stamp.description}</p>
+                      <p className="text-xs text-muted-foreground">{stamp.dateEarned}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div>
+                <h3 className="font-semibold mb-3">Next Goals</h3>
+                <div className="space-y-3">
+                  <div className="border rounded-lg p-3">
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-medium">Complete Technical Assessment</h4>
+                      <Badge>+100 points</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Showcase your skills by completing the technical assessment
+                    </p>
+                    <Button variant="outline" size="sm" className="mt-2">Get Started</Button>
+                  </div>
+                  
+                  <div className="border rounded-lg p-3">
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-medium">Attend Industry Workshop</h4>
+                      <Badge>+75 points</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Register for upcoming workshops to earn your Workshop Explorer stamp
+                    </p>
+                    <Button variant="outline" size="sm" className="mt-2">Browse Workshops</Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
