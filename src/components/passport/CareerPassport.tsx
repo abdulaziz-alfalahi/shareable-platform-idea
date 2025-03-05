@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Card, 
@@ -25,26 +24,27 @@ import ProgressTrackingTable from "./ProgressTrackingTable";
 import ActiveChallenges from "./ActiveChallenges";
 import LeaderboardCard from "./LeaderboardCard";
 import MentorMatchingCard from "./MentorMatchingCard";
-import { getLeaderboardData, getActiveChallenges, checkMentorEligibility } from "@/utils/careerUtils";
+import { 
+  getLeaderboardData, 
+  getActiveChallenges, 
+  checkMentorEligibility 
+} from "@/utils/career";
 
 interface CareerPassportProps {
   student: Student;
 }
 
-// Get next milestone points required
 const getNextLevelPoints = (currentLevel: number): number => {
   const baseLine = 500;
   return baseLine * (currentLevel + 1);
 };
 
-// Sample progress items for the tracking table
 const getProgressItems = (stamps: PassportStamp[]) => {
-  // Create progress items based on passport stamps
   return stamps.map(stamp => ({
     id: stamp.id.toString(),
     category: stamp.category,
     title: stamp.title,
-    progress: Math.floor(Math.random() * 100), // In a real app, this would come from the user_progress table
+    progress: Math.floor(Math.random() * 100),
     lastUpdated: stamp.dateEarned,
     nextMilestone: `Level ${stamp.level === "Bronze" ? "Silver" : stamp.level === "Silver" ? "Gold" : "Mastery"}`,
     status: Math.random() > 0.3 ? 'In Progress' : (Math.random() > 0.5 ? 'Completed' : 'Not Started') as 'In Progress' | 'Completed' | 'Not Started'
@@ -57,9 +57,7 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
   const [activeChallenges, setActiveChallenges] = useState<Challenge[]>([]);
   
   React.useEffect(() => {
-    // Fetch leaderboard data
     getLeaderboardData().then(data => {
-      // Mark the current user in the leaderboard
       const enhancedData = data.map(entry => ({
         ...entry,
         isCurrentUser: entry.name === student.name
@@ -67,12 +65,10 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
       setLeaderboardData(enhancedData);
     });
     
-    // Get active challenges
     const challenges = getActiveChallenges(student.id);
-    // Convert to Challenge type with currentProgress
     const formattedChallenges: Challenge[] = challenges.map(c => ({
       ...c,
-      currentProgress: c.currentProgress || 0, // Fix: Use currentProgress directly, as it should already exist
+      currentProgress: c.currentProgress || 0,
       category: c.category as "Workshop" | "Assessment" | "Training" | "Employment" | "Education" | "Skills",
     }));
     setActiveChallenges(formattedChallenges);
@@ -84,7 +80,6 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
   const nextLevelPoints = getNextLevelPoints(student.passportLevel);
   const progressToNextLevel = Math.min(Math.round((student.totalPoints / nextLevelPoints) * 100), 100);
   
-  // Generate progress items for the tracking table
   const progressItems = getProgressItems(student.passportStamps);
 
   const handleChallengeDetails = (challengeId: number) => {
@@ -123,7 +118,6 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
           </div>
         </CardHeader>
         <CardContent>
-          {/* Progress to next level with UAE-themed colors */}
           <div className="mb-6">
             <div className="flex justify-between text-sm mb-2">
               <span>Progress to Level {student.passportLevel + 1}</span>
@@ -132,18 +126,15 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
             <Progress 
               value={progressToNextLevel} 
               className="h-2" 
-              // Add UAE-themed color gradient for progress bars
               style={{
                 background: 'linear-gradient(to right, #f5e8c7, #f5e8c7)',
               }}
-              // The actual progress indicator with UAE-inspired green
               indicatorStyle={{
                 background: 'linear-gradient(to right, #2c4a2e, #4a7c31)',
               }}
             />
           </div>
 
-          {/* Tabs for different passport sections */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-4 mb-6">
               <TabsTrigger value="achievements">Achievements</TabsTrigger>
@@ -153,7 +144,6 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
             </TabsList>
             
             <TabsContent value="achievements">
-              {/* Featured achievements with interactive stamps */}
               {featuredStamps.length > 0 && (
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold mb-3">Featured Achievements</h3>
@@ -165,13 +155,11 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
                 </div>
               )}
 
-              {/* Progress tracking table */}
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-3">Progress Tracking</h3>
                 <ProgressTrackingTable progressItems={progressItems} />
               </div>
 
-              {/* Other achievements - displayed more compactly */}
               {otherStamps.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold mb-3">All Achievements</h3>
@@ -183,7 +171,6 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
                 </div>
               )}
 
-              {/* No achievements placeholder */}
               {student.passportStamps.length === 0 && (
                 <div className="text-center py-8">
                   <GraduationCap className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
