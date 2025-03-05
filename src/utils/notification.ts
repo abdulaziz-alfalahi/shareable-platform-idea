@@ -70,3 +70,20 @@ export const notifyAction = ({ title, description }: ToastProps) => {
     type: "action" as ToastType,
   });
 };
+
+// Add the missing notification functions
+export const notifyAdvisor = ({ title, description }: ToastProps) => {
+  toast({
+    title,
+    description,
+    type: "info" as ToastType,
+  });
+};
+
+export const notifyRecruiter = ({ title, description }: ToastProps) => {
+  toast({
+    title,
+    description,
+    type: "info" as ToastType,
+  });
+};

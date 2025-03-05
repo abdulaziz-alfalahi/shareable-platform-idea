@@ -7,6 +7,7 @@ export const students: Student[] = [
     name: "Alex Johnson",
     program: "Computer Science",
     year: 3,
+    gradeLevel: "university-3", // Added missing gradeLevel
     gpa: 3.78,
     advisingStatus: "On Track",
     riskLevel: "Low",
@@ -52,6 +53,7 @@ export const students: Student[] = [
     name: "Taylor Rivera",
     program: "Business Administration",
     year: 2,
+    gradeLevel: "university-2", // Added missing gradeLevel
     gpa: 3.25,
     advisingStatus: "Needs Attention",
     riskLevel: "Medium",
@@ -103,6 +105,7 @@ export const students: Student[] = [
     name: "Jordan Chen",
     program: "Mechanical Engineering",
     year: 4,
+    gradeLevel: "university-4", // Added missing gradeLevel
     gpa: 3.91,
     advisingStatus: "On Track",
     riskLevel: "Low",
@@ -148,6 +151,7 @@ export const students: Student[] = [
     name: "Morgan Williams",
     program: "Psychology",
     year: 1,
+    gradeLevel: "university-1", // Added missing gradeLevel
     gpa: 2.45,
     advisingStatus: "At Risk",
     riskLevel: "High",
@@ -196,6 +200,7 @@ export const students: Student[] = [
     name: "Jamie Lee",
     program: "Finance",
     year: 3,
+    gradeLevel: "university-3", // Added missing gradeLevel
     gpa: 3.67,
     advisingStatus: "On Track",
     riskLevel: "Low",
