@@ -72,7 +72,7 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
     // Convert to Challenge type with currentProgress
     const formattedChallenges: Challenge[] = challenges.map(c => ({
       ...c,
-      currentProgress: c.progress || 0,
+      currentProgress: c.currentProgress || 0, // Fix: Use currentProgress directly, as it should already exist
       category: c.category as "Workshop" | "Assessment" | "Training" | "Employment" | "Education" | "Skills",
     }));
     setActiveChallenges(formattedChallenges);
