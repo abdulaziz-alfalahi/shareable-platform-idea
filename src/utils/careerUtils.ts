@@ -1,5 +1,6 @@
+
 import { Student, CareerMilestone, PassportStamp } from '@/types/student';
-import { notifySuccess, notifyInfo } from './notification';
+import { notifySuccess, notifyInfo, notifyWarning } from './notification';
 
 // Define a Challenge type for time-bound challenges
 export interface Challenge {
@@ -49,15 +50,39 @@ export const checkMilestones = async (userId: number, progress: number, serviceT
     await awardPassportStamp(userId, serviceType);
     
     return true;
+  } else if (progress >= 90) {
+    // Near milestone notification
+    sendNearMilestoneNotification(userId, serviceType, progress);
   }
   
   return false;
+};
+
+// New function: Send notification when user is close to milestone
+export const sendNearMilestoneNotification = (userId: number, serviceType: string, progress: number): void => {
+  console.log(`User ${userId} is at ${progress}% for ${serviceType} - sending notification`);
+  
+  // In a real app, this would check if we've already sent this notification recently
+  // and would potentially send an email/push notification
+  
+  notifyWarning({
+    title: "Almost There!",
+    description: `You're ${progress}% to your next ${serviceType} stamp! Complete the remaining tasks to earn it.`
+  });
+  
+  // Simulate storing this notification in the database
+  console.log(`Saved notification for user ${userId}`);
 };
 
 // Track progress for a specific user and service
 export const trackProgress = (userId: number, serviceId: string, progress: number): void => {
   // This would be a server call to update the user_progress table
   console.log(`Tracking progress for user ${userId}, service ${serviceId}: ${progress}%`);
+  
+  // Check for near-milestone notification
+  if (progress >= 90 && progress < 100) {
+    sendNearMilestoneNotification(userId, serviceId, progress);
+  }
   
   // Simulate database update
   setTimeout(() => {
@@ -170,6 +195,36 @@ export const subscribeToPassportUpdates = (
   };
 };
 
+// New function: Share achievement to social media
+export const shareAchievementToSocial = (stampTitle: string, platform: "twitter" | "linkedin" | "facebook" = "twitter"): void => {
+  const message = encodeURIComponent(`I just earned my "${stampTitle}" stamp on the Emirati Journey platform! #EmiratiJourney #CareerGrowth`);
+  const url = encodeURIComponent(window.location.href);
+  
+  let shareUrl = '';
+  
+  switch (platform) {
+    case "twitter":
+      shareUrl = `https://twitter.com/intent/tweet?text=${message}&url=${url}`;
+      break;
+    case "linkedin":
+      shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&summary=${message}`;
+      break;
+    case "facebook":
+      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${message}`;
+      break;
+  }
+  
+  // Open in a new window
+  if (shareUrl) {
+    window.open(shareUrl, '_blank', 'width=600,height=400');
+    
+    notifySuccess({
+      title: "Shared Successfully",
+      description: `Your achievement has been shared to ${platform.charAt(0).toUpperCase() + platform.slice(1)}.`
+    });
+  }
+};
+
 // Simple job recommendation function based on skills
 export const recommendJobs = (student: Student, jobs: Vacancy[]): Vacancy[] => {
   // Extract skills from student (in a real app, you'd have a skills field)
@@ -273,5 +328,32 @@ export const getLeaderboardData = async (category?: string, limit: number = 10):
     { name: "Aisha Al Falasi", score: 17 },
     { name: "Ibrahim Al Mazrouei", score: 16 },
     { name: "Sara Al Qubaisi", score: 15 }
+  ];
+};
+
+// Function to check if a user qualifies as a mentor
+export const checkMentorEligibility = (student: Student): boolean => {
+  // Count the total number of stamps
+  const totalStamps = student.passportStamps.length;
+  
+  // Check if they have enough gold/silver stamps
+  const highLevelStamps = student.passportStamps.filter(
+    stamp => stamp.level === "Gold" || stamp.level === "Silver"
+  ).length;
+  
+  // Criteria: At least 10 total stamps with at least 3 gold/silver stamps
+  return totalStamps >= 10 && highLevelStamps >= 3;
+};
+
+// Function to find potential mentors for a student
+export const findPotentialMentors = async (student: Student, limit: number = 3): Promise<{id: number, name: string, stamps: number}[]> => {
+  // In a real app, this would be a database query
+  console.log(`Finding mentors for student ${student.id}`);
+  
+  // For demo, return mock data
+  return [
+    { id: 101, name: "Ahmed Al Mansoori", stamps: 32 },
+    { id: 102, name: "Fatima Al Hashemi", stamps: 28 },
+    { id: 103, name: "Mohammed Al Marzooqi", stamps: 25 }
   ];
 };

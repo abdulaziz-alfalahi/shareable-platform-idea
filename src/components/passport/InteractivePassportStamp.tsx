@@ -1,11 +1,12 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Award, Star, Map, Briefcase, GraduationCap, Code, Share2 } from "lucide-react";
+import { Award, Star, Map, Briefcase, GraduationCap, Code, Share2, Twitter, Linkedin, Facebook } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { PassportStamp } from "@/types/student";
 import { notifySuccess } from "@/utils/notification";
+import { shareAchievementToSocial } from "@/utils/careerUtils";
 
 interface InteractivePassportStampProps {
   stamp: PassportStamp;
@@ -62,6 +63,7 @@ const getIconComponent = (iconName: string) => {
 const InteractivePassportStamp: React.FC<InteractivePassportStampProps> = ({ stamp }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isSharingExpanded, setIsSharingExpanded] = useState(false);
 
   const handleStampClick = () => {
     setIsAnimating(true);
@@ -73,11 +75,12 @@ const InteractivePassportStamp: React.FC<InteractivePassportStampProps> = ({ sta
   };
 
   const handleShareAchievement = () => {
-    setIsDialogOpen(false);
-    notifySuccess({
-      title: "Achievement Shared",
-      description: `You've shared your "${stamp.title}" achievement with your network.`
-    });
+    setIsSharingExpanded(!isSharingExpanded);
+  };
+
+  const handleShareToSocial = (platform: "twitter" | "linkedin" | "facebook") => {
+    shareAchievementToSocial(stamp.title, platform);
+    setIsSharingExpanded(false);
   };
 
   // Animation variants for UAE-inspired animation
@@ -145,7 +148,7 @@ const InteractivePassportStamp: React.FC<InteractivePassportStampProps> = ({ sta
             </div>
           </div>
 
-          <DialogFooter className="sm:justify-between">
+          <DialogFooter className="sm:justify-between flex-col sm:flex-row">
             <Button
               variant="outline"
               size="sm"
@@ -153,13 +156,51 @@ const InteractivePassportStamp: React.FC<InteractivePassportStampProps> = ({ sta
             >
               Close
             </Button>
-            <Button
-              size="sm"
-              onClick={handleShareAchievement}
-              className="flex items-center"
-            >
-              <Share2 className="h-4 w-4 mr-1" /> Share Achievement
-            </Button>
+            <div className="relative">
+              <Button
+                size="sm"
+                onClick={handleShareAchievement}
+                className="flex items-center"
+              >
+                <Share2 className="h-4 w-4 mr-1" /> Share Achievement
+              </Button>
+              
+              {isSharingExpanded && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute right-0 mt-2 p-2 bg-white rounded-md shadow-lg z-10 flex space-x-2"
+                >
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => handleShareToSocial("twitter")}
+                    className="flex items-center"
+                  >
+                    <Twitter className="h-4 w-4 mr-1 text-blue-400" />
+                    X
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => handleShareToSocial("linkedin")}
+                    className="flex items-center"
+                  >
+                    <Linkedin className="h-4 w-4 mr-1 text-blue-600" />
+                    LinkedIn
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => handleShareToSocial("facebook")}
+                    className="flex items-center"
+                  >
+                    <Facebook className="h-4 w-4 mr-1 text-blue-500" />
+                    Facebook
+                  </Button>
+                </motion.div>
+              )}
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>

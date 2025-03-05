@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Card, 
@@ -13,7 +14,8 @@ import {
   Award, 
   GraduationCap, 
   Rocket, 
-  BarChart
+  BarChart,
+  UserCheck
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -22,7 +24,8 @@ import InteractivePassportStamp from "./InteractivePassportStamp";
 import ProgressTrackingTable from "./ProgressTrackingTable";
 import ActiveChallenges from "./ActiveChallenges";
 import LeaderboardCard from "./LeaderboardCard";
-import { getLeaderboardData, getActiveChallenges } from "@/utils/careerUtils";
+import MentorMatchingCard from "./MentorMatchingCard";
+import { getLeaderboardData, getActiveChallenges, checkMentorEligibility } from "@/utils/careerUtils";
 
 interface CareerPassportProps {
   student: Student;
@@ -50,7 +53,7 @@ const getProgressItems = (stamps: PassportStamp[]) => {
 
 const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
   const [activeTab, setActiveTab] = useState("achievements");
-  const [leaderboardData, setLeaderboardData] = useState<{name: string, score: number}[]>([]);
+  const [leaderboardData, setLeaderboardData] = useState<{name: string, score: number, isCurrentUser?: boolean}[]>([]);
   const [activeChallenges, setActiveChallenges] = useState<Challenge[]>([]);
   
   React.useEffect(() => {
@@ -91,6 +94,8 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
     });
   };
 
+  const isMentorEligible = checkMentorEligibility(student);
+
   return (
     <div className="space-y-6">
       <Card>
@@ -107,6 +112,11 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
                 <Badge variant="secondary" className="text-sm py-1 px-3">
                   <BarChart className="h-3 w-3 mr-1 inline-block" />
                   Rank #{student.leaderboardRank}
+                </Badge>
+              )}
+              {isMentorEligible && (
+                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                  <UserCheck className="h-3 w-3 mr-1" /> Mentor
                 </Badge>
               )}
             </div>
@@ -135,10 +145,11 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
 
           {/* Tabs for different passport sections */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 mb-6">
+            <TabsList className="grid grid-cols-4 mb-6">
               <TabsTrigger value="achievements">Achievements</TabsTrigger>
               <TabsTrigger value="challenges">Challenges</TabsTrigger>
               <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
+              <TabsTrigger value="mentors">Mentors</TabsTrigger>
             </TabsList>
             
             <TabsContent value="achievements">
@@ -235,6 +246,10 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
                   />
                 </div>
               </div>
+            </TabsContent>
+            
+            <TabsContent value="mentors">
+              <MentorMatchingCard student={student} />
             </TabsContent>
           </Tabs>
         </CardContent>

@@ -1,95 +1,97 @@
+
 import { useState, useEffect } from 'react';
 import { Student, PassportStamp } from '@/types/student';
-import { 
+import {
+  trackProgress,
+  subscribeToPassportUpdates,
   awardPassportStamp,
   checkMilestones
 } from '@/utils/careerUtils';
-import { notifySuccess } from '@/utils/notification';
 
-interface CareerProgressState {
+interface UseCareerProgressResult {
+  trackServiceProgress: (serviceId: string, progress: number) => void;
   loading: boolean;
   stamps: PassportStamp[];
   totalPoints: number;
   recentStamp: PassportStamp | null;
+  checkAndAwardMilestone: (userId: number, progress: number, serviceType: string) => Promise<boolean>;
 }
 
 /**
- * Hook to track and manage student career progress
+ * Hook for tracking career progress and passport stamps
  */
-export const useCareerProgress = ({ student }: { student: Student }) => {
-  const [state, setState] = useState<CareerProgressState>({
-    loading: true,
-    stamps: [],
-    totalPoints: 0,
-    recentStamp: null
-  });
+export const useCareerProgress = (userId: number): UseCareerProgressResult => {
+  const [stamps, setStamps] = useState<PassportStamp[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [recentStamp, setRecentStamp] = useState<PassportStamp | null>(null);
 
-  // Track a new service completion
-  const trackServiceProgress = (serviceId: string, progress: number) => {
-    // In a real app this would update progress in the backend
-    console.log(`Tracking progress for service ${serviceId}: ${progress}%`);
-    
-    // If 100% completion, award a stamp
-    if (progress === 100) {
-      awardPassportStamp(student.id, serviceId, "Bronze").then(stamp => {
-        if (stamp) {
-          // Add the stamp to state
-          setState(prevState => ({
-            ...prevState,
-            stamps: [...prevState.stamps, stamp],
-            recentStamp: stamp,
-            totalPoints: prevState.totalPoints + getLevelPoints(stamp.level)
-          }));
-          
-          // Show a success notification
-          notifySuccess({
-            title: "New Achievement!",
-            description: `You've earned the ${stamp.title} badge!`
-          });
-        }
-      });
-    }
-  };
-
-  // Check if a milestone should be awarded and award it if needed
-  const checkAndAwardMilestone = async (serviceType: string, progress: number): Promise<boolean> => {
-    return await checkMilestones(student.id, progress, serviceType);
-  };
-
-  // Get points based on stamp level
-  const getLevelPoints = (level: "Bronze" | "Silver" | "Gold"): number => {
-    switch (level) {
-      case "Gold": return 100;
-      case "Silver": return 50;
-      case "Bronze": return 25;
-      default: return 10;
-    }
-  };
-
-  // Load initial data
+  // Initialize with any existing stamps
   useEffect(() => {
-    setState(prevState => ({ ...prevState, loading: true }));
+    // This would normally fetch stamps from the server
+    console.log(`Initializing career progress for user ${userId}`);
+  }, [userId]);
+
+  // Subscribe to real-time stamp updates
+  useEffect(() => {
+    // Subscribe to updates and handle new stamps
+    const unsubscribe = subscribeToPassportUpdates(userId, (newStamp) => {
+      setStamps(prevStamps => [...prevStamps, newStamp]);
+      setRecentStamp(newStamp);
+      
+      // Update points based on stamp level
+      const pointsForLevel = {
+        "Bronze": 25,
+        "Silver": 50,
+        "Gold": 100
+      };
+      setTotalPoints(prev => prev + pointsForLevel[newStamp.level]);
+    });
     
-    // In a real app, this would load stamps from API
-    setTimeout(() => {
-      // Mock data load
-      setState({
-        loading: false,
-        stamps: [],
-        totalPoints: 0,
-        recentStamp: null
-      });
-    }, 1000);
-    
-    // No need for subscription in this demo version, but keeping the pattern:
+    // Cleanup subscription on unmount
     return () => {
-      console.log("Cleaning up career progress hook");
+      unsubscribe();
     };
-  }, [student.id]);
+  }, [userId]);
+
+  // Function for tracking service progress
+  const trackServiceProgress = (serviceId: string, progress: number) => {
+    setLoading(true);
+    
+    try {
+      // Track progress in the system
+      trackProgress(userId, serviceId, progress);
+      
+      // Check for milestones
+      checkMilestones(userId, progress, serviceId)
+        .then(achieved => {
+          if (achieved) {
+            console.log(`User ${userId} achieved a milestone in ${serviceId}`);
+          }
+        })
+        .catch(err => console.error("Error checking milestones:", err))
+        .finally(() => setLoading(false));
+    } catch (error) {
+      console.error("Error tracking progress:", error);
+      setLoading(false);
+    }
+  };
+
+  // Function to check and award a milestone
+  const checkAndAwardMilestone = async (
+    userId: number, 
+    progress: number, 
+    serviceType: string
+  ): Promise<boolean> => {
+    return await checkMilestones(userId, progress, serviceType);
+  };
 
   return {
-    ...state,
     trackServiceProgress,
+    loading,
+    stamps,
+    totalPoints,
+    recentStamp,
     checkAndAwardMilestone
   };
 };
