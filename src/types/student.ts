@@ -34,6 +34,19 @@ export interface CareerMilestone {
   badgeUrl?: string;
 }
 
+export interface Challenge {
+  id: number;
+  title: string;
+  description: string;
+  requiredCount: number;
+  currentProgress: number;
+  category: "Workshop" | "Assessment" | "Training" | "Employment" | "Education" | "Skills";
+  startDate: string;
+  endDate: string;
+  rewardTitle: string;
+  rewardLevel: "Bronze" | "Silver" | "Gold";
+}
+
 export interface Student {
   id: number;
   name: string;
@@ -60,6 +73,8 @@ export interface Student {
   totalPoints: number;
   skillsProgress?: number;
   certificationsProgress?: number;
+  activeChallenges?: Challenge[];
+  leaderboardRank?: number;
 }
 
 export interface FeedbackForm {

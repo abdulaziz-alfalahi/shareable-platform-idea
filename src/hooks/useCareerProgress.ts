@@ -1,79 +1,99 @@
 
 import { useState, useEffect } from 'react';
 import { Student, PassportStamp } from '@/types/student';
-import { Vacancy } from '@/components/jobs/MatchingVacanciesTab';
 import { 
-  checkMilestones, 
-  recommendJobs, 
   trackProgress, 
-  subscribeToPassportUpdates 
+  subscribeToPassportUpdates, 
+  awardPassportStamp 
 } from '@/utils/careerUtils';
 import { notifySuccess } from '@/utils/notification';
 
-interface UseCareerProgressProps {
-  student: Student;
-  availableJobs?: Vacancy[];
-}
-
-interface UseCareerProgressReturn {
-  recommendedJobs: Vacancy[];
-  trackServiceProgress: (serviceId: string, progress: number) => void;
-  checkAndAwardMilestone: (serviceType: string, progress: number) => Promise<boolean>;
-  latestStamp: PassportStamp | null;
+interface CareerProgressState {
+  loading: boolean;
+  stamps: PassportStamp[];
+  totalPoints: number;
+  recentStamp: PassportStamp | null;
 }
 
 /**
- * Hook for managing career progress and passport stamps
+ * Hook to track and manage student career progress
  */
-export function useCareerProgress({ 
-  student, 
-  availableJobs = [] 
-}: UseCareerProgressProps): UseCareerProgressReturn {
-  const [recommendedJobs, setRecommendedJobs] = useState<Vacancy[]>([]);
-  const [latestStamp, setLatestStamp] = useState<PassportStamp | null>(null);
-  
-  // Process job recommendations when student or jobs change
-  useEffect(() => {
-    if (student && availableJobs.length > 0) {
-      const recommended = recommendJobs(student, availableJobs);
-      setRecommendedJobs(recommended);
-    }
-  }, [student, availableJobs]);
-  
-  // Subscribe to passport updates
-  useEffect(() => {
-    if (student) {
-      const unsubscribe = subscribeToPassportUpdates(student.id, (newStamp) => {
-        setLatestStamp(newStamp);
-        notifySuccess({
-          title: "New Achievement!",
-          description: `You've earned the "${newStamp.title}" stamp in your Career Passport!`
-        });
-      });
-      
-      return unsubscribe;
-    }
-  }, [student]);
-  
-  // Function to track progress for a service
+export const useCareerProgress = (studentId: number) => {
+  const [state, setState] = useState<CareerProgressState>({
+    loading: true,
+    stamps: [],
+    totalPoints: 0,
+    recentStamp: null
+  });
+
+  // Track a new service completion
   const trackServiceProgress = (serviceId: string, progress: number) => {
-    if (student) {
-      trackProgress(student.id, serviceId, progress);
+    // Update progress in the backend
+    trackProgress(studentId, serviceId, progress);
+    
+    // If 100% completion, award a stamp
+    if (progress === 100) {
+      awardPassportStamp(studentId, serviceId, "Bronze").then(stamp => {
+        if (stamp) {
+          // Add the stamp to state
+          setState(prevState => ({
+            ...prevState,
+            stamps: [...prevState.stamps, stamp],
+            recentStamp: stamp,
+            totalPoints: prevState.totalPoints + getLevelPoints(stamp.level)
+          }));
+          
+          // Show a success notification
+          notifySuccess({
+            title: "New Achievement!",
+            description: `You've earned the ${stamp.title} badge!`
+          });
+        }
+      });
     }
   };
-  
-  // Function to check and award milestone
-  const checkAndAwardMilestone = async (serviceType: string, progress: number) => {
-    if (student) {
-      return await checkMilestones(student.id, progress, serviceType);
+
+  // Get points based on stamp level
+  const getLevelPoints = (level: "Bronze" | "Silver" | "Gold"): number => {
+    switch (level) {
+      case "Gold": return 100;
+      case "Silver": return 50;
+      case "Bronze": return 25;
+      default: return 10;
     }
-    return false;
   };
-  
+
+  // Load initial data and subscribe to updates
+  useEffect(() => {
+    setState(prevState => ({ ...prevState, loading: true }));
+    
+    // In a real app, this would load stamps from API
+    setTimeout(() => {
+      // Mock data load
+      setState({
+        loading: false,
+        stamps: [],
+        totalPoints: 0,
+        recentStamp: null
+      });
+    }, 1000);
+    
+    // Subscribe to real-time updates
+    const unsubscribe = subscribeToPassportUpdates(studentId, (newStamp) => {
+      setState(prevState => ({
+        ...prevState,
+        stamps: [...prevState.stamps, newStamp],
+        recentStamp: newStamp,
+        totalPoints: prevState.totalPoints + getLevelPoints(newStamp.level)
+      }));
+    });
+    
+    // Cleanup subscription
+    return unsubscribe;
+  }, [studentId]);
+
   return {
-    recommendedJobs,
-    trackServiceProgress,
-    checkAndAwardMilestone,
-    latestStamp
+    ...state,
+    trackServiceProgress
   };
-}
+};

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
   Card, 
   CardContent, 
@@ -8,50 +8,25 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Student, PassportStamp } from "@/types/student";
+import { Student, PassportStamp, Challenge } from "@/types/student";
 import { 
   Award, 
-  Star, 
-  Map, 
-  Briefcase, 
   GraduationCap, 
-  Code, 
-  Users, 
-  FileText, 
   Rocket, 
-  Settings, 
-  BarChart, 
-  Landmark, 
-  Share2
+  BarChart
 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { notifySuccess } from "@/utils/notification";
 import InteractivePassportStamp from "./InteractivePassportStamp";
 import ProgressTrackingTable from "./ProgressTrackingTable";
+import ActiveChallenges from "./ActiveChallenges";
+import LeaderboardCard from "./LeaderboardCard";
+import { getLeaderboardData, getActiveChallenges } from "@/utils/careerUtils";
 
 interface CareerPassportProps {
   student: Student;
 }
-
-// Map category to a specific color for visual distinction
-const getCategoryColor = (category: string): string => {
-  switch (category) {
-    case "Workshop":
-      return "bg-amber-100 text-amber-800 border-amber-300";
-    case "Assessment":
-      return "bg-violet-100 text-violet-800 border-violet-300";
-    case "Training":
-      return "bg-emerald-100 text-emerald-800 border-emerald-300";
-    case "Employment":
-      return "bg-blue-100 text-blue-800 border-blue-300";
-    case "Education":
-      return "bg-rose-100 text-rose-800 border-rose-300";
-    case "Skills":
-      return "bg-cyan-100 text-cyan-800 border-cyan-300";
-    default:
-      return "bg-gray-100 text-gray-800 border-gray-300";
-  }
-};
 
 // Get next milestone points required
 const getNextLevelPoints = (currentLevel: number): number => {
@@ -74,6 +49,32 @@ const getProgressItems = (stamps: PassportStamp[]) => {
 };
 
 const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
+  const [activeTab, setActiveTab] = useState("achievements");
+  const [leaderboardData, setLeaderboardData] = useState<{name: string, score: number}[]>([]);
+  const [activeChallenges, setActiveChallenges] = useState<Challenge[]>([]);
+  
+  React.useEffect(() => {
+    // Fetch leaderboard data
+    getLeaderboardData().then(data => {
+      // Mark the current user in the leaderboard
+      const enhancedData = data.map(entry => ({
+        ...entry,
+        isCurrentUser: entry.name === student.name
+      }));
+      setLeaderboardData(enhancedData);
+    });
+    
+    // Get active challenges
+    const challenges = getActiveChallenges(student.id);
+    // Convert to Challenge type with currentProgress
+    const formattedChallenges: Challenge[] = challenges.map(c => ({
+      ...c,
+      currentProgress: c.progress || 0,
+      category: c.category as "Workshop" | "Assessment" | "Training" | "Employment" | "Education" | "Skills",
+    }));
+    setActiveChallenges(formattedChallenges);
+  }, [student.id, student.name]);
+
   const featuredStamps = student.passportStamps.filter(stamp => stamp.featured);
   const otherStamps = student.passportStamps.filter(stamp => !stamp.featured);
   
@@ -82,6 +83,13 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
   
   // Generate progress items for the tracking table
   const progressItems = getProgressItems(student.passportStamps);
+
+  const handleChallengeDetails = (challengeId: number) => {
+    notifySuccess({
+      title: "Challenge Details",
+      description: `Viewing details for challenge #${challengeId}`
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -95,6 +103,12 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
             <div className="flex items-center space-x-2">
               <Badge className="text-sm py-1 px-3">Level {student.passportLevel}</Badge>
               <Badge variant="outline" className="text-sm py-1 px-3">{student.totalPoints} Points</Badge>
+              {student.leaderboardRank && (
+                <Badge variant="secondary" className="text-sm py-1 px-3">
+                  <BarChart className="h-3 w-3 mr-1 inline-block" />
+                  Rank #{student.leaderboardRank}
+                </Badge>
+              )}
             </div>
           </div>
         </CardHeader>
@@ -119,47 +133,110 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
             />
           </div>
 
-          {/* Featured achievements with interactive stamps */}
-          {featuredStamps.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">Featured Achievements</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {featuredStamps.map((stamp) => (
-                  <InteractivePassportStamp key={stamp.id} stamp={stamp} />
-                ))}
+          {/* Tabs for different passport sections */}
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid grid-cols-3 mb-6">
+              <TabsTrigger value="achievements">Achievements</TabsTrigger>
+              <TabsTrigger value="challenges">Challenges</TabsTrigger>
+              <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="achievements">
+              {/* Featured achievements with interactive stamps */}
+              {featuredStamps.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-3">Featured Achievements</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {featuredStamps.map((stamp) => (
+                      <InteractivePassportStamp key={stamp.id} stamp={stamp} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Progress tracking table */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3">Progress Tracking</h3>
+                <ProgressTrackingTable progressItems={progressItems} />
               </div>
-            </div>
-          )}
 
-          {/* Progress tracking table */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Progress Tracking</h3>
-            <ProgressTrackingTable progressItems={progressItems} />
-          </div>
+              {/* Other achievements - displayed more compactly */}
+              {otherStamps.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-3">All Achievements</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {otherStamps.map((stamp) => (
+                      <InteractivePassportStamp key={stamp.id} stamp={stamp} />
+                    ))}
+                  </div>
+                </div>
+              )}
 
-          {/* Other achievements - displayed more compactly */}
-          {otherStamps.length > 0 && (
-            <div>
-              <h3 className="text-lg font-semibold mb-3">All Achievements</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {otherStamps.map((stamp) => (
-                  <InteractivePassportStamp key={stamp.id} stamp={stamp} />
-                ))}
+              {/* No achievements placeholder */}
+              {student.passportStamps.length === 0 && (
+                <div className="text-center py-8">
+                  <GraduationCap className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
+                  <h3 className="text-lg font-medium">Your passport is empty!</h3>
+                  <p className="text-muted-foreground mt-1">
+                    Complete tasks and achieve milestones to earn stamps and badges
+                  </p>
+                  <Button className="mt-4">Explore Opportunities</Button>
+                </div>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="challenges">
+              <div className="space-y-6">
+                <ActiveChallenges 
+                  challenges={activeChallenges} 
+                  onViewDetails={handleChallengeDetails} 
+                />
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-xl">Completed Challenges</CardTitle>
+                    <CardDescription>Your challenge history</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center py-6">
+                      <Rocket className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
+                      <p className="text-muted-foreground">No completed challenges yet.</p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Active challenges will appear here once completed.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-            </div>
-          )}
-
-          {/* No achievements placeholder */}
-          {student.passportStamps.length === 0 && (
-            <div className="text-center py-8">
-              <GraduationCap className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-              <h3 className="text-lg font-medium">Your passport is empty!</h3>
-              <p className="text-muted-foreground mt-1">
-                Complete tasks and achieve milestones to earn stamps and badges
-              </p>
-              <Button className="mt-4">Explore Opportunities</Button>
-            </div>
-          )}
+            </TabsContent>
+            
+            <TabsContent value="leaderboard">
+              <div className="space-y-6">
+                <LeaderboardCard 
+                  data={leaderboardData}
+                  title="Passport Points Leaderboard"
+                  description="Top achievers this month"
+                  currentUserRank={student.leaderboardRank}
+                />
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <LeaderboardCard 
+                    data={leaderboardData.slice(0, 5)}
+                    title="Workshop Leaders"
+                    description="Most workshop stamps earned"
+                    category="Workshop"
+                  />
+                  
+                  <LeaderboardCard 
+                    data={leaderboardData.slice(0, 5)}
+                    title="Skills Masters"
+                    description="Highest skill certification scores"
+                    category="Skills"
+                  />
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </div>
