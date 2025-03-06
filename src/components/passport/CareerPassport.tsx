@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Stamp, Award, Trophy, ListChecks, TrendingUp } from "lucide-react";
+import { ChevronLeft, Stamp, Award, Trophy, ListChecks, TrendingUp, GitBranch } from "lucide-react";
 import { Student } from "@/types/student";
 import { useToast } from "@/hooks/toast";
 
@@ -13,6 +12,7 @@ import ActiveChallenges from "./ActiveChallenges";
 import LeaderboardCard from "./LeaderboardCard";
 import CulturalAchievements from "./CulturalAchievements";
 import SkillGapAnalysis from "./SkillGapAnalysis";
+import PathwaySimulator from "../career/PathwaySimulator";
 
 interface CareerPassportProps {
   student: Student;
@@ -23,7 +23,6 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("passport");
 
-  // Create mock data for leaderboard
   const leaderboardData = [
     { name: "Ahmed M.", score: 4250, position: 1 },
     { name: "Fatima K.", score: 3980, position: 2 },
@@ -85,6 +84,12 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
           >
             <TrendingUp size={16} className="mr-2" /> Skill Gaps
           </TabsTrigger>
+          <TabsTrigger
+            value="pathways"
+            className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white"
+          >
+            <GitBranch size={16} className="mr-2" /> Pathways
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="passport">
@@ -120,6 +125,10 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
         
         <TabsContent value="skill-gaps">
           <SkillGapAnalysis student={student} />
+        </TabsContent>
+
+        <TabsContent value="pathways">
+          <PathwaySimulator student={student} />
         </TabsContent>
       </Tabs>
     </div>
