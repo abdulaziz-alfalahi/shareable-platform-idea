@@ -8,3 +8,4 @@ export * from './leaderboard';
 export * from './mentors';
 export * from './recommendations';
 export * from './passportData';
+export * from './culturalAchievements';

@@ -23,3 +23,14 @@ export interface Vacancy {
   location: string;
   type: string;
 }
+
+// Cultural Achievement definitions
+export interface CulturalAchievement {
+  id: string;
+  name: string;
+  description: string;
+  iconName: string;
+  requiredCount: number;
+  category: "Mentorship" | "Resilience" | "Leadership" | "Innovation" | "Heritage";
+  stampLevel: "Bronze" | "Silver" | "Gold";
+}

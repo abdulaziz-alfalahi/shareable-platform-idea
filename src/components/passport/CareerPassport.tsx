@@ -14,7 +14,8 @@ import {
   GraduationCap, 
   Rocket, 
   BarChart,
-  UserCheck
+  UserCheck,
+  Landmark
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ import ProgressTrackingTable from "./ProgressTrackingTable";
 import ActiveChallenges from "./ActiveChallenges";
 import LeaderboardCard from "./LeaderboardCard";
 import MentorMatchingCard from "./MentorMatchingCard";
+import CulturalAchievements from "./CulturalAchievements";
 import { 
   getLeaderboardData, 
   getActiveChallenges, 
@@ -136,9 +138,13 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-4 mb-6">
+            <TabsList className="grid grid-cols-5 mb-6">
               <TabsTrigger value="achievements">Achievements</TabsTrigger>
               <TabsTrigger value="challenges">Challenges</TabsTrigger>
+              <TabsTrigger value="cultural">
+                <Landmark className="h-4 w-4 mr-1 inline" /> 
+                Cultural
+              </TabsTrigger>
               <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
               <TabsTrigger value="mentors">Mentors</TabsTrigger>
             </TabsList>
@@ -206,6 +212,10 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
                   </CardContent>
                 </Card>
               </div>
+            </TabsContent>
+            
+            <TabsContent value="cultural">
+              <CulturalAchievements student={student} />
             </TabsContent>
             
             <TabsContent value="leaderboard">

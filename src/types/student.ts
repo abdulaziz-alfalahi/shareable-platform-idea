@@ -18,7 +18,7 @@ export interface PassportStamp {
   id: number;
   title: string;
   description: string;
-  category: "Workshop" | "Assessment" | "Training" | "Employment" | "Education" | "Skills";
+  category: "Workshop" | "Assessment" | "Training" | "Employment" | "Education" | "Skills" | "Cultural";
   iconName: string;
   dateEarned: string;
   level: "Bronze" | "Silver" | "Gold";
