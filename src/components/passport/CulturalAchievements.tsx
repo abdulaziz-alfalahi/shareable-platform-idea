@@ -12,9 +12,9 @@ import { Progress } from "@/components/ui/progress";
 import { Student } from "@/types/student";
 import { 
   Users, 
-  Eagle, 
+  Bird, 
   Compass, 
-  PalmTree, 
+  Palmtree, 
   Gem,
   Award,
   LucideIcon
@@ -32,9 +32,9 @@ const CulturalAchievements: React.FC<CulturalAchievementsProps> = ({ student }) 
   const getIconComponent = (iconName: string) => {
     switch (iconName) {
       case "users": return <Users className="h-5 w-5" />;
-      case "eagle": return <Eagle className="h-5 w-5" />;
+      case "eagle": return <Bird className="h-5 w-5" />; // Replaced Eagle with Bird
       case "compass": return <Compass className="h-5 w-5" />;
-      case "palm-tree": return <PalmTree className="h-5 w-5" />;
+      case "palm-tree": return <Palmtree className="h-5 w-5" />; // Fixed PalmTree to Palmtree
       case "gem": return <Gem className="h-5 w-5" />;
       default: return <Award className="h-5 w-5" />;
     }

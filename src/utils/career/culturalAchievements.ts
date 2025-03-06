@@ -10,7 +10,7 @@ export const culturalAchievements: CulturalAchievement[] = [
     id: "bedouin-resilience",
     name: "Bedouin Resilience",
     description: "Displayed remarkable persistence by completing 10 challenges, embodying the resilience of Bedouin ancestors who thrived in challenging environments.",
-    iconName: "palm-tree",
+    iconName: "palm-tree", // Using palmtree icon
     requiredCount: 10,
     category: "Resilience",
     stampLevel: "Silver"
@@ -19,7 +19,7 @@ export const culturalAchievements: CulturalAchievement[] = [
     id: "falcon-vision",
     name: "Falcon Vision",
     description: "Demonstrated exceptional mentorship by guiding 5 peers, honoring the UAE's reverence for falcons as symbols of vision and guidance.",
-    iconName: "eagle",
+    iconName: "eagle", // Using bird icon as replacement
     requiredCount: 5,
     category: "Mentorship",
     stampLevel: "Gold"
