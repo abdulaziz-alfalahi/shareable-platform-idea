@@ -9,4 +9,12 @@ export * from './mentors';
 export * from './recommendations';
 export * from './passportData';
 export * from './culturalAchievements';
-export * from './skillGapAnalysis';
+
+// Export from skillGapAnalysis but exclude already exported types
+export {
+  analyzeSkillGaps,
+  getTopSkillRecommendations,
+  enrollInTraining,
+  getAllTrainingPrograms,
+  searchTrainingPrograms
+} from './skillGapAnalysis';

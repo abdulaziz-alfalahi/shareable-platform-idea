@@ -105,9 +105,7 @@ const SkillGapAnalysis: React.FC<SkillGapAnalysisProps> = ({ student }) => {
               {training.level.charAt(0).toUpperCase() + training.level.slice(1)}
             </div>
             <div className="text-xs flex items-center gap-1">
-              {format === 'online' ? <Globe className="h-3.5 w-3.5" /> : 
-               format === 'in-person' ? <MapPin className="h-3.5 w-3.5" /> : 
-               <LayoutGrid className="h-3.5 w-3.5" />}
+              {getFormatIcon(training.format)}
               {training.format.charAt(0).toUpperCase() + training.format.slice(1)}
             </div>
           </div>

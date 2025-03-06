@@ -23,6 +23,15 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("passport");
 
+  // Create mock data for leaderboard
+  const leaderboardData = [
+    { name: "Ahmed M.", score: 4250, position: 1 },
+    { name: "Fatima K.", score: 3980, position: 2 },
+    { name: "Mohammed A.", score: 3780, position: 3 },
+    { name: student.name, score: student.totalPoints, position: student.leaderboardRank || 4, isCurrentUser: true },
+    { name: "Omar S.", score: 3450, position: 5 }
+  ];
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center mb-6">
@@ -84,7 +93,12 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
               <PassportWidget student={student} />
             </div>
             <div>
-              <LeaderboardCard student={student} />
+              <LeaderboardCard 
+                data={leaderboardData}
+                title="Passport Leaderboard"
+                description="Top achievers this month"
+                category="Career Growth"
+              />
             </div>
           </div>
         </TabsContent>
@@ -94,7 +108,10 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
         </TabsContent>
 
         <TabsContent value="challenges">
-          <ActiveChallenges student={student} />
+          <ActiveChallenges 
+            challenges={student.activeChallenges || []} 
+            onViewDetails={(id) => console.log(`View challenge ${id}`)}
+          />
         </TabsContent>
         
         <TabsContent value="cultural">
