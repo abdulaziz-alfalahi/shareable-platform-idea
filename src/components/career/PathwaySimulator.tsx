@@ -8,6 +8,7 @@ import { Check, ChevronRight, Clock, TrendingUp, Briefcase, Award, School, Alert
 import { CareerPath, CareerNode, SimulationResult } from '@/utils/career/pathwayTypes';
 import { getCareerPaths, getCareerPathById, simulateCareerPath } from '@/utils/career/pathwaySimulator';
 import { Student } from '@/types/student';
+import PathwayVisualization from './PathwayVisualization';
 
 interface PathwaySimulatorProps {
   student: Student;
@@ -177,80 +178,12 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
 
               {selectedPath && (
                 <div className="mt-8 space-y-6">
-                  <div className="grid grid-cols-1 gap-4">
-                    {selectedPath.nodes.map((node) => {
-                      const isSelected = selectedNodes.includes(node.id);
-                      const canSelect = canSelectNode(node);
-                      const isDisabled = !canSelect && !isSelected;
-                      
-                      return (
-                        <div
-                          key={node.id}
-                          className={`p-4 rounded-lg border transition-all ${
-                            isSelected
-                              ? 'border-emirati-oasisGreen bg-emirati-oasisGreen/10'
-                              : isDisabled
-                              ? 'border-gray-200 bg-gray-50 opacity-60'
-                              : 'border-emirati-sandBeige/40 hover:border-emirati-oasisGreen/60'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <h4 className="text-lg font-semibold flex items-center gap-2">
-                                {node.title}
-                                {isSelected && (
-                                  <Check className="h-5 w-5 text-emirati-oasisGreen" />
-                                )}
-                              </h4>
-                              <p className="text-sm text-muted-foreground mt-1">
-                                {node.description}
-                              </p>
-                              
-                              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                  <div className="flex items-center gap-2 text-sm">
-                                    <Clock className="h-4 w-4 text-muted-foreground" />
-                                    <span>{node.timeToAchieve}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2 text-sm">
-                                    <School className="h-4 w-4 text-muted-foreground" />
-                                    <span>{node.education[0]}</span>
-                                  </div>
-                                </div>
-                                <div className="space-y-2">
-                                  <div className="flex items-center gap-2 text-sm">
-                                    <Award className="h-4 w-4 text-muted-foreground" />
-                                    <span>{node.level.charAt(0).toUpperCase() + node.level.slice(1)} Level</span>
-                                  </div>
-                                  <div className="flex items-center gap-2 text-sm">
-                                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                                    <span>{node.salary.min.toLocaleString()} - {node.salary.max.toLocaleString()} {node.salary.currency}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <Button
-                              variant={isSelected ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => handleNodeToggle(node.id)}
-                              disabled={isDisabled && !isSelected}
-                              className="ml-4"
-                            >
-                              {isSelected ? "Selected" : "Select"}
-                            </Button>
-                          </div>
-                          
-                          {isDisabled && (
-                            <div className="mt-2 text-sm flex items-center gap-1 text-amber-600">
-                              <AlertTriangle className="h-4 w-4" />
-                              <span>Complete previous levels first</span>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                  <PathwayVisualization
+                    path={selectedPath}
+                    selectedNodes={selectedNodes}
+                    onNodeSelect={handleNodeToggle}
+                    canSelectNode={canSelectNode}
+                  />
                   
                   <div className="flex justify-end mt-6">
                     <Button
