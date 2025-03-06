@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,8 +8,6 @@ import { Check, ChevronRight, Clock, TrendingUp, Briefcase, Award, School, Alert
 import { CareerPath, CareerNode, SimulationResult } from '@/utils/career/pathwayTypes';
 import { getCareerPaths, getCareerPathById, simulateCareerPath } from '@/utils/career/pathwaySimulator';
 import { Student } from '@/types/student';
-import PathwayVisualization from './PathwayVisualization';
-import SimulationResults from './SimulationResults';
 
 interface PathwaySimulatorProps {
   student: Student;
@@ -26,7 +23,6 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
   const [activeTab, setActiveTab] = useState('path-selection');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch available career paths
   useEffect(() => {
     const fetchPaths = async () => {
       try {
@@ -43,7 +39,6 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
     fetchPaths();
   }, []);
 
-  // Handle path selection
   const handlePathChange = async (pathId: string) => {
     setSelectedPathId(pathId);
     setSelectedNodes([]);
@@ -53,7 +48,6 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
       const path = await getCareerPathById(pathId);
       setSelectedPath(path);
       
-      // Automatically select the entry level node
       if (path) {
         const entryNode = path.nodes.find(node => node.level === 'entry');
         if (entryNode) {
@@ -65,28 +59,21 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
     }
   };
 
-  // Handle node selection/deselection
   const handleNodeToggle = (nodeId: string) => {
-    // Find the node and its position in the path
     const node = selectedPath?.nodes.find(n => n.id === nodeId);
     if (!node) return;
     
-    // Check if node is already selected
     if (selectedNodes.includes(nodeId)) {
-      // Get all nodes that depend on this node
       const dependentNodes = selectedPath?.nodes
         .filter(n => n.prerequisites?.includes(nodeId))
         .map(n => n.id) || [];
       
-      // Remove this node and all dependent nodes
       setSelectedNodes(prev => 
         prev.filter(id => id !== nodeId && !dependentNodes.includes(id))
       );
     } else {
-      // Add this node and its prerequisites if they're not already selected
       const nodesToAdd: string[] = [nodeId];
       
-      // Add prerequisites recursively
       const addPrerequisites = (id: string) => {
         const node = selectedPath?.nodes.find(n => n.id === id);
         if (node?.prerequisites && node.prerequisites.length > 0) {
@@ -101,12 +88,10 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
       
       addPrerequisites(nodeId);
       
-      // Combine current selected nodes with new nodes to add
       setSelectedNodes(prev => [...prev, ...nodesToAdd.filter(id => !prev.includes(id))]);
     }
   };
 
-  // Run the simulation
   const runSimulation = () => {
     if (!selectedPathId || selectedNodes.length === 0) return;
     
@@ -115,12 +100,9 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
     setActiveTab('simulation-results');
   };
 
-  // Check if simulation can be run
   const canRunSimulation = selectedPathId && selectedNodes.length > 0;
 
-  // Determine if a node can be selected based on prerequisites
   const canSelectNode = (node: CareerNode): boolean => {
-    // If no prerequisites or all prerequisites are selected, then it can be selected
     return !node.prerequisites || node.prerequisites.every(prereq => selectedNodes.includes(prereq));
   };
 
@@ -154,7 +136,6 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
 
           <TabsContent value="path-selection">
             <div className="space-y-6">
-              {/* Path Selection */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Select a Career Path</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -194,7 +175,6 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
                 </div>
               </div>
 
-              {/* Path Visualization */}
               {selectedPath && (
                 <div className="mt-8 space-y-6">
                   <div className="grid grid-cols-1 gap-4">
@@ -333,7 +313,6 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                  {/* Required Skills */}
                   <Card>
                     <CardHeader>
                       <CardTitle className="text-lg">Required Skills</CardTitle>
@@ -352,7 +331,6 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
                     </CardContent>
                   </Card>
                   
-                  {/* Recommended Training */}
                   <Card>
                     <CardHeader>
                       <CardTitle className="text-lg">Recommended Training</CardTitle>
