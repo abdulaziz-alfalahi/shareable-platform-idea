@@ -1,21 +1,19 @@
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, ChevronRight, Clock, TrendingUp, Briefcase, Award, School, AlertTriangle } from 'lucide-react';
+import { Briefcase, TrendingUp } from 'lucide-react';
 import { CareerPath, CareerNode, SimulationResult } from '@/utils/career/pathwayTypes';
 import { getCareerPaths, getCareerPathById, simulateCareerPath } from '@/utils/career/pathwaySimulator';
 import { Student } from '@/types/student';
-import PathwayVisualization from './PathwayVisualization';
+import PathSelection from './PathSelection';
+import SimulationResults from './SimulationResults';
 
 interface PathwaySimulatorProps {
   student: Student;
 }
 
 const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
-  const navigate = useNavigate();
   const [careerPaths, setCareerPaths] = useState<CareerPath[]>([]);
   const [selectedPathId, setSelectedPathId] = useState<string>('');
   const [selectedPath, setSelectedPath] = useState<CareerPath | null>(null);
@@ -136,169 +134,26 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
           </TabsList>
 
           <TabsContent value="path-selection">
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Select a Career Path</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Select 
-                      value={selectedPathId}
-                      onValueChange={handlePathChange}
-                      disabled={isLoading}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Choose a career path" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {careerPaths.map(path => (
-                          <SelectItem key={path.id} value={path.id}>
-                            {path.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  {selectedPath && (
-                    <div className="flex items-center justify-end space-x-2">
-                      <div className="text-sm rounded bg-emirati-sandBeige/20 px-2 py-1">
-                        <span className="font-medium">Demand:</span> {' '}
-                        {selectedPath.popularity >= 7 ? (
-                          <span className="text-green-600 font-medium">High</span>
-                        ) : selectedPath.popularity >= 4 ? (
-                          <span className="text-amber-600 font-medium">Medium</span>
-                        ) : (
-                          <span className="text-red-600 font-medium">Low</span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {selectedPath && (
-                <div className="mt-8 space-y-6">
-                  <PathwayVisualization
-                    path={selectedPath}
-                    selectedNodes={selectedNodes}
-                    onNodeSelect={handleNodeToggle}
-                    canSelectNode={canSelectNode}
-                  />
-                  
-                  <div className="flex justify-end mt-6">
-                    <Button
-                      onClick={runSimulation}
-                      disabled={!canRunSimulation}
-                      className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90"
-                    >
-                      Run Simulation
-                      <ChevronRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
+            <PathSelection
+              careerPaths={careerPaths}
+              selectedPathId={selectedPathId}
+              selectedPath={selectedPath}
+              selectedNodes={selectedNodes}
+              isLoading={isLoading}
+              canRunSimulation={canRunSimulation}
+              handlePathChange={handlePathChange}
+              handleNodeToggle={handleNodeToggle}
+              canSelectNode={canSelectNode}
+              runSimulation={runSimulation}
+            />
           </TabsContent>
 
           <TabsContent value="simulation-results">
-            {simulationResult && selectedPath && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Time to Complete</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-5 w-5 text-emirati-oasisGreen" />
-                        <span className="text-2xl font-semibold">{simulationResult.timeToComplete}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Potential Salary</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="h-5 w-5 text-emirati-oasisGreen" />
-                        <span className="text-2xl font-semibold">
-                          {simulationResult.potentialSalary.toLocaleString()} AED
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Challenge Level</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center gap-2">
-                        <Award className="h-5 w-5 text-emirati-oasisGreen" />
-                        <span className="text-2xl font-semibold capitalize">
-                          {simulationResult.challengeLevel}
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Required Skills</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-wrap gap-2">
-                        {simulationResult.requiredSkills.map((skill, index) => (
-                          <div
-                            key={index}
-                            className="px-3 py-1 rounded-full bg-emirati-sandBeige/20 text-sm"
-                          >
-                            {skill}
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Recommended Training</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-3">
-                        {simulationResult.recommendedTraining.map((training, index) => (
-                          <li
-                            key={index}
-                            className="flex items-start gap-2 text-sm"
-                          >
-                            <Check className="h-4 w-4 text-emirati-oasisGreen mt-0.5" />
-                            {training}
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </div>
-                
-                <div className="flex justify-between mt-6">
-                  <Button
-                    variant="outline"
-                    onClick={() => setActiveTab('path-selection')}
-                  >
-                    Modify Path
-                  </Button>
-                  <Button
-                    onClick={() => navigate('/training-centers')}
-                    className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90"
-                  >
-                    Explore Training Options
-                  </Button>
-                </div>
-              </div>
+            {simulationResult && (
+              <SimulationResults 
+                simulationResult={simulationResult}
+                onModifyPath={() => setActiveTab('path-selection')}
+              />
             )}
           </TabsContent>
         </Tabs>
