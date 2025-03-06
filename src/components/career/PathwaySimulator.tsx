@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Briefcase, TrendingUp } from 'lucide-react';
-import { CareerPath, CareerNode, SimulationResult } from '@/utils/career/pathwayTypes';
+import { CareerPath, SimulationResult } from '@/utils/career/pathwayTypes';
 import { getCareerPaths, getCareerPathById, simulateCareerPath } from '@/utils/career/pathwaySimulator';
 import { Student } from '@/types/student';
 import PathSelection from './PathSelection';

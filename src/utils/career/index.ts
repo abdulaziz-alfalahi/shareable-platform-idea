@@ -9,6 +9,9 @@ export * from './mentors';
 export * from './recommendations';
 export * from './passportData';
 export * from './culturalAchievements';
+export * from './pathwayDataService';
+export * from './pathwaySimulation';
+export * from './trainingRecommendations';
 
 // Export from skillGapAnalysis but exclude already exported types
 export {
