@@ -34,3 +34,21 @@ export interface CulturalAchievement {
   category: "Mentorship" | "Resilience" | "Leadership" | "Innovation" | "Heritage";
   stampLevel: "Bronze" | "Silver" | "Gold";
 }
+
+// Skill Gap Analysis Types
+export interface SkillGap {
+  skill: string;
+  demandLevel: 'high' | 'medium' | 'low';
+  relevanceScore: number;
+  suggestedTraining: TrainingRecommendation[];
+}
+
+export interface TrainingRecommendation {
+  id: string;
+  title: string;
+  provider: string;
+  duration: string;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  format: 'online' | 'in-person' | 'hybrid';
+  url?: string;
+}

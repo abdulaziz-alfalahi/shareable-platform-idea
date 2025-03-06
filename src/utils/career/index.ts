@@ -9,3 +9,4 @@ export * from './mentors';
 export * from './recommendations';
 export * from './passportData';
 export * from './culturalAchievements';
+export * from './skillGapAnalysis';
