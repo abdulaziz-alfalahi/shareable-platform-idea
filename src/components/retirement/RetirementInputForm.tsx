@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +10,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, PiggyBank } from "lucide-react";
+import { Loader2, Banknote } from "lucide-react";
 
 interface RetirementInputFormProps {
   onSimulate: (formData: {
@@ -182,7 +181,7 @@ const RetirementInputForm: React.FC<RetirementInputFormProps> = ({
           ) : (
             <>
               Run Simulation
-              <PiggyBank className="ml-2 h-4 w-4" />
+              <Banknote className="ml-2 h-4 w-4" />
             </>
           )}
         </Button>
