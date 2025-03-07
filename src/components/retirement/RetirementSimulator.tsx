@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { PiggyBank, Calculator, TrendingUp, Calendar } from "lucide-react";
+import { Banknote, Calculator, TrendingUp, Calendar } from "lucide-react";
 import RetirementInputForm from "./RetirementInputForm";
 import RetirementResults from "./RetirementResults";
 import { simulateRetirement } from "@/utils/career/retirementSimulation";
