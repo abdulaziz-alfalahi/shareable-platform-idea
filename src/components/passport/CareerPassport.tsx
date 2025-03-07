@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Stamp, Award, Trophy, ListChecks, TrendingUp, GitBranch, PiggyBank } from "lucide-react";
+import { ChevronLeft, Stamp, Award, Trophy, ListChecks, TrendingUp, GitBranch, Banknote } from "lucide-react";
 import { Student } from "@/types/student";
 import { useToast } from "@/hooks/toast";
 
@@ -52,7 +52,7 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
           onClick={() => navigate('/retirement-planning')}
           className="ml-auto"
         >
-          <PiggyBank size={16} className="mr-1" /> Retirement Planning
+          <Banknote size={16} className="mr-1" /> Retirement Planning
         </Button>
       </div>
 

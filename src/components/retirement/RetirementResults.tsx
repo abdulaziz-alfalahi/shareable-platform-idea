@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, TrendingUp, PiggyBank, Banknote, Heart } from 'lucide-react';
+import { Calendar, TrendingUp, Banknote, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { RetirementSimulationResult } from '@/utils/career/retirementTypes';
 
@@ -38,7 +38,7 @@ const RetirementResults: React.FC<RetirementResultsProps> = ({
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
-              <PiggyBank className="h-5 w-5 text-emirati-oasisGreen" />
+              <Banknote className="h-5 w-5 text-emirati-oasisGreen" />
               <span className="text-2xl font-semibold">
                 {simulationResult.retirementFund.toLocaleString()} AED
               </span>
