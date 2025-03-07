@@ -74,7 +74,7 @@ export const simulateCareerPath = async (
   if (student.id) {
     try {
       await saveSimulationResult(
-        student.id,
+        student.id.toString(), // Convert number to string for student.id
         pathId,
         selectedNodes,
         result
@@ -94,7 +94,7 @@ export const getStudentSimulationHistory = async (student: Student) => {
   
   try {
     const { getUserSimulations } = await import('./pathwayDataService');
-    return await getUserSimulations(student.id);
+    return await getUserSimulations(student.id.toString()); // Convert number to string for student.id
   } catch (error) {
     console.error("Error fetching simulation history:", error);
     return [];
