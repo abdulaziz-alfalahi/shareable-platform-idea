@@ -18,6 +18,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import TrainingCenters from "./pages/TrainingCenters";
 import AssessmentCenters from "./pages/AssessmentCenters";
 import CareerPassportPage from "./pages/CareerPassportPage";
+import RetirementPlanning from "./pages/RetirementPlanning";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/training-centers" element={<TrainingCenters />} />
           <Route path="/assessment-centers" element={<AssessmentCenters />} />
           <Route path="/career-passport/:id?" element={<CareerPassportPage />} />
+          <Route path="/retirement-planning" element={<RetirementPlanning />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

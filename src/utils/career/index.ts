@@ -12,6 +12,8 @@ export * from './culturalAchievements';
 export * from './pathwayDataService';
 export * from './pathwaySimulation';
 export * from './trainingRecommendations';
+export * from './retirementTypes';
+export * from './retirementSimulation';
 
 // Export from skillGapAnalysis but exclude already exported types
 export {
