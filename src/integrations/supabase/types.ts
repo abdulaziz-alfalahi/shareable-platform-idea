@@ -9,7 +9,277 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      career_path_nodes: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          level: string
+          path_id: string | null
+          position_x: number
+          position_y: number
+          salary_max: number
+          salary_min: number
+          time_to_achieve: number
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          level: string
+          path_id?: string | null
+          position_x: number
+          position_y: number
+          salary_max: number
+          salary_min: number
+          time_to_achieve: number
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          level?: string
+          path_id?: string | null
+          position_x?: number
+          position_y?: number
+          salary_max?: number
+          salary_min?: number
+          time_to_achieve?: number
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "career_path_nodes_path_id_fkey"
+            columns: ["path_id"]
+            isOneToOne: false
+            referencedRelation: "career_paths"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      career_paths: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          difficulty: number
+          id: string
+          industry: string | null
+          popularity: number
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          difficulty?: number
+          id?: string
+          industry?: string | null
+          popularity?: number
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          difficulty?: number
+          id?: string
+          industry?: string | null
+          popularity?: number
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      node_prerequisites: {
+        Row: {
+          id: string
+          node_id: string | null
+          prerequisite_node_id: string | null
+        }
+        Insert: {
+          id?: string
+          node_id?: string | null
+          prerequisite_node_id?: string | null
+        }
+        Update: {
+          id?: string
+          node_id?: string | null
+          prerequisite_node_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "node_prerequisites_node_id_fkey"
+            columns: ["node_id"]
+            isOneToOne: false
+            referencedRelation: "career_path_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "node_prerequisites_prerequisite_node_id_fkey"
+            columns: ["prerequisite_node_id"]
+            isOneToOne: false
+            referencedRelation: "career_path_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      node_skills: {
+        Row: {
+          id: string
+          node_id: string | null
+          skill: string
+        }
+        Insert: {
+          id?: string
+          node_id?: string | null
+          skill: string
+        }
+        Update: {
+          id?: string
+          node_id?: string | null
+          skill?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "node_skills_node_id_fkey"
+            columns: ["node_id"]
+            isOneToOne: false
+            referencedRelation: "career_path_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      simulation_recommended_training: {
+        Row: {
+          id: string
+          simulation_id: string | null
+          training_program: string
+        }
+        Insert: {
+          id?: string
+          simulation_id?: string | null
+          training_program: string
+        }
+        Update: {
+          id?: string
+          simulation_id?: string | null
+          training_program?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "simulation_recommended_training_simulation_id_fkey"
+            columns: ["simulation_id"]
+            isOneToOne: false
+            referencedRelation: "user_simulations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      simulation_required_skills: {
+        Row: {
+          id: string
+          simulation_id: string | null
+          skill: string
+        }
+        Insert: {
+          id?: string
+          simulation_id?: string | null
+          skill: string
+        }
+        Update: {
+          id?: string
+          simulation_id?: string | null
+          skill?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "simulation_required_skills_simulation_id_fkey"
+            columns: ["simulation_id"]
+            isOneToOne: false
+            referencedRelation: "user_simulations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      simulation_selected_nodes: {
+        Row: {
+          id: string
+          node_id: string | null
+          simulation_id: string | null
+        }
+        Insert: {
+          id?: string
+          node_id?: string | null
+          simulation_id?: string | null
+        }
+        Update: {
+          id?: string
+          node_id?: string | null
+          simulation_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "simulation_selected_nodes_node_id_fkey"
+            columns: ["node_id"]
+            isOneToOne: false
+            referencedRelation: "career_path_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "simulation_selected_nodes_simulation_id_fkey"
+            columns: ["simulation_id"]
+            isOneToOne: false
+            referencedRelation: "user_simulations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_simulations: {
+        Row: {
+          challenge_level: string
+          created_at: string | null
+          demand_level: string
+          id: string
+          path_id: string | null
+          potential_salary: number
+          time_to_complete: string
+          user_id: string | null
+        }
+        Insert: {
+          challenge_level: string
+          created_at?: string | null
+          demand_level: string
+          id?: string
+          path_id?: string | null
+          potential_salary: number
+          time_to_complete: string
+          user_id?: string | null
+        }
+        Update: {
+          challenge_level?: string
+          created_at?: string | null
+          demand_level?: string
+          id?: string
+          path_id?: string | null
+          potential_salary?: number
+          time_to_complete?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_simulations_path_id_fkey"
+            columns: ["path_id"]
+            isOneToOne: false
+            referencedRelation: "career_paths"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

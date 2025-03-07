@@ -1,10 +1,13 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Briefcase, TrendingUp } from 'lucide-react';
 import { CareerPath, SimulationResult } from '@/utils/career/pathwayTypes';
-import { getCareerPaths, getCareerPathById, simulateCareerPath } from '@/utils/career/pathwaySimulator';
+import { getCareerPaths, getCareerPathById } from '@/utils/career/pathwayDataService';
+import { simulateCareerPath } from '@/utils/career/pathwaySimulation';
 import { Student } from '@/types/student';
+import { useToast } from '@/hooks/toast';
 import PathSelection from './PathSelection';
 import SimulationResults from './SimulationResults';
 
@@ -20,6 +23,8 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
   const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
   const [activeTab, setActiveTab] = useState('path-selection');
   const [isLoading, setIsLoading] = useState(true);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchPaths = async () => {
@@ -30,12 +35,17 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching career paths:', error);
+        toast({
+          title: "Failed to load career paths",
+          description: "Please try again later",
+          variant: "destructive"
+        });
         setIsLoading(false);
       }
     };
 
     fetchPaths();
-  }, []);
+  }, [toast]);
 
   const handlePathChange = async (pathId: string) => {
     setSelectedPathId(pathId);
@@ -54,6 +64,11 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
       }
     } catch (error) {
       console.error('Error fetching career path details:', error);
+      toast({
+        title: "Failed to load path details",
+        description: "Please select another path or try again later",
+        variant: "destructive"
+      });
     }
   };
 
@@ -90,18 +105,39 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
     }
   };
 
-  const runSimulation = () => {
+  const runSimulation = async () => {
     if (!selectedPathId || selectedNodes.length === 0) return;
     
-    const result = simulateCareerPath(student, selectedPathId, selectedNodes);
-    setSimulationResult(result);
-    setActiveTab('simulation-results');
+    setIsSimulating(true);
+    try {
+      const result = await simulateCareerPath(student, selectedPathId, selectedNodes);
+      setSimulationResult(result);
+      setActiveTab('simulation-results');
+      
+      // Show success toast if user is logged in and simulation was likely saved
+      if (student.id) {
+        toast({
+          title: "Simulation saved",
+          description: "Your career pathway simulation has been saved to your profile",
+        });
+      }
+    } catch (error) {
+      console.error("Simulation error:", error);
+      toast({
+        title: "Simulation failed",
+        description: "Please try again or select a different path",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSimulating(false);
+    }
   };
 
-  const canRunSimulation = selectedPathId && selectedNodes.length > 0;
+  const canRunSimulation = selectedPathId && selectedNodes.length > 0 && !isSimulating;
 
-  const canSelectNode = (node: CareerNode): boolean => {
-    return !node.prerequisites || node.prerequisites.every(prereq => selectedNodes.includes(prereq));
+  const canSelectNode = (node: any): boolean => {
+    if (!node.prerequisites || node.prerequisites.length === 0) return true;
+    return node.prerequisites.every(prereq => selectedNodes.includes(prereq));
   };
 
   return (
@@ -139,6 +175,7 @@ const PathwaySimulator: React.FC<PathwaySimulatorProps> = ({ student }) => {
               selectedPath={selectedPath}
               selectedNodes={selectedNodes}
               isLoading={isLoading}
+              isSimulating={isSimulating}
               canRunSimulation={canRunSimulation}
               handlePathChange={handlePathChange}
               handleNodeToggle={handleNodeToggle}

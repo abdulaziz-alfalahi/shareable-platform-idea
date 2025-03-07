@@ -2,7 +2,7 @@
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Briefcase } from 'lucide-react';
+import { ChevronRight, Briefcase, Loader2 } from 'lucide-react';
 import { CareerPath } from '@/utils/career/pathwayTypes';
 import PathwayVisualization from './PathwayVisualization';
 
@@ -12,6 +12,7 @@ interface PathSelectionProps {
   selectedPath: CareerPath | null;
   selectedNodes: string[];
   isLoading: boolean;
+  isSimulating: boolean;
   canRunSimulation: boolean;
   handlePathChange: (pathId: string) => void;
   handleNodeToggle: (nodeId: string) => void;
@@ -25,6 +26,7 @@ const PathSelection: React.FC<PathSelectionProps> = ({
   selectedPath,
   selectedNodes,
   isLoading,
+  isSimulating,
   canRunSimulation,
   handlePathChange,
   handleNodeToggle,
@@ -43,7 +45,7 @@ const PathSelection: React.FC<PathSelectionProps> = ({
               disabled={isLoading}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Choose a career path" />
+                <SelectValue placeholder={isLoading ? "Loading paths..." : "Choose a career path"} />
               </SelectTrigger>
               <SelectContent>
                 {careerPaths.map(path => (
@@ -72,7 +74,14 @@ const PathSelection: React.FC<PathSelectionProps> = ({
         </div>
       </div>
 
-      {selectedPath && (
+      {isLoading && (
+        <div className="flex justify-center items-center h-40">
+          <Loader2 className="h-8 w-8 animate-spin text-emirati-oasisGreen" />
+          <span className="ml-2 text-lg">Loading career paths...</span>
+        </div>
+      )}
+
+      {selectedPath && !isLoading && (
         <div className="mt-8 space-y-6">
           <PathwayVisualization
             path={selectedPath}
@@ -87,8 +96,17 @@ const PathSelection: React.FC<PathSelectionProps> = ({
               disabled={!canRunSimulation}
               className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90"
             >
-              Run Simulation
-              <ChevronRight className="ml-2 h-4 w-4" />
+              {isSimulating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Simulating...
+                </>
+              ) : (
+                <>
+                  Run Simulation
+                  <ChevronRight className="ml-2 h-4 w-4" />
+                </>
+              )}
             </Button>
           </div>
         </div>

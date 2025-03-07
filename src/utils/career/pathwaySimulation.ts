@@ -1,17 +1,17 @@
 
 import { CareerPath, SimulationResult } from './pathwayTypes';
 import { Student } from '@/types/student';
-import { mockCareerPaths } from './mockData';
+import { getCareerPathById, saveSimulationResult } from './pathwayDataService';
 import { generateRecommendedTraining } from './trainingRecommendations';
 
 // Simulate a career path for a student
-export const simulateCareerPath = (
+export const simulateCareerPath = async (
   student: Student,
   pathId: string,
   selectedNodes: string[]
-): SimulationResult => {
+): Promise<SimulationResult> => {
   // Get path data
-  const path = mockCareerPaths.find(p => p.id === pathId);
+  const path = await getCareerPathById(pathId);
   if (!path) {
     throw new Error(`Career path with ID ${pathId} not found`);
   }
@@ -61,7 +61,7 @@ export const simulateCareerPath = (
   // Generate recommended training
   const recommendedTraining = generateRecommendedTraining(requiredSkills);
   
-  return {
+  const result = {
     timeToComplete,
     potentialSalary,
     requiredSkills,
@@ -69,4 +69,34 @@ export const simulateCareerPath = (
     demandLevel,
     recommendedTraining
   };
+  
+  // If the student is logged in, save the simulation result
+  if (student.id) {
+    try {
+      await saveSimulationResult(
+        student.id,
+        pathId,
+        selectedNodes,
+        result
+      );
+    } catch (error) {
+      console.error("Failed to save simulation result:", error);
+      // Continue without saving - don't interrupt the user experience
+    }
+  }
+  
+  return result;
+};
+
+// Get historical simulations for this student
+export const getStudentSimulationHistory = async (student: Student) => {
+  if (!student.id) return [];
+  
+  try {
+    const { getUserSimulations } = await import('./pathwayDataService');
+    return await getUserSimulations(student.id);
+  } catch (error) {
+    console.error("Error fetching simulation history:", error);
+    return [];
+  }
 };
