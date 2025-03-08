@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -50,25 +49,10 @@ const AuthPage = () => {
     
     try {
       await signIn(loginEmail, loginPassword);
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-        type: "success"
-      });
-      navigate("/");
+      // Successfully signed in, will redirect in the auth hook
     } catch (error: any) {
       console.error("Login error:", error);
-      
-      let errorMessage = "Invalid email or password.";
-      if (error.message?.includes("Invalid login credentials")) {
-        errorMessage = "Invalid login credentials. Make sure you've registered this account first.";
-      }
-      
-      toast({
-        title: "Sign in failed",
-        description: errorMessage,
-        type: "error",
-      });
+      // Toast notification is handled in the signIn function
     } finally {
       setLoginLoading(false);
     }
@@ -103,12 +87,6 @@ const AuthPage = () => {
         registerName,
         registerRole
       );
-      
-      toast({
-        title: "Registration successful",
-        description: "Your account has been created. You can now sign in.",
-        type: "success"
-      });
       
       // Pre-fill login fields and switch to login tab
       setLoginEmail(registerEmail);

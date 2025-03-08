@@ -9,6 +9,8 @@ export const useSupabaseAuth = () => {
 
   const signIn = async (email: string, password: string) => {
     try {
+      console.log("Signing in with:", { email });
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -20,6 +22,14 @@ export const useSupabaseAuth = () => {
       }
 
       console.log("Sign in successful:", data);
+      
+      toast({
+        title: "Welcome back!",
+        description: "You have successfully signed in.",
+        type: "success",
+      });
+      
+      navigate("/");
       
     } catch (error: any) {
       console.error("Sign in error:", error);
@@ -67,6 +77,8 @@ export const useSupabaseAuth = () => {
         description: "Your account has been created. You can now sign in.",
         type: "success",
       });
+      
+      return data;
       
     } catch (error: any) {
       console.error("Sign up error:", error);
