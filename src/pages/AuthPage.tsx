@@ -12,6 +12,10 @@ import { toast } from "@/hooks/toast";
 import { Loader2, Info, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+// Define the toast type to fix the type errors
+type ToastVariant = "default" | "destructive" | undefined;
+type ToastType = "default" | "success" | "info" | "warning" | "error";
+
 const AuthPage = () => {
   const { user, loading: authLoading, signIn, signUp } = useAuth();
   const [activeTab, setActiveTab] = useState("register");  // Default to register tab
@@ -41,7 +45,7 @@ const AuthPage = () => {
       toast({
         title: "Missing information",
         description: "Please enter both email and password.",
-        variant: "destructive",
+        variant: "destructive" as ToastVariant,
       });
       return;
     }
@@ -53,7 +57,7 @@ const AuthPage = () => {
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in.",
-        type: "success"
+        type: "success" as ToastType
       });
       navigate("/");
     } catch (error: any) {
@@ -67,7 +71,7 @@ const AuthPage = () => {
       toast({
         title: "Sign in failed",
         description: errorMessage,
-        variant: "destructive",
+        variant: "destructive" as ToastVariant,
       });
     } finally {
       setLoginLoading(false);
@@ -81,7 +85,7 @@ const AuthPage = () => {
       toast({
         title: "Missing information",
         description: "Please fill all required fields.",
-        variant: "destructive",
+        variant: "destructive" as ToastVariant,
       });
       return;
     }
@@ -100,7 +104,7 @@ const AuthPage = () => {
       toast({
         title: "Registration successful",
         description: "Your account has been created. You can now sign in.",
-        type: "success"
+        type: "success" as ToastType
       });
       
       // Pre-fill login fields and switch to login tab
@@ -121,7 +125,7 @@ const AuthPage = () => {
       toast({
         title: "Registration failed",
         description: errorMessage,
-        variant: "destructive",
+        variant: "destructive" as ToastVariant,
       });
     } finally {
       setRegisterLoading(false);
@@ -164,7 +168,7 @@ const AuthPage = () => {
     toast({
       title: "Test account filled",
       description: "Please register this account by clicking 'Create Account' to set it up.",
-      type: "info",
+      type: "info" as ToastType,
     });
   };
 
