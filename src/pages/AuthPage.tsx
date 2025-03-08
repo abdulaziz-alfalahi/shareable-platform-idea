@@ -9,12 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/toast";
-import { Loader2, Info } from "lucide-react";
+import { Loader2, Info, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const AuthPage = () => {
-  const { user, signIn, signUp } = useAuth();
-  const [activeTab, setActiveTab] = useState("login");
+  const { user, loading: authLoading, signIn, signUp } = useAuth();
+  const [activeTab, setActiveTab] = useState("register");  // Default to register tab
   const navigate = useNavigate();
 
   // State for login
@@ -36,19 +36,37 @@ const AuthPage = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!loginEmail || !loginPassword) {
+      toast({
+        title: "Missing information",
+        description: "Please enter both email and password.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoginLoading(true);
     
     try {
       await signIn(loginEmail, loginPassword);
       toast({
         title: "Welcome back!",
-        description: "You have successfully signed in."
+        description: "You have successfully signed in.",
+        type: "success"
       });
+      navigate("/");
     } catch (error: any) {
       console.error("Login error:", error);
+      
+      let errorMessage = "Invalid email or password.";
+      if (error.message?.includes("Invalid login credentials")) {
+        errorMessage = "Invalid login credentials. Make sure you've registered this account first.";
+      }
+      
       toast({
         title: "Sign in failed",
-        description: error.message || "Invalid email or password. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -58,6 +76,16 @@ const AuthPage = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!registerEmail || !registerPassword || !registerName) {
+      toast({
+        title: "Missing information",
+        description: "Please fill all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setRegisterLoading(true);
     
     try {
@@ -71,20 +99,28 @@ const AuthPage = () => {
       
       toast({
         title: "Registration successful",
-        description: "Your account has been created. You can now sign in."
+        description: "Your account has been created. You can now sign in.",
+        type: "success"
       });
       
-      // Switch to login tab
-      setActiveTab("login");
-      
-      // Pre-fill login fields
+      // Pre-fill login fields and switch to login tab
       setLoginEmail(registerEmail);
       setLoginPassword(registerPassword);
+      setActiveTab("login");
+      
     } catch (error: any) {
       console.error("Registration error:", error);
+      
+      let errorMessage = "Unable to create account.";
+      if (error.message?.includes("already registered")) {
+        errorMessage = "This email is already registered. Please try signing in instead.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: "Registration failed",
-        description: error.message || "Unable to create account. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -122,12 +158,13 @@ const AuthPage = () => {
         break;
     }
     
-    // Switch to register tab to create the account
+    // Make sure we're on the register tab since these are test accounts that need to be created first
     setActiveTab("register");
     
     toast({
       title: "Test account filled",
-      description: "Please register this account first by clicking 'Create Account'.",
+      description: "Please register this account by clicking 'Create Account' to set it up.",
+      type: "info",
     });
   };
 
@@ -145,7 +182,7 @@ const AuthPage = () => {
           </CardDescription>
         </CardHeader>
         
-        <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab}>
+        <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab}>
           <div className="px-6">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">Login</TabsTrigger>
@@ -154,11 +191,11 @@ const AuthPage = () => {
           </div>
           
           <CardContent className="p-6">
-            <Alert className="mb-4 bg-amber-50 text-amber-800 border-amber-200">
-              <Info className="h-4 w-4" />
+            <Alert className="mb-4 bg-red-50 text-red-800 border-red-200">
+              <AlertCircle className="h-4 w-4" />
               <AlertTitle>Important</AlertTitle>
               <AlertDescription>
-                You must register an account first before you can log in. Test accounts are not pre-created.
+                <strong>You must register an account first before you can log in.</strong> There are no pre-created accounts in the system.
               </AlertDescription>
             </Alert>
             
@@ -187,7 +224,7 @@ const AuthPage = () => {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loginLoading}>
+                <Button type="submit" className="w-full" disabled={loginLoading || authLoading}>
                   {loginLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -197,38 +234,17 @@ const AuthPage = () => {
                 </Button>
               </form>
               
-              <div className="mt-4 text-center text-sm text-muted-foreground">
-                <p>Quick-fill test account details:</p>
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => fillTestAccount("student")}
-                  >
-                    Student
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => fillTestAccount("advisor")}
-                  >
-                    Advisor
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => fillTestAccount("recruiter")}
-                  >
-                    Recruiter
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => fillTestAccount("admin")}
-                  >
-                    Admin
-                  </Button>
-                </div>
+              <div className="mt-6 text-center">
+                <p className="text-sm text-red-600 font-semibold mb-2">
+                  Don't have an account yet? Switch to the Register tab!
+                </p>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setActiveTab("register")}
+                  className="w-full"
+                >
+                  Go to Registration
+                </Button>
               </div>
             </TabsContent>
             
@@ -289,7 +305,7 @@ const AuthPage = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <Button type="submit" className="w-full" disabled={registerLoading}>
+                <Button type="submit" className="w-full" disabled={registerLoading || authLoading}>
                   {registerLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -298,6 +314,40 @@ const AuthPage = () => {
                   ) : "Create Account"}
                 </Button>
               </form>
+              
+              <div className="mt-4 text-center text-sm text-muted-foreground">
+                <p>Quick-fill test account details:</p>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => fillTestAccount("student")}
+                  >
+                    Student
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => fillTestAccount("advisor")}
+                  >
+                    Advisor
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => fillTestAccount("recruiter")}
+                  >
+                    Recruiter
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => fillTestAccount("admin")}
+                  >
+                    Admin
+                  </Button>
+                </div>
+              </div>
             </TabsContent>
           </CardContent>
         </Tabs>
