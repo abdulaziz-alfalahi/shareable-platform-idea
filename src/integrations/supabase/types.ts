@@ -9,6 +9,74 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_action_logs: {
+        Row: {
+          action_details: Json
+          action_type: string
+          admin_id: string
+          created_at: string
+          id: string
+          ip_address: string | null
+        }
+        Insert: {
+          action_details: Json
+          action_type: string
+          admin_id: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+        }
+        Update: {
+          action_details?: Json
+          action_type?: string
+          admin_id?: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+        }
+        Relationships: []
+      }
+      assessments: {
+        Row: {
+          assessed_by: string | null
+          assessment_date: string
+          created_at: string
+          feedback: string | null
+          id: string
+          score: number | null
+          service_id: string
+          user_id: string
+        }
+        Insert: {
+          assessed_by?: string | null
+          assessment_date?: string
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          score?: number | null
+          service_id: string
+          user_id: string
+        }
+        Update: {
+          assessed_by?: string | null
+          assessment_date?: string
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          score?: number | null
+          service_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessments_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       career_path_nodes: {
         Row: {
           created_at: string | null
@@ -95,6 +163,107 @@ export type Database = {
         }
         Relationships: []
       }
+      job_applications: {
+        Row: {
+          applicant_id: string
+          created_at: string
+          id: string
+          job_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          applicant_id: string
+          created_at?: string
+          id?: string
+          job_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          applicant_id?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_applications_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "job_postings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_postings: {
+        Row: {
+          company: string
+          created_at: string
+          description: string | null
+          id: string
+          job_type: string | null
+          location: string | null
+          posted_by: string
+          requirements: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          company: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          posted_by: string
+          requirements?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          company?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          posted_by?: string
+          requirements?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      mentorships: {
+        Row: {
+          created_at: string
+          id: string
+          mentee_id: string
+          mentor_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mentee_id: string
+          mentor_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mentee_id?: string
+          mentor_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       node_prerequisites: {
         Row: {
           id: string
@@ -153,6 +322,232 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      passport_stamps: {
+        Row: {
+          category: string
+          created_at: string
+          date_earned: string
+          description: string | null
+          featured: boolean | null
+          icon_name: string | null
+          id: string
+          level: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          date_earned?: string
+          description?: string | null
+          featured?: boolean | null
+          icon_name?: string | null
+          id?: string
+          level: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          date_earned?: string
+          description?: string | null
+          featured?: boolean | null
+          icon_name?: string | null
+          id?: string
+          level?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          access_level: Database["public"]["Enums"]["access_level"]
+          bio: string | null
+          created_at: string
+          email: string
+          id: string
+          linked_user_id: string | null
+          name: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+        }
+        Insert: {
+          access_level?: Database["public"]["Enums"]["access_level"]
+          bio?: string | null
+          created_at?: string
+          email: string
+          id: string
+          linked_user_id?: string | null
+          name: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Update: {
+          access_level?: Database["public"]["Enums"]["access_level"]
+          bio?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          linked_user_id?: string | null
+          name?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      retirement_plans: {
+        Row: {
+          created_at: string
+          current_age: number
+          current_salary: number
+          current_savings: number
+          id: string
+          investment_style: string
+          monthly_savings: number
+          post_retirement_work: boolean
+          retirement_age: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_age: number
+          current_salary: number
+          current_savings: number
+          id?: string
+          investment_style: string
+          monthly_savings: number
+          post_retirement_work?: boolean
+          retirement_age: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_age?: number
+          current_salary?: number
+          current_savings?: number
+          id?: string
+          investment_style?: string
+          monthly_savings?: number
+          post_retirement_work?: boolean
+          retirement_age?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      retirement_simulations: {
+        Row: {
+          created_at: string
+          id: string
+          income_adequacy_percentage: number
+          monthly_retirement_income: number
+          plan_id: string
+          savings_at_retirement: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          income_adequacy_percentage: number
+          monthly_retirement_income: number
+          plan_id: string
+          savings_at_retirement: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          income_adequacy_percentage?: number
+          monthly_retirement_income?: number
+          plan_id?: string
+          savings_at_retirement?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "retirement_simulations_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "retirement_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_assignments: {
+        Row: {
+          assigned_by: string | null
+          created_at: string
+          feedback: string | null
+          id: string
+          service_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          service_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          service_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_assignments_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration: string | null
+          id: string
+          name: string
+          provider_id: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          id?: string
+          name: string
+          provider_id?: string | null
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          id?: string
+          name?: string
+          provider_id?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       simulation_recommended_training: {
         Row: {
@@ -239,6 +634,68 @@ export type Database = {
           },
         ]
       }
+      user_permissions: {
+        Row: {
+          created_at: string
+          id: string
+          permission_type: string
+          target_user_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          permission_type: string
+          target_user_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          permission_type?: string
+          target_user_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_progress: {
+        Row: {
+          created_at: string
+          id: string
+          progress_percentage: number
+          service_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          progress_percentage?: number
+          service_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          progress_percentage?: number
+          service_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_progress_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_simulations: {
         Row: {
           challenge_level: string
@@ -285,10 +742,28 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: {
+          user_id: string
+        }
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
     }
     Enums: {
-      [_ in never]: never
+      access_level: "read_only" | "edit" | "admin"
+      user_role:
+        | "school_student"
+        | "university_student"
+        | "parent"
+        | "internship_coordinator"
+        | "advisor"
+        | "coach"
+        | "recruiter"
+        | "training_center_rep"
+        | "assessment_center_rep"
+        | "command_control_agent"
+        | "administrator"
+        | "leadership"
     }
     CompositeTypes: {
       [_ in never]: never
