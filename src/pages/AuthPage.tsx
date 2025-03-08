@@ -93,12 +93,19 @@ const AuthPage = () => {
     setRegisterLoading(true);
     
     try {
-      // Cast the role to the appropriate type
+      // Log what we're sending for debugging
+      console.log("Registering with data:", {
+        email: registerEmail,
+        name: registerName,
+        role: registerRole
+      });
+      
+      // Pass the role as a plain string to avoid type issues
       await signUp(
         registerEmail, 
         registerPassword,
         registerName,
-        registerRole as any
+        registerRole
       );
       
       toast({

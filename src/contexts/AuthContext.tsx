@@ -19,7 +19,7 @@ type AuthContextType = {
   user: User;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string, role: UserRole) => Promise<void>;
+  signUp: (email: string, password: string, name: string, role: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             id: profileData.id,
             email: profileData.email,
             name: profileData.name,
-            role: profileData.role as UserRole
+            role: profileData.role
           });
         }
       }
@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             id: profileData.id,
             email: profileData.email,
             name: profileData.name,
-            role: profileData.role as UserRole
+            role: profileData.role
           });
         }
       } else if (event === "SIGNED_OUT") {
@@ -140,9 +140,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUp = async (email: string, password: string, name: string, role: UserRole) => {
+  const signUp = async (email: string, password: string, name: string, role: string) => {
     try {
       setLoading(true);
+      
+      // Log what we're sending for debugging
+      console.log("Signup data:", { email, name, role });
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
