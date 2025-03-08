@@ -8,8 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
-import { notifyError, notifyInfo, notifySuccess } from "@/utils/notification";
-import { Loader2 } from "lucide-react";
+import { toast } from "@/hooks/toast";
+import { Loader2, Info } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const AuthPage = () => {
   const { user, signIn, signUp } = useAuth();
@@ -39,15 +40,16 @@ const AuthPage = () => {
     
     try {
       await signIn(loginEmail, loginPassword);
-      notifySuccess({
+      toast({
         title: "Welcome back!",
         description: "You have successfully signed in."
       });
     } catch (error: any) {
       console.error("Login error:", error);
-      notifyError({
+      toast({
         title: "Sign in failed",
-        description: error.message || "Invalid email or password. Please try again."
+        description: error.message || "Invalid email or password. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setLoginLoading(false);
@@ -67,7 +69,7 @@ const AuthPage = () => {
         registerRole as any
       );
       
-      notifySuccess({
+      toast({
         title: "Registration successful",
         description: "Your account has been created. You can now sign in."
       });
@@ -80,9 +82,10 @@ const AuthPage = () => {
       setLoginPassword(registerPassword);
     } catch (error: any) {
       console.error("Registration error:", error);
-      notifyError({
+      toast({
         title: "Registration failed",
-        description: error.message || "Unable to create account. Please try again."
+        description: error.message || "Unable to create account. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setRegisterLoading(false);
@@ -92,28 +95,39 @@ const AuthPage = () => {
   const fillTestAccount = (type: string) => {
     switch(type) {
       case "student":
-        setLoginEmail("student@example.com");
-        setLoginPassword("password123");
+        setRegisterEmail("student@example.com");
+        setRegisterPassword("password123");
+        setRegisterName("Test Student");
+        setRegisterRole("school_student");
         break;
       case "advisor":
-        setLoginEmail("advisor@example.com");
-        setLoginPassword("password123");
+        setRegisterEmail("advisor@example.com");
+        setRegisterPassword("password123");
+        setRegisterName("Test Advisor");
+        setRegisterRole("advisor");
         break;
       case "recruiter":
-        setLoginEmail("recruiter@example.com");
-        setLoginPassword("password123");
+        setRegisterEmail("recruiter@example.com");
+        setRegisterPassword("password123");
+        setRegisterName("Test Recruiter");
+        setRegisterRole("recruiter");
         break;
       case "admin":
-        setLoginEmail("admin@example.com");
-        setLoginPassword("password123");
+        setRegisterEmail("admin@example.com");
+        setRegisterPassword("password123");
+        setRegisterName("Test Admin");
+        setRegisterRole("administrator");
         break;
       default:
         break;
     }
     
-    notifyInfo({
-      title: "Test account loaded",
-      description: "You must create this account first by using the Register tab."
+    // Switch to register tab to create the account
+    setActiveTab("register");
+    
+    toast({
+      title: "Test account filled",
+      description: "Please register this account first by clicking 'Create Account'.",
     });
   };
 
@@ -140,6 +154,14 @@ const AuthPage = () => {
           </div>
           
           <CardContent className="p-6">
+            <Alert className="mb-4 bg-amber-50 text-amber-800 border-amber-200">
+              <Info className="h-4 w-4" />
+              <AlertTitle>Important</AlertTitle>
+              <AlertDescription>
+                You must register an account first before you can log in. Test accounts are not pre-created.
+              </AlertDescription>
+            </Alert>
+            
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
@@ -176,7 +198,7 @@ const AuthPage = () => {
               </form>
               
               <div className="mt-4 text-center text-sm text-muted-foreground">
-                <p>Test accounts available (register first):</p>
+                <p>Quick-fill test account details:</p>
                 <div className="grid grid-cols-2 gap-2 mt-2">
                   <Button 
                     variant="outline" 
@@ -258,11 +280,12 @@ const AuthPage = () => {
                       <SelectItem value="parent">Parent</SelectItem>
                       <SelectItem value="internship_coordinator">Internship Coordinator</SelectItem>
                       <SelectItem value="recruiter">Recruiter</SelectItem>
-                      <SelectItem value="training_provider">Training Provider</SelectItem>
-                      <SelectItem value="assessment_provider">Assessment Provider</SelectItem>
+                      <SelectItem value="training_center_rep">Training Provider</SelectItem>
+                      <SelectItem value="assessment_center_rep">Assessment Provider</SelectItem>
                       <SelectItem value="advisor">Career Advisor</SelectItem>
                       <SelectItem value="coach">Coach</SelectItem>
                       <SelectItem value="jobseeker">Job Seeker</SelectItem>
+                      <SelectItem value="administrator">Administrator</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
