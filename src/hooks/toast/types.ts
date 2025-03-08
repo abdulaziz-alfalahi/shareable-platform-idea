@@ -11,5 +11,10 @@ export type ToastProps_ = ToastProps & {
 };
 
 export type Toast = ToastProps_;
+export type ToasterToast = ToastProps_;
+
+export type ToastState = {
+  toasts: ToasterToast[];
+};
 
 export type ToastType = "default" | "success" | "error" | "warning" | "info" | "advisor" | "recruiter" | "student" | "admin";

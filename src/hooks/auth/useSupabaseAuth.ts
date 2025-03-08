@@ -33,7 +33,7 @@ export const useSupabaseAuth = () => {
       toast({
         title: "Sign in failed",
         description: errorMessage,
-        variant: "destructive",
+        type: "error",
       });
       throw error;
     }
@@ -65,6 +65,7 @@ export const useSupabaseAuth = () => {
       toast({
         title: "Registration successful",
         description: "Your account has been created. You can now sign in.",
+        type: "success",
       });
       
     } catch (error: any) {
@@ -79,7 +80,7 @@ export const useSupabaseAuth = () => {
       toast({
         title: "Registration failed",
         description: errorMessage,
-        variant: "destructive",
+        type: "error",
       });
       throw error;
     }
@@ -96,6 +97,7 @@ export const useSupabaseAuth = () => {
       toast({
         title: "Signed out",
         description: "You have been successfully signed out.",
+        type: "info",
       });
       
       navigate("/auth");
@@ -103,7 +105,7 @@ export const useSupabaseAuth = () => {
       toast({
         title: "Sign out failed",
         description: error.message,
-        variant: "destructive",
+        type: "error",
       });
     }
   };
