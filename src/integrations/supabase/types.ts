@@ -764,6 +764,7 @@ export type Database = {
         | "command_control_agent"
         | "administrator"
         | "leadership"
+        | "jobseeker"
     }
     CompositeTypes: {
       [_ in never]: never
