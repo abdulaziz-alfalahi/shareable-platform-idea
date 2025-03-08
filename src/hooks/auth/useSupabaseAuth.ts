@@ -75,6 +75,10 @@ export const useSupabaseAuth = () => {
       let errorMessage = error.message;
       if (error.message.includes("already registered")) {
         errorMessage = "This email is already registered. Please try signing in instead.";
+      } else if (error.message.includes("user_role")) {
+        errorMessage = "There was a database error with the role type. Please try a different role or contact support.";
+      } else if (error.message.includes("Database error")) {
+        errorMessage = "There was a database error. This might be related to how the role is stored. Please try a different role.";
       }
       
       toast({
