@@ -3,9 +3,10 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/toast";
 import { useNavigate } from "react-router-dom";
+import { Enums } from "@/integrations/supabase/types";
 
 // Define types for our context
-type UserRole = "school_student" | "university_student" | "parent" | "internship_coordinator" | "recruiter" | "training_provider" | "assessment_provider" | "advisor" | "coach" | "admin" | "leadership" | "jobseeker";
+type UserRole = Enums<"user_role">;
 
 type User = {
   id: string;
@@ -57,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             id: profileData.id,
             email: profileData.email,
             name: profileData.name,
-            role: profileData.role
+            role: profileData.role as UserRole
           });
         }
       }
@@ -87,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             id: profileData.id,
             email: profileData.email,
             name: profileData.name,
-            role: profileData.role
+            role: profileData.role as UserRole
           });
         }
       } else if (event === "SIGNED_OUT") {
