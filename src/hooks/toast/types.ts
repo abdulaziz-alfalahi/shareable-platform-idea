@@ -7,7 +7,7 @@ export type ToastProps_ = ToastProps & {
   description?: React.ReactNode;
   action?: ToastActionElement;
   read?: boolean;
-  type?: ToastType;
+  type?: "default" | "success" | "error" | "warning" | "info" | "advisor" | "recruiter" | "student" | "admin";
 };
 
 export type Toast = ToastProps_;

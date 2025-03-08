@@ -13,7 +13,7 @@ export type AuthContextType = {
   user: User;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string, role: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string, role: string) => Promise<any>;
   signOut: () => Promise<void>;
 };
 
