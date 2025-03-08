@@ -7,11 +7,14 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { notifyError, notifyInfo, notifySuccess } from "@/utils/notification";
+import { Loader2 } from "lucide-react";
 
 const AuthPage = () => {
   const { user, signIn, signUp } = useAuth();
   const [activeTab, setActiveTab] = useState("login");
+  const navigate = useNavigate();
 
   // State for login
   const [loginEmail, setLoginEmail] = useState("");
@@ -33,23 +36,85 @@ const AuthPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
-    await signIn(loginEmail, loginPassword);
-    setLoginLoading(false);
+    
+    try {
+      await signIn(loginEmail, loginPassword);
+      notifySuccess({
+        title: "Welcome back!",
+        description: "You have successfully signed in."
+      });
+    } catch (error: any) {
+      console.error("Login error:", error);
+      notifyError({
+        title: "Sign in failed",
+        description: error.message || "Invalid email or password. Please try again."
+      });
+    } finally {
+      setLoginLoading(false);
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setRegisterLoading(true);
     
-    // Cast the role to the appropriate type
-    await signUp(
-      registerEmail, 
-      registerPassword,
-      registerName,
-      registerRole as any
-    );
+    try {
+      // Cast the role to the appropriate type
+      await signUp(
+        registerEmail, 
+        registerPassword,
+        registerName,
+        registerRole as any
+      );
+      
+      notifySuccess({
+        title: "Registration successful",
+        description: "Your account has been created. You can now sign in."
+      });
+      
+      // Switch to login tab
+      setActiveTab("login");
+      
+      // Pre-fill login fields
+      setLoginEmail(registerEmail);
+      setLoginPassword(registerPassword);
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      notifyError({
+        title: "Registration failed",
+        description: error.message || "Unable to create account. Please try again."
+      });
+    } finally {
+      setRegisterLoading(false);
+    }
+  };
+
+  const fillTestAccount = (type: string) => {
+    switch(type) {
+      case "student":
+        setLoginEmail("student@example.com");
+        setLoginPassword("password123");
+        break;
+      case "advisor":
+        setLoginEmail("advisor@example.com");
+        setLoginPassword("password123");
+        break;
+      case "recruiter":
+        setLoginEmail("recruiter@example.com");
+        setLoginPassword("password123");
+        break;
+      case "admin":
+        setLoginEmail("admin@example.com");
+        setLoginPassword("password123");
+        break;
+      default:
+        break;
+    }
     
-    setRegisterLoading(false);
+    notifyInfo({
+      title: "Test account loaded",
+      description: "You must create this account first by using the Register tab."
+    });
   };
 
   return (
@@ -101,50 +166,43 @@ const AuthPage = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={loginLoading}>
-                  {loginLoading ? "Signing In..." : "Sign In"}
+                  {loginLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Signing In...
+                    </>
+                  ) : "Sign In"}
                 </Button>
               </form>
               
               <div className="mt-4 text-center text-sm text-muted-foreground">
-                <p>Test accounts available:</p>
+                <p>Test accounts available (register first):</p>
                 <div className="grid grid-cols-2 gap-2 mt-2">
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => {
-                      setLoginEmail("student@example.com");
-                      setLoginPassword("password123");
-                    }}
+                    onClick={() => fillTestAccount("student")}
                   >
                     Student
                   </Button>
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => {
-                      setLoginEmail("advisor@example.com");
-                      setLoginPassword("password123");
-                    }}
+                    onClick={() => fillTestAccount("advisor")}
                   >
                     Advisor
                   </Button>
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => {
-                      setLoginEmail("recruiter@example.com");
-                      setLoginPassword("password123");
-                    }}
+                    onClick={() => fillTestAccount("recruiter")}
                   >
                     Recruiter
                   </Button>
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => {
-                      setLoginEmail("admin@example.com");
-                      setLoginPassword("password123");
-                    }}
+                    onClick={() => fillTestAccount("admin")}
                   >
                     Admin
                   </Button>
@@ -209,7 +267,12 @@ const AuthPage = () => {
                   </Select>
                 </div>
                 <Button type="submit" className="w-full" disabled={registerLoading}>
-                  {registerLoading ? "Creating Account..." : "Create Account"}
+                  {registerLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating Account...
+                    </>
+                  ) : "Create Account"}
                 </Button>
               </form>
             </TabsContent>

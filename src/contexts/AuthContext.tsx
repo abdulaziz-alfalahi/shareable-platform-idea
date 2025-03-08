@@ -104,33 +104,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
+        console.error("Sign in error:", error.message);
         throw error;
       }
 
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-      });
-      
+      console.log("Sign in successful:", data);
       navigate("/");
     } catch (error: any) {
+      console.error("Sign in error:", error);
       toast({
         title: "Sign in failed",
         description: error.message,
         variant: "destructive",
       });
+      throw error;
     }
   };
 
   const signUp = async (email: string, password: string, name: string, role: UserRole) => {
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -142,21 +141,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) {
+        console.error("Sign up error:", error.message);
         throw error;
       }
 
-      toast({
-        title: "Registration successful",
-        description: "Please check your email to confirm your account.",
-      });
+      console.log("Sign up successful:", data);
       
-      // Note: We don't navigate here because the user needs to confirm their email first
+      // Note: We don't navigate here because the user might need to confirm their email first
+      // depending on Supabase settings
     } catch (error: any) {
+      console.error("Sign up error:", error);
       toast({
         title: "Registration failed",
         description: error.message,
         variant: "destructive",
       });
+      throw error;
     }
   };
 
