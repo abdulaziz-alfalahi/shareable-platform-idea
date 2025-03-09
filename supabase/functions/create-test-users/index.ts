@@ -63,13 +63,12 @@ serve(async (req) => {
         console.log(`Creating user: ${email} with role: ${role}`);
         
         // Check if user already exists
-        const { data: existingUser } = await supabase
+        const { data: existingUsers } = await supabase
           .from('profiles')
           .select('email')
-          .eq('email', email)
-          .maybeSingle();
+          .eq('email', email);
           
-        if (existingUser) {
+        if (existingUsers && existingUsers.length > 0) {
           console.log(`User ${email} already exists, skipping...`);
           results.push({ role, email, success: true, message: "User already exists" });
           continue;
