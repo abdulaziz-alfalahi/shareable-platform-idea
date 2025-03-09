@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/toast";
 import { Loader2, Info, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { UserRole } from "@/types/auth";
 
 const AuthPage = () => {
   const { user, loading: authLoading, signIn, signUp } = useAuth();
@@ -25,7 +27,7 @@ const AuthPage = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerName, setRegisterName] = useState("");
-  const [registerRole, setRegisterRole] = useState<string>("school_student");
+  const [registerRole, setRegisterRole] = useState<UserRole>("school_student");
   const [registerLoading, setRegisterLoading] = useState(false);
 
   // If already logged in, redirect to home
@@ -80,7 +82,6 @@ const AuthPage = () => {
         role: registerRole
       });
       
-      // Pass the role as a plain string to avoid type issues
       await signUp(
         registerEmail, 
         registerPassword,
