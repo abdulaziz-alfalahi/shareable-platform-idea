@@ -275,7 +275,7 @@ const AuthPage = () => {
                   <Label htmlFor="register-role">Role</Label>
                   <Select 
                     value={registerRole} 
-                    onValueChange={setRegisterRole}
+                    onValueChange={(value) => setRegisterRole(value as UserRole)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select Role" />
