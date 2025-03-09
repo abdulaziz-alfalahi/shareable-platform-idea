@@ -98,15 +98,16 @@ serve(async (req) => {
         
         console.log(`Creating user: ${email} with role: ${role}`);
         
-        // Create user with string-based metadata (no enum types)
+        // IMPORTANT: We're completely bypassing any enum types by using string metadata only
         const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
           email: email,
           password: password,
           email_confirm: true,
+          // Store everything as strings to avoid enum type issues
           user_metadata: {
-            full_name: name,
-            role_name: role,
-            access_level_name: role === 'administrator' ? 'admin' : (role === 'coach' || role === 'advisor' ? 'edit' : 'read_only')
+            name: name,
+            role: role,
+            access_level: role === 'administrator' ? 'admin' : (role === 'coach' || role === 'advisor' ? 'edit' : 'read_only')
           }
         });
 
