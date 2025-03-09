@@ -63,9 +63,7 @@ serve(async (req) => {
         console.log(`Creating user: ${email} with role: ${role}`);
         
         // Check if user exists in auth.users directly
-        const { data: authUsers, error: authUsersError } = await supabase.auth.admin.listUsers({
-          filter: `email.eq.${email}`,
-        });
+        const { data: authUsers, error: authUsersError } = await supabase.auth.admin.listUsers();
         
         if (authUsersError) {
           console.error(`Error checking if user exists: ${authUsersError.message}`);
@@ -73,20 +71,24 @@ serve(async (req) => {
           continue;
         }
         
-        if (authUsers && authUsers.users && authUsers.users.length > 0) {
+        // Check if the email already exists in the list of users
+        const userExists = authUsers && authUsers.users && 
+                          authUsers.users.some(user => user.email === email);
+        
+        if (userExists) {
           console.log(`User ${email} already exists in auth.users, skipping...`);
           results.push({ role, email, success: true, message: "User already exists" });
           continue;
         }
         
-        // Create the user with the admin API
+        // Create the user with the admin API - removing the role from metadata to avoid type issues
         const { data: userData, error: userError } = await supabase.auth.admin.createUser({
           email: email,
           password: password,
           email_confirm: true, // Auto-confirm email
           user_metadata: {
             name: name,
-            role: role,
+            role_name: role, // Use a string property instead of trying to use the enum directly
             access_level: role === 'administrator' ? 'admin' : (role === 'coach' || role === 'advisor' ? 'edit' : 'read_only')
           }
         });
