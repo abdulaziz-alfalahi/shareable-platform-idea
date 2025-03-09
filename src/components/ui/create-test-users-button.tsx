@@ -24,7 +24,6 @@ export function CreateTestUsersButton() {
           title: "Error creating test users",
           description: functionError.message,
           variant: "destructive",
-          type: "error",
         });
         return;
       }
@@ -36,13 +35,11 @@ export function CreateTestUsersButton() {
           title: "Some users couldn't be created",
           description: `Created ${functionData.results.length} out of ${functionData.results.length + functionData.errors.length} users`,
           variant: "destructive",
-          type: "warning",
         });
       } else {
         toast({
           title: "Test users created successfully",
           description: `Created ${functionData.results.length} users with password "Test1234!"`,
-          type: "success",
         });
       }
     } catch (error) {
@@ -51,7 +48,6 @@ export function CreateTestUsersButton() {
         title: "Error creating test users",
         description: error.message || "An unknown error occurred",
         variant: "destructive",
-        type: "error",
       });
     } finally {
       setIsLoading(false);
