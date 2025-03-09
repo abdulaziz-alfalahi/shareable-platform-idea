@@ -19,10 +19,10 @@ export function CreateTestUsersButton() {
       const { data: functionData, error: functionError } = await supabase.functions.invoke('create-test-users');
       
       if (functionError) {
-        console.error("Function error:", functionError);
+        console.error("Function invocation error:", functionError);
         toast({
-          title: "Error creating test users",
-          description: functionError.message,
+          title: "Error invoking create-test-users function",
+          description: functionError.message || "Unknown error",
           variant: "destructive",
         });
         return;
@@ -30,36 +30,46 @@ export function CreateTestUsersButton() {
       
       console.log("Function response:", functionData);
       
-      if (!functionData || typeof functionData !== 'object') {
+      if (!functionData) {
         toast({
           title: "Invalid response from server",
-          description: "Received an unexpected response format",
+          description: "No data returned from function",
           variant: "destructive",
         });
         return;
       }
       
-      const successCount = functionData.results?.filter(r => r.success)?.length || 0;
+      // Count new users created (excluding "already exists" cases)
+      const newUsersCount = functionData.results?.filter(r => r.success && !r.message)?.length || 0;
+      const existingUsersCount = functionData.results?.filter(r => r.success && r.message === "User already exists")?.length || 0;
       const errorCount = functionData.errors?.length || 0;
       
       if (errorCount > 0) {
-        // Show first error for more context
-        const firstError = functionData.errors[0]?.error || "Unknown error";
+        // Show detailed error information
+        const firstError = functionData.errors[0];
+        const errorMessage = firstError.error || "Unknown error";
+        const errorRole = firstError.role || "";
+        
         toast({
-          title: `Created ${successCount} out of ${successCount + errorCount} users`,
-          description: `Error: ${firstError}`,
+          title: `Created ${newUsersCount} new users, ${existingUsersCount} already existed`,
+          description: `Error with ${errorRole} role: ${errorMessage}`,
           variant: "destructive",
         });
-      } else if (successCount === 0) {
+      } else if (newUsersCount === 0 && existingUsersCount === 0) {
         toast({
           title: "No users created",
-          description: "All users may already exist or there was an issue with the creation process",
+          description: "No users were created or found",
           variant: "destructive",
+        });
+      } else if (newUsersCount === 0 && existingUsersCount > 0) {
+        toast({
+          title: "All users already exist",
+          description: `${existingUsersCount} users already exist with password "Test1234!"`,
         });
       } else {
         toast({
-          title: `Test users created successfully`,
-          description: `Created ${successCount} users with password "Test1234!"`,
+          title: "Test users created successfully",
+          description: `Created ${newUsersCount} new users, ${existingUsersCount} already existed. All users have password "Test1234!"`,
         });
       }
     } catch (error) {
@@ -75,8 +85,17 @@ export function CreateTestUsersButton() {
   };
 
   return (
-    <Button onClick={createTestUsers} disabled={isLoading} className="bg-emerald-600 hover:bg-emerald-700">
-      {isLoading ? "Creating Users..." : "Create Test Users"}
-    </Button>
+    <div className="space-y-4">
+      <Button 
+        onClick={createTestUsers} 
+        disabled={isLoading} 
+        className="bg-emerald-600 hover:bg-emerald-700"
+      >
+        {isLoading ? "Creating Users..." : "Create Test Users"}
+      </Button>
+      <p className="text-sm text-muted-foreground">
+        This will create test accounts for all roles with password "Test1234!". Email format: role.name@example.com
+      </p>
+    </div>
   );
 }

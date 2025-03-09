@@ -62,56 +62,59 @@ serve(async (req) => {
         
         console.log(`Creating user: ${email} with role: ${role}`);
         
-        // Check if user exists in auth.users directly
-        const { data: authUsers, error: authUsersError } = await supabase.auth.admin.listUsers();
+        // Get all users and check if email already exists
+        const { data: existingUsers, error: getUsersError } = await supabase.auth.admin.listUsers();
         
-        if (authUsersError) {
-          console.error(`Error checking if user exists: ${authUsersError.message}`);
-          errors.push({ role, error: authUsersError.message });
+        if (getUsersError) {
+          console.error(`Error fetching users: ${getUsersError.message}`);
+          errors.push({ role, error: getUsersError.message });
           continue;
         }
         
-        // Check if the email already exists in the list of users
-        const userExists = authUsers && authUsers.users && 
-                          authUsers.users.some(user => user.email === email);
+        // Check if email exists in any user
+        const emailExists = existingUsers?.users?.some(user => 
+          user.email?.toLowerCase() === email.toLowerCase()
+        );
         
-        if (userExists) {
-          console.log(`User ${email} already exists in auth.users, skipping...`);
+        if (emailExists) {
+          console.log(`User ${email} already exists, skipping...`);
           results.push({ role, email, success: true, message: "User already exists" });
           continue;
         }
         
-        // Create the user with the admin API - removing the role from metadata to avoid type issues
-        const { data: userData, error: userError } = await supabase.auth.admin.createUser({
+        // Create user with completely string-based metadata (avoid enum type issues)
+        const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
           email: email,
           password: password,
-          email_confirm: true, // Auto-confirm email
+          email_confirm: true,
           user_metadata: {
-            name: name,
-            role_name: role, // Use a string property instead of trying to use the enum directly
-            access_level: role === 'administrator' ? 'admin' : (role === 'coach' || role === 'advisor' ? 'edit' : 'read_only')
+            full_name: name,
+            role_name: role, // String, not enum
+            access_level_name: role === 'administrator' ? 'admin' : (role === 'coach' || role === 'advisor' ? 'edit' : 'read_only')
           }
         });
 
-        if (userError) {
-          console.error(`Error creating user ${email}:`, userError.message);
-          errors.push({ role, error: userError.message });
-        } else {
-          console.log(`Successfully created user: ${email}`);
-          results.push({ role, email, success: true });
+        if (createError) {
+          console.error(`Failed to create user ${email}:`, createError);
+          errors.push({ role, email, error: createError.message });
+          continue;
         }
+        
+        console.log(`Successfully created user: ${email}`);
+        results.push({ role, email, success: true });
       } catch (error) {
-        console.error(`Exception creating user with role ${role}:`, error.message);
-        errors.push({ role, error: error.message });
+        console.error(`Unexpected error creating user with role ${role}:`, error);
+        errors.push({ role, error: error.message || "Unknown error" });
       }
     }
 
     console.log(`Created ${results.length} users with ${errors.length} errors`);
-
+    
+    // Return detailed response
     return new Response(
       JSON.stringify({
-        success: errors.length === 0,
-        message: "Test users creation completed",
+        success: errors.length === 0 && results.length > 0,
+        message: `Test users creation completed. Created ${results.filter(r => !r.message).length} new users, ${results.filter(r => r.message === "User already exists").length} already existed.`,
         results,
         errors,
       }),
@@ -121,9 +124,13 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error("Unexpected error in create-test-users function:", error.message);
+    console.error("Unexpected error in create-test-users function:", error);
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ 
+        success: false, 
+        error: error.message || "Unknown error",
+        stack: error.stack
+      }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500,
