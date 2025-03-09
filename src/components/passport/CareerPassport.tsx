@@ -32,15 +32,6 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
     { name: "Omar S.", score: 3450, position: 5 }
   ];
 
-  const handleRetirementPlanning = () => {
-    navigate('/retirement-planning');
-    toast({
-      title: "Retirement Planning",
-      description: "Opening retirement planning tools to help secure your future",
-      variant: "default"
-    });
-  };
-
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center mb-6">
@@ -58,7 +49,7 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ student }) => {
         <Button
           variant="outline"
           size="sm"
-          onClick={handleRetirementPlanning}
+          onClick={() => navigate('/retirement-planning')}
           className="ml-auto"
         >
           <Banknote size={16} className="mr-1" /> Retirement Planning

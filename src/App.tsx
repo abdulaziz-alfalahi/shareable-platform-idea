@@ -19,107 +19,33 @@ import TrainingCenters from "./pages/TrainingCenters";
 import AssessmentCenters from "./pages/AssessmentCenters";
 import CareerPassportPage from "./pages/CareerPassportPage";
 import RetirementPlanning from "./pages/RetirementPlanning";
-import AuthPage from "./pages/AuthPage";
-import { AuthProvider } from "./contexts/AuthContext";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
-import Navbar from "./components/shared/Navbar";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <Toaster />
+      <Sonner />
       <BrowserRouter>
-        <AuthProvider>
-          <Navbar />
-          <Toaster />
-          <Sonner />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<AuthPage />} />
-            
-            <Route path="/resume-builder" element={
-              <ProtectedRoute>
-                <ResumeBuilder />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/job-applications" element={
-              <ProtectedRoute>
-                <JobApplications />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/job-location-matching" element={
-              <ProtectedRoute>
-                <JobLocationMatching />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/achievements" element={
-              <ProtectedRoute>
-                <Achievements />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/student-dashboard" element={
-              <ProtectedRoute requiredRoles={["school_student", "university_student"]}>
-                <StudentDashboard />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/recruiter-dashboard" element={
-              <ProtectedRoute requiredRoles={["recruiter", "internship_coordinator"]}>
-                <RecruiterDashboard />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/advisor-dashboard" element={
-              <ProtectedRoute requiredRoles={["advisor", "coach"]}>
-                <AdvisorDashboard />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/student/:id" element={
-              <ProtectedRoute>
-                <StudentProfile />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/admin-dashboard" element={
-              <ProtectedRoute requiredRoles={["admin", "leadership"]}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/training-centers" element={
-              <ProtectedRoute>
-                <TrainingCenters />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/assessment-centers" element={
-              <ProtectedRoute>
-                <AssessmentCenters />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/career-passport/:id?" element={
-              <ProtectedRoute>
-                <CareerPassportPage />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/retirement-planning" element={
-              <ProtectedRoute>
-                <RetirementPlanning />
-              </ProtectedRoute>
-            } />
-            
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/resume-builder" element={<ResumeBuilder />} />
+          <Route path="/job-applications" element={<JobApplications />} />
+          <Route path="/job-location-matching" element={<JobLocationMatching />} />
+          <Route path="/achievements" element={<Achievements />} />
+          <Route path="/student-dashboard" element={<StudentDashboard />} />
+          <Route path="/recruiter-dashboard" element={<RecruiterDashboard />} />
+          <Route path="/advisor-dashboard" element={<AdvisorDashboard />} />
+          <Route path="/student/:id" element={<StudentProfile />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/training-centers" element={<TrainingCenters />} />
+          <Route path="/assessment-centers" element={<AssessmentCenters />} />
+          <Route path="/career-passport/:id?" element={<CareerPassportPage />} />
+          <Route path="/retirement-planning" element={<RetirementPlanning />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

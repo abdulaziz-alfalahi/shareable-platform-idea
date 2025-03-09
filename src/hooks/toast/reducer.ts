@@ -1,4 +1,3 @@
-
 import { TOAST_LIMIT, TOAST_REMOVE_DELAY } from "./constants"
 import { actionTypes } from "./constants"
 import type { ToasterToast, ToastState } from "./types"

@@ -9,7 +9,6 @@ import {
   ToastViewport,
 } from "@/components/ui/toast"
 import { Bell } from "lucide-react"
-import { ToastType } from "@/hooks/toast/types"
 
 export function Toaster() {
   const { toasts } = useToast()
@@ -18,7 +17,7 @@ export function Toaster() {
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, type, read, ...props }) {
         return (
-          <Toast key={id} {...props} className={type ? undefined : props.className}>
+          <Toast key={id} type={type} {...props}>
             <div className="grid gap-1">
               <div className="flex items-center gap-2">
                 {!read && <span className="h-2 w-2 rounded-full bg-blue-500"></span>}

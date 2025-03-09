@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -8,78 +8,28 @@ import RetirementInputForm from "./RetirementInputForm";
 import RetirementResults from "./RetirementResults";
 import { simulateRetirement } from "@/utils/career/retirementSimulation";
 import { RetirementSimulationResult } from "@/utils/career/retirementTypes";
-import { getUserRetirementPlan, saveRetirementPlan, saveRetirementSimulation } from "@/services/retirement/retirementService";
-import { useToast } from "@/hooks/toast";
 
 const RetirementSimulator: React.FC = () => {
   const [activeTab, setActiveTab] = useState("input-form");
   const [simulationResult, setSimulationResult] = useState<RetirementSimulationResult | null>(null);
   const [isSimulating, setIsSimulating] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    currentAge: 30,
-    retirementAge: 60,
-    currentSalary: 25000,
-    monthlySavings: 5000,
-    currentSavings: 100000,
-    investmentStyle: 'moderate' as 'conservative' | 'moderate' | 'aggressive',
-    postRetirementWork: false
-  });
-  
-  const { toast } = useToast();
-  
-  // Load user's saved retirement plan when component mounts
-  useEffect(() => {
-    const loadUserPlan = async () => {
-      try {
-        const savedPlan = await getUserRetirementPlan();
-        if (savedPlan) {
-          setFormData(savedPlan);
-          toast({
-            title: "Saved plan loaded",
-            description: "Your previously saved retirement plan has been loaded.",
-            variant: "default"
-          });
-        }
-      } catch (error) {
-        console.error("Error loading retirement plan:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadUserPlan();
-  }, [toast]);
 
-  const handleSimulation = async (formInput: typeof formData) => {
+  const handleSimulation = async (formData: {
+    currentAge: number;
+    retirementAge: number;
+    currentSalary: number;
+    monthlySavings: number;
+    currentSavings: number;
+    investmentStyle: 'conservative' | 'moderate' | 'aggressive';
+    postRetirementWork: boolean;
+  }) => {
     setIsSimulating(true);
     try {
-      // First save the retirement plan
-      const plan = await saveRetirementPlan(formInput);
-      
-      // Then run the simulation
-      const result = await simulateRetirement(formInput);
-      
-      // Save the simulation result
-      if (plan && plan.id) {
-        await saveRetirementSimulation(plan.id, result);
-      }
-      
+      const result = await simulateRetirement(formData);
       setSimulationResult(result);
       setActiveTab("results");
-      
-      toast({
-        title: "Retirement Plan Saved",
-        description: "Your retirement plan and simulation results have been saved successfully.",
-        variant: "default"
-      });
     } catch (error) {
       console.error("Retirement simulation error:", error);
-      toast({
-        title: "Error",
-        description: "There was an error saving your retirement plan. Please try again.",
-        variant: "destructive"
-      });
     } finally {
       setIsSimulating(false);
     }
@@ -114,20 +64,10 @@ const RetirementSimulator: React.FC = () => {
           </TabsList>
 
           <TabsContent value="input-form">
-            {isLoading ? (
-              <div className="flex justify-center items-center py-12">
-                <div className="text-center">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emirati-oasisGreen mb-4"></div>
-                  <p className="text-gray-500">Loading your retirement plan...</p>
-                </div>
-              </div>
-            ) : (
-              <RetirementInputForm 
-                onSimulate={handleSimulation}
-                isSimulating={isSimulating}
-                initialFormData={formData}
-              />
-            )}
+            <RetirementInputForm 
+              onSimulate={handleSimulation} 
+              isSimulating={isSimulating} 
+            />
           </TabsContent>
 
           <TabsContent value="results">

@@ -1,20 +1,24 @@
 
-import { ToastActionElement, ToastProps } from "@/components/ui/toast";
+import type {
+  ToastActionElement,
+  ToastProps,
+} from "@/components/ui/toast"
+import * as React from "react"
 
-export type ToastType = "default" | "success" | "error" | "warning" | "info" | "advisor" | "recruiter" | "student" | "admin";
+// Toast type definitions
+export type ToastType = "default" | "advisor" | "recruiter" | "student" | "admin" | "success" | "error" | "warning" | "info"
 
-export type ToastProps_ = ToastProps & {
-  id: string;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  action?: ToastActionElement;
-  read?: boolean;
-  type?: ToastType;
-};
+export type ToasterToast = ToastProps & {
+  id: string
+  title?: React.ReactNode
+  description?: React.ReactNode
+  action?: ToastActionElement
+  type?: ToastType
+  read?: boolean
+}
 
-export type Toast = ToastProps_;
-export type ToasterToast = ToastProps_;
+export type Toast = Omit<ToasterToast, "id">
 
-export type ToastState = {
-  toasts: ToasterToast[];
-};
+export interface ToastState {
+  toasts: ToasterToast[]
+}

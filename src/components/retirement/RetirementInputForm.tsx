@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,21 +23,11 @@ interface RetirementInputFormProps {
     postRetirementWork: boolean;
   }) => void;
   isSimulating: boolean;
-  initialFormData?: {
-    currentAge: number;
-    retirementAge: number;
-    currentSalary: number;
-    monthlySavings: number;
-    currentSavings: number;
-    investmentStyle: 'conservative' | 'moderate' | 'aggressive';
-    postRetirementWork: boolean;
-  };
 }
 
 const RetirementInputForm: React.FC<RetirementInputFormProps> = ({
   onSimulate,
-  isSimulating,
-  initialFormData
+  isSimulating
 }) => {
   const [formData, setFormData] = useState({
     currentAge: 30,
@@ -49,13 +38,6 @@ const RetirementInputForm: React.FC<RetirementInputFormProps> = ({
     investmentStyle: 'moderate' as 'conservative' | 'moderate' | 'aggressive',
     postRetirementWork: false
   });
-
-  // Update form data when initialFormData changes
-  useEffect(() => {
-    if (initialFormData) {
-      setFormData(initialFormData);
-    }
-  }, [initialFormData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

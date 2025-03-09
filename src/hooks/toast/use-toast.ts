@@ -1,12 +1,12 @@
 
 import * as React from "react"
 import { dispatch, genId, memoryState, subscribe } from "./store"
-import type { Toast, ToasterToast, ToastState } from "./types"
+import type { Toast, ToasterToast } from "./types"
 
-function toast({ ...props }: Omit<Toast, "id">) {
+function toast({ ...props }: Toast) {
   const id = genId()
 
-  const update = (props: Partial<ToasterToast>) =>
+  const update = (props: ToasterToast) =>
     dispatch({
       type: "UPDATE_TOAST",
       toast: { ...props, id },
@@ -38,7 +38,7 @@ function toast({ ...props }: Omit<Toast, "id">) {
 }
 
 function useToast() {
-  const [state, setState] = React.useState<ToastState>(memoryState)
+  const [state, setState] = React.useState(memoryState)
 
   React.useEffect(() => {
     const unsubscribe = subscribe(setState)
