@@ -1,13 +1,8 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-
-type User = {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-} | null;
+import { User } from "./useAuth";
+import { UserRole } from "@/types/auth";
 
 export const useAuthState = () => {
   const [user, setUser] = useState<User>(null);
@@ -38,7 +33,7 @@ export const useAuthState = () => {
             id: profileData.id,
             email: profileData.email,
             name: profileData.name,
-            role: profileData.role
+            role: profileData.role as UserRole
           });
         }
       }
@@ -68,7 +63,7 @@ export const useAuthState = () => {
             id: profileData.id,
             email: profileData.email,
             name: profileData.name,
-            role: profileData.role
+            role: profileData.role as UserRole
           });
         }
       } else if (event === "SIGNED_OUT") {

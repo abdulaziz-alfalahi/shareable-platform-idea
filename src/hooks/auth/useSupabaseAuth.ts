@@ -2,6 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/toast";
 import { useNavigate } from "react-router-dom";
+import { UserRole } from "@/types/auth";
 
 export const useSupabaseAuth = () => {
   const { toast } = useToast();
@@ -49,7 +50,7 @@ export const useSupabaseAuth = () => {
     }
   };
 
-  const signUp = async (email: string, password: string, name: string, role: string) => {
+  const signUp = async (email: string, password: string, name: string, role: UserRole) => {
     try {
       // Log what we're sending for debugging
       console.log("Signup data:", { email, name, role });
@@ -67,7 +68,7 @@ export const useSupabaseAuth = () => {
 
       if (error) {
         console.error("Sign up error:", error.message);
-        throw error;
+        return { user: null, error };
       }
 
       console.log("Sign up successful:", data);
@@ -78,7 +79,12 @@ export const useSupabaseAuth = () => {
         type: "success",
       });
       
-      return data;
+      return { user: data.user ? {
+        id: data.user.id,
+        email: data.user.email || email,
+        name,
+        role,
+      } : null, error: null };
       
     } catch (error: any) {
       console.error("Sign up error:", error);
@@ -98,7 +104,8 @@ export const useSupabaseAuth = () => {
         description: errorMessage,
         type: "error",
       });
-      throw error;
+      
+      return { user: null, error };
     }
   };
 

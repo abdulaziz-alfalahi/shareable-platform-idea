@@ -4,6 +4,7 @@ import { useAuthState } from "@/hooks/auth/useAuthState";
 import { useSupabaseAuth } from "@/hooks/auth/useSupabaseAuth";
 import { AuthContext } from "@/hooks/auth/useAuth";
 import type { AuthContextType } from "@/hooks/auth/useAuth";
+import { UserRole } from "@/types/auth";
 
 // Create a provider component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -14,7 +15,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user,
     loading,
     signIn,
-    signUp,
+    signUp: (email: string, password: string, name: string, role: string) => 
+      signUp(email, password, name, role as UserRole),
     signOut,
   };
 

@@ -1,19 +1,15 @@
 
 import { createContext, useContext } from "react";
+import { UserProfile, UserRole } from "@/types/auth";
 
 // Define types for our context
-type User = {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-} | null;
+export type User = UserProfile | null;
 
 export type AuthContextType = {
   user: User;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string, role: string) => Promise<any>;
+  signUp: (email: string, password: string, name: string, role: UserRole) => Promise<{ user: User | null; error: Error | null }>;
   signOut: () => Promise<void>;
 };
 
