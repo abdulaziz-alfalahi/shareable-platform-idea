@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   Card, 
@@ -16,8 +15,7 @@ import {
   Compass, 
   Palmtree, 
   Gem,
-  Award,
-  LucideIcon
+  Award
 } from "lucide-react";
 import { getStudentCulturalAchievementProgress } from "@/utils/career";
 
@@ -28,19 +26,17 @@ interface CulturalAchievementsProps {
 const CulturalAchievements: React.FC<CulturalAchievementsProps> = ({ student }) => {
   const achievements = getStudentCulturalAchievementProgress(student);
   
-  // Map icon names to Lucide icons
   const getIconComponent = (iconName: string) => {
     switch (iconName) {
       case "users": return <Users className="h-5 w-5" />;
-      case "eagle": return <Bird className="h-5 w-5" />; // Replaced Eagle with Bird
+      case "eagle": return <Bird className="h-5 w-5" />;
       case "compass": return <Compass className="h-5 w-5" />;
-      case "palm-tree": return <Palmtree className="h-5 w-5" />; // Fixed PalmTree to Palmtree
+      case "palm-tree": return <Palmtree className="h-5 w-5" />;
       case "gem": return <Gem className="h-5 w-5" />;
       default: return <Award className="h-5 w-5" />;
     }
   };
   
-  // Define custom colors for different achievement levels
   const getLevelColor = (level: "Bronze" | "Silver" | "Gold") => {
     switch (level) {
       case "Bronze": return "bg-amber-500";
