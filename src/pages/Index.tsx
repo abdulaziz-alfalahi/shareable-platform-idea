@@ -1,11 +1,11 @@
 
 import React from "react";
-import { Header } from "@/components/home/Header";
-import { HeroSection } from "@/components/home/HeroSection";
-import { SearchBar } from "@/components/home/SearchBar";
-import { TestimonialsSection } from "@/components/home/TestimonialsSection";
-import { CallToActionSection } from "@/components/home/CallToActionSection";
-import { Footer } from "@/components/home/Footer";
+import Header from "@/components/home/Header";
+import HeroSection from "@/components/home/HeroSection";
+import SearchBar from "@/components/home/SearchBar";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
+import CallToActionSection from "@/components/home/CallToActionSection";
+import Footer from "@/components/home/Footer";
 import { CreateTestUsersButton } from "@/components/ui/create-test-users-button";
 
 export default function Index() {
