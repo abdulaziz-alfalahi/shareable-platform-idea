@@ -52,10 +52,28 @@ serve(async (req) => {
     const results = [];
     const errors = [];
 
+    console.log("Starting to create test users...");
+
     // Create a user for each role
     for (const role of roles) {
       try {
         const email = `${role.toLowerCase().replace(/_/g, ".")}@example.com`;
+        const name = role.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        
+        console.log(`Creating user: ${email} with role: ${role}`);
+        
+        // Check if user already exists
+        const { data: existingUser } = await supabase
+          .from('profiles')
+          .select('email')
+          .eq('email', email)
+          .maybeSingle();
+          
+        if (existingUser) {
+          console.log(`User ${email} already exists, skipping...`);
+          results.push({ role, email, success: true, message: "User already exists" });
+          continue;
+        }
         
         // Create the user with the admin API
         const { data: userData, error: userError } = await supabase.auth.admin.createUser({
@@ -63,21 +81,26 @@ serve(async (req) => {
           password: password,
           email_confirm: true, // Auto-confirm email
           user_metadata: {
-            name: role.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+            name: name,
             role: role,
             access_level: role === 'administrator' ? 'admin' : (role === 'coach' || role === 'advisor' ? 'edit' : 'read_only')
           }
         });
 
         if (userError) {
+          console.error(`Error creating user ${email}:`, userError);
           errors.push({ role, error: userError.message });
         } else {
+          console.log(`Successfully created user: ${email}`);
           results.push({ role, email, success: true });
         }
       } catch (error) {
+        console.error(`Exception creating user with role ${role}:`, error);
         errors.push({ role, error: error.message });
       }
     }
+
+    console.log(`Created ${results.length} users with ${errors.length} errors`);
 
     return new Response(
       JSON.stringify({
@@ -92,6 +115,7 @@ serve(async (req) => {
       }
     );
   } catch (error) {
+    console.error("Unexpected error in create-test-users function:", error);
     return new Response(
       JSON.stringify({ success: false, error: error.message }),
       {
