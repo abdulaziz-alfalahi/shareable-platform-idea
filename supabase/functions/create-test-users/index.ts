@@ -32,6 +32,7 @@ serve(async (req) => {
     // Create a Supabase client with the service role key
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Define user roles as plain strings
     const roles = [
       'school_student',
       'university_student',
@@ -54,42 +55,57 @@ serve(async (req) => {
 
     console.log("Starting to create test users...");
 
+    // Get existing users first to check for duplicates
+    const { data: existingUsers, error: getUsersError } = await supabase.auth.admin.listUsers();
+    
+    if (getUsersError) {
+      console.error(`Error fetching users: ${getUsersError.message}`);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Failed to retrieve existing users",
+          error: getUsersError.message
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 500,
+        }
+      );
+    }
+
+    // Create a map of existing emails for faster lookup
+    const existingEmails = new Map();
+    existingUsers?.users?.forEach(user => {
+      if (user.email) {
+        existingEmails.set(user.email.toLowerCase(), true);
+      }
+    });
+
     // Create a user for each role
     for (const role of roles) {
       try {
         const email = `${role.toLowerCase().replace(/_/g, ".")}@example.com`;
         const name = role.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         
-        console.log(`Creating user: ${email} with role: ${role}`);
+        console.log(`Checking if user exists: ${email}`);
         
-        // Get all users and check if email already exists
-        const { data: existingUsers, error: getUsersError } = await supabase.auth.admin.listUsers();
-        
-        if (getUsersError) {
-          console.error(`Error fetching users: ${getUsersError.message}`);
-          errors.push({ role, error: getUsersError.message });
-          continue;
-        }
-        
-        // Check if email exists in any user
-        const emailExists = existingUsers?.users?.some(user => 
-          user.email?.toLowerCase() === email.toLowerCase()
-        );
-        
-        if (emailExists) {
+        // Check if email already exists in our map
+        if (existingEmails.has(email.toLowerCase())) {
           console.log(`User ${email} already exists, skipping...`);
           results.push({ role, email, success: true, message: "User already exists" });
           continue;
         }
         
-        // Create user with completely string-based metadata (avoid enum type issues)
+        console.log(`Creating user: ${email} with role: ${role}`);
+        
+        // Create user with string-based metadata (no enum types)
         const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
           email: email,
           password: password,
           email_confirm: true,
           user_metadata: {
             full_name: name,
-            role_name: role, // String, not enum
+            role_name: role,
             access_level_name: role === 'administrator' ? 'admin' : (role === 'coach' || role === 'advisor' ? 'edit' : 'read_only')
           }
         });
@@ -108,7 +124,7 @@ serve(async (req) => {
       }
     }
 
-    console.log(`Created ${results.length} users with ${errors.length} errors`);
+    console.log(`Created ${results.filter(r => !r.message).length} users with ${errors.length} errors`);
     
     // Return detailed response
     return new Response(
