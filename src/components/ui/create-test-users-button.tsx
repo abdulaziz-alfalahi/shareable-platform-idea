@@ -30,16 +30,36 @@ export function CreateTestUsersButton() {
       
       console.log("Function response:", functionData);
       
-      if (functionData.errors && functionData.errors.length > 0) {
+      if (!functionData || typeof functionData !== 'object') {
         toast({
-          title: "Some users couldn't be created",
-          description: `Created ${functionData.results.length} out of ${functionData.results.length + functionData.errors.length} users`,
+          title: "Invalid response from server",
+          description: "Received an unexpected response format",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const successCount = functionData.results?.filter(r => r.success)?.length || 0;
+      const errorCount = functionData.errors?.length || 0;
+      
+      if (errorCount > 0) {
+        // Show first error for more context
+        const firstError = functionData.errors[0]?.error || "Unknown error";
+        toast({
+          title: `Created ${successCount} out of ${successCount + errorCount} users`,
+          description: `Error: ${firstError}`,
+          variant: "destructive",
+        });
+      } else if (successCount === 0) {
+        toast({
+          title: "No users created",
+          description: "All users may already exist or there was an issue with the creation process",
           variant: "destructive",
         });
       } else {
         toast({
-          title: "Test users created successfully",
-          description: `Created ${functionData.results.length} users with password "Test1234!"`,
+          title: `Test users created successfully`,
+          description: `Created ${successCount} users with password "Test1234!"`,
         });
       }
     } catch (error) {

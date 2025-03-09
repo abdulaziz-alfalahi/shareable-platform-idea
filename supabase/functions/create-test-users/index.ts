@@ -62,14 +62,19 @@ serve(async (req) => {
         
         console.log(`Creating user: ${email} with role: ${role}`);
         
-        // Check if user already exists
-        const { data: existingUsers } = await supabase
-          .from('profiles')
-          .select('email')
-          .eq('email', email);
-          
-        if (existingUsers && existingUsers.length > 0) {
-          console.log(`User ${email} already exists, skipping...`);
+        // Check if user exists in auth.users directly
+        const { data: authUsers, error: authUsersError } = await supabase.auth.admin.listUsers({
+          filter: `email.eq.${email}`,
+        });
+        
+        if (authUsersError) {
+          console.error(`Error checking if user exists: ${authUsersError.message}`);
+          errors.push({ role, error: authUsersError.message });
+          continue;
+        }
+        
+        if (authUsers && authUsers.users && authUsers.users.length > 0) {
+          console.log(`User ${email} already exists in auth.users, skipping...`);
           results.push({ role, email, success: true, message: "User already exists" });
           continue;
         }
@@ -87,14 +92,14 @@ serve(async (req) => {
         });
 
         if (userError) {
-          console.error(`Error creating user ${email}:`, userError);
+          console.error(`Error creating user ${email}:`, userError.message);
           errors.push({ role, error: userError.message });
         } else {
           console.log(`Successfully created user: ${email}`);
           results.push({ role, email, success: true });
         }
       } catch (error) {
-        console.error(`Exception creating user with role ${role}:`, error);
+        console.error(`Exception creating user with role ${role}:`, error.message);
         errors.push({ role, error: error.message });
       }
     }
@@ -114,7 +119,7 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error("Unexpected error in create-test-users function:", error);
+    console.error("Unexpected error in create-test-users function:", error.message);
     return new Response(
       JSON.stringify({ success: false, error: error.message }),
       {
