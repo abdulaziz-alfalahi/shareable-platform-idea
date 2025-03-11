@@ -1,12 +1,16 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { StudentFormData } from "@/components/data-entry/form/types";
+import { Json } from "@/integrations/supabase/types";
 
 /**
  * Creates a new student record in the database
  */
 export const createStudentRecord = async (data: StudentFormData) => {
   try {
+    // Convert subjects array to JSON-compatible format
+    const jsonSubjects = data.subjects as unknown as Json;
+    
     const { error } = await supabase
       .from('student_records')
       .insert({
@@ -17,7 +21,7 @@ export const createStudentRecord = async (data: StudentFormData) => {
         school: data.school,
         grade: data.grade,
         date_of_birth: data.dateOfBirth ? new Date(data.dateOfBirth).toISOString() : null,
-        subjects: data.subjects,
+        subjects: jsonSubjects,
         additional_notes: data.additionalNotes
       });
 
@@ -94,7 +98,7 @@ export const updateStudentRecord = async (studentId: string, data: Partial<Stude
     if (data.school) updateData.school = data.school;
     if (data.grade) updateData.grade = data.grade;
     if (data.dateOfBirth) updateData.date_of_birth = new Date(data.dateOfBirth).toISOString();
-    if (data.subjects) updateData.subjects = data.subjects;
+    if (data.subjects) updateData.subjects = data.subjects as unknown as Json;
     if (data.additionalNotes) updateData.additional_notes = data.additionalNotes;
     
     // Add updated_at timestamp
