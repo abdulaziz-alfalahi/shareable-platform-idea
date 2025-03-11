@@ -40,7 +40,7 @@ const ServicesSection = () => {
       icon: <GraduationCap className="w-10 h-10" />,
       title: "Career Development",
       description: "Personalized career pathways, skills assessment, and development plans tailored to your goals.",
-      link: "/career-passport-page",
+      link: "/career-passport",
     },
     {
       icon: <Briefcase className="w-10 h-10" />,

@@ -18,7 +18,7 @@ const Header = () => {
           <Link to="/student-dashboard" className="text-gray-700 hover:text-emirati-oasisGreen transition">
             Dashboard
           </Link>
-          <Link to="/career-passport-page" className="text-gray-700 hover:text-emirati-oasisGreen transition">
+          <Link to="/career-passport" className="text-gray-700 hover:text-emirati-oasisGreen transition">
             Career Passport
           </Link>
           <Link to="/job-applications" className="text-gray-700 hover:text-emirati-oasisGreen transition">

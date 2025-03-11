@@ -19,6 +19,7 @@ import TrainingCenters from "./pages/TrainingCenters";
 import AssessmentCenters from "./pages/AssessmentCenters";
 import CareerPassportPage from "./pages/CareerPassportPage";
 import RetirementPlanning from "./pages/RetirementPlanning";
+import MindMap from "./pages/MindMap";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => (
           <Route path="/assessment-centers" element={<AssessmentCenters />} />
           <Route path="/career-passport/:id?" element={<CareerPassportPage />} />
           <Route path="/retirement-planning" element={<RetirementPlanning />} />
+          <Route path="/mindmap" element={<MindMap />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
