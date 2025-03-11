@@ -10,7 +10,6 @@ interface MapContainerProps {
   jobs: JobLocation[];
   userLocation: [number, number] | null;
   setUserLocation: (location: [number, number]) => void;
-  marker: React.MutableRefObject<mapboxgl.Marker | null>;
   onLocationUpdate?: (jobs: JobLocation[]) => void;
   reverseGeocode: (lat: number, lng: number) => Promise<void>;
   findNearbyJobs: (latitude: number, longitude: number) => void;
@@ -21,13 +20,13 @@ const MapContainer: React.FC<MapContainerProps> = ({
   jobs,
   userLocation,
   setUserLocation,
-  marker,
   onLocationUpdate,
   reverseGeocode,
   findNearbyJobs,
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const marker = useRef<mapboxgl.Marker | null>(null);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -139,7 +138,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
     return () => {
       map.current?.remove();
     };
-  }, [mapboxToken, jobs, userLocation, setUserLocation, marker, onLocationUpdate, reverseGeocode, findNearbyJobs]);
+  }, [mapboxToken, jobs, userLocation, setUserLocation, onLocationUpdate, reverseGeocode, findNearbyJobs]);
 
   return (
     <div ref={mapContainer} className="h-[500px] rounded-lg border border-gray-200 shadow-sm" />
