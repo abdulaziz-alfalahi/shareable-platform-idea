@@ -1,6 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
+import React, { useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useToast } from '@/components/ui/use-toast';
 import TokenInput from './map/TokenInput';
@@ -20,6 +19,8 @@ export interface JobLocation {
     address: string;
   };
   distance?: number;
+  matchPercentage?: number;
+  portfolioMatch?: boolean;
 }
 
 interface JobMapProps {
@@ -28,7 +29,6 @@ interface JobMapProps {
 }
 
 const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
-  const marker = useRef<mapboxgl.Marker | null>(null);
   const [mapboxToken, setMapboxToken] = useState<string>('');
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [searchRadius, setSearchRadius] = useState<number>(10); // in kilometers
@@ -53,7 +53,7 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
       );
 
       return { ...job, distance };
-    }).filter(job => job.distance <= searchRadius);
+    }).filter(job => job.distance !== undefined && job.distance <= searchRadius);
 
     setNearbyJobs(nearby);
   };
@@ -81,10 +81,12 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
         const [lng, lat] = data.features[0].center;
         const address = data.features[0].place_name;
         
-        // Update the job data
-        if (marker.current && onLocationUpdate) {
-          marker.current.setLngLat([lng, lat]);
-          
+        // Update the map and nearby jobs
+        setUserLocation([lng, lat]);
+        findNearbyJobs(lat, lng);
+        
+        // Update the location if onLocationUpdate is provided
+        if (onLocationUpdate) {
           const updatedJobs = jobs.map(job => 
             job.id === "workplace" 
               ? { 
@@ -99,9 +101,7 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
               : job
           );
           
-          if (onLocationUpdate) {
-            onLocationUpdate(updatedJobs);
-          }
+          onLocationUpdate(updatedJobs);
         }
       } else {
         toast({
@@ -179,7 +179,6 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
                 jobs={jobs}
                 userLocation={userLocation}
                 setUserLocation={setUserLocation}
-                marker={marker}
                 onLocationUpdate={onLocationUpdate}
                 reverseGeocode={reverseGeocode}
                 findNearbyJobs={findNearbyJobs}
