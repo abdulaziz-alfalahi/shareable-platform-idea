@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Student } from "@/types/student";
 import CareerPassport from "@/components/passport/CareerPassport";
@@ -11,8 +11,15 @@ interface PassportTabsProps {
 }
 
 const PassportTabs: React.FC<PassportTabsProps> = ({ student }) => {
+  const [activeTab, setActiveTab] = useState("passport");
+
   return (
-    <Tabs defaultValue="passport" className="w-full">
+    <Tabs 
+      defaultValue="passport" 
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="w-full"
+    >
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="passport">Passport</TabsTrigger>
         <TabsTrigger value="profile">Public Profile</TabsTrigger>
