@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { sampleJobs } from '@/components/jobs/mockData';
+import { jobLocationsData } from '@/components/jobs/mockData';
 import JobMap from '@/components/JobMap';
 import LocationMatchingHeader from '@/components/jobs/location/LocationMatchingHeader';
 import FilterTabs, { FilterType } from '@/components/jobs/location/FilterTabs';
@@ -12,14 +12,14 @@ const JobLocationMatching = () => {
   const getFilteredJobs = () => {
     switch (activeFilter) {
       case 'ai-top-10':
-        return [...sampleJobs]
+        return [...jobLocationsData]
           .sort((a, b) => b.matchPercentage - a.matchPercentage)
           .slice(0, 10);
       case 'portfolio-match':
-        return sampleJobs.filter(job => job.portfolioMatch);
+        return jobLocationsData.filter(job => job.portfolioMatch);
       case 'all':
       default:
-        return sampleJobs;
+        return jobLocationsData;
     }
   };
 
