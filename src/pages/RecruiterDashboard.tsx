@@ -1,18 +1,10 @@
 
 import React, { useState, useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Bell, BarChart2 } from "lucide-react";
 import { useToast } from "@/hooks/toast";
 import { notifyRecruiter, notifySuccess } from "@/utils/notification";
-
-import VacancyManagement from "@/components/recruiter/VacancyManagement";
-import CandidateSearch from "@/components/recruiter/CandidateSearch";
-import InterviewCalendar from "@/components/recruiter/InterviewCalendar";
-import InternTracking from "@/components/recruiter/InternTracking";
-import CompanyPartners from "@/components/recruiter/CompanyPartners";
 import ScheduleInterviewDialog from "@/components/recruiter/ScheduleInterviewDialog";
-import MonitoringDashboard from "@/components/recruiter/MonitoringDashboard";
+import RecruiterDashboardHeader from "@/components/recruiter/dashboard/RecruiterDashboardHeader";
+import RecruiterDashboardTabs from "@/components/recruiter/dashboard/RecruiterDashboardTabs";
 
 const vacancies = [
   {
@@ -62,11 +54,11 @@ const vacancies = [
 ];
 
 const RecruiterDashboard = () => {
-  const { toasts, markAsRead } = useToast();
   const [activeTab, setActiveTab] = useState("vacancies");
   const [isScheduleInterviewDialogOpen, setIsScheduleInterviewDialogOpen] = useState(false);
   const [showNotificationsPanel, setShowNotificationsPanel] = useState(false);
 
+  // Set up demo notifications
   useEffect(() => {
     setTimeout(() => {
       notifyRecruiter({
@@ -92,101 +84,19 @@ const RecruiterDashboard = () => {
     setIsScheduleInterviewDialogOpen(false);
   };
 
-  const unreadNotificationsCount = toasts.filter(toast => !toast.read).length;
-
   return (
     <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Recruiter Dashboard</h1>
-        
-        <div className="relative">
-          <Button 
-            variant="outline"
-            size="icon"
-            className="relative"
-            onClick={() => setShowNotificationsPanel(!showNotificationsPanel)}
-          >
-            <Bell className="h-5 w-5" />
-            {unreadNotificationsCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {unreadNotificationsCount}
-              </span>
-            )}
-          </Button>
-          
-          {showNotificationsPanel && (
-            <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 shadow-lg rounded-md border z-50">
-              <div className="p-3 border-b">
-                <h3 className="font-medium">Notifications</h3>
-              </div>
-              <div className="max-h-96 overflow-y-auto">
-                {toasts.length > 0 ? (
-                  <div className="divide-y">
-                    {toasts.map((notification) => (
-                      <div 
-                        key={notification.id} 
-                        className={`p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer ${!notification.read ? 'bg-purple-50 dark:bg-purple-900/20' : ''}`}
-                        onClick={() => markAsRead(notification.id)}
-                      >
-                        <div className="flex items-center gap-2">
-                          {!notification.read && <span className="h-2 w-2 rounded-full bg-purple-500"></span>}
-                          <h4 className="font-medium">{notification.title}</h4>
-                        </div>
-                        {notification.description && (
-                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{notification.description}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-3 text-center text-gray-500">
-                    No notifications
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      <RecruiterDashboardHeader 
+        showNotificationsPanel={showNotificationsPanel}
+        setShowNotificationsPanel={setShowNotificationsPanel}
+      />
       
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="vacancies">Vacancy Management</TabsTrigger>
-          <TabsTrigger value="candidates">Candidate Search</TabsTrigger>
-          <TabsTrigger value="interviews">Interviews</TabsTrigger>
-          <TabsTrigger value="interns">Intern Tracking</TabsTrigger>
-          <TabsTrigger value="companies">Company Partners</TabsTrigger>
-          <TabsTrigger value="monitoring" className="flex items-center gap-1">
-            <BarChart2 className="h-4 w-4" /> Monitoring
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="vacancies" className="mt-6">
-          <VacancyManagement vacancies={vacancies} />
-        </TabsContent>
-        
-        <TabsContent value="candidates" className="mt-6">
-          <CandidateSearch />
-        </TabsContent>
-        
-        <TabsContent value="interviews" className="mt-6">
-          <InterviewCalendar 
-            onScheduleInterview={() => setIsScheduleInterviewDialogOpen(true)} 
-          />
-        </TabsContent>
-        
-        <TabsContent value="interns" className="mt-6">
-          <InternTracking />
-        </TabsContent>
-        
-        <TabsContent value="companies" className="mt-6">
-          <CompanyPartners />
-        </TabsContent>
-
-        <TabsContent value="monitoring" className="mt-6">
-          <MonitoringDashboard />
-        </TabsContent>
-      </Tabs>
+      <RecruiterDashboardTabs 
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onScheduleInterview={() => setIsScheduleInterviewDialogOpen(true)}
+        vacancies={vacancies}
+      />
       
       <ScheduleInterviewDialog
         open={isScheduleInterviewDialogOpen}
