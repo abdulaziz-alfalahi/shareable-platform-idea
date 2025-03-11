@@ -41,6 +41,7 @@ export const simulateRetirement = async (
   const retirementFund = futureValueOfCurrentSavings + futureValueOfContributions;
   
   // Estimate life expectancy (simplified for Emirati nationals)
+  // UAE life expectancy data: Males ~77, Females ~80
   const lifeExpectancy = 85;
   
   // Calculate years in retirement
@@ -50,10 +51,37 @@ export const simulateRetirement = async (
   const annualWithdrawal = retirementFund * 0.04;
   const monthlyRetirementIncome = annualWithdrawal / 12;
   
-  // Add government pension estimate (simplified for Emirati nationals)
-  // Assume 80% of final salary for 30+ years of service
+  // Add government pension estimate (UAE-specific for Emirati nationals)
+  // UAE GPSSA pension calculation: based on years of service and final salary
   const estimatedFinalSalary = params.currentSalary * Math.pow(1.03, yearsToRetirement); // 3% annual salary growth
-  const governmentPension = params.retirementAge >= 60 ? estimatedFinalSalary * 0.7 : estimatedFinalSalary * 0.5;
+  
+  // UAE-specific pension calculation
+  // Years of service presumption: current age - 22 (average start age) + years to retirement
+  const estimatedYearsOfService = Math.min(35, Math.max(0, params.currentAge - 22 + yearsToRetirement));
+  
+  // Pension calculation based on GPSSA rules:
+  // - 2.5% of final salary per year of service for the first 15 years
+  // - 2% for each year thereafter, up to 35 years max
+  let pensionPercentage = 0;
+  if (estimatedYearsOfService <= 15) {
+    pensionPercentage = estimatedYearsOfService * 0.025; // 2.5% per year
+  } else {
+    pensionPercentage = 0.375 + (estimatedYearsOfService - 15) * 0.02; // 37.5% + 2% per additional year
+  }
+  
+  // Cap at 80% per UAE rules
+  pensionPercentage = Math.min(0.8, pensionPercentage);
+  
+  // Adjust for early retirement if applicable
+  // For Emiratis, standard retirement age is 60 for men, 55 for women
+  // Early retirement penalty: 20% reduction if retiring before standard age (simplified)
+  let earlyRetirementPenalty = 1;
+  if (params.retirementAge < 60) {
+    earlyRetirementPenalty = 0.8; // 20% reduction for early retirement
+  }
+  
+  // Calculate monthly government pension
+  const governmentPension = (estimatedFinalSalary * pensionPercentage * earlyRetirementPenalty);
   
   // Add part-time work income if applicable
   const partTimeIncome = params.postRetirementWork ? estimatedFinalSalary * 0.3 : 0;
@@ -84,14 +112,17 @@ export const simulateRetirement = async (
     params,
     financialReadiness,
     incomeReplacementRatio,
-    yearsToRetirement
+    yearsToRetirement,
+    estimatedYearsOfService
   );
   
   return {
     retirementAge: params.retirementAge,
     yearsToRetirement,
     retirementFund: Math.round(retirementFund),
-    monthlyRetirementIncome: Math.round(totalMonthlyIncome),
+    monthlyRetirementIncome: Math.round(monthlyRetirementIncome),
+    governmentPension: Math.round(governmentPension),
+    totalMonthlyIncome: Math.round(totalMonthlyIncome),
     incomeReplacementRatio,
     lifeExpectancy,
     fundSustainability: Math.round(fundSustainability),
@@ -124,7 +155,8 @@ const generateRecommendations = (
   params: RetirementSimulationParams,
   financialReadiness: string,
   incomeReplacementRatio: number,
-  yearsToRetirement: number
+  yearsToRetirement: number,
+  estimatedYearsOfService: number
 ): string[] => {
   const recommendations: string[] = [];
   
@@ -151,10 +183,21 @@ const generateRecommendations = (
     );
   }
   
+  // UAE-specific pension recommendations
+  if (estimatedYearsOfService < 15) {
+    recommendations.push(
+      "Consider working at least 15 years to qualify for the UAE government pension scheme for Emiratis."
+    );
+  } else if (estimatedYearsOfService < 35) {
+    recommendations.push(
+      "Aim for 35 years of service to maximize your government pension benefits under the UAE GPSSA system."
+    );
+  }
+  
   // Retirement age recommendations
   if (params.retirementAge < 60 && financialReadiness !== 'Excellent') {
     recommendations.push(
-      "Delaying retirement by a few years could significantly increase your pension benefits and investment returns."
+      "Delaying retirement until age 60 could significantly increase your pension benefits under the UAE GPSSA system."
     );
   }
   

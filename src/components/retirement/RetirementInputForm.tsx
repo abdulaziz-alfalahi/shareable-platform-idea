@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,18 +11,12 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Banknote } from "lucide-react";
+import { Loader2, Banknote, AlertCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { RetirementSimulationParams } from "@/utils/career/retirementTypes";
 
 interface RetirementInputFormProps {
-  onSimulate: (formData: {
-    currentAge: number;
-    retirementAge: number;
-    currentSalary: number;
-    monthlySavings: number;
-    currentSavings: number;
-    investmentStyle: 'conservative' | 'moderate' | 'aggressive';
-    postRetirementWork: boolean;
-  }) => void;
+  onSimulate: (formData: RetirementSimulationParams) => void;
   isSimulating: boolean;
 }
 
@@ -29,13 +24,13 @@ const RetirementInputForm: React.FC<RetirementInputFormProps> = ({
   onSimulate,
   isSimulating
 }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RetirementSimulationParams>({
     currentAge: 30,
     retirementAge: 60,
     currentSalary: 25000,
     monthlySavings: 5000,
     currentSavings: 100000,
-    investmentStyle: 'moderate' as 'conservative' | 'moderate' | 'aggressive',
+    investmentStyle: 'moderate',
     postRetirementWork: false
   });
 
@@ -85,7 +80,19 @@ const RetirementInputForm: React.FC<RetirementInputFormProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="retirementAge">Planned Retirement Age</Label>
+            <div className="flex items-center">
+              <Label htmlFor="retirementAge" className="mr-2">Planned Retirement Age</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <AlertCircle className="h-4 w-4 text-emirati-desertRed" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">Standard UAE retirement age is 60 for men and 55 for women in the government sector.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <Input
               id="retirementAge"
               name="retirementAge"
@@ -114,7 +121,19 @@ const RetirementInputForm: React.FC<RetirementInputFormProps> = ({
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="monthlySavings">Monthly Savings (AED)</Label>
+            <div className="flex items-center">
+              <Label htmlFor="monthlySavings" className="mr-2">Monthly Savings (AED)</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <AlertCircle className="h-4 w-4 text-emirati-desertRed" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">Recommended monthly savings is at least 20% of your income for Emiratis.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <Input
               id="monthlySavings"
               name="monthlySavings"

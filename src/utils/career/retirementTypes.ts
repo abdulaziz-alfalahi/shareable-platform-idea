@@ -14,6 +14,8 @@ export interface RetirementSimulationResult {
   yearsToRetirement: number;
   retirementFund: number;
   monthlyRetirementIncome: number;
+  governmentPension: number;
+  totalMonthlyIncome: number;
   incomeReplacementRatio: number;
   lifeExpectancy: number;
   fundSustainability: number;
