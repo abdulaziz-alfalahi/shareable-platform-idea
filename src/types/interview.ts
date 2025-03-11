@@ -14,3 +14,8 @@ export interface ScheduleInterviewDialogProps {
   onOpenChange: (open: boolean) => void;
   onSchedule: (data: InterviewData) => void;
 }
+
+export interface AutosaveStatus {
+  isSaving: boolean;
+  lastSaved: Date | null;
+}

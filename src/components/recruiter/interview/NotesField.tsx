@@ -1,8 +1,10 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FileText } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import NoteInput from "./notes/NoteInput";
+import CharacterCounter from "./notes/CharacterCounter";
+import AutosaveIndicator from "./notes/AutosaveIndicator";
 
 interface NotesFieldProps {
   notes: string;
@@ -13,19 +15,39 @@ const NotesField: React.FC<NotesFieldProps> = ({
   notes,
   setNotes,
 }) => {
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const maxLength = 500; // Maximum character limit
+
+  // Simulated autosave functionality
+  useEffect(() => {
+    const saveTimeout = setTimeout(() => {
+      if (notes.trim() !== "") {
+        setIsSaving(true);
+        
+        // Simulate saving delay
+        setTimeout(() => {
+          setIsSaving(false);
+          setLastSaved(new Date());
+        }, 500);
+      }
+    }, 1000);
+
+    return () => clearTimeout(saveTimeout);
+  }, [notes]);
+
   return (
     <div className="grid gap-2">
-      <Label htmlFor="notes">Interview Notes (Optional)</Label>
-      <div className="relative">
-        <Input
-          id="notes"
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="Add any interview details or preparation notes"
-          className="pl-10"
-        />
-        <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <div className="flex justify-between items-center">
+        <Label htmlFor="notes">Interview Notes (Optional)</Label>
+        <AutosaveIndicator isSaving={isSaving} lastSaved={lastSaved} />
       </div>
+      <NoteInput
+        notes={notes}
+        setNotes={setNotes}
+        maxLength={maxLength}
+      />
+      <CharacterCounter current={notes.length} maximum={maxLength} />
     </div>
   );
 };
