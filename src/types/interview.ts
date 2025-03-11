@@ -6,6 +6,10 @@ export interface InterviewData {
   time: string;
   duration: string;
   location?: string;
+  locationCoordinates?: {
+    latitude: number;
+    longitude: number;
+  };
   notes: string;
 }
 
@@ -19,3 +23,4 @@ export interface AutosaveStatus {
   isSaving: boolean;
   lastSaved: Date | null;
 }
+
