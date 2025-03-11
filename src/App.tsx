@@ -20,6 +20,7 @@ import AssessmentCenters from "./pages/AssessmentCenters";
 import CareerPassportPage from "./pages/CareerPassportPage";
 import RetirementPlanning from "./pages/RetirementPlanning";
 import MindMap from "./pages/MindMap";
+import DataEntryPage from "./pages/DataEntryPage";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/advisor-dashboard" element={<AdvisorDashboard />} />
           <Route path="/student/:id" element={<StudentProfile />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/data-entry" element={<DataEntryPage />} />
           <Route path="/training-centers" element={<TrainingCenters />} />
           <Route path="/assessment-centers" element={<AssessmentCenters />} />
           <Route path="/career-passport/:id?" element={<CareerPassportPage />} />

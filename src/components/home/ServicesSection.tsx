@@ -8,7 +8,8 @@ import {
   Building, 
   BookOpen, 
   Award,
-  Map
+  Map,
+  Database
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -77,6 +78,12 @@ const ServicesSection = () => {
       title: "Portfolio Building",
       description: "Create a compelling digital portfolio that showcases your achievements and capabilities.",
       link: "/achievements",
+    },
+    {
+      icon: <Database className="w-10 h-10" />,
+      title: "Data Entry",
+      description: "Upload and manage student academic records and reports for platform integration.",
+      link: "/data-entry",
     },
   ];
 

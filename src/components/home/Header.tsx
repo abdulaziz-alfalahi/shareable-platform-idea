@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Map, User, Search, Briefcase, GraduationCap } from "lucide-react";
+import { Map, User, Search, Briefcase, GraduationCap, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Header = () => {
@@ -29,6 +29,9 @@ const Header = () => {
           </Link>
           <Link to="/mindmap" className="text-gray-700 hover:text-emirati-oasisGreen transition flex items-center">
             <Map className="w-4 h-4 mr-1" /> Mindmap
+          </Link>
+          <Link to="/data-entry" className="text-gray-700 hover:text-emirati-oasisGreen transition flex items-center">
+            <Database className="w-4 h-4 mr-1" /> Data Entry
           </Link>
         </nav>
 
