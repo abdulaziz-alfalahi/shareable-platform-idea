@@ -16,7 +16,7 @@ export const createStudentRecord = async (data: StudentFormData) => {
         email: data.email,
         school: data.school,
         grade: data.grade,
-        date_of_birth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
+        date_of_birth: data.dateOfBirth ? new Date(data.dateOfBirth).toISOString() : null,
         subjects: data.subjects,
         additional_notes: data.additionalNotes
       });
@@ -93,12 +93,12 @@ export const updateStudentRecord = async (studentId: string, data: Partial<Stude
     if (data.email) updateData.email = data.email;
     if (data.school) updateData.school = data.school;
     if (data.grade) updateData.grade = data.grade;
-    if (data.dateOfBirth) updateData.date_of_birth = new Date(data.dateOfBirth);
+    if (data.dateOfBirth) updateData.date_of_birth = new Date(data.dateOfBirth).toISOString();
     if (data.subjects) updateData.subjects = data.subjects;
     if (data.additionalNotes) updateData.additional_notes = data.additionalNotes;
     
     // Add updated_at timestamp
-    updateData.updated_at = new Date();
+    updateData.updated_at = new Date().toISOString();
     
     const { error } = await supabase
       .from('student_records')
