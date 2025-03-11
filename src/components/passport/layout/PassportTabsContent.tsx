@@ -5,7 +5,7 @@ import { Student } from "@/types/student";
 import CareerMilestones from "@/components/passport/CareerMilestones";
 import ActiveChallenges from "@/components/passport/ActiveChallenges";
 import CulturalAchievements from "@/components/passport/CulturalAchievements";
-import SkillGapAnalysis from "@/components/passport/SkillGapAnalysis";
+import SkillGapAnalysis from "@/components/passport/skill-gap/SkillGapAnalysis";
 import PathwaySimulator from "@/components/career/PathwaySimulator";
 import PassportMainContent from "../PassportMainContent";
 
