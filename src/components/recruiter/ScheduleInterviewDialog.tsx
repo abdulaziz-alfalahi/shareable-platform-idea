@@ -9,13 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { InterviewData, ScheduleInterviewDialogProps } from "@/types/interview";
 import CandidateFields from "./interview/CandidateFields";
 import DatePickerField from "./interview/DatePickerField";
 import TimeAndDurationFields from "./interview/TimeAndDurationFields";
+import LocationField from "./interview/LocationField";
+import NotesField from "./interview/NotesField";
 
 const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
   open,
@@ -28,6 +28,7 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
   const [duration, setDuration] = useState("60");
   const [candidateName, setCandidateName] = useState("");
   const [position, setPosition] = useState("");
+  const [location, setLocation] = useState("");
   const [notes, setNotes] = useState("");
   const [calendarOpen, setCalendarOpen] = useState(false);
 
@@ -47,6 +48,7 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
       date,
       time,
       duration,
+      location,
       notes
     });
 
@@ -59,6 +61,7 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
     setDuration("60");
     setCandidateName("");
     setPosition("");
+    setLocation("");
     setNotes("");
     setCalendarOpen(false);
   };
@@ -109,15 +112,15 @@ const ScheduleInterviewDialog: React.FC<ScheduleInterviewDialogProps> = ({
             setDuration={setDuration}
           />
 
-          <div className="grid gap-2">
-            <Label htmlFor="notes">Interview Notes (Optional)</Label>
-            <Input
-              id="notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Add any interview details or preparation notes"
-            />
-          </div>
+          <LocationField
+            location={location}
+            setLocation={setLocation}
+          />
+
+          <NotesField
+            notes={notes}
+            setNotes={setNotes}
+          />
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>

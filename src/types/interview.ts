@@ -5,6 +5,7 @@ export interface InterviewData {
   date: Date;
   time: string;
   duration: string;
+  location?: string;
   notes: string;
 }
 
