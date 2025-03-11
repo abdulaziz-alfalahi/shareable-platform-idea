@@ -7,8 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/toast";
 
+type StatusType = "verified" | "pending" | "error";
+
+interface StudentRecord {
+  id: string;
+  name: string;
+  school: string;
+  grade: string;
+  lastUpdated: string;
+  status: StatusType;
+}
+
 // Mock data - in a real application, this would come from an API
-const mockStudents = [
+const mockStudents: StudentRecord[] = [
   {
     id: "ST00123",
     name: "Ahmed Al Mansoori",
@@ -66,17 +77,6 @@ const mockStudents = [
     status: "verified"
   }
 ];
-
-type StatusType = "verified" | "pending" | "error";
-
-interface StudentRecord {
-  id: string;
-  name: string;
-  school: string;
-  grade: string;
-  lastUpdated: string;
-  status: StatusType;
-}
 
 const StudentRecordsList = () => {
   const { toast } = useToast();
