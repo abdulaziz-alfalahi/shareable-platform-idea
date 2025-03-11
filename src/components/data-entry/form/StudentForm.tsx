@@ -7,8 +7,13 @@ import { StudentFormData, initialFormData } from "./types";
 import PersonalInfoFields from "./PersonalInfoFields";
 import SubjectsFields from "./SubjectsFields";
 import NotesField from "./NotesField";
+import { createStudentRecord } from "@/utils/dataEntryService";
 
-const StudentForm: React.FC = () => {
+interface StudentFormProps {
+  onSuccess?: () => void;
+}
+
+const StudentForm: React.FC<StudentFormProps> = ({ onSuccess }) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState<StudentFormData>(initialFormData);
   const [isSaving, setIsSaving] = useState(false);
@@ -48,7 +53,7 @@ const StudentForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Simple validation
@@ -63,16 +68,29 @@ const StudentForm: React.FC = () => {
     
     setIsSaving(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    // Save to database
+    const result = await createStudentRecord(formData);
+    
+    if (result.success) {
       toast({
         title: "Student record saved",
         description: `Successfully added record for ${formData.studentName}.`
       });
-      
-      setIsSaving(false);
       setFormData(initialFormData);
-    }, 1500);
+      
+      // Call the success callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
+    } else {
+      toast({
+        title: "Error saving record",
+        description: result.error || "There was a problem saving the student record. Please try again.",
+        variant: "destructive"
+      });
+    }
+    
+    setIsSaving(false);
   };
 
   return (

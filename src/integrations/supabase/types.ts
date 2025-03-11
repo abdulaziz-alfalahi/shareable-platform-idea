@@ -634,6 +634,51 @@ export type Database = {
           },
         ]
       }
+      student_records: {
+        Row: {
+          additional_notes: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          email: string | null
+          grade: string | null
+          id: string
+          national_id: string
+          school: string | null
+          student_id: string
+          student_name: string
+          subjects: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          additional_notes?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          grade?: string | null
+          id?: string
+          national_id: string
+          school?: string | null
+          student_id: string
+          student_name: string
+          subjects?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          additional_notes?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          grade?: string | null
+          id?: string
+          national_id?: string
+          school?: string | null
+          student_id?: string
+          student_name?: string
+          subjects?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_permissions: {
         Row: {
           created_at: string
