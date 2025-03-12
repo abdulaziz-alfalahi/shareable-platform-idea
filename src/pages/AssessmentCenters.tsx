@@ -1,248 +1,236 @@
 
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { 
-  Award, 
-  Search, 
-  Filter, 
-  MapPin, 
-  Clock, 
-  Users, 
-  ArrowUpRight, 
-  CheckCircle, 
-  Flame,
-  TestTube,
-  Calendar
-} from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react";
+import { ClipboardCheck, Search, MapPin, Phone, Mail, Info, Clock, Layers, DollarSign } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { notifySuccess } from "@/utils/notification";
-
-// Mock data for assessment centers
-const assessmentCenters = [
-  {
-    id: 1,
-    name: "Emirates Skills Assessment Center",
-    location: "Dubai",
-    rating: 4.9,
-    assessments: 18,
-    participants: 2342,
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80",
-    categories: ["Technical Skills", "Digital Literacy", "Professional Certification"],
-    description: "Emirates Skills Assessment Center provides comprehensive skills evaluation for various technical and professional fields, helping candidates validate their expertise for the job market."
-  },
-  {
-    id: 2,
-    name: "Abu Dhabi Assessment Hub",
-    location: "Abu Dhabi",
-    rating: 4.7,
-    assessments: 15,
-    participants: 1876,
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80",
-    categories: ["Leadership", "Management", "Executive Assessment"],
-    description: "Specializing in leadership and management assessment, Abu Dhabi Assessment Hub offers evaluation programs for professionals advancing to executive and leadership positions."
-  },
-  {
-    id: 3,
-    name: "UAE Career Aptitude Center",
-    location: "Sharjah",
-    rating: 4.6,
-    assessments: 12,
-    participants: 1653,
-    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80",
-    categories: ["Career Aptitude", "Personality Assessment", "Vocational Guidance"],
-    description: "UAE Career Aptitude Center helps individuals identify their strengths, interests, and suitable career paths through scientific assessment methods and career counseling."
-  },
-  {
-    id: 4,
-    name: "Dubai Academic Assessment Institute",
-    location: "Dubai",
-    rating: 4.8,
-    assessments: 20,
-    participants: 2156,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80",
-    categories: ["Academic Evaluation", "Educational Testing", "University Preparation"],
-    description: "Dubai Academic Assessment Institute conducts standardized testing and academic evaluations for students preparing for higher education and international university applications."
-  },
-  {
-    id: 5,
-    name: "Ajman Professional Certification Center",
-    location: "Ajman",
-    rating: 4.5,
-    assessments: 10,
-    participants: 975,
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80",
-    categories: ["Industry Certification", "Professional Licensing", "Skills Validation"],
-    description: "Ajman Professional Certification Center offers industry-recognized certification programs and skills validation services across multiple professional domains."
-  }
-];
+import { useToast } from "@/hooks/toast";
+import { fetchAssessmentCenters, fetchAssessmentTypes, AssessmentCenter, AssessmentType } from "@/utils/assessmentCentersService";
 
 const AssessmentCenters = () => {
+  const { toast } = useToast();
+  const [centers, setCenters] = useState<AssessmentCenter[]>([]);
+  const [activeCenter, setActiveCenter] = useState<string | null>(null);
+  const [assessments, setAssessments] = useState<AssessmentType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("all");
-  const [selectedCenter, setSelectedCenter] = useState<number | null>(null);
-  const [bookingDetails, setBookingDetails] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredCenters = assessmentCenters.filter(center => {
-    const matchesSearch = center.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         center.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         center.categories.some(cat => cat.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    if (activeTab === "all") return matchesSearch;
-    return matchesSearch && center.categories.some(cat => cat.toLowerCase().includes(activeTab.toLowerCase()));
-  });
+  useEffect(() => {
+    loadAssessmentCenters();
+  }, []);
 
-  const handleBookAssessment = (centerId: number) => {
-    notifySuccess({
-      title: "Assessment Booked",
-      description: "Your assessment booking request has been sent. You will receive a confirmation soon."
-    });
-    setBookingDetails("");
-    setSelectedCenter(null);
+  const loadAssessmentCenters = async () => {
+    try {
+      setIsLoading(true);
+      const result = await fetchAssessmentCenters();
+      
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      
+      setCenters(result.data);
+    } catch (error) {
+      console.error("Error loading assessment centers:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load assessment centers",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const loadCenterAssessments = async (centerId: string) => {
+    try {
+      const result = await fetchAssessmentTypes(centerId);
+      
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      
+      setAssessments(result.data);
+      setActiveCenter(centerId);
+    } catch (error) {
+      console.error("Error loading assessments:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load assessment types",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const filteredCenters = centers.filter(center =>
+    center.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (center.location && center.location.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center text-slate-900">
-            <TestTube className="mr-2 h-8 w-8 text-teal-600" />
-            Assessment Centers
-          </h1>
-          <p className="text-slate-600 mt-2">
-            Evaluate your skills and get certified with our professional assessment centers
-          </p>
-        </div>
-        
-        <div className="flex w-full md:w-auto gap-2">
-          <div className="relative flex-1 md:w-64">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-            <Input 
-              placeholder="Search centers, assessments..." 
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <Button variant="outline" className="gap-2">
-            <Filter className="h-4 w-4" />
-            Filter
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-emirati-deepBlue mb-2">Assessment Centers Directory</h1>
+        <p className="text-gray-600">
+          Discover assessment centers that evaluate and certify skills across various domains.
+        </p>
+      </div>
+      
+      <div className="flex flex-col md:flex-row gap-6">
+        <div className="md:w-1/3">
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <ClipboardCheck className="mr-2 h-5 w-5 text-emirati-sandGold" />
+                Assessment Centers
+              </CardTitle>
+              <CardDescription>
+                Explore accredited assessment and certification centers
+              </CardDescription>
+              <div className="mt-2">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                  <Input
+                    type="search"
+                    placeholder="Search centers..."
+                    className="pl-8"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">Loading assessment centers...</p>
+                </div>
+              ) : filteredCenters.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No assessment centers found</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {filteredCenters.map((center) => (
+                    <div 
+                      key={center.id}
+                      className={`p-3 rounded-md cursor-pointer transition-colors ${
+                        activeCenter === center.id ? 'bg-amber-50 border border-amber-200' : 'hover:bg-gray-50'
+                      }`}
+                      onClick={() => loadCenterAssessments(center.id)}
+                    >
+                      <h3 className="font-medium text-base">{center.name}</h3>
+                      {center.location && (
+                        <div className="flex items-center text-sm text-gray-500 mt-1">
+                          <MapPin className="h-3.5 w-3.5 mr-1" />
+                          {center.location}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          
+          <Button 
+            variant="outline" 
+            className="w-full"
+            onClick={() => window.location.href = '/data-entry'}
+          >
+            Go to Data Entry
           </Button>
         </div>
-      </div>
-
-      <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="mb-8">
-        <TabsList className="grid grid-cols-2 md:grid-cols-6 gap-2">
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="technical">Technical</TabsTrigger>
-          <TabsTrigger value="leadership">Leadership</TabsTrigger>
-          <TabsTrigger value="career">Career</TabsTrigger>
-          <TabsTrigger value="academic">Academic</TabsTrigger>
-          <TabsTrigger value="certification">Certification</TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredCenters.map((center) => (
-          <Card key={center.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="h-48 overflow-hidden">
-              <img 
-                src={center.image} 
-                alt={center.name} 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-xl">{center.name}</CardTitle>
-                  <CardDescription className="flex items-center mt-1">
-                    <MapPin className="h-4 w-4 mr-1 text-slate-400" />
-                    {center.location}
-                  </CardDescription>
-                </div>
-                <Badge variant="outline" className="bg-teal-50 text-teal-700 border-teal-200">
-                  {center.rating} ★
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-slate-600 mb-4">{center.description}</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {center.categories.map((category, idx) => (
-                  <Badge key={idx} variant="secondary" className="bg-teal-50 text-teal-700 border-teal-100">
-                    {category}
-                  </Badge>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 mr-2 text-slate-400" />
-                  <span className="text-sm text-slate-600">{center.assessments} Assessments</span>
-                </div>
-                <div className="flex items-center">
-                  <Users className="h-4 w-4 mr-2 text-slate-400" />
-                  <span className="text-sm text-slate-600">{center.participants.toLocaleString()} Participants</span>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => setSelectedCenter(center.id)}>
-                Book Assessment
-              </Button>
-              <Button className="gap-1 bg-teal-600 hover:bg-teal-700">
-                View Details <ArrowUpRight className="h-4 w-4" />
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-
-      {selectedCenter && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>Book Assessment</CardTitle>
-              <CardDescription>
-                Schedule an assessment at {assessmentCenters.find(c => c.id === selectedCenter)?.name}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-amber-600">
-                  <Flame className="h-5 w-5" />
-                  <span className="font-medium">Popular assessment center! Limited slots available.</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-600">
-                  <Calendar className="h-5 w-5" />
-                  <span>Next available dates: Jun 15, Jun 22, Jun 29</span>
-                </div>
-                <Textarea 
-                  placeholder="Additional details or special requirements..." 
-                  className="min-h-32"
-                  value={bookingDetails}
-                  onChange={(e) => setBookingDetails(e.target.value)}
-                />
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setSelectedCenter(null)}>
-                Cancel
-              </Button>
-              <Button 
-                className="bg-teal-600 hover:bg-teal-700"
-                onClick={() => handleBookAssessment(selectedCenter)}
-              >
-                Book Assessment
-              </Button>
-            </CardFooter>
-          </Card>
+        
+        <div className="md:w-2/3">
+          {activeCenter ? (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <ClipboardCheck className="mr-2 h-5 w-5 text-emirati-sandGold" />
+                  Available Assessments
+                </CardTitle>
+                <CardDescription>
+                  {centers.find(c => c.id === activeCenter)?.name || "Assessment Center"} offers the following assessments
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {assessments.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">No assessment types available for this center</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {assessments.map((assessment) => (
+                      <div key={assessment.id} className="border rounded-md p-4">
+                        <h3 className="text-lg font-medium mb-2">{assessment.name}</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4 mb-3">
+                          {assessment.duration && (
+                            <div className="flex items-center text-sm">
+                              <Clock className="h-4 w-4 mr-2 text-gray-500" />
+                              <span>Duration: {assessment.duration}</span>
+                            </div>
+                          )}
+                          
+                          {assessment.certification_level && (
+                            <div className="flex items-center text-sm">
+                              <Layers className="h-4 w-4 mr-2 text-gray-500" />
+                              <span>Level: {assessment.certification_level}</span>
+                            </div>
+                          )}
+                          
+                          {assessment.cost !== undefined && assessment.cost !== null && (
+                            <div className="flex items-center text-sm">
+                              <DollarSign className="h-4 w-4 mr-2 text-gray-500" />
+                              <span>Cost: {assessment.cost} AED</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {assessment.skill_areas && assessment.skill_areas.length > 0 && (
+                          <div className="mt-3">
+                            <p className="text-sm font-medium mb-1">Skill Areas:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {assessment.skill_areas.map((skill, index) => (
+                                <span 
+                                  key={index}
+                                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800"
+                                >
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {assessment.description && (
+                          <p className="text-sm text-gray-600 mt-3">{assessment.description}</p>
+                        )}
+                        
+                        <div className="mt-4 flex justify-end">
+                          <Button>
+                            Schedule Assessment
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardContent className="p-10 text-center">
+                <ClipboardCheck className="mx-auto h-12 w-12 text-gray-300" />
+                <h3 className="mt-4 text-lg font-medium">Select an Assessment Center</h3>
+                <p className="mt-2 text-gray-500">
+                  Choose an assessment center from the left to view available assessment types
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

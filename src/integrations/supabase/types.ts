@@ -36,6 +36,89 @@ export type Database = {
         }
         Relationships: []
       }
+      assessment_centers: {
+        Row: {
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string | null
+          id: string
+          license_number: string | null
+          location: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          license_number?: string | null
+          location?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          license_number?: string | null
+          location?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      assessment_types: {
+        Row: {
+          center_id: string
+          certification_level: string | null
+          cost: number | null
+          created_at: string
+          description: string | null
+          duration: string | null
+          id: string
+          name: string
+          skill_areas: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          center_id: string
+          certification_level?: string | null
+          cost?: number | null
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          id?: string
+          name: string
+          skill_areas?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          center_id?: string
+          certification_level?: string | null
+          cost?: number | null
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          id?: string
+          name?: string
+          skill_areas?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_types_center_id_fkey"
+            columns: ["center_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_centers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assessments: {
         Row: {
           assessed_by: string | null
@@ -678,6 +761,98 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      training_centers: {
+        Row: {
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string | null
+          id: string
+          license_number: string | null
+          location: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          license_number?: string | null
+          location?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          license_number?: string | null
+          location?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      training_programs: {
+        Row: {
+          center_id: string
+          certification_offered: boolean | null
+          cost: number | null
+          created_at: string
+          description: string | null
+          duration: string | null
+          end_date: string | null
+          id: string
+          name: string
+          skill_level: string | null
+          start_date: string | null
+          target_audience: string | null
+          updated_at: string
+        }
+        Insert: {
+          center_id: string
+          certification_offered?: boolean | null
+          cost?: number | null
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          end_date?: string | null
+          id?: string
+          name: string
+          skill_level?: string | null
+          start_date?: string | null
+          target_audience?: string | null
+          updated_at?: string
+        }
+        Update: {
+          center_id?: string
+          certification_offered?: boolean | null
+          cost?: number | null
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          skill_level?: string | null
+          start_date?: string | null
+          target_audience?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_programs_center_id_fkey"
+            columns: ["center_id"]
+            isOneToOne: false
+            referencedRelation: "training_centers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_permissions: {
         Row: {
