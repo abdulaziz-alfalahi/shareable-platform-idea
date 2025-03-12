@@ -2,6 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { StudentFormData } from "@/components/data-entry/form/types";
 import { Json } from "@/integrations/supabase/types";
+import { StudentRecord } from "@/components/data-entry/types";
 
 /**
  * Creates a new student record in the database
@@ -40,7 +41,11 @@ export const createStudentRecord = async (data: StudentFormData) => {
 /**
  * Fetches all student records from the database
  */
-export const fetchStudentRecords = async () => {
+export const fetchStudentRecords = async (): Promise<{
+  success: boolean;
+  data: StudentRecord[];
+  error?: string;
+}> => {
   try {
     const { data, error } = await supabase
       .from('student_records')
@@ -49,7 +54,17 @@ export const fetchStudentRecords = async () => {
 
     if (error) throw error;
     
-    return { success: true, data };
+    // Transform the data to match our StudentRecord type
+    const transformedData: StudentRecord[] = data.map(record => ({
+      id: record.student_id,
+      name: record.student_name,
+      school: record.school || 'Not specified',
+      grade: record.grade || 'Not specified',
+      lastUpdated: record.updated_at || record.created_at,
+      status: "verified" as const // Default status
+    }));
+    
+    return { success: true, data: transformedData };
   } catch (error) {
     console.error("Error fetching student records:", error);
     return { 
@@ -136,6 +151,47 @@ export const deleteStudentRecord = async (studentId: string) => {
     return { success: true };
   } catch (error) {
     console.error(`Error deleting student with ID ${studentId}:`, error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : "Unknown error occurred" 
+    };
+  }
+};
+
+/**
+ * Exports student records to CSV format
+ */
+export const exportStudentRecordsToCSV = async () => {
+  try {
+    const result = await fetchStudentRecords();
+    
+    if (!result.success) {
+      throw new Error(result.error || "Failed to fetch records for export");
+    }
+    
+    const records = result.data;
+    
+    // Format data for CSV
+    const csvData = records.map(record => ({
+      ID: record.id,
+      Name: record.name,
+      School: record.school,
+      Grade: record.grade,
+      'Last Updated': new Date(record.lastUpdated).toLocaleDateString(),
+      Status: record.status
+    }));
+    
+    // Create CSV content
+    const headers = Object.keys(csvData[0]).join(',');
+    const rows = csvData.map(row => Object.values(row).join(','));
+    const csvContent = [headers, ...rows].join('\n');
+    
+    return { 
+      success: true, 
+      data: csvContent 
+    };
+  } catch (error) {
+    console.error("Error exporting student records:", error);
     return { 
       success: false, 
       error: error instanceof Error ? error.message : "Unknown error occurred" 

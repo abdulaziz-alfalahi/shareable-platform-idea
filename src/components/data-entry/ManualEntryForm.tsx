@@ -4,12 +4,19 @@ import { Card } from "@/components/ui/card";
 import StudentForm from "./form/StudentForm";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/toast";
 
 const ManualEntryForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
+  const { toast } = useToast();
   
   const handleFormSuccess = () => {
     setShowSuccess(true);
+    
+    toast({
+      title: "Success",
+      description: "Student record has been saved successfully",
+    });
     
     // Reset after 5 seconds
     setTimeout(() => {

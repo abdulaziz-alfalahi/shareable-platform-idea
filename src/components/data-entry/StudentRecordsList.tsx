@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/toast";
 import { StudentRecord } from "./types";
 import StudentListControls from "./StudentListControls";
 import StudentRecordsTable from "./StudentRecordsTable";
-import { supabase } from "@/integrations/supabase/client";
+import { fetchStudentRecords, deleteStudentRecord, exportStudentRecordsToCSV } from "@/utils/dataEntryService";
 
 const StudentRecordsList = () => {
   const { toast } = useToast();
@@ -15,29 +15,18 @@ const StudentRecordsList = () => {
   const [students, setStudents] = useState<StudentRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch student records from Supabase
+  // Fetch student records from database
   useEffect(() => {
-    const fetchStudentRecords = async () => {
+    const loadStudentRecords = async () => {
       try {
         setIsLoading(true);
-        const { data, error } = await supabase
-          .from('student_records')
-          .select('*')
-          .order('created_at', { ascending: false });
+        const result = await fetchStudentRecords();
 
-        if (error) throw error;
+        if (!result.success) {
+          throw new Error(result.error);
+        }
 
-        // Transform the data to match our StudentRecord type
-        const transformedData: StudentRecord[] = data.map(record => ({
-          id: record.student_id,
-          name: record.student_name,
-          school: record.school || 'Not specified',
-          grade: record.grade || 'Not specified',
-          lastUpdated: record.updated_at,
-          status: "verified" as const // Default status
-        }));
-
-        setStudents(transformedData);
+        setStudents(result.data);
       } catch (error) {
         console.error("Error fetching student records:", error);
         toast({
@@ -50,7 +39,7 @@ const StudentRecordsList = () => {
       }
     };
 
-    fetchStudentRecords();
+    loadStudentRecords();
   }, [toast]);
 
   const handleSort = (field: keyof StudentRecord) => {
@@ -85,13 +74,11 @@ const StudentRecordsList = () => {
   const handleDelete = async (studentId: string, studentName: string) => {
     if (window.confirm(`Are you sure you want to delete the record for ${studentName}?`)) {
       try {
-        // Delete from Supabase
-        const { error } = await supabase
-          .from('student_records')
-          .delete()
-          .eq('student_id', studentId);
-
-        if (error) throw error;
+        const result = await deleteStudentRecord(studentId);
+        
+        if (!result.success) {
+          throw new Error(result.error);
+        }
 
         // Update local state
         setStudents(prev => prev.filter(student => student.id !== studentId));
@@ -111,33 +98,36 @@ const StudentRecordsList = () => {
     }
   };
 
-  const handleExport = () => {
-    // Export functionality could be expanded to generate CSV/Excel files
-    const exportData = filteredStudents.map(({ id, name, school, grade, lastUpdated, status }) => ({
-      ID: id,
-      Name: name,
-      School: school,
-      Grade: grade,
-      'Last Updated': new Date(lastUpdated).toLocaleDateString(),
-      Status: status
-    }));
+  const handleExport = async () => {
+    try {
+      const result = await exportStudentRecordsToCSV();
+      
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      
+      const csvContent = "data:text/csv;charset=utf-8," + result.data;
+      const encodedUri = encodeURI(csvContent);
+      
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "student_records.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-    const csvContent = "data:text/csv;charset=utf-8," + 
-      Object.keys(exportData[0]).join(",") + "\n" +
-      exportData.map(row => Object.values(row).join(",")).join("\n");
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "student_records.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    toast({
-      title: "Records Exported",
-      description: "Student records have been exported as CSV.",
-    });
+      toast({
+        title: "Records Exported",
+        description: "Student records have been exported as CSV.",
+      });
+    } catch (error) {
+      console.error("Error exporting student records:", error);
+      toast({
+        title: "Export Failed",
+        description: "There was a problem exporting the student records.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
