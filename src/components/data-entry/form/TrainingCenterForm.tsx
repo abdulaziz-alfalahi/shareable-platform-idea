@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/toast";
 import { createTrainingCenter, createTrainingProgram } from "@/utils/trainingCentersService";
 import { X, Plus } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface TrainingCenterFormProps {
   onSuccess?: () => void;
@@ -115,7 +115,6 @@ const TrainingCenterForm: React.FC<TrainingCenterFormProps> = ({ onSuccess }) =>
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simple validation
     if (!formData.name) {
       toast({
         title: "Missing required fields",
@@ -128,7 +127,6 @@ const TrainingCenterForm: React.FC<TrainingCenterFormProps> = ({ onSuccess }) =>
     setIsSaving(true);
     
     try {
-      // First create the center
       const centerResult = await createTrainingCenter({
         name: formData.name,
         location: formData.location,
@@ -142,7 +140,6 @@ const TrainingCenterForm: React.FC<TrainingCenterFormProps> = ({ onSuccess }) =>
         throw new Error(centerResult.error);
       }
       
-      // Fetch the newly created center to get its ID
       const { data: centers } = await supabase
         .from('training_centers')
         .select('id')
@@ -156,7 +153,6 @@ const TrainingCenterForm: React.FC<TrainingCenterFormProps> = ({ onSuccess }) =>
       
       const centerId = centers[0].id;
       
-      // Create programs if they have a name
       for (const program of formData.programs) {
         if (program.name) {
           await createTrainingProgram({
@@ -182,7 +178,6 @@ const TrainingCenterForm: React.FC<TrainingCenterFormProps> = ({ onSuccess }) =>
       setFormData(initialFormData);
       setStep('center');
       
-      // Call the success callback if provided
       if (onSuccess) {
         onSuccess();
       }
@@ -441,7 +436,7 @@ const TrainingCenterForm: React.FC<TrainingCenterFormProps> = ({ onSuccess }) =>
         </CardContent>
         {step === 'programs' && (
           <CardFooter className="flex justify-between">
-            <div></div> {/* Empty div for spacing */}
+            <div></div>
             <Button 
               type="submit" 
               disabled={isSaving}
