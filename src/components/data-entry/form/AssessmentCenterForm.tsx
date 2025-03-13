@@ -1,54 +1,15 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/toast";
 import { createAssessmentCenter, createAssessmentType } from "@/utils/assessmentCentersService";
-import { X, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { initialFormData, AssessmentCenterData } from "./assessment-center/types";
+import CenterDetailsForm from "./assessment-center/CenterDetailsForm";
+import AssessmentsForm from "./assessment-center/AssessmentsForm";
 
 interface AssessmentCenterFormProps {
   onSuccess?: () => void;
 }
-
-interface AssessmentCenterData {
-  name: string;
-  location: string;
-  contact_email: string;
-  contact_phone: string;
-  license_number: string;
-  description: string;
-  assessments: {
-    name: string;
-    description: string;
-    duration: string;
-    skill_areas: string;
-    certification_level: string;
-    cost: string;
-  }[];
-}
-
-const initialFormData: AssessmentCenterData = {
-  name: "",
-  location: "",
-  contact_email: "",
-  contact_phone: "",
-  license_number: "",
-  description: "",
-  assessments: [
-    {
-      name: "",
-      description: "",
-      duration: "",
-      skill_areas: "",
-      certification_level: "",
-      cost: ""
-    }
-  ]
-};
 
 const AssessmentCenterForm: React.FC<AssessmentCenterFormProps> = ({ onSuccess }) => {
   const { toast } = useToast();
@@ -192,202 +153,6 @@ const AssessmentCenterForm: React.FC<AssessmentCenterFormProps> = ({ onSuccess }
     }
   };
 
-  const renderCenterForm = () => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div>
-          <Label htmlFor="name">Center Name <span className="text-red-500">*</span></Label>
-          <Input
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <Label htmlFor="location">Location</Label>
-          <Input
-            id="location"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div>
-          <Label htmlFor="contact_email">Contact Email</Label>
-          <Input
-            id="contact_email"
-            name="contact_email"
-            type="email"
-            value={formData.contact_email}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Label htmlFor="contact_phone">Contact Phone</Label>
-          <Input
-            id="contact_phone"
-            name="contact_phone"
-            value={formData.contact_phone}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      
-      <div>
-        <Label htmlFor="license_number">License Number</Label>
-        <Input
-          id="license_number"
-          name="license_number"
-          value={formData.license_number}
-          onChange={handleChange}
-        />
-      </div>
-      
-      <div>
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          rows={4}
-        />
-      </div>
-      
-      <div className="flex justify-between pt-4">
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={() => setFormData(initialFormData)}
-        >
-          Clear Form
-        </Button>
-        <Button 
-          type="button" 
-          onClick={() => setStep('assessments')}
-        >
-          Next: Add Assessments
-        </Button>
-      </div>
-    </div>
-  );
-
-  const renderAssessmentsForm = () => (
-    <div className="space-y-6">
-      <div className="border rounded-md p-4">
-        <h3 className="text-lg font-medium mb-4">Assessment Types</h3>
-        
-        {formData.assessments.map((assessment, index) => (
-          <div key={index} className="space-y-4 mb-6 pb-6 border-b border-gray-200 last:border-0">
-            <div className="flex justify-between items-center">
-              <h4 className="font-medium">Assessment #{index + 1}</h4>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => removeAssessment(index)}
-                disabled={formData.assessments.length <= 1}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor={`assessment-name-${index}`}>Assessment Name</Label>
-                <Input
-                  id={`assessment-name-${index}`}
-                  value={assessment.name}
-                  onChange={(e) => handleAssessmentChange(index, 'name', e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor={`assessment-duration-${index}`}>Duration</Label>
-                <Input
-                  id={`assessment-duration-${index}`}
-                  value={assessment.duration}
-                  onChange={(e) => handleAssessmentChange(index, 'duration', e.target.value)}
-                  placeholder="e.g. 2 hours, 1 day"
-                />
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor={`assessment-cert-${index}`}>Certification Level</Label>
-                <Input
-                  id={`assessment-cert-${index}`}
-                  value={assessment.certification_level}
-                  onChange={(e) => handleAssessmentChange(index, 'certification_level', e.target.value)}
-                  placeholder="e.g. Basic, Professional"
-                />
-              </div>
-              <div>
-                <Label htmlFor={`assessment-cost-${index}`}>Cost (AED)</Label>
-                <Input
-                  id={`assessment-cost-${index}`}
-                  type="number"
-                  value={assessment.cost}
-                  onChange={(e) => handleAssessmentChange(index, 'cost', e.target.value)}
-                />
-              </div>
-            </div>
-            
-            <div>
-              <Label htmlFor={`assessment-skills-${index}`}>Skill Areas (comma separated)</Label>
-              <Input
-                id={`assessment-skills-${index}`}
-                value={assessment.skill_areas}
-                onChange={(e) => handleAssessmentChange(index, 'skill_areas', e.target.value)}
-                placeholder="e.g. Programming, Design, Communication"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor={`assessment-desc-${index}`}>Description</Label>
-              <Textarea
-                id={`assessment-desc-${index}`}
-                value={assessment.description}
-                onChange={(e) => handleAssessmentChange(index, 'description', e.target.value)}
-                rows={3}
-              />
-            </div>
-          </div>
-        ))}
-        
-        <Button
-          type="button"
-          variant="outline"
-          className="mt-4 w-full"
-          onClick={addAssessment}
-        >
-          <Plus className="h-4 w-4 mr-2" /> Add Another Assessment
-        </Button>
-      </div>
-      
-      <div className="flex justify-between pt-4">
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={() => setStep('center')}
-        >
-          Back to Center Details
-        </Button>
-        <Button 
-          type="submit" 
-          disabled={isSaving}
-        >
-          {isSaving ? "Saving..." : "Save Assessment Center"}
-        </Button>
-      </div>
-    </div>
-  );
-
   return (
     <form onSubmit={handleSubmit}>
       <Card>
@@ -398,7 +163,23 @@ const AssessmentCenterForm: React.FC<AssessmentCenterFormProps> = ({ onSuccess }
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {step === 'center' ? renderCenterForm() : renderAssessmentsForm()}
+          {step === 'center' ? (
+            <CenterDetailsForm 
+              formData={formData}
+              handleChange={handleChange}
+              onClearForm={() => setFormData(initialFormData)}
+              onNext={() => setStep('assessments')}
+            />
+          ) : (
+            <AssessmentsForm
+              formData={formData}
+              onAssessmentChange={handleAssessmentChange}
+              onAddAssessment={addAssessment}
+              onRemoveAssessment={removeAssessment}
+              onBack={() => setStep('center')}
+              isSaving={isSaving}
+            />
+          )}
         </CardContent>
         {step === 'assessments' && (
           <CardFooter className="flex justify-between">
