@@ -1,6 +1,7 @@
 
 import React from "react";
 import TimeRangeSelector from "./TimeRangeSelector";
+import { UaeCard, UaeCardHeader, UaeCardTitle } from "@/components/ui/uae";
 
 interface DashboardHeaderProps {
   timeRange: string;
@@ -12,10 +13,14 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   setTimeRange 
 }) => {
   return (
-    <div className="flex justify-between items-center">
-      <h2 className="text-2xl font-bold">Platform Monitoring Dashboard</h2>
-      <TimeRangeSelector timeRange={timeRange} setTimeRange={setTimeRange} />
-    </div>
+    <UaeCard variant="oasis" className="mb-6">
+      <UaeCardHeader className="flex flex-row items-center justify-between py-4">
+        <UaeCardTitle className="text-2xl font-serif text-emirati-oasisGreen">
+          Platform Monitoring Dashboard
+        </UaeCardTitle>
+        <TimeRangeSelector timeRange={timeRange} setTimeRange={setTimeRange} />
+      </UaeCardHeader>
+    </UaeCard>
   );
 };
 

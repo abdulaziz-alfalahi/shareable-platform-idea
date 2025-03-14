@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import { Users, Briefcase, Calendar, UserCheck } from "lucide-react";
 import DashboardHeader from "./monitoring/DashboardHeader";
-import StatCards from "./monitoring/StatCards";
-import DashboardTabs from "./monitoring/DashboardTabs";
 import { 
   interviewData, 
   candidateStatusData, 
@@ -12,6 +10,9 @@ import {
   userGrowthData,
   statsCards as statsCardsData
 } from "./monitoring/mockData";
+import { UaeStatCard } from "@/components/ui/uae";
+import DashboardTabs from "./monitoring/DashboardTabs";
+import { UaeDecoContainer, UaeDivider } from "@/components/ui/uae";
 
 const MonitoringDashboard = () => {
   const [timeRange, setTimeRange] = useState("6m");
@@ -28,11 +29,31 @@ const MonitoringDashboard = () => {
   }));
 
   return (
-    <div className="space-y-6">
+    <UaeDecoContainer 
+      variant="desert" 
+      decoration="pattern" 
+      patternUrl="https://www.transparenttextures.com/patterns/arabesque.png"
+      className="space-y-6"
+    >
       <DashboardHeader timeRange={timeRange} setTimeRange={setTimeRange} />
 
       {/* Stats Cards */}
-      <StatCards stats={statsCards} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {statsCards.map((stat, index) => (
+          <UaeStatCard
+            key={index}
+            variant="desert"
+            title={stat.title}
+            value={stat.value}
+            change={stat.change}
+            trend={stat.trend}
+            icon={stat.icon}
+            description={stat.description}
+          />
+        ))}
+      </div>
+
+      <UaeDivider variant="gradient" />
 
       {/* Charts */}
       <DashboardTabs 
@@ -42,7 +63,7 @@ const MonitoringDashboard = () => {
         advisorySessionsData={advisorySessionsData}
         userGrowthData={userGrowthData}
       />
-    </div>
+    </UaeDecoContainer>
   );
 };
 
