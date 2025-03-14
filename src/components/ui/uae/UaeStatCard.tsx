@@ -3,26 +3,21 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import { UaeCard, UaeCardContent, UaeCardDescription, UaeCardHeader, UaeCardTitle } from "./UaeCard";
 
 const uaeStatCardVariants = cva(
-  "rounded-xl overflow-hidden transition-all duration-200",
+  "transition-all",
   {
     variants: {
       variant: {
-        default: "bg-white border border-gray-200 shadow-sm",
-        desert: "bg-emirati-sandBeige/50 border border-emirati-desertGold/30",
-        oasis: "bg-emirati-oasisGreen/10 border border-emirati-oasisGreen/30",
-        flag: "bg-white border-2 border-red-600/70",
-      },
-      size: {
-        default: "p-6",
-        sm: "p-4",
-        lg: "p-8",
+        default: "",
+        desert: "bg-gradient-to-br from-emirati-sandBeige/30 to-emirati-desertGold/10",
+        oasis: "bg-gradient-to-br from-emirati-oasisGreen/30 to-emirati-oasisGreen/5",
+        flag: "bg-gradient-to-br from-red-600/10 to-red-500/5 border-l-4 border-red-600",
       },
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
     },
   }
 );
@@ -30,11 +25,11 @@ const uaeStatCardVariants = cva(
 export interface UaeStatCardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof uaeStatCardVariants> {
+  icon?: React.ReactNode;
   title: string;
   value: string | number;
-  icon?: React.ReactNode;
-  trend?: "up" | "down";
   change?: string;
+  trend?: "up" | "down";
   description?: string;
 }
 
@@ -42,52 +37,49 @@ const UaeStatCard = React.forwardRef<HTMLDivElement, UaeStatCardProps>(
   ({ 
     className, 
     variant, 
-    size, 
+    icon, 
     title, 
     value, 
-    icon, 
-    trend, 
     change, 
-    description,
+    trend, 
+    description, 
     ...props 
-  }, ref) => (
-    <div
-      ref={ref}
-      className={cn(uaeStatCardVariants({ variant, size, className }))}
-      {...props}
-    >
-      <div className="flex justify-between items-start">
-        <div>
-          <p className="text-sm font-medium text-muted-foreground mb-1">{title}</p>
-          <div className="flex items-baseline">
-            <h3 className="text-2xl font-bold">{value}</h3>
-            {trend && change && (
-              <p className={`ml-2 text-sm font-medium ${
-                trend === "up" ? "text-green-500" : "text-red-500"
-              }`}>
-                <span className="inline-flex items-center">
-                  {trend === "up" ? (
-                    <TrendingUp className="h-3 w-3 mr-1" />
-                  ) : (
-                    <TrendingDown className="h-3 w-3 mr-1" />
-                  )}
+  }, ref) => {
+    return (
+      <UaeCard ref={ref} className={cn(uaeStatCardVariants({ variant, className }))} {...props}>
+        <UaeCardHeader className="flex flex-row items-center justify-between pb-2">
+          <UaeCardTitle className="text-sm font-medium">{title}</UaeCardTitle>
+          {icon && <div className="w-4 h-4 text-muted-foreground">{icon}</div>}
+        </UaeCardHeader>
+        <UaeCardContent>
+          <div className="text-2xl font-bold">{value}</div>
+          {(change || trend) && (
+            <div className="flex items-center mt-1">
+              {trend && (
+                <span className={`mr-1 ${trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+                  {trend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                </span>
+              )}
+              {change && (
+                <span 
+                  className={`text-xs font-medium ${
+                    trend === 'up' ? 'text-green-500' : trend === 'down' ? 'text-red-500' : ''
+                  }`}
+                >
                   {change}
                 </span>
-              </p>
-            )}
-          </div>
-          {description && (
-            <p className="text-xs text-muted-foreground mt-1">{description}</p>
+              )}
+            </div>
           )}
-        </div>
-        {icon && (
-          <div className="self-start">
-            {icon}
-          </div>
-        )}
-      </div>
-    </div>
-  )
+          {description && (
+            <UaeCardDescription className="mt-2 text-xs">
+              {description}
+            </UaeCardDescription>
+          )}
+        </UaeCardContent>
+      </UaeCard>
+    );
+  }
 );
 
 UaeStatCard.displayName = "UaeStatCard";
