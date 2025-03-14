@@ -13,6 +13,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import MobileNavigation from "./MobileNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
+import RoleNotifications from "@/components/notifications/RoleNotifications";
+import { UserRole } from "@/components/notifications/RoleNotifications";
 
 // Define our personas
 const personas = [
@@ -30,6 +32,7 @@ const personas = [
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPersona, setCurrentPersona] = useState(personas[0]);
+  const [showNotificationsPanel, setShowNotificationsPanel] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
@@ -39,6 +42,23 @@ const Header = () => {
     if (isMobile) {
       setMobileMenuOpen(false);
     }
+  };
+
+  // Map persona ID to user role for notifications
+  const getCurrentRole = (): UserRole => {
+    const roleMap: Record<string, UserRole> = {
+      "student": "student",
+      "parent": "parent",
+      "advisor": "advisor", 
+      "recruiter": "recruiter",
+      "school": "admin",
+      "university": "admin",
+      "training": "training",
+      "assessment": "assessment",
+      "admin": "admin"
+    };
+    
+    return roleMap[currentPersona.id] || "student";
   };
 
   return (
@@ -77,6 +97,13 @@ const Header = () => {
           <Button variant="ghost" size="icon" className="hidden sm:flex">
             <Search className="h-5 w-5" />
           </Button>
+          
+          {/* Role-based notifications */}
+          <RoleNotifications
+            role={getCurrentRole()}
+            showNotificationsPanel={showNotificationsPanel}
+            setShowNotificationsPanel={setShowNotificationsPanel}
+          />
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
