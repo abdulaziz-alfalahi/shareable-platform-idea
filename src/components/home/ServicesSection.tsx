@@ -13,7 +13,7 @@ import {
   Coffee,
   Compass,
   Landmark,
-  Palmtree
+  PalmTree
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
