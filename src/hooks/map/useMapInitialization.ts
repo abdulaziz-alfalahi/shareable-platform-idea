@@ -1,5 +1,5 @@
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { toast } from '@/components/ui/use-toast';
 
@@ -19,10 +19,13 @@ const useMapInitialization = ({
   onMapLoaded
 }: UseMapInitializationProps) => {
   const map = useRef<mapboxgl.Map | null>(null);
+  const [initializationAttempted, setInitializationAttempted] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
     if (!mapboxToken) return;
+    
+    setInitializationAttempted(true);
 
     try {
       mapboxgl.accessToken = mapboxToken;
@@ -36,7 +39,9 @@ const useMapInitialization = ({
         container: containerRef.current,
         style: 'mapbox://styles/mapbox/streets-v11',
         center: initialCenter,
-        zoom: initialZoom
+        zoom: initialZoom,
+        failIfMajorPerformanceCaveat: false,
+        attributionControl: false // Removes attribution control which can cause issues in some cases
       });
 
       // Add navigation controls
@@ -44,6 +49,11 @@ const useMapInitialization = ({
         new mapboxgl.NavigationControl(),
         'top-right'
       );
+
+      // Add attribution control in a better position
+      map.current.addControl(new mapboxgl.AttributionControl({
+        compact: true
+      }), 'bottom-right');
 
       // Call onMapLoaded callback when map is loaded
       map.current.on('load', () => {
@@ -70,12 +80,23 @@ const useMapInitialization = ({
       console.error('Error initializing map:', error);
       toast({
         title: 'Map Error',
-        description: 'Failed to initialize map. Please check your Mapbox token.',
+        description: 'Failed to initialize map. Please check your network connection and try again.',
         variant: 'destructive'
       });
       return undefined;
     }
   }, [mapboxToken, containerRef, initialCenter, initialZoom, onMapLoaded]);
+
+  useEffect(() => {
+    // Show a toast if initialization was attempted but map is still null
+    if (initializationAttempted && !map.current) {
+      toast({
+        title: 'Map Initialization Failed',
+        description: 'The map could not be initialized. Please try refreshing the page or use a different browser.',
+        variant: 'destructive'
+      });
+    }
+  }, [initializationAttempted]);
 
   return map;
 };

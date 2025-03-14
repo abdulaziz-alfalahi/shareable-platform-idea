@@ -22,6 +22,9 @@ const TokenInput: React.FC<TokenInputProps> = ({
   setMapboxToken,
   setTokenSubmitted
 }) => {
+  // Public demo token - limited usage, should be replaced in production
+  const defaultToken = 'pk.eyJ1IjoiZW1pcmF0aXBsYXRmb3JtIiwiYSI6ImNscHp3dDYyMzAyMmsyanBwenM0ZDd4eHoifQ.YTG7pCPxbz-6zDNL4OJeOQ';
+  
   const handleTokenSubmit = () => {
     if (!mapboxToken) {
       toast({
@@ -45,13 +48,18 @@ const TokenInput: React.FC<TokenInputProps> = ({
     setTokenSubmitted(true);
   };
 
+  const useDefaultToken = () => {
+    setMapboxToken(defaultToken);
+    setTokenSubmitted(true);
+  };
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Mapbox Integration</CardTitle>
         <CardDescription>
-          To use the map feature, please enter your Mapbox token. 
-          You can get a free token at <a href="https://www.mapbox.com/" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">mapbox.com</a>
+          To use the map feature, please enter your Mapbox token or use our demo token.
+          For full functionality, you can get a free token at <a href="https://www.mapbox.com/" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">mapbox.com</a>
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -66,14 +74,25 @@ const TokenInput: React.FC<TokenInputProps> = ({
           </AlertDescription>
         </Alert>
 
-        <div className="flex gap-2">
-          <Input 
-            placeholder="Enter your Mapbox token (pk.xxx...)" 
-            value={mapboxToken}
-            onChange={(e) => setMapboxToken(e.target.value)}
-            className="flex-1"
-          />
-          <Button onClick={handleTokenSubmit}>Submit</Button>
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
+            <Input 
+              placeholder="Enter your Mapbox token (pk.xxx...)" 
+              value={mapboxToken}
+              onChange={(e) => setMapboxToken(e.target.value)}
+              className="flex-1"
+            />
+            <Button onClick={handleTokenSubmit}>Submit</Button>
+          </div>
+          <div className="flex justify-end">
+            <Button 
+              variant="outline" 
+              onClick={useDefaultToken}
+              className="text-emirati-oasisGreen"
+            >
+              Use Demo Token
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
