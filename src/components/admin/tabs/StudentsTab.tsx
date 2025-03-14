@@ -20,14 +20,14 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
 }) => {
   // Sample skill gap data for the new component
   const skillGapData = [
-    { skill: "AI & Machine Learning", demandScore: 85, supplyScore: 42, gap: 43, trend: "increasing", sector: "Technology" },
-    { skill: "Cybersecurity", demandScore: 92, supplyScore: 55, gap: 37, trend: "increasing", sector: "Technology" },
-    { skill: "Data Analysis", demandScore: 78, supplyScore: 48, gap: 30, trend: "stable", sector: "Business" },
-    { skill: "Digital Marketing", demandScore: 72, supplyScore: 45, gap: 27, trend: "increasing", sector: "Marketing" },
-    { skill: "UX/UI Design", demandScore: 65, supplyScore: 40, gap: 25, trend: "stable", sector: "Design" },
-    { skill: "Blockchain", demandScore: 55, supplyScore: 32, gap: 23, trend: "increasing", sector: "Technology" },
-    { skill: "Project Management", demandScore: 70, supplyScore: 52, gap: 18, trend: "decreasing", sector: "Management" }
-  ] as const;
+    { skill: "AI & Machine Learning", demandScore: 85, supplyScore: 42, gap: 43, trend: "increasing" as const, sector: "Technology" },
+    { skill: "Cybersecurity", demandScore: 92, supplyScore: 55, gap: 37, trend: "increasing" as const, sector: "Technology" },
+    { skill: "Data Analysis", demandScore: 78, supplyScore: 48, gap: 30, trend: "stable" as const, sector: "Business" },
+    { skill: "Digital Marketing", demandScore: 72, supplyScore: 45, gap: 27, trend: "increasing" as const, sector: "Marketing" },
+    { skill: "UX/UI Design", demandScore: 65, supplyScore: 40, gap: 25, trend: "stable" as const, sector: "Design" },
+    { skill: "Blockchain", demandScore: 55, supplyScore: 32, gap: 23, trend: "increasing" as const, sector: "Technology" },
+    { skill: "Project Management", demandScore: 70, supplyScore: 52, gap: 18, trend: "decreasing" as const, sector: "Management" }
+  ];
 
   return (
     <>
