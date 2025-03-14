@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import HomePage from './pages/HomePage';
+import Index from './pages/Index';
 import JobApplications from './pages/JobApplications';
 import { ThemeProvider } from "./components/ui/theme-provider";
 import { NotificationsMenu } from "./components/notifications/NotificationsMenu";
@@ -29,7 +29,7 @@ function App() {
       <ThemeProvider defaultTheme="light" storageKey="vite-react-theme">
         <Router>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<Index />} />
             <Route path="/JobApplications" element={<JobApplications />} />
           </Routes>
         </Router>
