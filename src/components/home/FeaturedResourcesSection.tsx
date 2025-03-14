@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, TrendingUp, Coffee, PalmTree, Compass } from "lucide-react";
+import { Users, TrendingUp, Coffee, Palmtree, Compass } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const FeaturedResourcesSection = () => {
@@ -25,7 +25,7 @@ const FeaturedResourcesSection = () => {
       tags: ["UAE Culture", "Professional"]
     },
     {
-      icon: <PalmTree className="text-emirati-oasisGreen h-6 w-6" />,
+      icon: <Palmtree className="text-emirati-oasisGreen h-6 w-6" />,
       title: "Local Industry Insights",
       description: "Stay updated with UAE's growing industries and emerging opportunities.",
       tags: ["Local Market", "Trends"]
