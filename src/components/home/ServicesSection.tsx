@@ -13,7 +13,11 @@ import {
   Coffee,
   Compass,
   Landmark,
-  Palmtree
+  School,
+  Clock,
+  TrendingUp,
+  Heart,
+  PiggyBank
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -45,17 +49,45 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, description, lin
 const ServicesSection = () => {
   const services = [
     {
+      icon: <School className="w-8 h-8" />,
+      title: "Early Education",
+      description: "Academic guidance for school students to identify strengths and potential career paths.",
+      link: "/student-dashboard",
+      iconBg: "bg-emirati-camelBrown/10"
+    },
+    {
       icon: <GraduationCap className="w-8 h-8" />,
-      title: "Career Development",
-      description: "Personalized career pathways, skills assessment, and development plans tailored to your goals.",
+      title: "University Pathways",
+      description: "Find the best university programs aligned with your career goals and interests.",
       link: "/career-passport",
       iconBg: "bg-emirati-desertGold/10"
     },
     {
+      icon: <Compass className="w-8 h-8" />,
+      title: "Career Exploration",
+      description: "Discover potential career paths tailored to your skills, interests, and the UAE market needs.",
+      link: "/mindmap",
+      iconBg: "bg-emirati-oasisGreen/10"
+    },
+    {
+      icon: <Building className="w-8 h-8" />,
+      title: "Internship Programs",
+      description: "Gain practical experience through internships with leading UAE organizations.",
+      link: "/job-location-matching",
+      iconBg: "bg-emirati-camelBrown/10"
+    },
+    {
       icon: <Briefcase className="w-8 h-8" />,
       title: "Job Matching",
-      description: "Find the perfect job opportunities that match your skills, preferences, and career aspirations.",
+      description: "Find job opportunities that align with your skills, qualifications, and career aspirations.",
       link: "/job-applications",
+      iconBg: "bg-emirati-desertGold/10"
+    },
+    {
+      icon: <TrendingUp className="w-8 h-8" />,
+      title: "Skills Development",
+      description: "Enhance your professional capabilities through targeted training and certification programs.",
+      link: "/training-centers",
       iconBg: "bg-emirati-oasisGreen/10"
     },
     {
@@ -66,27 +98,6 @@ const ServicesSection = () => {
       iconBg: "bg-emirati-camelBrown/10"
     },
     {
-      icon: <BookOpen className="w-8 h-8" />,
-      title: "Training Programs",
-      description: "Access specialized training and courses to enhance your skills and qualifications.",
-      link: "/training-centers",
-      iconBg: "bg-emirati-desertGold/10"
-    },
-    {
-      icon: <Building className="w-8 h-8" />,
-      title: "Internship Opportunities",
-      description: "Gain practical experience through internships with leading UAE organizations.",
-      link: "/job-location-matching",
-      iconBg: "bg-emirati-oasisGreen/10"
-    },
-    {
-      icon: <Map className="w-8 h-8" />,
-      title: "Platform Mindmap",
-      description: "Visualize all user journeys through our comprehensive career development ecosystem.",
-      link: "/mindmap",
-      iconBg: "bg-emirati-camelBrown/10"
-    },
-    {
       icon: <Award className="w-8 h-8" />,
       title: "Portfolio Building",
       description: "Create a compelling digital portfolio that showcases your achievements and capabilities.",
@@ -94,10 +105,31 @@ const ServicesSection = () => {
       iconBg: "bg-emirati-desertGold/10"
     },
     {
-      icon: <Database className="w-8 h-8" />,
-      title: "Data Entry",
-      description: "Upload and manage student academic records and reports for platform integration.",
-      link: "/data-entry",
+      icon: <Clock className="w-8 h-8" />,
+      title: "Mid-Career Transition",
+      description: "Navigate career changes with personalized guidance and reskilling opportunities.",
+      link: "/career-passport",
+      iconBg: "bg-emirati-oasisGreen/10"
+    },
+    {
+      icon: <BookOpen className="w-8 h-8" />,
+      title: "Continuous Learning",
+      description: "Access lifelong learning resources to stay relevant in an evolving job market.",
+      link: "/training-centers",
+      iconBg: "bg-emirati-camelBrown/10"
+    },
+    {
+      icon: <Heart className="w-8 h-8" />,
+      title: "Work-Life Balance",
+      description: "Strategies and resources for maintaining a healthy balance throughout your career journey.",
+      link: "/student-dashboard",
+      iconBg: "bg-emirati-desertGold/10"
+    },
+    {
+      icon: <PiggyBank className="w-8 h-8" />,
+      title: "Retirement Planning",
+      description: "Prepare for a fulfilling retirement with financial guidance and post-career opportunities.",
+      link: "/mindmap",
       iconBg: "bg-emirati-oasisGreen/10"
     },
   ];
