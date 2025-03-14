@@ -1,64 +1,121 @@
 
 import React, { useState } from "react";
-import { 
-  Upload, 
-  File, 
-  Plus, 
-  Check, 
-  List,
-  Search,
-  Download,
-  User,
-  X
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { useLocation } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/toast";
-import DataEntryFileUpload from "@/components/data-entry/DataEntryFileUpload";
-import ManualEntryForm from "@/components/data-entry/ManualEntryForm";
-import StudentRecordsList from "@/components/data-entry/StudentRecordsList";
+import { School, GraduationCap, Building, Target } from "lucide-react";
+import TrainingCenterForm from "@/components/data-entry/form/TrainingCenterForm";
+import AssessmentCenterForm from "@/components/data-entry/form/AssessmentCenterForm";
+import SchoolDataEntryForm from "@/components/data-entry/form/SchoolDataEntryForm";
+import UniversityDataEntryForm from "@/components/data-entry/form/UniversityDataEntryForm";
+import StudentForm from "@/components/data-entry/form/StudentForm";
 
 const DataEntryPage = () => {
-  const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("upload");
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(() => {
+    // Set initial tab based on location state or default to "students"
+    if (location.state?.tab) {
+      return location.state.tab;
+    }
+    return "students";
+  });
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-emirati-deepBlue mb-2">Student Data Entry</h1>
-        <p className="text-gray-600">
-          Upload student records or manually enter student grades and reports. This data will be integrated 
-          into the platform until direct connections with educational institutions are established.
-        </p>
-      </div>
-
+      <h1 className="text-3xl font-bold text-emirati-deepBlue mb-6">Data Entry</h1>
+      
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 mb-6">
-          <TabsTrigger value="upload" className="flex items-center gap-2">
-            <Upload className="h-4 w-4" /> Batch Upload
+        <TabsList className="grid grid-cols-5 mb-8">
+          <TabsTrigger value="students" className="flex items-center">
+            <School className="mr-2 h-4 w-4" />
+            <span>Students</span>
           </TabsTrigger>
-          <TabsTrigger value="manual" className="flex items-center gap-2">
-            <Plus className="h-4 w-4" /> Manual Entry
+          <TabsTrigger value="schools" className="flex items-center">
+            <School className="mr-2 h-4 w-4" />
+            <span>Schools</span>
           </TabsTrigger>
-          <TabsTrigger value="manage" className="flex items-center gap-2">
-            <List className="h-4 w-4" /> Manage Records
+          <TabsTrigger value="universities" className="flex items-center">
+            <GraduationCap className="mr-2 h-4 w-4" />
+            <span>Universities</span>
+          </TabsTrigger>
+          <TabsTrigger value="training" className="flex items-center">
+            <Building className="mr-2 h-4 w-4" />
+            <span>Training</span>
+          </TabsTrigger>
+          <TabsTrigger value="assessment" className="flex items-center">
+            <Target className="mr-2 h-4 w-4" />
+            <span>Assessment</span>
           </TabsTrigger>
         </TabsList>
-
-        <TabsContent value="upload">
-          <DataEntryFileUpload />
+        
+        <TabsContent value="students">
+          <Card>
+            <CardHeader>
+              <CardTitle>Student Records</CardTitle>
+              <CardDescription>
+                Enter student information, grades, and academic records
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <StudentForm />
+            </CardContent>
+          </Card>
         </TabsContent>
-
-        <TabsContent value="manual">
-          <ManualEntryForm />
+        
+        <TabsContent value="schools">
+          <Card>
+            <CardHeader>
+              <CardTitle>School Data Entry</CardTitle>
+              <CardDescription>
+                Register school details and upload student grades and reports
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <SchoolDataEntryForm />
+            </CardContent>
+          </Card>
         </TabsContent>
-
-        <TabsContent value="manage">
-          <StudentRecordsList />
+        
+        <TabsContent value="universities">
+          <Card>
+            <CardHeader>
+              <CardTitle>University Data Entry</CardTitle>
+              <CardDescription>
+                Register university programs, upload grades, reports, and training details
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <UniversityDataEntryForm />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="training">
+          <Card>
+            <CardHeader>
+              <CardTitle>Training Center Data Entry</CardTitle>
+              <CardDescription>
+                Register training centers and their offered programs
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TrainingCenterForm />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="assessment">
+          <Card>
+            <CardHeader>
+              <CardTitle>Assessment Center Data Entry</CardTitle>
+              <CardDescription>
+                Register assessment centers and the types of assessments they offer
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AssessmentCenterForm />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

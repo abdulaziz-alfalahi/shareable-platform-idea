@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Map, User, Search, Briefcase, GraduationCap, Database, Menu, X, ChevronDown } from "lucide-react";
+import { Map, User, Search, Briefcase, GraduationCap, Database, Menu, X, ChevronDown, School, Building, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,6 +17,10 @@ const personas = [
   { id: "parent", name: "Parent", path: "/student-dashboard", icon: <User className="h-4 w-4 mr-2" /> },
   { id: "advisor", name: "Career Advisor", path: "/advisor-dashboard", icon: <User className="h-4 w-4 mr-2" /> },
   { id: "recruiter", name: "Recruiter", path: "/recruiter-dashboard", icon: <Briefcase className="h-4 w-4 mr-2" /> },
+  { id: "school", name: "School Administrator", path: "/data-entry", icon: <School className="h-4 w-4 mr-2" /> },
+  { id: "university", name: "University", path: "/data-entry", icon: <GraduationCap className="h-4 w-4 mr-2" /> },
+  { id: "training", name: "Training Center", path: "/training-centers", icon: <Building className="h-4 w-4 mr-2" /> },
+  { id: "assessment", name: "Assessment Center", path: "/assessment-centers", icon: <Target className="h-4 w-4 mr-2" /> },
   { id: "admin", name: "System Administrator", path: "/admin-dashboard", icon: <Database className="h-4 w-4 mr-2" /> },
 ];
 
@@ -98,7 +101,6 @@ const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          {/* Persona Switcher Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="flex items-center">
@@ -138,7 +140,6 @@ const Header = () => {
         </div>
       </div>
       
-      {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="md:hidden px-4 pt-2 pb-4 bg-white border-t border-gray-100">
           <nav className="flex flex-col space-y-3">
@@ -185,7 +186,6 @@ const Header = () => {
               <Database className="w-4 h-4 mr-1" /> Data Entry
             </Link>
             
-            {/* Persona Switcher in Mobile Menu */}
             <div className="pt-2 border-t border-gray-100">
               <p className="text-sm font-medium text-gray-500 mb-2">Switch Persona</p>
               {personas.map((persona) => (

@@ -1,63 +1,107 @@
 
 import React, { useState, useEffect } from "react";
-import { ClipboardCheck, Search, MapPin, Phone, Mail, Info, Clock, Layers, DollarSign } from "lucide-react";
+import { Target, Map, User, Search, Phone, Mail, Info, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/toast";
-import { fetchAssessmentCenters, fetchAssessmentTypes, AssessmentCenter, AssessmentType } from "@/utils/assessmentCentersService";
+
+// Mock data - would be replaced with API calls to backend
+const mockAssessmentCenters = [
+  {
+    id: '1',
+    name: 'Emirates Skills Assessment Center',
+    location: 'Abu Dhabi',
+    contact_email: 'contact@emiratesskills.ae',
+    contact_phone: '+971-2-123-4567',
+    description: 'The leading assessment center focusing on technical and vocational skills development.',
+    assessments: [
+      {
+        id: '101',
+        name: 'Engineering Aptitude Assessment',
+        description: 'Comprehensive assessment of engineering skills and aptitude.',
+        duration: '3 hours',
+        skill_areas: ['Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering'],
+        certification_level: 'Professional',
+        cost: 850
+      },
+      {
+        id: '102',
+        name: 'Digital Skills Assessment',
+        description: 'Evaluation of digital literacy and technical skills.',
+        duration: '2 hours',
+        skill_areas: ['Programming', 'Data Analysis', 'Digital Marketing'],
+        certification_level: 'Intermediate',
+        cost: 650
+      }
+    ]
+  },
+  {
+    id: '2',
+    name: 'Career Readiness Center',
+    location: 'Dubai',
+    contact_email: 'info@career-readiness.ae',
+    contact_phone: '+971-4-765-4321',
+    description: 'Specialized in career readiness assessments and professional development evaluations.',
+    assessments: [
+      {
+        id: '201',
+        name: 'Leadership Assessment',
+        description: 'Comprehensive assessment of leadership capabilities and potential.',
+        duration: '4 hours',
+        skill_areas: ['Team Leadership', 'Strategic Thinking', 'Change Management'],
+        certification_level: 'Executive',
+        cost: 1200
+      },
+      {
+        id: '202',
+        name: 'Business Communication Assessment',
+        description: 'Evaluation of business communication skills.',
+        duration: '2 hours',
+        skill_areas: ['Written Communication', 'Presentation Skills', 'Negotiation'],
+        certification_level: 'Professional',
+        cost: 750
+      }
+    ]
+  }
+];
 
 const AssessmentCenters = () => {
   const { toast } = useToast();
-  const [centers, setCenters] = useState<AssessmentCenter[]>([]);
-  const [activeCenter, setActiveCenter] = useState<string | null>(null);
-  const [assessments, setAssessments] = useState<AssessmentType[]>([]);
+  const [centers, setCenters] = useState([]);
+  const [activeCenter, setActiveCenter] = useState(null);
+  const [assessments, setAssessments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadAssessmentCenters();
-  }, []);
-
-  const loadAssessmentCenters = async () => {
-    try {
-      setIsLoading(true);
-      const result = await fetchAssessmentCenters();
-      
-      if (!result.success) {
-        throw new Error(result.error);
+    // Simulate API call to load centers
+    const loadCenters = async () => {
+      try {
+        setIsLoading(true);
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 800));
+        setCenters(mockAssessmentCenters);
+      } catch (error) {
+        console.error("Error loading assessment centers:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load assessment centers",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
       }
-      
-      setCenters(result.data);
-    } catch (error) {
-      console.error("Error loading assessment centers:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load assessment centers",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
+    
+    loadCenters();
+  }, [toast]);
 
-  const loadCenterAssessments = async (centerId: string) => {
-    try {
-      const result = await fetchAssessmentTypes(centerId);
-      
-      if (!result.success) {
-        throw new Error(result.error);
-      }
-      
-      setAssessments(result.data);
-      setActiveCenter(centerId);
-    } catch (error) {
-      console.error("Error loading assessments:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load assessment types",
-        variant: "destructive"
-      });
+  const loadCenterAssessments = (centerId) => {
+    const center = centers.find(c => c.id === centerId);
+    if (center) {
+      setAssessments(center.assessments || []);
+      setActiveCenter(center);
     }
   };
 
@@ -71,7 +115,7 @@ const AssessmentCenters = () => {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-emirati-deepBlue mb-2">Assessment Centers Directory</h1>
         <p className="text-gray-600">
-          Discover assessment centers that evaluate and certify skills across various domains.
+          Explore assessment centers and their available assessment types to evaluate your skills and qualifications.
         </p>
       </div>
       
@@ -80,11 +124,11 @@ const AssessmentCenters = () => {
           <Card className="mb-6">
             <CardHeader>
               <CardTitle className="flex items-center">
-                <ClipboardCheck className="mr-2 h-5 w-5 text-emirati-sandGold" />
+                <Target className="mr-2 h-5 w-5 text-emirati-oasisGreen" />
                 Assessment Centers
               </CardTitle>
               <CardDescription>
-                Explore accredited assessment and certification centers
+                Browse accredited assessment centers
               </CardDescription>
               <div className="mt-2">
                 <div className="relative">
@@ -114,14 +158,14 @@ const AssessmentCenters = () => {
                     <div 
                       key={center.id}
                       className={`p-3 rounded-md cursor-pointer transition-colors ${
-                        activeCenter === center.id ? 'bg-amber-50 border border-amber-200' : 'hover:bg-gray-50'
+                        activeCenter && activeCenter.id === center.id ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'
                       }`}
                       onClick={() => loadCenterAssessments(center.id)}
                     >
                       <h3 className="font-medium text-base">{center.name}</h3>
                       {center.location && (
                         <div className="flex items-center text-sm text-gray-500 mt-1">
-                          <MapPin className="h-3.5 w-3.5 mr-1" />
+                          <Map className="h-3.5 w-3.5 mr-1" />
                           {center.location}
                         </div>
                       )}
@@ -146,17 +190,17 @@ const AssessmentCenters = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <ClipboardCheck className="mr-2 h-5 w-5 text-emirati-sandGold" />
+                  <Target className="mr-2 h-5 w-5 text-emirati-oasisGreen" />
                   Available Assessments
                 </CardTitle>
                 <CardDescription>
-                  {centers.find(c => c.id === activeCenter)?.name || "Assessment Center"} offers the following assessments
+                  {activeCenter.name} offers the following assessment types
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {assessments.length === 0 ? (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">No assessment types available for this center</p>
+                    <p className="text-gray-500">No assessments available for this center</p>
                   </div>
                 ) : (
                   <div className="space-y-6">
@@ -167,35 +211,32 @@ const AssessmentCenters = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4 mb-3">
                           {assessment.duration && (
                             <div className="flex items-center text-sm">
-                              <Clock className="h-4 w-4 mr-2 text-gray-500" />
+                              <Info className="h-4 w-4 mr-2 text-gray-500" />
                               <span>Duration: {assessment.duration}</span>
                             </div>
                           )}
                           
                           {assessment.certification_level && (
                             <div className="flex items-center text-sm">
-                              <Layers className="h-4 w-4 mr-2 text-gray-500" />
+                              <CheckCircle className="h-4 w-4 mr-2 text-gray-500" />
                               <span>Level: {assessment.certification_level}</span>
                             </div>
                           )}
                           
-                          {assessment.cost !== undefined && assessment.cost !== null && (
+                          {assessment.cost !== undefined && (
                             <div className="flex items-center text-sm">
-                              <DollarSign className="h-4 w-4 mr-2 text-gray-500" />
+                              <Info className="h-4 w-4 mr-2 text-gray-500" />
                               <span>Cost: {assessment.cost} AED</span>
                             </div>
                           )}
                         </div>
                         
                         {assessment.skill_areas && assessment.skill_areas.length > 0 && (
-                          <div className="mt-3">
-                            <p className="text-sm font-medium mb-1">Skill Areas:</p>
-                            <div className="flex flex-wrap gap-2">
+                          <div className="mb-3">
+                            <p className="text-sm font-medium text-gray-500">Skill Areas:</p>
+                            <div className="flex flex-wrap gap-2 mt-1">
                               {assessment.skill_areas.map((skill, index) => (
-                                <span 
-                                  key={index}
-                                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800"
-                                >
+                                <span key={index} className="bg-emirati-sandBeige/10 text-xs rounded-full px-3 py-1">
                                   {skill}
                                 </span>
                               ))}
@@ -204,7 +245,7 @@ const AssessmentCenters = () => {
                         )}
                         
                         {assessment.description && (
-                          <p className="text-sm text-gray-600 mt-3">{assessment.description}</p>
+                          <p className="text-sm text-gray-600 mt-2">{assessment.description}</p>
                         )}
                         
                         <div className="mt-4 flex justify-end">
@@ -221,7 +262,7 @@ const AssessmentCenters = () => {
           ) : (
             <Card>
               <CardContent className="p-10 text-center">
-                <ClipboardCheck className="mx-auto h-12 w-12 text-gray-300" />
+                <Target className="mx-auto h-12 w-12 text-gray-300" />
                 <h3 className="mt-4 text-lg font-medium">Select an Assessment Center</h3>
                 <p className="mt-2 text-gray-500">
                   Choose an assessment center from the left to view available assessment types
