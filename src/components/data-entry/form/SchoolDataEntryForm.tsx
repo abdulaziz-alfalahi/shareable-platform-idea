@@ -1,13 +1,9 @@
 
 import React, { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileUp, Plus, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/toast";
+import SchoolInfoForm from "./school/SchoolInfoForm";
+import GradeUploadForm from "./school/GradeUploadForm";
 
 const SchoolDataEntryForm = () => {
   const { toast } = useToast();
@@ -141,140 +137,21 @@ const SchoolDataEntryForm = () => {
       </TabsList>
       
       <TabsContent value="school-info">
-        <form onSubmit={handleSchoolSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="space-y-2">
-              <Label htmlFor="name">School Name *</Label>
-              <Input 
-                id="name" 
-                name="name" 
-                value={schoolInfo.name} 
-                onChange={handleSchoolInfoChange} 
-                required 
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="location">Location *</Label>
-              <Input 
-                id="location" 
-                name="location" 
-                value={schoolInfo.location} 
-                onChange={handleSchoolInfoChange} 
-                required 
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="contact_email">Contact Email *</Label>
-              <Input 
-                id="contact_email" 
-                name="contact_email" 
-                type="email" 
-                value={schoolInfo.contact_email} 
-                onChange={handleSchoolInfoChange} 
-                required 
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="contact_phone">Contact Phone *</Label>
-              <Input 
-                id="contact_phone" 
-                name="contact_phone" 
-                value={schoolInfo.contact_phone} 
-                onChange={handleSchoolInfoChange} 
-                required 
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="registration_number">Registration Number *</Label>
-              <Input 
-                id="registration_number" 
-                name="registration_number" 
-                value={schoolInfo.registration_number} 
-                onChange={handleSchoolInfoChange} 
-                required 
-              />
-            </div>
-          </div>
-          
-          <div className="space-y-2 mb-6">
-            <Label htmlFor="description">Description</Label>
-            <Textarea 
-              id="description" 
-              name="description" 
-              value={schoolInfo.description} 
-              onChange={handleSchoolInfoChange} 
-              rows={4} 
-            />
-          </div>
-          
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : "Register School"}
-          </Button>
-        </form>
+        <SchoolInfoForm 
+          schoolInfo={schoolInfo}
+          handleSchoolInfoChange={handleSchoolInfoChange}
+          handleSchoolSubmit={handleSchoolSubmit}
+          isSubmitting={isSubmitting}
+        />
       </TabsContent>
       
       <TabsContent value="grade-upload">
-        <form onSubmit={handleGradeUpload}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="space-y-2">
-              <Label htmlFor="grade_level">Grade Level *</Label>
-              <Input 
-                id="grade_level" 
-                name="grade_level" 
-                value={gradeUpload.grade_level} 
-                onChange={handleGradeUploadChange} 
-                required 
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="academic_year">Academic Year *</Label>
-              <Input 
-                id="academic_year" 
-                name="academic_year" 
-                value={gradeUpload.academic_year} 
-                onChange={handleGradeUploadChange} 
-                required 
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="term">Term *</Label>
-              <Input 
-                id="term" 
-                name="term" 
-                value={gradeUpload.term} 
-                onChange={handleGradeUploadChange} 
-                required 
-              />
-            </div>
-          </div>
-          
-          <div className="space-y-2 mb-6">
-            <Label htmlFor="grade-file">Upload File (Excel or CSV) *</Label>
-            <div className="border border-dashed rounded-md p-6 flex flex-col items-center justify-center">
-              <FileUp className="h-10 w-10 text-gray-400 mb-2" />
-              <p className="text-sm text-gray-500 mb-2">Drag and drop or click to select</p>
-              <Input 
-                id="grade-file" 
-                name="file" 
-                type="file" 
-                accept=".xlsx,.xls,.csv"
-                onChange={handleGradeUploadChange} 
-                className="max-w-xs"
-                required 
-              />
-            </div>
-          </div>
-          
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Uploading..." : "Upload Grades"}
-          </Button>
-        </form>
+        <GradeUploadForm 
+          gradeUpload={gradeUpload}
+          handleGradeUploadChange={handleGradeUploadChange}
+          handleGradeUpload={handleGradeUpload}
+          isSubmitting={isSubmitting}
+        />
       </TabsContent>
     </Tabs>
   );
