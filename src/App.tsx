@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/HomePage';
 import JobApplications from './pages/JobApplications';
-import { ThemeProvider } from "@/components/ui/theme-provider"
+import { ThemeProvider } from "./components/ui/theme-provider";
 import { NotificationsMenu } from "./components/notifications/NotificationsMenu";
 import CareerNotifications from "./components/notifications/CareerNotifications";
 import { Toaster } from "sonner";
