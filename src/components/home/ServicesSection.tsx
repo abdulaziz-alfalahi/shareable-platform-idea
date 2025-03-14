@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -128,7 +129,7 @@ const ServicesSection = () => {
       icon: <Wallet className="w-8 h-8" />,
       title: "Retirement Planning",
       description: "Prepare for a fulfilling retirement with financial guidance and post-career opportunities.",
-      link: "/mindmap",
+      link: "/enhanced-retirement-planning",
       iconBg: "bg-emirati-oasisGreen/10"
     },
   ];

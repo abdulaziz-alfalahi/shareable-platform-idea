@@ -20,6 +20,7 @@ import AssessmentCenters from "./pages/AssessmentCenters";
 import CareerPassportPage from "./pages/CareerPassportPage";
 import RetirementPlanning from "./pages/RetirementPlanning";
 import RetirementPlanningPage from "./pages/RetirementPlanningPage";
+import EnhancedRetirementPlanning from "./pages/EnhancedRetirementPlanning";
 import MindMap from "./pages/MindMap";
 import DataEntryPage from "./pages/DataEntryPage";
 
@@ -48,6 +49,8 @@ function App() {
             <Route path="/assessment-centers" element={<AssessmentCenters />} />
             <Route path="/career-passport/:id?" element={<CareerPassportPage />} />
             <Route path="/retirement-planning" element={<RetirementPlanningPage />} />
+            <Route path="/retirement-planner" element={<RetirementPlanning />} />
+            <Route path="/enhanced-retirement-planning" element={<EnhancedRetirementPlanning />} />
             <Route path="/mindmap" element={<MindMap />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
