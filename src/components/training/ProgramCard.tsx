@@ -3,12 +3,20 @@ import React from "react";
 import { Calendar, Users, Info, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TrainingProgram } from "@/utils/trainingCentersService";
+import { toast } from "@/components/ui/use-toast";
 
 interface ProgramCardProps {
   program: TrainingProgram;
 }
 
 const ProgramCard: React.FC<ProgramCardProps> = ({ program }) => {
+  const handleApply = () => {
+    toast({
+      title: "Application Submitted",
+      description: `Your application for ${program.name} has been received.`,
+    });
+  };
+
   return (
     <div key={program.id} className="border rounded-md p-4">
       <h3 className="text-lg font-medium mb-2">{program.name}</h3>
@@ -48,7 +56,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ program }) => {
       )}
       
       <div className="mt-4 flex justify-end">
-        <Button>
+        <Button onClick={handleApply}>
           Apply for Program
         </Button>
       </div>
