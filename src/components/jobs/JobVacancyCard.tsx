@@ -17,8 +17,7 @@ import {
   ArrowUpCircleIcon,
   InfoIcon,
   ChevronDownIcon,
-  ChevronUpIcon,
-  BellIcon
+  ChevronUpIcon
 } from "lucide-react";
 import { 
   Tooltip,
@@ -30,7 +29,6 @@ import SkillMatchVisualization from "./SkillMatchVisualization";
 import { Vacancy } from "./MatchingVacanciesTab";
 import { JobApplication } from "./MyApplicationsTab";
 import VacancySkillsList from "./VacancySkillsList";
-import { Badge } from "@/components/ui/badge";
 
 interface JobVacancyCardProps {
   vacancy: Vacancy;
@@ -51,14 +49,6 @@ const JobVacancyCard = ({ vacancy, onApply }: JobVacancyCardProps) => {
     setExpanded(prev => !prev);
   };
 
-  // Determine if this is a new job posting (less than 2 days old)
-  const isNewPosting = () => {
-    const postedDate = new Date(vacancy.postedDate);
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-    return postedDate > twoDaysAgo;
-  };
-
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
@@ -66,31 +56,24 @@ const JobVacancyCard = ({ vacancy, onApply }: JobVacancyCardProps) => {
           <div>
             <CardTitle className="text-xl text-emirati-oasisGreen flex items-center">
               {vacancy.title}
-              {isNewPosting() && (
-                <Badge variant="outline" className="ml-2 bg-amber-100 text-amber-800 text-xs border-amber-300">
-                  <BellIcon size={12} className="mr-1" /> New
-                </Badge>
-              )}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className={`ml-3 text-sm font-medium ${getMatchColor(vacancy.matchPercentage)} flex items-center`}>
+                      {vacancy.matchPercentage}% Match
+                      <InfoIcon size={14} className="ml-1 text-gray-400" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-sm">This score is based on how well your skills match the job requirements</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </CardTitle>
             <CardDescription className="flex items-center mt-1">
               <BuildingIcon size={16} className="mr-1" /> 
               {vacancy.company}
             </CardDescription>
-          </div>
-          <div className={`ml-3 text-sm font-medium ${getMatchColor(vacancy.matchPercentage)} flex items-center`}>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="flex items-center">
-                    {vacancy.matchPercentage}% Match
-                    <InfoIcon size={14} className="ml-1 text-gray-400" />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-sm">This score is based on how well your skills match the job requirements</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </div>
         </div>
       </CardHeader>
