@@ -8,6 +8,7 @@ import CallToActionSection from "@/components/home/CallToActionSection";
 import SearchBar from "@/components/home/SearchBar";
 import ServicesSection from "@/components/home/ServicesSection";
 import FeaturedResourcesSection from "@/components/home/FeaturedResourcesSection";
+import CareerJourneyTimeline from "@/components/home/CareerJourneyTimeline";
 
 const Index = () => {
   return (
@@ -52,6 +53,9 @@ const Index = () => {
         <ServicesSection />
         <FeaturedResourcesSection />
       </main>
+
+      {/* Career Journey Timeline */}
+      <CareerJourneyTimeline />
 
       {/* Testimonials Section */}
       <TestimonialsSection />
