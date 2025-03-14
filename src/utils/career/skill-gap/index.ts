@@ -20,3 +20,11 @@ export {
   getAllTrainingPrograms,
   searchTrainingPrograms
 } from './training-service';
+
+// Re-export job matching functions
+export {
+  calculateSkillMatch,
+  identifyMissingSkills,
+  getRecommendedJobs,
+  getCareerPathAlignedJobs
+} from './job-matching-service';

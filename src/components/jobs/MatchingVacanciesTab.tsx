@@ -12,8 +12,16 @@ import {
   BuildingIcon, 
   CalendarIcon,
   MapPinIcon,
-  SendIcon
+  SendIcon,
+  ArrowUpCircleIcon,
+  InfoIcon
 } from "lucide-react";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { notifySuccess } from "@/utils/notification";
 import { JobApplication } from "./MyApplicationsTab";
 
@@ -70,7 +78,8 @@ export const MatchingVacanciesTab = ({
     <div className="space-y-6">
       <div className="mb-6">
         <p className="text-gray-600">
-          Based on your skills and experience, here are the top 10 job vacancies that match your profile.
+          Based on your skills and experience, here are the top job vacancies that match your profile.
+          Our AI-powered matching algorithm considers your skills, experience, and career goals.
         </p>
       </div>
 
@@ -82,9 +91,19 @@ export const MatchingVacanciesTab = ({
                 <div>
                   <CardTitle className="text-xl text-emirati-oasisGreen flex items-center">
                     {vacancy.title}
-                    <span className={`ml-3 text-sm font-medium ${getMatchColor(vacancy.matchPercentage)}`}>
-                      {vacancy.matchPercentage}% Match
-                    </span>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className={`ml-3 text-sm font-medium ${getMatchColor(vacancy.matchPercentage)} flex items-center`}>
+                            {vacancy.matchPercentage}% Match
+                            <InfoIcon size={14} className="ml-1 text-gray-400" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-sm">This score is based on how well your skills match the job requirements</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </CardTitle>
                   <CardDescription className="flex items-center mt-1">
                     <BuildingIcon size={16} className="mr-1" /> 
@@ -125,7 +144,10 @@ export const MatchingVacanciesTab = ({
                 
                 {vacancy.missingSkills.length > 0 && (
                   <div>
-                    <p className="text-sm font-medium">Skills to Develop:</p>
+                    <p className="text-sm font-medium flex items-center">
+                      Skills to Develop
+                      <ArrowUpCircleIcon size={14} className="ml-1 text-emirati-desertGold" />
+                    </p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {vacancy.missingSkills.map((skill, index) => (
                         <span 
