@@ -1,33 +1,8 @@
 
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  BuildingIcon, 
-  CalendarIcon,
-  MapPinIcon,
-  SendIcon,
-  ArrowUpCircleIcon,
-  InfoIcon,
-  ChevronDownIcon,
-  ChevronUpIcon
-} from "lucide-react";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { notifySuccess } from "@/utils/notification";
 import { JobApplication } from "./MyApplicationsTab";
-import SkillMatchVisualization from "./SkillMatchVisualization";
-import { useState } from "react";
+import JobVacancyCard from "./JobVacancyCard";
 
 export interface Vacancy {
   id: string;
@@ -52,7 +27,6 @@ export const MatchingVacanciesTab = ({
   setApplications,
   applications
 }: MatchingVacanciesTabProps) => {
-  const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
   
   const handleApplyToJob = (jobTitle: string, company: string) => {
     const application: JobApplication = {
@@ -72,20 +46,6 @@ export const MatchingVacanciesTab = ({
     });
   };
 
-  const getMatchColor = (percentage: number) => {
-    if (percentage >= 90) return "text-green-600";
-    if (percentage >= 75) return "text-blue-600";
-    if (percentage >= 60) return "text-yellow-600";
-    return "text-red-600";
-  };
-
-  const toggleExpand = (id: string) => {
-    setExpandedCards(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
-  };
-
   return (
     <div className="space-y-6">
       <div className="mb-6">
@@ -97,109 +57,11 @@ export const MatchingVacanciesTab = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {vacancies.map((vacancy) => (
-          <Card key={vacancy.id} className="hover:shadow-md transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-xl text-emirati-oasisGreen flex items-center">
-                    {vacancy.title}
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className={`ml-3 text-sm font-medium ${getMatchColor(vacancy.matchPercentage)} flex items-center`}>
-                            {vacancy.matchPercentage}% Match
-                            <InfoIcon size={14} className="ml-1 text-gray-400" />
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="text-sm">This score is based on how well your skills match the job requirements</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </CardTitle>
-                  <CardDescription className="flex items-center mt-1">
-                    <BuildingIcon size={16} className="mr-1" /> 
-                    {vacancy.company}
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-3 space-y-2">
-                <div className="flex items-center text-sm text-gray-600">
-                  <MapPinIcon size={14} className="mr-1 text-emirati-camelBrown" /> 
-                  {vacancy.location}
-                </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <CalendarIcon size={14} className="mr-1 text-emirati-camelBrown" /> 
-                  Posted: {vacancy.postedDate}
-                </div>
-                <div className="flex items-center text-sm font-medium">
-                  {vacancy.salary}
-                </div>
-              </div>
-              
-              {!expandedCards[vacancy.id] ? (
-                <div className="space-y-2">
-                  <div>
-                    <p className="text-sm font-medium">Required Skills:</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {vacancy.requiredSkills.map((skill, index) => (
-                        <span 
-                          key={index} 
-                          className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {vacancy.missingSkills.length > 0 && (
-                    <div>
-                      <p className="text-sm font-medium flex items-center">
-                        Skills to Develop
-                        <ArrowUpCircleIcon size={14} className="ml-1 text-emirati-desertGold" />
-                      </p>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {vacancy.missingSkills.map((skill, index) => (
-                          <span 
-                            key={index} 
-                            className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <SkillMatchVisualization vacancy={vacancy} />
-              )}
-              
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => toggleExpand(vacancy.id)}
-                className="w-full mt-3 text-emirati-desertGold"
-              >
-                {expandedCards[vacancy.id] ? (
-                  <>Show Skills <ChevronUpIcon className="ml-1 h-4 w-4" /></>
-                ) : (
-                  <>View Match Details <ChevronDownIcon className="ml-1 h-4 w-4" /></>
-                )}
-              </Button>
-            </CardContent>
-            <CardFooter className="pt-1">
-              <Button 
-                className="w-full bg-emirati-oasisGreen hover:bg-emirati-desertGold"
-                onClick={() => handleApplyToJob(vacancy.title, vacancy.company)}
-              >
-                <SendIcon size={14} className="mr-1" /> Apply Now
-              </Button>
-            </CardFooter>
-          </Card>
+          <JobVacancyCard 
+            key={vacancy.id} 
+            vacancy={vacancy} 
+            onApply={handleApplyToJob} 
+          />
         ))}
       </div>
     </div>
