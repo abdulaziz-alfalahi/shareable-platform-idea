@@ -1,17 +1,35 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Map, User, Search, Briefcase, GraduationCap, Database, Menu, X } from "lucide-react";
+import { Map, User, Search, Briefcase, GraduationCap, Database, Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
+
+// Define our personas
+const personas = [
+  { id: "student", name: "Student", path: "/student-dashboard", icon: <GraduationCap className="h-4 w-4 mr-2" /> },
+  { id: "parent", name: "Parent", path: "/student-dashboard", icon: <User className="h-4 w-4 mr-2" /> },
+  { id: "advisor", name: "Career Advisor", path: "/advisor-dashboard", icon: <User className="h-4 w-4 mr-2" /> },
+  { id: "recruiter", name: "Recruiter", path: "/recruiter-dashboard", icon: <Briefcase className="h-4 w-4 mr-2" /> },
+  { id: "admin", name: "System Administrator", path: "/admin-dashboard", icon: <Database className="h-4 w-4 mr-2" /> },
+];
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentPersona, setCurrentPersona] = useState(personas[0]);
+  const navigate = useNavigate();
+
+  const handlePersonaChange = (persona) => {
+    setCurrentPersona(persona);
+    navigate(persona.path);
+  };
 
   return (
     <header className="bg-white border-b border-emirati-sandBeige/20 py-4">
@@ -80,9 +98,34 @@ const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <Button variant="outline" className="hidden md:flex items-center">
-            <User className="mr-2 h-4 w-4" /> Sign In
-          </Button>
+          {/* Persona Switcher Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center">
+                {currentPersona.icon}
+                {currentPersona.name}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white w-56">
+              <DropdownMenuItem className="py-2 px-3 text-sm text-muted-foreground" disabled>
+                Switch Persona
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              {personas.map((persona) => (
+                <DropdownMenuItem 
+                  key={persona.id} 
+                  className={`py-2 ${currentPersona.id === persona.id ? 'bg-emirati-sandBeige/10' : ''}`}
+                  onClick={() => handlePersonaChange(persona)}
+                >
+                  <div className="flex items-center">
+                    {persona.icon}
+                    <span>{persona.name}</span>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           
           <Button 
             variant="ghost" 
@@ -141,9 +184,26 @@ const Header = () => {
             >
               <Database className="w-4 h-4 mr-1" /> Data Entry
             </Link>
-            <Button variant="outline" className="flex items-center justify-center w-full mt-2">
-              <User className="mr-2 h-4 w-4" /> Sign In
-            </Button>
+            
+            {/* Persona Switcher in Mobile Menu */}
+            <div className="pt-2 border-t border-gray-100">
+              <p className="text-sm font-medium text-gray-500 mb-2">Switch Persona</p>
+              {personas.map((persona) => (
+                <button
+                  key={persona.id}
+                  className={`flex items-center w-full text-left py-2 px-2 rounded-md ${
+                    currentPersona.id === persona.id ? 'bg-emirati-sandBeige/20 text-emirati-oasisGreen' : 'text-gray-700'
+                  }`}
+                  onClick={() => {
+                    handlePersonaChange(persona);
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  {persona.icon}
+                  <span>{persona.name}</span>
+                </button>
+              ))}
+            </div>
           </nav>
         </div>
       )}
