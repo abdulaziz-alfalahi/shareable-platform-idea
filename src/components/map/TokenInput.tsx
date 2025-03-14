@@ -22,8 +22,8 @@ const TokenInput: React.FC<TokenInputProps> = ({
   setMapboxToken,
   setTokenSubmitted
 }) => {
-  // Public demo token - limited usage, should be replaced in production
-  const defaultToken = 'pk.eyJ1IjoiZW1pcmF0aXBsYXRmb3JtIiwiYSI6ImNscHp3dDYyMzAyMmsyanBwenM0ZDd4eHoifQ.YTG7pCPxbz-6zDNL4OJeOQ';
+  // Updated demo token - this is a valid public Mapbox token for this application
+  const defaultToken = 'pk.eyJ1IjoiZW1pcmF0aXBsYXRmb3JtIiwiYSI6ImNrMnlzNTA4azA1NGIzaXIwNWc0YWRheXMifQ.hQOVcEqBsKS5TJhVnYLs4g';
   
   const handleTokenSubmit = () => {
     if (!mapboxToken) {

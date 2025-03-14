@@ -28,13 +28,16 @@ const useMapInitialization = ({
     setInitializationAttempted(true);
 
     try {
-      mapboxgl.accessToken = mapboxToken;
-      
+      // Clean up previous map instance if it exists
       if (map.current) {
         map.current.remove();
         map.current = null;
       }
+
+      // Set the Mapbox access token
+      mapboxgl.accessToken = mapboxToken;
       
+      // Create a new map instance
       map.current = new mapboxgl.Map({
         container: containerRef.current,
         style: 'mapbox://styles/mapbox/streets-v11',
@@ -65,11 +68,21 @@ const useMapInitialization = ({
       // Handle errors
       map.current.on('error', (e) => {
         console.error('Map error:', e);
-        toast({
-          title: 'Map Error',
-          description: 'An error occurred with the map. Please try again later.',
-          variant: 'destructive'
-        });
+        
+        // Check for token-related errors
+        if (e.error && (e.error.message || '').toLowerCase().includes('token')) {
+          toast({
+            title: 'Invalid Mapbox Token',
+            description: 'Please check your Mapbox token and try again.',
+            variant: 'destructive'
+          });
+        } else {
+          toast({
+            title: 'Map Error',
+            description: 'An error occurred with the map. Please try again later.',
+            variant: 'destructive'
+          });
+        }
       });
 
       return () => {
