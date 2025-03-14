@@ -1,5 +1,6 @@
 
 import { Student, CareerMilestone, PassportStamp, Challenge } from '@/types/student';
+import { SkillGap, TrainingRecommendation } from './skill-gap/types';
 
 // Define a Challenge type for time-bound challenges
 export interface ChallengeBase {
@@ -35,20 +36,5 @@ export interface CulturalAchievement {
   stampLevel: "Bronze" | "Silver" | "Gold";
 }
 
-// Skill Gap Analysis Types
-export interface SkillGap {
-  skill: string;
-  demandLevel: 'high' | 'medium' | 'low';
-  relevanceScore: number;
-  suggestedTraining: TrainingRecommendation[];
-}
-
-export interface TrainingRecommendation {
-  id: string;
-  title: string;
-  provider: string;
-  duration: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
-  format: 'online' | 'in-person' | 'hybrid';
-  url?: string;
-}
+// Re-export skill gap types for backward compatibility
+export type { SkillGap, TrainingRecommendation };

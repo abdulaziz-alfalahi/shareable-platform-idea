@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TrendingUp, BarChart, BookOpen } from "lucide-react";
@@ -6,7 +5,7 @@ import { Student } from "@/types/student";
 import TopRecommendationsTab from "./TopRecommendationsTab";
 import AllSkillGapsTab from "./AllSkillGapsTab";
 import TrainingProgramsTab from "./TrainingProgramsTab";
-import { searchTrainingPrograms } from "@/utils/career/skillGapAnalysis";
+import { searchTrainingPrograms } from "@/utils/career/skill-gap";
 
 interface SkillGapTabsProps {
   student: Student;
@@ -23,7 +22,6 @@ const SkillGapTabs: React.FC<SkillGapTabsProps> = ({
   const [isEnrolling, setIsEnrolling] = useState(false);
   const [enrollingId, setEnrollingId] = useState<string | null>(null);
   
-  // Get search results
   const searchResults = searchTerm.length > 2 
     ? searchTrainingPrograms(searchTerm)
     : [];

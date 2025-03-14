@@ -9,7 +9,7 @@ import {
   TrainingRecommendation, 
   getAllTrainingPrograms,
   searchTrainingPrograms 
-} from "@/utils/career/skillGapAnalysis";
+} from "@/utils/career/skill-gap"; // Updated import path
 import TrainingCard from "./TrainingCard";
 
 interface TrainingProgramsTabProps {

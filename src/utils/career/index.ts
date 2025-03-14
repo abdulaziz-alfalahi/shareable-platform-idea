@@ -15,11 +15,5 @@ export * from './trainingRecommendations';
 export * from './retirementTypes';
 export * from './retirementSimulation';
 
-// Export from skillGapAnalysis but exclude already exported types
-export {
-  analyzeSkillGaps,
-  getTopSkillRecommendations,
-  enrollInTraining,
-  getAllTrainingPrograms,
-  searchTrainingPrograms
-} from './skillGapAnalysis';
+// Export skill gap analysis
+export * from './skill-gap'; // Updated to use the new structure

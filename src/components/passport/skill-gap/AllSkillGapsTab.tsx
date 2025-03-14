@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { BarChart, Search, SlidersHorizontal, BookOpen } from "lucide-react";
 import { Student } from "@/types/student";
-import { analyzeSkillGaps } from "@/utils/career/skillGapAnalysis";
+import { analyzeSkillGaps } from "@/utils/career/skill-gap"; // Updated import path
 import { getDemandLevelColor, getSkillRelevanceColor } from "./utils";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";

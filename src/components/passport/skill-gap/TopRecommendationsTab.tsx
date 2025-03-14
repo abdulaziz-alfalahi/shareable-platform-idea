@@ -8,7 +8,7 @@ import {
   getTopSkillRecommendations, 
   enrollInTraining,
   SkillGap
-} from "@/utils/career/skillGapAnalysis";
+} from "@/utils/career/skill-gap"; // Updated import path
 import TrainingCard from "./TrainingCard";
 import { getDemandLevelColor, getSkillRelevanceColor } from "./utils";
 
