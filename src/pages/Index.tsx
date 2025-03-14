@@ -44,6 +44,9 @@ const Index = () => {
           <p className="text-lg text-gray-700 max-w-3xl mx-auto">
             Your gateway to employment opportunities, career development resources, and professional growth in the UAE.
           </p>
+          <p className="text-sm text-emirati-deepBrown/70 mt-2 max-w-2xl mx-auto">
+            Browse services by career stage or explore all available resources to support your professional journey.
+          </p>
         </section>
 
         <ServicesSection />
