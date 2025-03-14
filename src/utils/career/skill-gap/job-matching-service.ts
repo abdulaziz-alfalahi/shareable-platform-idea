@@ -1,6 +1,6 @@
 
 import { Student } from '@/types/student';
-import { Vacancy } from '@/components/jobs/MatchingVacanciesTab';
+import { Vacancy } from '@/utils/career/types';
 import { uaeJobMarketTrends } from './mock-data';
 import { extractStudentSkills } from './analysis-service';
 
@@ -60,21 +60,25 @@ export const identifyMissingSkills = (
   return missingSkills;
 };
 
+// Define an intermediate type to work with both vacancy types
+interface EnhancedVacancy extends Vacancy {
+  matchPercentage?: number;
+  missingSkills?: string[];
+}
+
 /**
  * Enhanced job recommendations based on skill matching
  */
 export const getRecommendedJobs = (
   student: Student,
   vacancies: Vacancy[]
-): Vacancy[] => {
+): EnhancedVacancy[] => {
   const studentSkills = extractStudentSkills(student);
   
   // Calculate match score for each job
   const scoredJobs = vacancies.map(job => {
     // For each job, get the list of required skills
-    const requirements = Array.isArray(job.requirements) 
-      ? job.requirements 
-      : [];
+    const requirements = job.requirements || [];
     
     // Calculate match percentage
     const matchPercentage = calculateSkillMatch(studentSkills, requirements);
@@ -102,7 +106,7 @@ export const getRecommendedJobs = (
 export const getCareerPathAlignedJobs = (
   student: Student,
   vacancies: Vacancy[]
-): Vacancy[] => {
+): EnhancedVacancy[] => {
   // Get student's career path
   const careerPath = student.careerPath?.toLowerCase();
   
@@ -120,9 +124,7 @@ export const getCareerPathAlignedJobs = (
   // Calculate job alignment scores
   const alignedJobs = vacancies.map(job => {
     // Basic skill match
-    const requirements = Array.isArray(job.requirements) 
-      ? job.requirements 
-      : [];
+    const requirements = job.requirements || [];
     
     const matchPercentage = calculateSkillMatch(studentSkills, requirements);
     const missingSkills = identifyMissingSkills(studentSkills, requirements);
