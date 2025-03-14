@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import { useToast } from "@/hooks/toast";
 import { notifyRecruiter, notifySuccess } from "@/utils/notification";
 import ScheduleInterviewDialog from "@/components/recruiter/ScheduleInterviewDialog";
 import RoleNotifications from "@/components/notifications/RoleNotifications";
+import { Button } from "@/components/ui/button";
 
 const vacancies = [
   {
