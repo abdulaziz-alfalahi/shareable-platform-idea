@@ -5,6 +5,8 @@ import AgeDistributionChart from "@/components/admin/AgeDistributionChart";
 import TopListTable from "@/components/admin/TopListTable";
 import TimeSeriesChart from "@/components/admin/TimeSeriesChart";
 import PlacementMetrics from "@/components/admin/PlacementMetrics";
+import SkillGapInsightsCard from "@/components/admin/SkillGapInsightsCard";
+import CareerInsightsChart from "@/components/admin/CareerInsightsChart";
 import { AdminDashboardData } from "@/types/admin";
 
 interface StudentsTabProps {
@@ -16,6 +18,17 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
   adminDashboardData,
   pathColumns
 }) => {
+  // Sample skill gap data for the new component
+  const skillGapData = [
+    { skill: "AI & Machine Learning", demandScore: 85, supplyScore: 42, gap: 43, trend: "increasing", sector: "Technology" },
+    { skill: "Cybersecurity", demandScore: 92, supplyScore: 55, gap: 37, trend: "increasing", sector: "Technology" },
+    { skill: "Data Analysis", demandScore: 78, supplyScore: 48, gap: 30, trend: "stable", sector: "Business" },
+    { skill: "Digital Marketing", demandScore: 72, supplyScore: 45, gap: 27, trend: "increasing", sector: "Marketing" },
+    { skill: "UX/UI Design", demandScore: 65, supplyScore: 40, gap: 25, trend: "stable", sector: "Design" },
+    { skill: "Blockchain", demandScore: 55, supplyScore: 32, gap: 23, trend: "increasing", sector: "Technology" },
+    { skill: "Project Management", demandScore: 70, supplyScore: 52, gap: 18, trend: "decreasing", sector: "Management" }
+  ] as const;
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -35,7 +48,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <TimeSeriesChart
           title="Student Engagement"
           description="Active students over time"
@@ -45,6 +58,13 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
           placementRate={adminDashboardData.placementRate}
           averageTimeToHire={adminDashboardData.averageTimeToHire}
         />
+      </div>
+
+      {/* New skill insights section */}
+      <h3 className="text-xl font-semibold mt-8 mb-4">Career & Skills Analytics</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <SkillGapInsightsCard data={skillGapData} />
+        <CareerInsightsChart />
       </div>
     </>
   );
