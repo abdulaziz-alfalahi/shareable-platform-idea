@@ -68,6 +68,7 @@ export default {
 				},
 				emirati: {
 					sandstone: '#f5e8c7',
+					sandBeige: '#f0e0bf', // Added sandBeige color
 					oasisGreen: '#2c4a2e',
 					desertGold: '#d4a373',
 					camelBrown: '#8b5e34',

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -26,7 +27,7 @@ interface ServiceCardProps {
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, description, link, iconBg = "bg-emirati-oasisGreen/10" }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md border border-emirati-sandBeige/30 p-6 transition-all duration-300 hover:shadow-lg hover:border-emirati-oasisGreen/30 group">
+    <div className="bg-white rounded-lg shadow-md border border-emirati-sandstone/30 p-6 transition-all duration-300 hover:shadow-lg hover:border-emirati-oasisGreen/30 group">
       <div className={`${iconBg} w-16 h-16 rounded-full flex items-center justify-center text-emirati-oasisGreen mb-4 group-hover:scale-110 transition-transform`}>
         {icon}
       </div>

@@ -128,13 +128,13 @@ const DataEntryFileUpload = () => {
             onDrop={handleDrop}
           >
             <div className="flex flex-col items-center justify-center space-y-4">
-              <div className="bg-emirati-sandBeige/30 p-4 rounded-full">
+              <div className="bg-emirati-sandstone/30 p-4 rounded-full">
                 <Upload className="h-8 w-8 text-emirati-oasisGreen" />
               </div>
               
               {file ? (
-                <div className="flex items-center space-x-2 bg-emirati-sandBeige/20 px-4 py-2 rounded-lg">
-                  <File className="h-5 w-5 text-emirati-deepBlue" />
+                <div className="flex items-center space-x-2 bg-emirati-sandstone/20 px-4 py-2 rounded-lg">
+                  <File className="h-5 w-5 text-emirati-deepBrown" />
                   <span className="font-medium">{file.name}</span>
                   <span className="text-sm text-gray-500">({(file.size / 1024).toFixed(2)} KB)</span>
                 </div>
@@ -227,8 +227,8 @@ const DataEntryFileUpload = () => {
             {templateExamples.map((template, i) => (
               <div key={i} className="border rounded-lg p-4 flex flex-col space-y-3">
                 <div className="flex justify-between items-center">
-                  <File className="h-6 w-6 text-emirati-deepBlue" />
-                  <span className="text-xs bg-emirati-sandBeige/30 px-2 py-1 rounded">
+                  <File className="h-6 w-6 text-emirati-deepBrown" />
+                  <span className="text-xs bg-emirati-sandstone/30 px-2 py-1 rounded">
                     {template.format}
                   </span>
                 </div>
