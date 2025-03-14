@@ -20,22 +20,24 @@ import MyApplicationsTab, { JobApplication } from "@/components/jobs/MyApplicati
 import MatchingVacanciesTab, { Vacancy } from "@/components/jobs/MatchingVacanciesTab";
 import UpskillingTab from "@/components/jobs/UpskillingTab";
 import JobLocationTab from "@/components/jobs/JobLocationTab";
-import { usePassportData } from "@/hooks/passport/usePassportData";
+import { students } from "@/data/mockData";
 import { recommendJobs } from "@/utils/career/recommendations";
 
 const JobApplications = () => {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<JobApplication[]>(initialApplications);
   const [matchedVacancies, setMatchedVacancies] = useState<Vacancy[]>(vacanciesData);
-  const { student } = usePassportData();
+  
+  // Use the first student from mock data for demonstration
+  const mockStudent = students[0];
 
   // Update matched vacancies based on student profile when it loads
   useEffect(() => {
-    if (student) {
-      const recommendedJobs = recommendJobs(student, vacanciesData);
+    if (mockStudent) {
+      const recommendedJobs = recommendJobs(mockStudent, vacanciesData);
       setMatchedVacancies(recommendedJobs);
     }
-  }, [student]);
+  }, [mockStudent]);
 
   return (
     <div className="container mx-auto py-10 px-4">
