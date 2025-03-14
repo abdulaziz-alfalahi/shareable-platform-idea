@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -17,7 +16,7 @@ import {
   Clock,
   TrendingUp,
   Heart,
-  PiggyBank
+  Wallet
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -126,7 +125,7 @@ const ServicesSection = () => {
       iconBg: "bg-emirati-desertGold/10"
     },
     {
-      icon: <PiggyBank className="w-8 h-8" />,
+      icon: <Wallet className="w-8 h-8" />,
       title: "Retirement Planning",
       description: "Prepare for a fulfilling retirement with financial guidance and post-career opportunities.",
       link: "/mindmap",
@@ -136,7 +135,6 @@ const ServicesSection = () => {
 
   return (
     <div>
-      {/* Arabic-inspired decorative pattern */}
       <div className="flex justify-center mb-8">
         <div className="h-px w-40 bg-emirati-desertGold relative">
           <div className="absolute -bottom-2 h-1 w-full bg-emirati-oasisGreen"></div>
@@ -157,7 +155,6 @@ const ServicesSection = () => {
         ))}
       </div>
       
-      {/* Arabic-inspired decorative pattern */}
       <div className="flex justify-center mt-8">
         <div className="h-px w-40 bg-emirati-desertGold relative">
           <div className="absolute -bottom-2 h-1 w-full bg-emirati-oasisGreen"></div>
