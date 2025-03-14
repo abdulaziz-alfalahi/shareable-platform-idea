@@ -175,8 +175,8 @@ const UniversityDataEntryForm = () => {
         file: null
       });
       
-      // Reset file input
-      const fileInput = document.getElementById('grade-file');
+      // Reset file input - Fixed type error by using HTMLInputElement instead of HTMLElement
+      const fileInput = document.getElementById('grade-file') as HTMLInputElement;
       if (fileInput) {
         fileInput.value = "";
       }
