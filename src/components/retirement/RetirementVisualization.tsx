@@ -37,7 +37,8 @@ const RetirementVisualization: React.FC<RetirementVisualizationProps> = ({ resul
     return [
       { name: "Government Pension", value: results.governmentPension || 0 },
       { name: "Personal Savings", value: results.monthlyRetirementIncome || 0 },
-      { name: "Part-time Work", value: results.postRetirementWork ? (results.totalMonthlyIncome || 0) * 0.15 : 0 },
+      // Use recommendations or another property to determine if post-retirement work is included
+      { name: "Part-time Work", value: results.recommendations?.includes("Consider part-time work") ? (results.totalMonthlyIncome || 0) * 0.15 : 0 },
     ].filter(item => item.value > 0);
   };
 

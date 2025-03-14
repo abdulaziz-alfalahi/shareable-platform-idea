@@ -20,7 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Calculator, ChevronRight, Wallet, BriefcaseBusiness, Building, Landmark, Coins } from "lucide-react";
-import { RetirementSimulationResults } from "@/utils/career/retirementTypes";
+import { RetirementSimulationParams, RetirementSimulationResults } from "@/utils/career/retirementTypes";
 import RetirementResults from "./RetirementResults";
 import { UaeDecoContainer, UaeDivider } from "@/components/ui/uae";
 import { simulateRetirement } from "@/utils/career/retirementSimulation";
@@ -70,9 +70,18 @@ const EnhancedRetirementCalculator: React.FC = () => {
   const onSubmit = async (values: FormValues) => {
     setIsCalculating(true);
     try {
-      const results = await simulateRetirement({
-        ...values,
-      });
+      // Create an object that matches RetirementSimulationParams interface
+      const simulationParams: RetirementSimulationParams = {
+        currentAge: values.currentAge,
+        retirementAge: values.retirementAge,
+        currentSalary: values.currentSalary,
+        monthlySavings: values.monthlySavings,
+        currentSavings: values.currentSavings,
+        investmentStyle: values.investmentStyle,
+        postRetirementWork: values.postRetirementWork
+      };
+      
+      const results = await simulateRetirement(simulationParams);
       setSimulationResults(results);
       setActiveTab("results");
     } catch (error) {

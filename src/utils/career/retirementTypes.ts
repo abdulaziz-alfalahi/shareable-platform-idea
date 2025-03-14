@@ -7,6 +7,13 @@ export interface RetirementSimulationParams {
   currentSavings: number;
   investmentStyle: 'conservative' | 'moderate' | 'aggressive';
   postRetirementWork: boolean;
+  // Optional additional parameters
+  sectorType?: 'government' | 'semi_government' | 'private';
+  yearsOfService?: number;
+  dependents?: number;
+  additionalIncome?: number;
+  healthcareExpenses?: number;
+  housingExpenses?: number;
 }
 
 export interface RetirementSimulationResults {
