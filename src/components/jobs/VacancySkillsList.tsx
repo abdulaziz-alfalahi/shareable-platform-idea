@@ -1,5 +1,5 @@
 
-import { ArrowUpCircleIcon } from "lucide-react";
+import { ArrowUpCircleIcon, ZapIcon } from "lucide-react";
 import { Vacancy } from "./MatchingVacanciesTab";
 
 interface VacancySkillsListProps {
@@ -33,8 +33,9 @@ const VacancySkillsList = ({ vacancy }: VacancySkillsListProps) => {
             {vacancy.missingSkills.map((skill, index) => (
               <span 
                 key={index} 
-                className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full"
+                className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full flex items-center"
               >
+                {index === 0 && <ZapIcon size={10} className="mr-1" />}
                 {skill}
               </span>
             ))}
