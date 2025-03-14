@@ -17,12 +17,14 @@ const MonitoringDashboard = () => {
   const [timeRange, setTimeRange] = useState("6m");
 
   // Map the icon strings to actual icon components
+  // Ensure trend is strictly typed as "up" | "down"
   const statsCards = statsCardsData.map(card => ({
     ...card,
     icon: card.icon === "Users" ? <Users className="h-8 w-8 text-blue-500" /> :
           card.icon === "Briefcase" ? <Briefcase className="h-8 w-8 text-purple-500" /> :
           card.icon === "Calendar" ? <Calendar className="h-8 w-8 text-green-500" /> :
-          <UserCheck className="h-8 w-8 text-emerald-500" />
+          <UserCheck className="h-8 w-8 text-emerald-500" />,
+    trend: card.trend as "up" | "down" // Ensure trend is properly typed
   }));
 
   return (

@@ -44,12 +44,13 @@ export const userGrowthData = [
   { month: "Jun", students: 420, recruiters: 65, advisors: 28 },
 ];
 
+// Update the statsCards data to explicitly specify trend as "up" | "down"
 export const statsCards = [
   { 
     title: "Total Jobseekers", 
     value: "420", 
     change: "+8.3%", 
-    trend: "up", 
+    trend: "up" as const, 
     icon: "Users",
     description: "Active students and graduates seeking employment"
   },
@@ -57,7 +58,7 @@ export const statsCards = [
     title: "Open Vacancies", 
     value: "38", 
     change: "-9.5%", 
-    trend: "down", 
+    trend: "down" as const, 
     icon: "Briefcase",
     description: "Currently open positions across all companies"
   },
@@ -65,7 +66,7 @@ export const statsCards = [
     title: "Interviews This Month", 
     value: "35", 
     change: "+25.0%", 
-    trend: "up", 
+    trend: "up" as const, 
     icon: "Calendar",
     description: "Scheduled interviews for current month"
   },
@@ -73,7 +74,7 @@ export const statsCards = [
     title: "Candidates Placed", 
     value: "124", 
     change: "+12.7%", 
-    trend: "up", 
+    trend: "up" as const, 
     icon: "UserCheck",
     description: "Successfully employed candidates year-to-date"
   },
