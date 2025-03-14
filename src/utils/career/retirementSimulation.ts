@@ -1,10 +1,9 @@
-
-import { RetirementSimulationParams, RetirementSimulationResult } from './retirementTypes';
+import { RetirementSimulationParams, RetirementSimulationResults } from './retirementTypes';
 
 // Simulate retirement planning for a user
 export const simulateRetirement = async (
   params: RetirementSimulationParams
-): Promise<RetirementSimulationResult> => {
+): Promise<RetirementSimulationResults> => {
   // Calculate years to retirement
   const yearsToRetirement = params.retirementAge - params.currentAge;
   
@@ -127,7 +126,11 @@ export const simulateRetirement = async (
     lifeExpectancy,
     fundSustainability: Math.round(fundSustainability),
     financialReadiness,
-    recommendations
+    recommendations,
+    incomeAdequacyPercentage: incomeReplacementRatio,
+    savingsAtRetirement: Math.round(retirementFund),
+    sufficientFunds: financialReadiness === 'Excellent' || financialReadiness === 'Good',
+    recommendedTraining: recommendations.slice(0, 3) // Take first 3 recommendations for training
   };
 };
 

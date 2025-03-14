@@ -15,4 +15,14 @@ export interface RetirementSimulationResults {
   incomeAdequacyPercentage: number;
   sufficientFunds: boolean;
   recommendedTraining: string[];
+  retirementAge?: number;
+  yearsToRetirement?: number;
+  retirementFund?: number;
+  governmentPension?: number;
+  totalMonthlyIncome?: number;
+  incomeReplacementRatio?: number;
+  lifeExpectancy?: number;
+  fundSustainability?: number;
+  financialReadiness?: 'Excellent' | 'Good' | 'Moderate' | 'At Risk';
+  recommendations?: string[];
 }

@@ -1,11 +1,15 @@
-
 import React, { useState, useEffect } from "react";
 import { Building, GraduationCap, Search, MapPin, Phone, Mail, Info, Calendar, Users, Award } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/toast";
-import { fetchTrainingCenters, fetchTrainingPrograms, TrainingCenter, TrainingProgram } from "@/utils/trainingCentersService";
+import { 
+  fetchTrainingCenters, 
+  fetchProgramsByCenter, 
+  TrainingCenter, 
+  TrainingProgram 
+} from "@/utils/trainingCentersService";
 
 const TrainingCenters = () => {
   const { toast } = useToast();
@@ -43,7 +47,7 @@ const TrainingCenters = () => {
 
   const loadCenterPrograms = async (centerId: string) => {
     try {
-      const result = await fetchTrainingPrograms(centerId);
+      const result = await fetchProgramsByCenter(centerId);
       
       if (!result.success) {
         throw new Error(result.error);

@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RetirementSimulationResult } from '@/utils/career/retirementTypes';
+import { RetirementSimulationResults } from '@/utils/career/retirementTypes';
 
 interface RetirementFinancialMetricsProps {
-  simulationResult: RetirementSimulationResult;
+  simulationResult: RetirementSimulationResults;
 }
 
 const RetirementFinancialMetrics: React.FC<RetirementFinancialMetricsProps> = ({
@@ -31,7 +31,7 @@ const RetirementFinancialMetrics: React.FC<RetirementFinancialMetricsProps> = ({
           </div>
           <div className="flex justify-between">
             <span className="text-sm text-muted-foreground">GPSSA pension monthly:</span>
-            <span className="font-medium">{simulationResult.governmentPension.toLocaleString()} AED</span>
+            <span className="font-medium">{simulationResult.governmentPension?.toLocaleString()} AED</span>
           </div>
           <div className="flex justify-between">
             <span className="text-sm text-muted-foreground">Retirement fund sustainability:</span>

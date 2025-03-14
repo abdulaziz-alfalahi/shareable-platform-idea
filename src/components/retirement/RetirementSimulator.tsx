@@ -8,11 +8,11 @@ import RetirementResults from "./RetirementResults";
 import RetirementPolicyInfo from "./RetirementPolicyInfo";
 import SimulationTabs from "./SimulationTabs";
 import { simulateRetirement } from "@/utils/career/retirementSimulation";
-import { RetirementSimulationResult, RetirementSimulationParams } from "@/utils/career/retirementTypes";
+import { RetirementSimulationResults, RetirementSimulationParams } from "@/utils/career/retirementTypes";
 
 const RetirementSimulator: React.FC = () => {
   const [activeTab, setActiveTab] = useState("input-form");
-  const [simulationResult, setSimulationResult] = useState<RetirementSimulationResult | null>(null);
+  const [simulationResult, setSimulationResult] = useState<RetirementSimulationResults | null>(null);
   const [isSimulating, setIsSimulating] = useState(false);
 
   const handleSimulation = async (formData: RetirementSimulationParams) => {
@@ -53,8 +53,8 @@ const RetirementSimulator: React.FC = () => {
           <TabsContent value="results">
             {simulationResult && (
               <RetirementResults 
-                simulationResult={simulationResult}
-                onModifyParams={() => setActiveTab("input-form")}
+                results={simulationResult}
+                onRestart={() => setActiveTab("input-form")}
               />
             )}
           </TabsContent>

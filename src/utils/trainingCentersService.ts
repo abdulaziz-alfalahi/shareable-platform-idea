@@ -1,6 +1,32 @@
 
 import { supabase } from "@/integrations/supabase/client";
 
+export interface TrainingCenter {
+  id: string;
+  name: string;
+  location?: string;
+  contact_email?: string;
+  contact_phone?: string;
+  license_number?: string;
+  description?: string;
+  created_at?: string;
+}
+
+export interface TrainingProgram {
+  id: string;
+  center_id: string;
+  name: string;
+  description?: string;
+  duration?: string;
+  skill_level?: string;
+  target_audience?: string;
+  certification_offered?: boolean;
+  start_date?: string;
+  end_date?: string;
+  cost?: number;
+  created_at?: string;
+}
+
 interface TrainingCenterInput {
   name: string;
   location?: string;
@@ -110,4 +136,11 @@ export const fetchProgramsByCenter = async (centerId: string) => {
       data: [] 
     };
   }
+};
+
+/**
+ * Fetches training programs from the database
+ */
+export const fetchTrainingPrograms = async (centerId: string) => {
+  return fetchProgramsByCenter(centerId);
 };
