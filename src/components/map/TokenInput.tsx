@@ -3,6 +3,12 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+import { InfoIcon } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
 interface TokenInputProps {
@@ -25,6 +31,17 @@ const TokenInput: React.FC<TokenInputProps> = ({
       });
       return;
     }
+
+    // Basic token format validation
+    if (!mapboxToken.startsWith('pk.')) {
+      toast({
+        title: "Invalid Token",
+        description: "Please enter a valid public Mapbox token (starts with 'pk.')",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setTokenSubmitted(true);
   };
 
@@ -37,10 +54,21 @@ const TokenInput: React.FC<TokenInputProps> = ({
           You can get a free token at <a href="https://www.mapbox.com/" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">mapbox.com</a>
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
+        <Alert>
+          <InfoIcon className="h-4 w-4" />
+          <AlertTitle>How to get your Mapbox token</AlertTitle>
+          <AlertDescription>
+            1. Sign up or log in to <a href="https://www.mapbox.com/" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">Mapbox</a><br />
+            2. Go to your Account → Tokens<br />
+            3. Create a new token or use your default public token<br />
+            4. Copy and paste the token here (starts with 'pk.')
+          </AlertDescription>
+        </Alert>
+
         <div className="flex gap-2">
           <Input 
-            placeholder="Enter your Mapbox token" 
+            placeholder="Enter your Mapbox token (pk.xxx...)" 
             value={mapboxToken}
             onChange={(e) => setMapboxToken(e.target.value)}
             className="flex-1"

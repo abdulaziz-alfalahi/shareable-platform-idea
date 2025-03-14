@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { JobLocation } from '../JobMap';
 import useMapInitialization from '@/hooks/map/useMapInitialization';
@@ -26,15 +26,22 @@ const MapContainer: React.FC<MapContainerProps> = ({
   findNearbyJobs,
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
+  const [mapReady, setMapReady] = useState(false);
   const map = useMapInitialization({
     mapboxToken,
     containerRef: mapContainer,
-    initialCenter: userLocation || undefined
+    initialCenter: userLocation || undefined,
+    onMapLoaded: () => setMapReady(true)
   });
+
+  // Reset the map ready state if mapbox token changes
+  useEffect(() => {
+    setMapReady(false);
+  }, [mapboxToken]);
 
   return (
     <div ref={mapContainer} className="h-[500px] rounded-lg border border-gray-200 shadow-sm">
-      {map.current && (
+      {map.current && mapReady && (
         <>
           <UserLocationMarker 
             map={map} 
