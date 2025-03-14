@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,40 +18,42 @@ import TrainingCenters from "./pages/TrainingCenters";
 import AssessmentCenters from "./pages/AssessmentCenters";
 import CareerPassportPage from "./pages/CareerPassportPage";
 import RetirementPlanning from "./pages/RetirementPlanning";
+import RetirementPlanningPage from "./pages/RetirementPlanningPage";
 import MindMap from "./pages/MindMap";
 import DataEntryPage from "./pages/DataEntryPage";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/resume-builder" element={<ResumeBuilder />} />
-          <Route path="/job-applications" element={<JobApplications />} />
-          <Route path="/job-location-matching" element={<JobLocationMatching />} />
-          <Route path="/achievements" element={<Achievements />} />
-          <Route path="/student-dashboard" element={<StudentDashboard />} />
-          <Route path="/recruiter-dashboard" element={<RecruiterDashboard />} />
-          <Route path="/advisor-dashboard" element={<AdvisorDashboard />} />
-          <Route path="/student/:id" element={<StudentProfile />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/data-entry" element={<DataEntryPage />} />
-          <Route path="/training-centers" element={<TrainingCenters />} />
-          <Route path="/assessment-centers" element={<AssessmentCenters />} />
-          <Route path="/career-passport/:id?" element={<CareerPassportPage />} />
-          <Route path="/retirement-planning" element={<RetirementPlanning />} />
-          <Route path="/mindmap" element={<MindMap />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/resume-builder" element={<ResumeBuilder />} />
+            <Route path="/job-applications" element={<JobApplications />} />
+            <Route path="/job-location-matching" element={<JobLocationMatching />} />
+            <Route path="/achievements" element={<Achievements />} />
+            <Route path="/student-dashboard" element={<StudentDashboard />} />
+            <Route path="/recruiter-dashboard" element={<RecruiterDashboard />} />
+            <Route path="/advisor-dashboard" element={<AdvisorDashboard />} />
+            <Route path="/student/:id" element={<StudentProfile />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/data-entry" element={<DataEntryPage />} />
+            <Route path="/training-centers" element={<TrainingCenters />} />
+            <Route path="/assessment-centers" element={<AssessmentCenters />} />
+            <Route path="/career-passport/:id?" element={<CareerPassportPage />} />
+            <Route path="/retirement-planning" element={<RetirementPlanningPage />} />
+            <Route path="/mindmap" element={<MindMap />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;

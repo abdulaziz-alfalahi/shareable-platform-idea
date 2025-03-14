@@ -9,16 +9,10 @@ export interface RetirementSimulationParams {
   postRetirementWork: boolean;
 }
 
-export interface RetirementSimulationResult {
-  retirementAge: number;
-  yearsToRetirement: number;
-  retirementFund: number;
+export interface RetirementSimulationResults {
+  savingsAtRetirement: number;
   monthlyRetirementIncome: number;
-  governmentPension: number;
-  totalMonthlyIncome: number;
-  incomeReplacementRatio: number;
-  lifeExpectancy: number;
-  fundSustainability: number;
-  financialReadiness: 'Excellent' | 'Good' | 'Moderate' | 'At Risk';
-  recommendations: string[];
+  incomeAdequacyPercentage: number;
+  sufficientFunds: boolean;
+  recommendedTraining: string[];
 }
