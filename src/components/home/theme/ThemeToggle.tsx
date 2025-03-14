@@ -2,14 +2,14 @@
 import React from "react";
 import { Sun, Moon, TreePalm, Building } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useThemeContext } from "./ThemeContext";
+import { UaeTheme, useThemeContext } from "./ThemeContext";
 import { UaeButton } from "@/components/ui/uae";
 
 const themeOptions = [
-  { id: "default", icon: <Sun className="h-4 w-4" />, label: "Default" },
-  { id: "desert", icon: <TreePalm className="h-4 w-4" />, label: "Desert" },
-  { id: "oasis", icon: <Moon className="h-4 w-4" />, label: "Oasis" },
-  { id: "modern", icon: <Building className="h-4 w-4" />, label: "Modern" }
+  { id: "default" as UaeTheme, icon: <Sun className="h-4 w-4" />, label: "Default" },
+  { id: "desert" as UaeTheme, icon: <TreePalm className="h-4 w-4" />, label: "Desert" },
+  { id: "oasis" as UaeTheme, icon: <Moon className="h-4 w-4" />, label: "Oasis" },
+  { id: "modern" as UaeTheme, icon: <Building className="h-4 w-4" />, label: "Modern" }
 ];
 
 const ThemeToggle: React.FC = () => {
