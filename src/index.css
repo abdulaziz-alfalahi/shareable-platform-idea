@@ -92,6 +92,10 @@
   body {
     @apply bg-emirati-sandstone text-emirati-oasisGreen;
   }
+  
+  .font-serif {
+    font-family: 'Amiri', 'Scheherazade New', serif;
+  }
 }
 
 .btn-success {
@@ -108,4 +112,33 @@
 
 .btn-danger {
   @apply bg-emirati-subtleRed hover:bg-[#c9302c] text-white;
+}
+
+/* Add UAE-inspired decorative elements */
+.uae-pattern-divider {
+  @apply h-px w-full bg-gradient-to-r from-transparent via-emirati-desertGold to-transparent my-8 relative;
+}
+
+.uae-pattern-divider::before,
+.uae-pattern-divider::after {
+  content: "";
+  @apply absolute h-2 w-2 rounded-full bg-emirati-oasisGreen top-1/2 transform -translate-y-1/2;
+}
+
+.uae-pattern-divider::before {
+  @apply left-1/3;
+}
+
+.uae-pattern-divider::after {
+  @apply right-1/3;
+}
+
+/* Card with UAE-inspired styling */
+.uae-card {
+  @apply bg-white rounded-lg shadow-md border border-emirati-sandBeige/30 p-6 transition-all duration-300 relative overflow-hidden;
+}
+
+.uae-card::before {
+  content: "";
+  @apply absolute top-0 right-0 w-20 h-20 bg-emirati-desertGold/10 -translate-x-1/2 -translate-y-1/2 rounded-full;
 }

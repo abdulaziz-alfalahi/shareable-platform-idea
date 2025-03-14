@@ -16,10 +16,19 @@ const HeroSection = () => {
         }}
       />
       
+      {/* Arabic geometric pattern overlay */}
+      <div 
+        className="absolute inset-0 bg-repeat opacity-10 z-0" 
+        style={{
+          backgroundImage: "url('https://www.transparenttextures.com/patterns/arabesque.png')",
+          backgroundSize: "200px"
+        }}
+      />
+      
       {/* Hero content */}
-      <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
+      <div className="container mx-auto px-4 py-24 md:py-36 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white animate-fade-in">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white animate-fade-in font-serif">
             Shape Your Future in the UAE
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-white/90 animate-fade-in" style={{ animationDelay: "0.2s" }}>
@@ -39,6 +48,13 @@ const HeroSection = () => {
             </Link>
           </div>
         </div>
+      </div>
+      
+      {/* Decorative element - Bottom wave pattern */}
+      <div className="absolute bottom-0 left-0 right-0 h-16 md:h-24 z-10">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="absolute bottom-0 text-emirati-sandstone">
+          <path fill="currentColor" fillOpacity="1" d="M0,160L48,160C96,160,192,160,288,170.7C384,181,480,203,576,186.7C672,171,768,117,864,101.3C960,85,1056,107,1152,117.3C1248,128,1344,128,1392,128L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
       </div>
     </div>
   );
