@@ -22,11 +22,13 @@ import UpskillingTab from "@/components/jobs/UpskillingTab";
 import JobLocationTab from "@/components/jobs/JobLocationTab";
 import { students } from "@/data/mockData";
 import { recommendJobs } from "@/utils/career/recommendations";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const JobApplications = () => {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<JobApplication[]>(initialApplications);
   const [matchedVacancies, setMatchedVacancies] = useState<Vacancy[]>(vacanciesData);
+  const [activeTab, setActiveTab] = useState("applications");
   
   // Use the first student from mock data for demonstration
   const mockStudent = students[0];
@@ -38,6 +40,10 @@ const JobApplications = () => {
       setMatchedVacancies(recommendedJobs);
     }
   }, [mockStudent]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -53,7 +59,7 @@ const JobApplications = () => {
         <h1 className="text-3xl font-bold text-emirati-oasisGreen">Job Applications Tracker</h1>
       </div>
 
-      <Tabs defaultValue="applications" className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="mb-6 bg-emirati-sandBeige/20">
           <TabsTrigger value="applications" className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white">
             <BriefcaseIcon size={16} className="mr-2" /> My Applications
@@ -89,7 +95,11 @@ const JobApplications = () => {
         </TabsContent>
 
         <TabsContent value="location">
-          <JobLocationTab jobs={jobLocationsData} />
+          <ErrorBoundary fallback={<div className="p-6 border rounded-md bg-red-50 text-red-800">
+            There was an error loading the map. Please try again later.
+          </div>}>
+            <JobLocationTab jobs={jobLocationsData} />
+          </ErrorBoundary>
         </TabsContent>
       </Tabs>
     </div>
