@@ -24,7 +24,8 @@ import {
   Info, 
   CheckCircle, 
   AlertTriangle,
-  ChevronRight
+  ChevronRight,
+  Briefcase
 } from "lucide-react";
 
 const UaeComponentsShowcase = () => {
