@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -95,6 +94,55 @@
   
   .font-serif {
     font-family: 'Amiri', 'Scheherazade New', serif;
+  }
+
+  /* UAE Theme Variations */
+  .theme-desert {
+    @apply bg-emirati-sandBeige;
+  }
+  
+  .theme-desert .uae-card {
+    @apply bg-amber-50 border-amber-200/50;
+  }
+
+  .theme-desert .decorative-element div {
+    @apply bg-amber-700;
+  }
+  
+  .theme-desert .decorative-element div div {
+    @apply bg-amber-500;
+  }
+
+  .theme-oasis {
+    @apply bg-emerald-50;
+  }
+  
+  .theme-oasis .uae-card {
+    @apply bg-emerald-50 border-emerald-200/50;
+  }
+  
+  .theme-oasis .decorative-element div {
+    @apply bg-emerald-700;
+  }
+  
+  .theme-oasis .decorative-element div div {
+    @apply bg-emerald-500;
+  }
+
+  .theme-modern {
+    @apply bg-slate-50;
+  }
+  
+  .theme-modern .uae-card {
+    @apply bg-white border-slate-200/50 shadow-md;
+  }
+  
+  .theme-modern .decorative-element div {
+    @apply bg-blue-700;
+  }
+  
+  .theme-modern .decorative-element div div {
+    @apply bg-blue-500;
   }
 }
 

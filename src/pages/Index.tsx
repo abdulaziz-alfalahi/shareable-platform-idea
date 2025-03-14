@@ -1,72 +1,29 @@
 
 import React from "react";
-import Header from "@/components/home/Header";
-import Footer from "@/components/home/Footer";
 import HeroSection from "@/components/home/HeroSection";
+import ServicesSection from "@/components/home/ServicesSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import CallToActionSection from "@/components/home/CallToActionSection";
-import SearchBar from "@/components/home/SearchBar";
-import ServicesSection from "@/components/home/ServicesSection";
+import Header from "@/components/home/Header";
+import Footer from "@/components/home/Footer";
 import FeaturedResourcesSection from "@/components/home/FeaturedResourcesSection";
 import CareerJourneyTimeline from "@/components/home/CareerJourneyTimeline";
+import ThemeToggle from "@/components/home/theme/ThemeToggle";
 
-const Index = () => {
+export default function Index() {
   return (
-    <div className="flex flex-col min-h-screen bg-emirati-sandstone">
+    <div className="min-h-screen">
       <Header />
-
-      {/* Hero Section */}
-      <HeroSection />
-
-      {/* Search Section */}
-      <section className="py-8 -mt-6 relative z-10">
-        <div className="container mx-auto px-4">
-          <SearchBar />
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <main className="flex-1 container mx-auto py-12 px-4">
-        {/* Decorative cultural element */}
-        <div className="flex justify-center mb-12">
-          <div className="h-20 w-20 relative">
-            <div className="absolute inset-0 bg-emirati-desertGold rounded-full opacity-20"></div>
-            <div className="absolute inset-2 bg-emirati-oasisGreen rounded-full opacity-30"></div>
-            <div className="absolute inset-4 bg-emirati-camelBrown rounded-full opacity-40"></div>
-            <div className="absolute inset-6 bg-emirati-desertGold rounded-full opacity-50"></div>
-            <div className="absolute inset-8 bg-emirati-oasisGreen rounded-full opacity-60"></div>
-          </div>
-        </div>
-        
-        <section className="text-center mb-12 animate-fade-in">
-          <h2 className="text-4xl font-extrabold text-emirati-oasisGreen mb-4 font-serif">
-            Our Services
-          </h2>
-          <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-            Your gateway to employment opportunities, career development resources, and professional growth in the UAE.
-          </p>
-          <p className="text-sm text-emirati-deepBrown/70 mt-2 max-w-2xl mx-auto">
-            Browse services by career stage or explore all available resources to support your professional journey.
-          </p>
-        </section>
-
+      <main className="container mx-auto px-4 py-4">
+        <HeroSection />
+        <ThemeToggle />
         <ServicesSection />
+        <CareerJourneyTimeline />
+        <TestimonialsSection />
         <FeaturedResourcesSection />
+        <CallToActionSection />
       </main>
-
-      {/* Career Journey Timeline */}
-      <CareerJourneyTimeline />
-
-      {/* Testimonials Section */}
-      <TestimonialsSection />
-
-      {/* Call to Action Section */}
-      <CallToActionSection />
-
-      {/* Footer */}
       <Footer />
     </div>
   );
-};
-
-export default Index;
+}
