@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -17,13 +17,25 @@ import {
   jobLocationsData 
 } from "@/components/jobs/mockData";
 import MyApplicationsTab, { JobApplication } from "@/components/jobs/MyApplicationsTab";
-import MatchingVacanciesTab from "@/components/jobs/MatchingVacanciesTab";
+import MatchingVacanciesTab, { Vacancy } from "@/components/jobs/MatchingVacanciesTab";
 import UpskillingTab from "@/components/jobs/UpskillingTab";
 import JobLocationTab from "@/components/jobs/JobLocationTab";
+import { usePassportData } from "@/hooks/passport/usePassportData";
+import { recommendJobs } from "@/utils/career/recommendations";
 
 const JobApplications = () => {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<JobApplication[]>(initialApplications);
+  const [matchedVacancies, setMatchedVacancies] = useState<Vacancy[]>(vacanciesData);
+  const { student } = usePassportData();
+
+  // Update matched vacancies based on student profile when it loads
+  useEffect(() => {
+    if (student) {
+      const recommendedJobs = recommendJobs(student, vacanciesData);
+      setMatchedVacancies(recommendedJobs);
+    }
+  }, [student]);
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -64,7 +76,7 @@ const JobApplications = () => {
 
         <TabsContent value="matching">
           <MatchingVacanciesTab 
-            vacancies={vacanciesData} 
+            vacancies={matchedVacancies} 
             setApplications={setApplications}
             applications={applications}
           />

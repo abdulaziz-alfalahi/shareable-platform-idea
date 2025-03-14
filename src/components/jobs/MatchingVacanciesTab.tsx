@@ -14,7 +14,9 @@ import {
   MapPinIcon,
   SendIcon,
   ArrowUpCircleIcon,
-  InfoIcon
+  InfoIcon,
+  ChevronDownIcon,
+  ChevronUpIcon
 } from "lucide-react";
 import { 
   Tooltip,
@@ -24,6 +26,8 @@ import {
 } from "@/components/ui/tooltip";
 import { notifySuccess } from "@/utils/notification";
 import { JobApplication } from "./MyApplicationsTab";
+import SkillMatchVisualization from "./SkillMatchVisualization";
+import { useState } from "react";
 
 export interface Vacancy {
   id: string;
@@ -48,6 +52,7 @@ export const MatchingVacanciesTab = ({
   setApplications,
   applications
 }: MatchingVacanciesTabProps) => {
+  const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
   
   const handleApplyToJob = (jobTitle: string, company: string) => {
     const application: JobApplication = {
@@ -72,6 +77,13 @@ export const MatchingVacanciesTab = ({
     if (percentage >= 75) return "text-blue-600";
     if (percentage >= 60) return "text-yellow-600";
     return "text-red-600";
+  };
+
+  const toggleExpand = (id: string) => {
+    setExpandedCards(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
 
   return (
@@ -127,40 +139,57 @@ export const MatchingVacanciesTab = ({
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <div>
-                  <p className="text-sm font-medium">Required Skills:</p>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {vacancy.requiredSkills.map((skill, index) => (
-                      <span 
-                        key={index} 
-                        className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                
-                {vacancy.missingSkills.length > 0 && (
+              {!expandedCards[vacancy.id] ? (
+                <div className="space-y-2">
                   <div>
-                    <p className="text-sm font-medium flex items-center">
-                      Skills to Develop
-                      <ArrowUpCircleIcon size={14} className="ml-1 text-emirati-desertGold" />
-                    </p>
+                    <p className="text-sm font-medium">Required Skills:</p>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {vacancy.missingSkills.map((skill, index) => (
+                      {vacancy.requiredSkills.map((skill, index) => (
                         <span 
                           key={index} 
-                          className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full"
+                          className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full"
                         >
                           {skill}
                         </span>
                       ))}
                     </div>
                   </div>
+                  
+                  {vacancy.missingSkills.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium flex items-center">
+                        Skills to Develop
+                        <ArrowUpCircleIcon size={14} className="ml-1 text-emirati-desertGold" />
+                      </p>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {vacancy.missingSkills.map((skill, index) => (
+                          <span 
+                            key={index} 
+                            className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <SkillMatchVisualization vacancy={vacancy} />
+              )}
+              
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => toggleExpand(vacancy.id)}
+                className="w-full mt-3 text-emirati-desertGold"
+              >
+                {expandedCards[vacancy.id] ? (
+                  <>Show Skills <ChevronUpIcon className="ml-1 h-4 w-4" /></>
+                ) : (
+                  <>View Match Details <ChevronDownIcon className="ml-1 h-4 w-4" /></>
                 )}
-              </div>
+              </Button>
             </CardContent>
             <CardFooter className="pt-1">
               <Button 
