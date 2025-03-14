@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -189,4 +190,39 @@
 .uae-card::before {
   content: "";
   @apply absolute top-0 right-0 w-20 h-20 bg-emirati-desertGold/10 -translate-x-1/2 -translate-y-1/2 rounded-full;
+}
+
+/* Mobile navigation styles */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .mobile-nav-active {
+    overflow: hidden;
+  }
+}
+
+/* Mobile navigation slide effect */
+.mobile-nav-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.mobile-nav-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.mobile-nav-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mobile-nav-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 300ms, transform 300ms;
 }

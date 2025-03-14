@@ -1,6 +1,7 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Map, User, Search, Briefcase, GraduationCap, Database, Menu, X, ChevronDown, School, Building, Target } from "lucide-react";
+import { Map, User, Search, Briefcase, GraduationCap, Database, ChevronDown, School, Building, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,6 +11,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
+import MobileNavigation from "./MobileNavigation";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Define our personas
 const personas = [
@@ -28,14 +31,18 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPersona, setCurrentPersona] = useState(personas[0]);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const handlePersonaChange = (persona) => {
     setCurrentPersona(persona);
     navigate(persona.path);
+    if (isMobile) {
+      setMobileMenuOpen(false);
+    }
   };
 
   return (
-    <header className="bg-white border-b border-emirati-sandBeige/20 py-4">
+    <header className="bg-white border-b border-emirati-sandBeige/20 py-4 sticky top-0 z-40">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center">
           <Link to="/" className="text-2xl font-bold text-emirati-desertRed">
@@ -43,6 +50,7 @@ const Header = () => {
           </Link>
         </div>
 
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
           <Link to="/student-dashboard" className="text-gray-700 hover:text-emirati-oasisGreen transition">
             Dashboard
@@ -65,13 +73,14 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon">
+          {/* Common actions shown on both mobile and desktop */}
+          <Button variant="ghost" size="icon" className="hidden sm:flex">
             <Search className="h-5 w-5" />
           </Button>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="hidden sm:flex">
                 <Briefcase className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
@@ -87,7 +96,7 @@ const Header = () => {
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="hidden sm:flex">
                 <GraduationCap className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
@@ -101,11 +110,12 @@ const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           
+          {/* Persona Switcher (shown on both mobile and desktop) */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="flex items-center">
                 {currentPersona.icon}
-                {currentPersona.name}
+                <span className="hidden sm:inline-block ml-1">{currentPersona.name}</span>
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -129,84 +139,10 @@ const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          {/* Mobile Navigation Trigger */}
+          <MobileNavigation isOpen={mobileMenuOpen} setIsOpen={setMobileMenuOpen} />
         </div>
       </div>
-      
-      {mobileMenuOpen && (
-        <div className="md:hidden px-4 pt-2 pb-4 bg-white border-t border-gray-100">
-          <nav className="flex flex-col space-y-3">
-            <Link 
-              to="/student-dashboard" 
-              className="text-gray-700 hover:text-emirati-oasisGreen transition py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Dashboard
-            </Link>
-            <Link 
-              to="/career-passport" 
-              className="text-gray-700 hover:text-emirati-oasisGreen transition py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Career Passport
-            </Link>
-            <Link 
-              to="/job-applications" 
-              className="text-gray-700 hover:text-emirati-oasisGreen transition py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Jobs
-            </Link>
-            <Link 
-              to="/training-centers" 
-              className="text-gray-700 hover:text-emirati-oasisGreen transition py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Training
-            </Link>
-            <Link 
-              to="/mindmap" 
-              className="text-gray-700 hover:text-emirati-oasisGreen transition py-2 flex items-center"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Map className="w-4 h-4 mr-1" /> Mindmap
-            </Link>
-            <Link 
-              to="/data-entry" 
-              className="text-gray-700 hover:text-emirati-oasisGreen transition py-2 flex items-center"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Database className="w-4 h-4 mr-1" /> Data Entry
-            </Link>
-            
-            <div className="pt-2 border-t border-gray-100">
-              <p className="text-sm font-medium text-gray-500 mb-2">Switch Persona</p>
-              {personas.map((persona) => (
-                <button
-                  key={persona.id}
-                  className={`flex items-center w-full text-left py-2 px-2 rounded-md ${
-                    currentPersona.id === persona.id ? 'bg-emirati-sandBeige/20 text-emirati-oasisGreen' : 'text-gray-700'
-                  }`}
-                  onClick={() => {
-                    handlePersonaChange(persona);
-                    setMobileMenuOpen(false);
-                  }}
-                >
-                  {persona.icon}
-                  <span>{persona.name}</span>
-                </button>
-              ))}
-            </div>
-          </nav>
-        </div>
-      )}
     </header>
   );
 };

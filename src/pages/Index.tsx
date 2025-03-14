@@ -12,11 +12,13 @@ import ThemeToggle from "@/components/home/theme/ThemeToggle";
 
 export default function Index() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="container mx-auto px-4 py-4">
+      <main className="container mx-auto px-4 py-4 flex-1">
         <HeroSection />
-        <ThemeToggle />
+        <div className="hidden md:block">
+          <ThemeToggle />
+        </div>
         <ServicesSection />
         <CareerJourneyTimeline />
         <TestimonialsSection />
