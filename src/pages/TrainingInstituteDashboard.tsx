@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import RoleDashboardLayout, { DashboardTab, DashboardMetric } from "@/components/dashboard/RoleDashboardLayout";
 import { TabsContent } from "@/components/ui/tabs";
@@ -58,7 +57,7 @@ const TrainingInstituteDashboard = () => {
       label: "Placement Rate", 
       value: "72%", 
       description: "Graduates in relevant jobs", 
-      icon: <Trending className="w-4 h-4" />
+      icon: <TrendingUp className="w-4 h-4" />
     }
   ];
 

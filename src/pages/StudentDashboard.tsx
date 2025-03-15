@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import RoleDashboardLayout, { DashboardTab, DashboardMetric } from "@/components/dashboard/RoleDashboardLayout";
 import { TabsContent } from "@/components/ui/tabs";
@@ -12,7 +11,6 @@ import { Student } from "@/types/student";
 const studentData: Student = {
   id: 123,
   name: "Mohammed Al Mansoori",
-  email: "mohammed@example.com",
   program: "Computer Science",
   year: 3,
   gradeLevel: "university-3",
@@ -54,7 +52,7 @@ const StudentDashboard = () => {
   const dashboardMetrics: DashboardMetric[] = [
     { 
       label: "Courses Completed", 
-      value: studentData.completedCourses, 
+      value: studentData.coursesCompleted, 
       change: "+2 this month", 
       trend: "up", 
       icon: <BookOpen className="w-4 h-4" />
@@ -152,7 +150,6 @@ const StudentDashboard = () => {
   );
 };
 
-// Placeholder components for tabs
 const UpcomingAssessments = () => (
   <div className="rounded-lg border p-4">
     <h3 className="text-lg font-medium mb-4">Upcoming Assessments</h3>
