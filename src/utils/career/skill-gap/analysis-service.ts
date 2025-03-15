@@ -12,10 +12,24 @@ export const extractStudentSkills = (student: Student): string[] => {
   // Extract skills from passport stamps (those with 'Skills' category)
   const skillsFromStamps = student.passportStamps
     .filter(stamp => stamp.category === 'Skills')
-    .map(stamp => stamp.title.toLowerCase());
+    .map(stamp => stamp.title);
+  
+  // Hard-coded skills for demonstration purposes
+  // In a real app, these would come from a more sophisticated assessment
+  const additionalSkills = [
+    "Leadership", 
+    "Strategic Planning", 
+    "Project Management",
+    "Communication",
+    "Problem Solving"
+  ];
   
   // Combine and deduplicate skills
-  return Array.from(new Set([...skillsFromAchievements.map(s => s.toLowerCase()), ...skillsFromStamps]));
+  return Array.from(new Set([
+    ...skillsFromAchievements.map(s => s), 
+    ...skillsFromStamps,
+    ...additionalSkills
+  ]));
 };
 
 /**
@@ -29,7 +43,8 @@ export const analyzeSkillGaps = (student: Student): SkillGap[] => {
   for (const trend of uaeJobMarketTrends) {
     // Check if student has this skill already
     const hasSkill = studentSkills.some(skill => 
-      skill.includes(trend.skill) || trend.skill.includes(skill)
+      skill.toLowerCase().includes(trend.skill.toLowerCase()) || 
+      trend.skill.toLowerCase().includes(skill.toLowerCase())
     );
     
     if (!hasSkill) {
@@ -38,7 +53,7 @@ export const analyzeSkillGaps = (student: Student): SkillGap[] => {
       let relevanceScore = trend.growth;
       
       // If student has a career path that matches the sector, increase relevance
-      if (student.careerPath && trend.sector.includes(student.careerPath.toLowerCase())) {
+      if (student.careerPath && trend.sector.toLowerCase().includes(student.careerPath.toLowerCase())) {
         relevanceScore += 20;
       }
       
@@ -67,4 +82,15 @@ export const analyzeSkillGaps = (student: Student): SkillGap[] => {
 export const getTopSkillRecommendations = (student: Student, limit: number = 3): SkillGap[] => {
   const gaps = analyzeSkillGaps(student);
   return gaps.slice(0, limit);
+};
+
+/**
+ * Calculate the overall skill market fit percentage
+ */
+export const calculateSkillMarketFit = (student: Student): number => {
+  const studentSkills = extractStudentSkips(student);
+  const skillGaps = analyzeSkillGaps(student);
+  
+  // Simple calculation: (existing skills) / (existing skills + gaps) * 100
+  return Math.min(100, Math.round((studentSkills.length / (studentSkills.length + skillGaps.length)) * 100));
 };

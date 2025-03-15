@@ -2,12 +2,14 @@
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Calendar, Award, MessageSquare, TreePalm } from "lucide-react";
+import { BookOpen, Calendar, Award, MessageSquare, TreePalm, BarChart } from "lucide-react";
 import EnrollmentManagement from "@/components/training/EnrollmentManagement";
 import TrainingCalendar from "@/components/training/TrainingCalendar";
 import CertificateGenerator from "@/components/training/CertificateGenerator";
 import ProgramReviews from "@/components/training/ProgramReviews";
 import { UaeGeometricPattern } from "@/components/ui/uae";
+import SkillGapAnalysis from "@/components/passport/skill-gap/SkillGapAnalysis";
+import { studentData } from "@/data/studentMockData";
 
 const TrainingStudentDashboard = () => {
   const [activeTab, setActiveTab] = useState("enrollments");
@@ -52,6 +54,9 @@ const TrainingStudentDashboard = () => {
           <TabsTrigger value="reviews" className="flex items-center data-[state=active]:bg-emirati-oasisGreen/10">
             <MessageSquare className="h-4 w-4 mr-2" /> Reviews
           </TabsTrigger>
+          <TabsTrigger value="skill-gaps" className="flex items-center data-[state=active]:bg-emirati-oasisGreen/10">
+            <BarChart className="h-4 w-4 mr-2" /> Skill Gaps
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="enrollments">
@@ -68,6 +73,10 @@ const TrainingStudentDashboard = () => {
         
         <TabsContent value="reviews">
           <ProgramReviews />
+        </TabsContent>
+        
+        <TabsContent value="skill-gaps">
+          <SkillGapAnalysis student={studentData} />
         </TabsContent>
       </Tabs>
       
