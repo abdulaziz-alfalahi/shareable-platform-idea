@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +24,10 @@ import RetirementPlanningPage from "./pages/RetirementPlanningPage";
 import EnhancedRetirementPlanning from "./pages/EnhancedRetirementPlanning";
 import MindMap from "./pages/MindMap";
 import DataEntryPage from "./pages/DataEntryPage";
+import IndustryGuides from "./pages/IndustryGuides";
+import EducationalResources from "./pages/EducationalResources";
+import ParentDashboard from "./pages/ParentDashboard";
+import TrainingInstituteDashboard from "./pages/TrainingInstituteDashboard";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +58,10 @@ function App() {
               <Route path="/retirement-planner" element={<RetirementPlanning />} />
               <Route path="/enhanced-retirement-planning" element={<EnhancedRetirementPlanning />} />
               <Route path="/mindmap" element={<MindMap />} />
+              <Route path="/industry-guides" element={<IndustryGuides />} />
+              <Route path="/educational-resources" element={<EducationalResources />} />
+              <Route path="/parent-dashboard" element={<ParentDashboard />} />
+              <Route path="/training-dashboard" element={<TrainingInstituteDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
