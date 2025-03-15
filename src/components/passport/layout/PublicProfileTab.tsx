@@ -1,8 +1,15 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Student } from "@/types/student";
 
-const PublicProfileTab: React.FC = () => {
+// This component currently doesn't use the student prop, but we're adding it
+// to match how it's being called from PassportTabsContent
+interface PublicProfileTabProps {
+  student?: Student; // Make it optional for backward compatibility
+}
+
+const PublicProfileTab: React.FC<PublicProfileTabProps> = ({ student }) => {
   return (
     <div className="bg-white rounded-lg border p-6">
       <h2 className="text-xl font-semibold mb-4">Public Profile</h2>
