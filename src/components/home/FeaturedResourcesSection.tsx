@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Users, TrendingUp, Coffee, Palmtree, Compass } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const FeaturedResourcesSection = () => {
   const resources = [
@@ -57,31 +58,32 @@ const FeaturedResourcesSection = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {resources.map((resource, index) => (
-          <Link to={resource.link} key={index} className="block">
-            <Card className="hover:shadow-md transition-all duration-300 border-emirati-desertGold/30 hover:border-emirati-desertGold group overflow-hidden cursor-pointer">
-              <div className="absolute inset-0 bg-gradient-to-b from-emirati-oasisGreen/5 to-transparent"></div>
-              <CardHeader>
-                <div className="flex items-center justify-center bg-emirati-oasisGreen/10 w-12 h-12 rounded-full mx-auto mb-2 group-hover:scale-110 transition-transform group-hover:bg-emirati-oasisGreen/20">
-                  {resource.icon}
-                </div>
-                <CardTitle className="flex flex-col items-center justify-center gap-2">
-                  <span className="font-serif">{resource.title}</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base mb-4">
-                  {resource.description}
-                </CardDescription>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {resource.tags.map((tag, i) => (
-                    <Badge key={i} variant="outline" className="bg-emirati-sandstone/50 text-emirati-deepBrown border-emirati-desertGold/30">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
+          <Card key={index} className="transition-all duration-300 border-emirati-desertGold/30 hover:border-emirati-desertGold group overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-emirati-oasisGreen/5 to-transparent pointer-events-none"></div>
+            <CardHeader>
+              <div className="flex items-center justify-center bg-emirati-oasisGreen/10 w-12 h-12 rounded-full mx-auto mb-2 group-hover:scale-110 transition-transform group-hover:bg-emirati-oasisGreen/20">
+                {resource.icon}
+              </div>
+              <CardTitle className="flex flex-col items-center justify-center gap-2">
+                <span className="font-serif">{resource.title}</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription className="text-base mb-4">
+                {resource.description}
+              </CardDescription>
+              <div className="flex flex-wrap gap-2 justify-center mb-4">
+                {resource.tags.map((tag, i) => (
+                  <Badge key={i} variant="outline" className="bg-emirati-sandstone/50 text-emirati-deepBrown border-emirati-desertGold/30">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <Button variant="outline" className="w-full" asChild>
+                <Link to={resource.link}>Learn More</Link>
+              </Button>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </section>
