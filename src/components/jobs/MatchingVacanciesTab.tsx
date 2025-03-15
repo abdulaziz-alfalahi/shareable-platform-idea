@@ -39,7 +39,7 @@ export interface Vacancy {
   careerPathAlignment?: number;
 }
 
-interface JobApplication {
+export interface JobApplication {
   id: string;
   jobTitle: string;
   company: string;

@@ -18,6 +18,7 @@ export interface TrainingRecommendation {
   duration: string;
   level: 'beginner' | 'intermediate' | 'advanced';
   format: 'online' | 'in-person' | 'hybrid';
+  description: string; // Added missing property
   url?: string;
 }
 

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -29,6 +28,16 @@ import AiSkillRecommendations from "@/components/jobs/AiSkillRecommendations";
 import CulturalFitAssessment from "@/components/jobs/CulturalFitAssessment";
 import { notifySuccess } from "@/utils/notification";
 
+const enrichVacancy = (vacancy: any): Vacancy => {
+  return {
+    ...vacancy,
+    matchedSkills: vacancy.matchedSkills || vacancy.requiredSkills.slice(0, Math.ceil(vacancy.requiredSkills.length * (vacancy.matchPercentage / 100))),
+    missingSkills: vacancy.missingSkills || vacancy.requiredSkills.slice(Math.ceil(vacancy.requiredSkills.length * (vacancy.matchPercentage / 100))),
+    culturalFit: vacancy.culturalFit || Math.round(65 + Math.random() * 25),
+    careerPathAlignment: vacancy.careerPathAlignment || Math.round(60 + Math.random() * 30)
+  };
+};
+
 const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -42,7 +51,7 @@ const JobDetails = () => {
     if (id) {
       const foundVacancy = vacanciesData.find(v => v.id === id);
       if (foundVacancy) {
-        setVacancy(foundVacancy);
+        setVacancy(enrichVacancy(foundVacancy));
         
         // Check if user has already applied (demo purposes)
         const randomApplied = Math.random() > 0.7;
@@ -366,3 +375,4 @@ const JobDetails = () => {
 };
 
 export default JobDetails;
+

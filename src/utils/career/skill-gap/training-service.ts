@@ -50,3 +50,6 @@ export const searchTrainingPrograms = (keyword: string): TrainingRecommendation[
     program.provider.toLowerCase().includes(searchTerm)
   );
 };
+
+// Re-export TrainingRecommendation type for external use
+export type { TrainingRecommendation };

@@ -34,7 +34,11 @@ import { Badge } from "@/components/ui/badge";
 
 interface JobVacancyCardProps {
   vacancy: Vacancy;
-  onApply: (jobTitle: string, company: string) => void;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
+  onApply: () => void;
+  onViewDetails: () => void;
+  isApplying: boolean;
   matchType?: string;
 }
 
@@ -45,13 +49,15 @@ export const getMatchColor = (percentage: number) => {
   return "text-red-600";
 };
 
-const JobVacancyCard = ({ vacancy, onApply, matchType = "skill-match" }: JobVacancyCardProps) => {
-  const [expanded, setExpanded] = useState(false);
-  
-  const toggleExpand = () => {
-    setExpanded(prev => !prev);
-  };
-
+const JobVacancyCard = ({ 
+  vacancy, 
+  isExpanded, 
+  onToggleExpand, 
+  onApply, 
+  onViewDetails, 
+  isApplying, 
+  matchType = "skill-match" 
+}: JobVacancyCardProps) => {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
@@ -106,7 +112,7 @@ const JobVacancyCard = ({ vacancy, onApply, matchType = "skill-match" }: JobVaca
           </div>
         </div>
         
-        {!expanded ? (
+        {!isExpanded ? (
           <VacancySkillsList vacancy={vacancy} />
         ) : (
           <SkillMatchVisualization vacancy={vacancy} />
@@ -115,10 +121,10 @@ const JobVacancyCard = ({ vacancy, onApply, matchType = "skill-match" }: JobVaca
         <Button 
           variant="ghost" 
           size="sm" 
-          onClick={toggleExpand}
+          onClick={onToggleExpand}
           className="w-full mt-3 text-emirati-desertGold"
         >
-          {expanded ? (
+          {isExpanded ? (
             <>Show Skills <ChevronUpIcon className="ml-1 h-4 w-4" /></>
           ) : (
             <>View Match Details <ChevronDownIcon className="ml-1 h-4 w-4" /></>
@@ -128,9 +134,12 @@ const JobVacancyCard = ({ vacancy, onApply, matchType = "skill-match" }: JobVaca
       <CardFooter className="pt-1">
         <Button 
           className="w-full bg-emirati-oasisGreen hover:bg-emirati-desertGold"
-          onClick={() => onApply(vacancy.title, vacancy.company)}
+          onClick={onApply}
+          disabled={isApplying}
         >
-          <SendIcon size={14} className="mr-1" /> Apply Now
+          {isApplying ? "Applying..." : (
+            <><SendIcon size={14} className="mr-1" /> Apply Now</>
+          )}
         </Button>
       </CardFooter>
     </Card>

@@ -57,7 +57,7 @@ export const generateAIRecommendations = (
     const matchingPrograms = allPrograms.filter(program => 
       topSkills.some(skill => 
         program.title.toLowerCase().includes(skill.skill.toLowerCase()) ||
-        program.description.toLowerCase().includes(skill.skill.toLowerCase())
+        (program.description && program.description.toLowerCase().includes(skill.skill.toLowerCase()))
       )
     ).slice(0, 3);
     
@@ -103,7 +103,7 @@ export const generateCareerTransitionRecommendations = (
   const recommendedTraining = allPrograms.filter(program => 
     requiredSkills.some(skill => 
       program.title.toLowerCase().includes(skill.toLowerCase()) ||
-      program.description.toLowerCase().includes(skill.toLowerCase())
+      (program.description && program.description.toLowerCase().includes(skill.toLowerCase()))
     )
   ).slice(0, 3);
   

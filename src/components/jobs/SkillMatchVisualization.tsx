@@ -12,18 +12,26 @@ import { Vacancy } from './MatchingVacanciesTab';
 import { Separator } from "@/components/ui/separator";
 
 interface SkillMatchVisualizationProps {
-  vacancy: Vacancy;
+  vacancy?: Vacancy;
+  matchPercentage?: number;
+  matchedSkills?: string[];
+  missingSkills?: string[];
+  careerPathAlignment?: number;
+  culturalFit?: number;
 }
 
-const SkillMatchVisualization: React.FC<SkillMatchVisualizationProps> = ({ vacancy }) => {
+const SkillMatchVisualization: React.FC<SkillMatchVisualizationProps> = (props) => {
+  // Allow component to be used with either a vacancy object or individual props
   const { 
-    matchPercentage, 
-    requiredSkills, 
-    missingSkills,
-    matchedSkills = [],
-    culturalFit = 70,
-    careerPathAlignment = 60
-  } = vacancy;
+    matchPercentage = props.vacancy?.matchPercentage || 0, 
+    matchedSkills = props.vacancy?.matchedSkills || [],
+    missingSkills = props.vacancy?.missingSkills || [],
+    careerPathAlignment = props.vacancy?.careerPathAlignment || 60,
+    culturalFit = props.vacancy?.culturalFit || 70
+  } = props;
+  
+  const requiredSkills = props.vacancy?.requiredSkills || 
+    [...(matchedSkills || []), ...(missingSkills || [])];
   
   // Determine color based on match percentage
   const getMatchColor = (percentage: number) => {
@@ -35,6 +43,7 @@ const SkillMatchVisualization: React.FC<SkillMatchVisualizationProps> = ({ vacan
 
   // Count matched skills
   const matchedSkillsCount = matchedSkills.length;
+  const totalSkillsCount = requiredSkills.length || matchedSkills.length + missingSkills.length;
   
   return (
     <div className="space-y-4">
@@ -63,8 +72,8 @@ const SkillMatchVisualization: React.FC<SkillMatchVisualizationProps> = ({ vacan
           
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Matched Skills ({matchedSkillsCount}/{requiredSkills.length})</span>
-              <span>{Math.round((matchedSkillsCount/requiredSkills.length) * 100)}%</span>
+              <span>Matched Skills ({matchedSkillsCount}/{totalSkillsCount})</span>
+              <span>{totalSkillsCount > 0 ? Math.round((matchedSkillsCount/totalSkillsCount) * 100) : 0}%</span>
             </div>
             
             <div className="flex flex-wrap gap-2">
@@ -89,8 +98,8 @@ const SkillMatchVisualization: React.FC<SkillMatchVisualizationProps> = ({ vacan
           {missingSkills.length > 0 && (
             <div className="mt-4 space-y-2">
               <div className="flex justify-between text-sm text-muted-foreground">
-                <span>Missing Skills ({missingSkills.length}/{requiredSkills.length})</span>
-                <span>{Math.round((missingSkills.length/requiredSkills.length) * 100)}%</span>
+                <span>Missing Skills ({missingSkills.length}/{totalSkillsCount})</span>
+                <span>{totalSkillsCount > 0 ? Math.round((missingSkills.length/totalSkillsCount) * 100) : 0}%</span>
               </div>
               
               <div className="flex flex-wrap gap-2">

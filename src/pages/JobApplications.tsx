@@ -17,19 +17,30 @@ import {
   trainingProgramsData, 
   jobLocationsData 
 } from "@/components/jobs/mockData";
-import MyApplicationsTab, { JobApplication } from "@/components/jobs/MyApplicationsTab";
-import MatchingVacanciesTab, { Vacancy } from "@/components/jobs/MatchingVacanciesTab";
+import MyApplicationsTab from "@/components/jobs/MyApplicationsTab";
+import MatchingVacanciesTab, { Vacancy, JobApplication } from "@/components/jobs/MatchingVacanciesTab";
 import UpskillingTab from "@/components/jobs/UpskillingTab";
 import JobLocationTab from "@/components/jobs/JobLocationTab";
 import { students } from "@/data/mockData";
 import { recommendJobs, recommendCareerAlignedJobs } from "@/utils/career/recommendations";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 
+// Add matchedSkills to mockVacancies if they don't already have them
+const enrichVacancyData = (vacancies: any[]): Vacancy[] => {
+  return vacancies.map(vacancy => ({
+    ...vacancy,
+    matchedSkills: vacancy.matchedSkills || vacancy.requiredSkills.slice(0, Math.ceil(vacancy.requiredSkills.length * (vacancy.matchPercentage / 100))),
+    missingSkills: vacancy.missingSkills || vacancy.requiredSkills.slice(Math.ceil(vacancy.requiredSkills.length * (vacancy.matchPercentage / 100))),
+    culturalFit: vacancy.culturalFit || Math.round(65 + Math.random() * 25),
+    careerPathAlignment: vacancy.careerPathAlignment || Math.round(60 + Math.random() * 30)
+  }));
+};
+
 const JobApplications = () => {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<JobApplication[]>(initialApplications);
-  const [matchedVacancies, setMatchedVacancies] = useState<Vacancy[]>(vacanciesData);
-  const [careerAlignedVacancies, setCareerAlignedVacancies] = useState<Vacancy[]>(vacanciesData);
+  const [matchedVacancies, setMatchedVacancies] = useState<Vacancy[]>(enrichVacancyData(vacanciesData));
+  const [careerAlignedVacancies, setCareerAlignedVacancies] = useState<Vacancy[]>(enrichVacancyData(vacanciesData));
   const [activeTab, setActiveTab] = useState("applications");
   const [matchingSubTab, setMatchingSubTab] = useState("skill-match"); // 'skill-match' or 'career-path'
   
@@ -40,11 +51,11 @@ const JobApplications = () => {
   useEffect(() => {
     if (mockStudent) {
       // Get skill-based matches
-      const skillRecommendedJobs = recommendJobs(mockStudent, vacanciesData);
+      const skillRecommendedJobs = recommendJobs(mockStudent, matchedVacancies);
       setMatchedVacancies(skillRecommendedJobs);
       
       // Get career path aligned matches
-      const careerRecommendedJobs = recommendCareerAlignedJobs(mockStudent, vacanciesData);
+      const careerRecommendedJobs = recommendCareerAlignedJobs(mockStudent, matchedVacancies);
       setCareerAlignedVacancies(careerRecommendedJobs);
     }
   }, [mockStudent]);
@@ -94,8 +105,37 @@ const JobApplications = () => {
 
         <TabsContent value="applications">
           <MyApplicationsTab 
-            applications={applications} 
-            setApplications={setApplications} 
+            applications={applications.map(app => ({
+              id: app.id,
+              position: app.jobTitle,
+              company: app.company,
+              date: app.appliedDate,
+              status: app.status.toLowerCase() as any, // Convert to MyApplicationsTab status format
+              notes: ""
+            }))} 
+            setApplications={(newApps) => {
+              // Convert from MyApplicationsTab format to our JobApplication format
+              setApplications(
+                (typeof newApps === 'function' 
+                  ? newApps(applications.map(app => ({
+                      id: app.id,
+                      position: app.jobTitle,
+                      company: app.company,
+                      date: app.appliedDate,
+                      status: app.status.toLowerCase() as any,
+                      notes: ""
+                    }))) 
+                  : newApps
+                ).map(app => ({
+                  id: app.id,
+                  jobTitle: app.position,
+                  company: app.company,
+                  appliedDate: app.date,
+                  status: app.status.charAt(0).toUpperCase() + app.status.slice(1) as any,
+                  priority: "medium" // Default priority
+                }))
+              );
+            }} 
           />
         </TabsContent>
 
