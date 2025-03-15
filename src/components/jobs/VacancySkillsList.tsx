@@ -1,6 +1,5 @@
-
 import { ArrowUpCircleIcon } from "lucide-react";
-import { Vacancy } from "./MatchingVacanciesTab";
+import { Vacancy } from "@/types/jobs";
 
 interface VacancySkillsListProps {
   vacancy: Vacancy;

@@ -1,7 +1,7 @@
 
 import { Student } from '@/types/student';
 import { Vacancy as CareerVacancy, JobMatchDetails } from './types';
-import { Vacancy as UIVacancy } from '@/components/jobs/MatchingVacanciesTab';
+import { Vacancy as UIVacancy } from '@/types/jobs';
 import { getRecommendedJobs, getCareerPathAlignedJobs, getDetailedJobMatch } from './skill-gap';
 
 // Convert from UI Vacancy format to Career Vacancy format

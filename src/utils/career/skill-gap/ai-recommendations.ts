@@ -150,6 +150,7 @@ export const calculateCulturalFitScore = (
   
   // Work style fit (30% of overall score)
   // In a real implementation, this would come from preferences stored in the profile
+  // Fix: Explicitly type workStylePreference to match employerWorkStyle type
   const workStylePreference: 'remote' | 'hybrid' | 'in-office' = 'hybrid'; // placeholder - would be from student profile
   const workStyleFit = workStylePreference === employerWorkStyle ? 100 : 
     (workStylePreference === 'hybrid' || employerWorkStyle === 'hybrid') ? 70 : 40;

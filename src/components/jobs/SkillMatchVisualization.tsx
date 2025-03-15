@@ -8,7 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Vacancy } from './MatchingVacanciesTab';
+import { Vacancy } from '@/types/jobs';
 import { Separator } from "@/components/ui/separator";
 
 interface SkillMatchVisualizationProps {

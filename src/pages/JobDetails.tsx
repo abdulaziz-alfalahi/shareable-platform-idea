@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,7 @@ import {
 } from "lucide-react";
 import { vacanciesData } from "@/components/jobs/mockData";
 import { students } from "@/data/mockData";
-import { Vacancy } from "@/components/jobs/MatchingVacanciesTab";
+import { Vacancy } from "@/types/jobs";
 import { Student } from "@/types/student";
 import SkillMatchVisualization from "@/components/jobs/SkillMatchVisualization";
 import { getJobMatchDetails } from "@/utils/career/recommendations";
