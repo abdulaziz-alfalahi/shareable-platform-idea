@@ -18,18 +18,7 @@ import {
   SendIcon
 } from "lucide-react";
 import { notifySuccess } from "@/utils/notification";
-
-export interface JobApplication {
-  id: string;
-  company: string;
-  position: string;
-  date: string;
-  status: "applied" | "interview" | "offer" | "rejected";
-  notes: string;
-  jobTitle?: string;
-  appliedDate?: string;
-  priority?: "high" | "medium" | "low";
-}
+import { JobApplication } from "@/types/jobs";
 
 interface MyApplicationsTabProps {
   applications: JobApplication[];

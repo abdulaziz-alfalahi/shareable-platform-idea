@@ -17,13 +17,14 @@ import {
   trainingProgramsData, 
   jobLocationsData 
 } from "@/components/jobs/mockData";
-import MyApplicationsTab, { JobApplication } from "@/components/jobs/MyApplicationsTab";
-import MatchingVacanciesTab, { Vacancy } from "@/components/jobs/MatchingVacanciesTab";
+import MyApplicationsTab from "@/components/jobs/MyApplicationsTab";
+import MatchingVacanciesTab from "@/components/jobs/MatchingVacanciesTab";
 import UpskillingTab from "@/components/jobs/UpskillingTab";
 import JobLocationTab from "@/components/jobs/JobLocationTab";
 import { students } from "@/data/mockData";
 import { recommendJobs, recommendCareerAlignedJobs } from "@/utils/career/recommendations";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
+import { JobApplication, Vacancy } from "@/types/jobs";
 
 // Add matchedSkills to mockVacancies if they don't already have them
 const enrichVacancyData = (vacancies: any[]): Vacancy[] => {

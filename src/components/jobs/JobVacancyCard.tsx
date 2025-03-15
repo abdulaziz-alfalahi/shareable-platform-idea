@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Card, 
@@ -27,8 +26,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import SkillMatchVisualization from "./SkillMatchVisualization";
-import { Vacancy } from "./MatchingVacanciesTab";
-import { JobApplication } from "./MyApplicationsTab";
+import { Vacancy } from "@/types/jobs";
 import VacancySkillsList from "./VacancySkillsList";
 import { Badge } from "@/components/ui/badge";
 

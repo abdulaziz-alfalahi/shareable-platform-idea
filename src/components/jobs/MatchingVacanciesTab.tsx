@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -23,30 +22,7 @@ import { notifySuccess } from "@/utils/notification";
 import VacancySkillsList from "./VacancySkillsList";
 import SkillMatchVisualization from "./SkillMatchVisualization";
 import JobVacancyCard from "./JobVacancyCard";
-
-export interface Vacancy {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  salary: string;
-  matchPercentage: number;
-  postedDate: string;
-  requiredSkills: string[];
-  matchedSkills: string[];
-  missingSkills: string[];
-  culturalFit?: number;
-  careerPathAlignment?: number;
-}
-
-export interface JobApplication {
-  id: string;
-  jobTitle: string;
-  company: string;
-  appliedDate: string;
-  status: "Applied" | "In Review" | "Interview Scheduled" | "Rejected" | "Offer Received";
-  priority: "high" | "medium" | "low";
-}
+import { JobApplication, Vacancy } from "@/types/jobs";
 
 interface MatchingVacanciesTabProps {
   vacancies: Vacancy[];
@@ -123,9 +99,12 @@ const MatchingVacanciesTab: React.FC<MatchingVacanciesTabProps> = ({
           id: `app-${Date.now()}`,
           jobTitle: vacancy.title,
           company: vacancy.company,
+          position: vacancy.title,
+          date: new Date().toISOString().split('T')[0],
           appliedDate: new Date().toLocaleDateString(),
           status: "Applied",
-          priority: vacancy.matchPercentage > 80 ? "high" : vacancy.matchPercentage > 60 ? "medium" : "low"
+          priority: vacancy.matchPercentage > 80 ? "high" : vacancy.matchPercentage > 60 ? "medium" : "low",
+          notes: ""
         };
         
         setApplications(prev => [newApplication, ...prev]);
