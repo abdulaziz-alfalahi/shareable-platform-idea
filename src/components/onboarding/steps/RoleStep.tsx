@@ -23,25 +23,30 @@ const RoleStep: React.FC<OnboardingStepProps> = ({
       <p className="text-center text-muted-foreground">Select the role that best describes you.</p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-        {roleOptions.map((role) => (
-          <div 
-            key={role.id}
-            onClick={() => handleRoleSelect(role.id)}
-            className={`p-4 border rounded-lg cursor-pointer transition-all ${
-              data.role === role.id 
-                ? 'border-emirati-oasisGreen bg-emirati-sandBeige/10' 
-                : 'border-emirati-sandBeige hover:border-emirati-desertGold'
-            }`}
-          >
-            <div className="flex items-center space-x-4">
-              <div>{role.icon}</div>
-              <div>
-                <h3 className="font-semibold">{role.name}</h3>
-                <p className="text-sm text-muted-foreground">{role.description}</p>
+        {roleOptions.map((role) => {
+          const IconComponent = role.icon;
+          return (
+            <div 
+              key={role.id}
+              onClick={() => handleRoleSelect(role.id)}
+              className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                data.role === role.id 
+                  ? 'border-emirati-oasisGreen bg-emirati-sandBeige/10' 
+                  : 'border-emirati-sandBeige hover:border-emirati-desertGold'
+              }`}
+            >
+              <div className="flex items-center space-x-4">
+                <div>
+                  <IconComponent className="w-8 h-8 text-emirati-oasisGreen" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">{role.name}</h3>
+                  <p className="text-sm text-muted-foreground">{role.description}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       
       <div className="mt-6 flex justify-between">

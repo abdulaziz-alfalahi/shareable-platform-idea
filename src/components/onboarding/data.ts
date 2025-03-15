@@ -1,5 +1,4 @@
 
-import React from "react";
 import { 
   GraduationCap, 
   Briefcase, 
@@ -12,7 +11,7 @@ import { UserRole } from "@/components/notifications/RoleNotifications";
 export interface RoleOption {
   id: UserRole;
   name: string;
-  icon: React.ReactNode;
+  icon: React.ElementType; // Changed from React.ReactNode to React.ElementType
   description: string;
 }
 
@@ -20,31 +19,31 @@ export const roleOptions: RoleOption[] = [
   {
     id: "student",
     name: "Student",
-    icon: <GraduationCap className="w-8 h-8 text-emirati-oasisGreen" />,
+    icon: GraduationCap, // Using the component type, not JSX
     description: "Find your career path, build skills, and connect with mentors"
   },
   {
     id: "recruiter",
     name: "Recruiter",
-    icon: <Briefcase className="w-8 h-8 text-emirati-desertRed" />,
+    icon: Briefcase, // Using the component type, not JSX
     description: "Find qualified Emirati talent for your organization"
   },
   {
     id: "advisor",
     name: "Career Advisor",
-    icon: <Target className="w-8 h-8 text-emirati-desertGold" />,
+    icon: Target, // Using the component type, not JSX
     description: "Guide students and professionals in their career journey"
   },
   {
     id: "training",
     name: "Training Institute",
-    icon: <Building className="w-8 h-8 text-emirati-camelBrown" />,
+    icon: Building, // Using the component type, not JSX
     description: "Offer training programs to upskill Emirati workforce"
   },
   {
     id: "parent",
     name: "Parent",
-    icon: <User className="w-8 h-8 text-emirati-linkedinBlue" />,
+    icon: User, // Using the component type, not JSX
     description: "Support and monitor your child's educational journey"
   }
 ];
