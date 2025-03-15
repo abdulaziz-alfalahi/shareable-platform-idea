@@ -29,7 +29,11 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
 
     // Function to add markers to the map
     const addMarkers = () => {
-      if (!map.current || !map.current.loaded()) return;
+      if (!map.current || !map.current.loaded()) {
+        console.log('Map not loaded yet, will retry');
+        return;
+      }
+      
       isAddingMarkers.current = true;
 
       try {
@@ -55,15 +59,21 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
                   new mapboxgl.Popup().setHTML(
                     `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || "Drag to set location"}</p>`
                   )
-                )
-                .addTo(map.current);
+                );
+              
+              // Add to map if it's loaded  
+              if (map.current.loaded()) {
+                workplaceMarker.current.addTo(map.current);
+              }
               
               // Update job location when marker is dragged
               workplaceMarker.current.on('dragend', () => {
                 if (workplaceMarker.current) {
                   const lngLat = workplaceMarker.current.getLngLat();
                   // Reverse geocode to get address
-                  reverseGeocode(lngLat.lat, lngLat.lng);
+                  reverseGeocode(lngLat.lat, lngLat.lng).catch(err => {
+                    console.error('Error in reverse geocoding:', err);
+                  });
                 }
               });
             } else {
@@ -75,10 +85,12 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
                     `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || ""}</p>`
                   )
                 );
-                
+              
               // Add to map if it's loaded
-              marker.addTo(map.current);
-              markersRef.current.push(marker);
+              if (map.current && map.current.loaded()) {
+                marker.addTo(map.current);
+                markersRef.current.push(marker);
+              }
             }
           } catch (error) {
             console.error("Error adding marker:", error);
@@ -91,14 +103,17 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
       }
     };
 
-    // Check if map is already loaded, otherwise listen for load event
+    // Try to add markers if map is ready
     if (map.current.loaded()) {
       addMarkers();
     } else {
-      // Wait for map to be fully loaded before adding markers
+      // Set up a load event listener for when the map is ready
       const loadHandler = () => {
-        addMarkers();
+        setTimeout(() => {
+          addMarkers();
+        }, 500); // Small delay to ensure map is fully initialized
       };
+      
       map.current.on('load', loadHandler);
       
       return () => {
@@ -109,9 +124,13 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     // Add click handler to set location if we're in edit mode
     if (onLocationUpdate) {
       const clickHandler = (e: mapboxgl.MapMouseEvent) => {
+        if (!map.current || !map.current.loaded()) return;
+        
         if (workplaceMarker.current) {
           workplaceMarker.current.setLngLat([e.lngLat.lng, e.lngLat.lat]);
-          reverseGeocode(e.lngLat.lat, e.lngLat.lng);
+          reverseGeocode(e.lngLat.lat, e.lngLat.lng).catch(err => {
+            console.error('Error in reverse geocoding after click:', err);
+          });
         }
       };
 

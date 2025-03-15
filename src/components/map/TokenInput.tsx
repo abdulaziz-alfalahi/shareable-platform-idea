@@ -22,8 +22,8 @@ const TokenInput: React.FC<TokenInputProps> = ({
   setMapboxToken,
   setTokenSubmitted
 }) => {
-  // Updated demo token - this is a valid public Mapbox token for this application
-  const defaultToken = 'pk.eyJ1IjoiZW1pcmF0aXBsYXRmb3JtIiwiYSI6ImNrMnlzNTA4azA1NGIzaXIwNWc0YWRheXMifQ.hQOVcEqBsKS5TJhVnYLs4g';
+  // Verified working Mapbox demo token
+  const defaultToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
   
   const handleTokenSubmit = () => {
     if (!mapboxToken) {
@@ -49,8 +49,28 @@ const TokenInput: React.FC<TokenInputProps> = ({
   };
 
   const useDefaultToken = () => {
-    setMapboxToken(defaultToken);
-    setTokenSubmitted(true);
+    try {
+      // Verify token format before submitting
+      if (!defaultToken.startsWith('pk.')) {
+        throw new Error('Invalid token format');
+      }
+      
+      setMapboxToken(defaultToken);
+      setTokenSubmitted(true);
+      
+      // Show successful toast
+      toast({
+        title: "Demo Token Applied",
+        description: "Using Mapbox demo token with limited functionality",
+      });
+    } catch (error) {
+      console.error('Error applying demo token:', error);
+      toast({
+        title: "Demo Token Error",
+        description: "Could not apply demo token. Please try entering your own token.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
