@@ -8,7 +8,8 @@ import {
   ChevronLeftIcon,
   CheckCircleIcon,
   ArrowUpCircleIcon,
-  MapPinIcon
+  MapPinIcon,
+  TrendingUpIcon
 } from "lucide-react";
 import { 
   initialApplications, 
@@ -21,14 +22,16 @@ import MatchingVacanciesTab, { Vacancy } from "@/components/jobs/MatchingVacanci
 import UpskillingTab from "@/components/jobs/UpskillingTab";
 import JobLocationTab from "@/components/jobs/JobLocationTab";
 import { students } from "@/data/mockData";
-import { recommendJobs } from "@/utils/career/recommendations";
+import { recommendJobs, recommendCareerAlignedJobs } from "@/utils/career/recommendations";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const JobApplications = () => {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<JobApplication[]>(initialApplications);
   const [matchedVacancies, setMatchedVacancies] = useState<Vacancy[]>(vacanciesData);
+  const [careerAlignedVacancies, setCareerAlignedVacancies] = useState<Vacancy[]>(vacanciesData);
   const [activeTab, setActiveTab] = useState("applications");
+  const [matchingSubTab, setMatchingSubTab] = useState("skill-match"); // 'skill-match' or 'career-path'
   
   // Use the first student from mock data for demonstration
   const mockStudent = students[0];
@@ -36,14 +39,28 @@ const JobApplications = () => {
   // Update matched vacancies based on student profile when it loads
   useEffect(() => {
     if (mockStudent) {
-      const recommendedJobs = recommendJobs(mockStudent, vacanciesData);
-      setMatchedVacancies(recommendedJobs);
+      // Get skill-based matches
+      const skillRecommendedJobs = recommendJobs(mockStudent, vacanciesData);
+      setMatchedVacancies(skillRecommendedJobs);
+      
+      // Get career path aligned matches
+      const careerRecommendedJobs = recommendCareerAlignedJobs(mockStudent, vacanciesData);
+      setCareerAlignedVacancies(careerRecommendedJobs);
     }
   }, [mockStudent]);
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
+
+  const handleMatchingSubTabChange = (value: string) => {
+    setMatchingSubTab(value);
+  };
+
+  // Get the appropriate vacancies based on the sub-tab
+  const displayedVacancies = matchingSubTab === "skill-match" 
+    ? matchedVacancies 
+    : careerAlignedVacancies;
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -83,10 +100,24 @@ const JobApplications = () => {
         </TabsContent>
 
         <TabsContent value="matching">
+          <div className="mb-6">
+            <Tabs value={matchingSubTab} onValueChange={handleMatchingSubTabChange} className="w-full">
+              <TabsList className="bg-emirati-sandBeige/10 mb-4 w-full justify-start max-w-md">
+                <TabsTrigger value="skill-match" className="data-[state=active]:bg-emirati-desertGold/30 data-[state=active]:text-emirati-oasisGreen">
+                  <CheckCircleIcon size={14} className="mr-2" /> Skill-Based Matches
+                </TabsTrigger>
+                <TabsTrigger value="career-path" className="data-[state=active]:bg-emirati-desertGold/30 data-[state=active]:text-emirati-oasisGreen">
+                  <TrendingUpIcon size={14} className="mr-2" /> Career Path Alignment
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+          
           <MatchingVacanciesTab 
-            vacancies={matchedVacancies} 
+            vacancies={displayedVacancies}
             setApplications={setApplications}
             applications={applications}
+            matchType={matchingSubTab}
           />
         </TabsContent>
 

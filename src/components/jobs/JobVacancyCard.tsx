@@ -17,7 +17,8 @@ import {
   ArrowUpCircleIcon,
   InfoIcon,
   ChevronDownIcon,
-  ChevronUpIcon
+  ChevronUpIcon,
+  TrendingUpIcon
 } from "lucide-react";
 import { 
   Tooltip,
@@ -29,10 +30,12 @@ import SkillMatchVisualization from "./SkillMatchVisualization";
 import { Vacancy } from "./MatchingVacanciesTab";
 import { JobApplication } from "./MyApplicationsTab";
 import VacancySkillsList from "./VacancySkillsList";
+import { Badge } from "@/components/ui/badge";
 
 interface JobVacancyCardProps {
   vacancy: Vacancy;
   onApply: (jobTitle: string, company: string) => void;
+  matchType?: string;
 }
 
 export const getMatchColor = (percentage: number) => {
@@ -42,7 +45,7 @@ export const getMatchColor = (percentage: number) => {
   return "text-red-600";
 };
 
-const JobVacancyCard = ({ vacancy, onApply }: JobVacancyCardProps) => {
+const JobVacancyCard = ({ vacancy, onApply, matchType = "skill-match" }: JobVacancyCardProps) => {
   const [expanded, setExpanded] = useState(false);
   
   const toggleExpand = () => {
@@ -65,7 +68,11 @@ const JobVacancyCard = ({ vacancy, onApply }: JobVacancyCardProps) => {
                     </span>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="text-sm">This score is based on how well your skills match the job requirements</p>
+                    <p className="text-sm">
+                      {matchType === "skill-match" 
+                        ? "This score is based on how well your skills match the job requirements" 
+                        : "This score includes your career path alignment with this position"}
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -75,6 +82,13 @@ const JobVacancyCard = ({ vacancy, onApply }: JobVacancyCardProps) => {
               {vacancy.company}
             </CardDescription>
           </div>
+          
+          {matchType === "career-path" && (
+            <Badge variant="outline" className="bg-emirati-desertGold/10 text-emirati-desertGold border-emirati-desertGold flex items-center">
+              <TrendingUpIcon size={12} className="mr-1" />
+              Career Path
+            </Badge>
+          )}
         </div>
       </CardHeader>
       <CardContent>

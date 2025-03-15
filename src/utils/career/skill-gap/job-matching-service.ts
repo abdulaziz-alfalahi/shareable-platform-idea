@@ -1,6 +1,6 @@
 
 import { Student } from '@/types/student';
-import { Vacancy } from '@/utils/career/types';
+import { Vacancy, JobMatchDetails, EmploymentPreference } from '@/utils/career/types';
 import { uaeJobMarketTrends } from './mock-data';
 import { extractStudentSkills } from './analysis-service';
 
@@ -60,10 +60,75 @@ export const identifyMissingSkills = (
   return missingSkills;
 };
 
+/**
+ * Identify matched skills based on job requirements
+ */
+export const identifyMatchedSkills = (
+  studentSkills: string[],
+  jobRequirements: string[]
+): string[] => {
+  const matchedSkills: string[] = [];
+  
+  jobRequirements.forEach(requirement => {
+    const normalizedRequirement = requirement.toLowerCase();
+    
+    // Find the student skills that match this requirement
+    studentSkills.forEach(skill => {
+      if (normalizedRequirement.includes(skill.toLowerCase()) || 
+          skill.toLowerCase().includes(normalizedRequirement)) {
+        if (!matchedSkills.includes(requirement)) {
+          matchedSkills.push(requirement);
+        }
+      }
+    });
+  });
+  
+  return matchedSkills;
+};
+
+/**
+ * Calculate cultural fit score based on UAE values and job characteristics
+ */
+export const calculateCulturalFit = (
+  student: Student,
+  vacancy: Vacancy
+): number => {
+  // Base cultural fit score
+  let culturalFitScore = 50;
+  
+  // Check if student has cultural achievement stamps
+  const culturalAchievements = student.passportStamps.filter(
+    stamp => ["Heritage", "Hospitality", "Craftsmanship", "Navigation", "Employment"].includes(stamp.category)
+  );
+  
+  // Add points for cultural achievements
+  culturalFitScore += culturalAchievements.length * 5;
+  
+  // Check if job is in UAE government sector 
+  // (simplified logic, in real app this would be more sophisticated)
+  if (vacancy.company.toLowerCase().includes('government') || 
+      vacancy.company.toLowerCase().includes('ministry') ||
+      vacancy.company.toLowerCase().includes('authority')) {
+    culturalFitScore += 15;
+  }
+  
+  // Check for location preferences (UAE cities get bonus)
+  const uaeCities = ['dubai', 'abu dhabi', 'sharjah', 'ajman', 'ras al khaimah', 'fujairah', 'umm al quwain'];
+  if (uaeCities.some(city => vacancy.location.toLowerCase().includes(city))) {
+    culturalFitScore += 10;
+  }
+  
+  // Cap the score at 100
+  return Math.min(culturalFitScore, 100);
+};
+
 // Define an intermediate type to work with both vacancy types
 interface EnhancedVacancy extends Vacancy {
   matchPercentage?: number;
+  matchedSkills?: string[];
   missingSkills?: string[];
+  culturalFit?: number;
+  careerPathAlignment?: number;
 }
 
 /**
@@ -83,13 +148,26 @@ export const getRecommendedJobs = (
     // Calculate match percentage
     const matchPercentage = calculateSkillMatch(studentSkills, requirements);
     
-    // Get missing skills
+    // Get missing and matched skills
     const missingSkills = identifyMissingSkills(studentSkills, requirements);
+    const matchedSkills = identifyMatchedSkills(studentSkills, requirements);
+    
+    // Calculate cultural fit
+    const culturalFit = calculateCulturalFit(student, job);
+    
+    // Calculate career path alignment
+    const careerPath = student.careerPath?.toLowerCase() || '';
+    const careerPathAlignment = job.title.toLowerCase().includes(careerPath) || 
+                               job.company.toLowerCase().includes(careerPath) ? 
+                               80 : 50;
     
     return {
       ...job,
       matchPercentage,
-      missingSkills
+      matchedSkills,
+      missingSkills,
+      culturalFit,
+      careerPathAlignment
     };
   });
   
@@ -128,6 +206,10 @@ export const getCareerPathAlignedJobs = (
     
     const matchPercentage = calculateSkillMatch(studentSkills, requirements);
     const missingSkills = identifyMissingSkills(studentSkills, requirements);
+    const matchedSkills = identifyMatchedSkills(studentSkills, requirements);
+    
+    // Calculate cultural fit
+    const culturalFit = calculateCulturalFit(student, job);
     
     // Calculate career path alignment (bonus points)
     const jobTitle = job.title.toLowerCase();
@@ -142,7 +224,10 @@ export const getCareerPathAlignedJobs = (
     return {
       ...job,
       matchPercentage: finalMatchScore,
-      missingSkills
+      matchedSkills,
+      missingSkills,
+      culturalFit,
+      careerPathAlignment: relevantTrends.length > 0 ? 85 : 60
     };
   });
   
@@ -150,4 +235,36 @@ export const getCareerPathAlignedJobs = (
   return alignedJobs.sort((a, b) => 
     (b.matchPercentage || 0) - (a.matchPercentage || 0)
   );
+};
+
+/**
+ * Get detailed match information for a specific vacancy
+ */
+export const getDetailedJobMatch = (
+  student: Student,
+  vacancy: Vacancy
+): JobMatchDetails => {
+  const studentSkills = extractStudentSkills(student);
+  const requirements = vacancy.requirements || [];
+  
+  const matchPercentage = calculateSkillMatch(studentSkills, requirements);
+  const missingSkills = identifyMissingSkills(studentSkills, requirements);
+  const matchedSkills = identifyMatchedSkills(studentSkills, requirements);
+  
+  // Calculate career path alignment
+  const careerPath = student.careerPath?.toLowerCase() || '';
+  const careerPathAlignment = vacancy.title.toLowerCase().includes(careerPath) || 
+                             vacancy.company.toLowerCase().includes(careerPath) ? 
+                             80 : 50;
+  
+  // Calculate cultural fit
+  const culturalFit = calculateCulturalFit(student, vacancy);
+  
+  return {
+    matchPercentage,
+    matchedSkills,
+    missingSkills,
+    careerPathAlignment,
+    culturalFit
+  };
 };

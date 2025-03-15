@@ -14,11 +14,12 @@ import {
   LandPlot,
   Mountain,
   MapPin,
-  Star
+  Star,
+  Briefcase
 } from "lucide-react";
 
 type IconName = "users" | "eagle" | "compass" | "palm-tree" | "gem" | "award" | "sun" | "coffee" | 
-                "ship" | "sailboat" | "land-plot" | "mountain" | "map-pin" | "star";
+                "ship" | "sailboat" | "land-plot" | "mountain" | "map-pin" | "star" | "briefcase";
 
 interface AchievementIconProps {
   iconName: string;
@@ -43,6 +44,7 @@ export const AchievementIcon: React.FC<AchievementIconProps> = ({
     case "mountain": return <Mountain className={className} />;
     case "map-pin": return <MapPin className={className} />;
     case "star": return <Star className={className} />;
+    case "briefcase": return <Briefcase className={className} />;
     default: return <Award className={className} />;
   }
 };
@@ -66,6 +68,7 @@ export const getProgressLabel = (category: string) => {
     case "Hospitality": return "events";
     case "Craftsmanship": return "creations";
     case "Navigation": return "journeys";
+    case "Employment": return "positions";
     default: return "milestones";
   }
 };

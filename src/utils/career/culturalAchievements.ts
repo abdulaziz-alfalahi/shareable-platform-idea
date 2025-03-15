@@ -10,3 +10,6 @@ export {
   awardCulturalAchievement,
   processCulturalAchievements 
 } from './achievements/achievementAwarder';
+export {
+  calculateEmploymentAchievements
+} from './achievements/employmentAchievements';

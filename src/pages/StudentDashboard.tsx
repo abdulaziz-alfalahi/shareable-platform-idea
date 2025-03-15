@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import RoleDashboardLayout, { DashboardTab } from "@/components/dashboard/RoleDashboardLayout";
-import { BookOpen, PlusCircle, FileText } from "lucide-react";
+import { BookOpen, PlusCircle, FileText, Briefcase } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { studentData } from "@/data/studentMockData";
 import { getStudentDashboardMetrics } from "@/components/student/dashboard/StudentDashboardMetrics";
@@ -33,6 +33,12 @@ const StudentDashboard = () => {
       onClick: () => navigate("/educational-resources"),
       icon: <PlusCircle className="h-4 w-4" />,
       variant: "outline" as const
+    },
+    {
+      label: "Job Matching",
+      onClick: () => navigate("/job-applications"),
+      icon: <Briefcase className="h-4 w-4" />,
+      variant: "secondary" as const
     },
     {
       label: "Resume",
