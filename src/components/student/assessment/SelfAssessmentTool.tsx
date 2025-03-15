@@ -20,7 +20,7 @@ import {
   AssessmentQuestion,
   AssessmentResult
 } from "@/utils/career/skill-gap/assessment-service";
-import { studentMockData } from "@/data/studentMockData";
+import { studentData } from "@/data/studentMockData";
 
 interface SelfAssessmentToolProps {
   assessmentName: string;
@@ -31,8 +31,8 @@ const SelfAssessmentTool: React.FC<SelfAssessmentToolProps> = ({
   assessmentName,
   onComplete
 }) => {
-  // For demo purposes, use the first student from mock data
-  const student = studentMockData[0];
+  // For demo purposes, use the student data from mock data
+  const student = studentData;
   
   const [currentStep, setCurrentStep] = useState<"intro" | "questions" | "results">("intro");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -338,3 +338,4 @@ const SelfAssessmentTool: React.FC<SelfAssessmentToolProps> = ({
 };
 
 export default SelfAssessmentTool;
+
