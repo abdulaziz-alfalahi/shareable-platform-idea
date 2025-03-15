@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from "react";
 import RoleDashboardLayout, { DashboardTab, DashboardMetric } from "@/components/dashboard/RoleDashboardLayout";
 import { TabsContent } from "@/components/ui/tabs";
-import { Briefcase, UserCheck, ChevronRight, Clock, PlusCircle, BarChart2 } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Briefcase, UserCheck, ChevronRight, Clock, PlusCircle, BarChart2, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { notifyRecruiter, notifySuccess } from "@/utils/notification";
 import ScheduleInterviewDialog from "@/components/recruiter/ScheduleInterviewDialog";
 import RecruiterDashboardTabs from "@/components/recruiter/dashboard/RecruiterDashboardTabs";
+import VideoInterviewPanel from "@/components/recruiter/VideoInterviewPanel";
 import { useNavigate } from "react-router-dom";
 
 const vacancies = [
@@ -59,6 +61,7 @@ const vacancies = [
 const RecruiterDashboard = () => {
   const [activeTab, setActiveTab] = useState("vacancies");
   const [isScheduleInterviewDialogOpen, setIsScheduleInterviewDialogOpen] = useState(false);
+  const [isVideoInterviewOpen, setIsVideoInterviewOpen] = useState(false);
   const navigate = useNavigate();
 
   // Set up demo notifications
@@ -116,12 +119,22 @@ const RecruiterDashboard = () => {
     });
     setIsScheduleInterviewDialogOpen(false);
   };
+  
+  const handleStartVideoInterview = () => {
+    setIsVideoInterviewOpen(true);
+  };
 
   const dashboardActions = [
     {
       label: "Schedule Interview",
       onClick: () => setIsScheduleInterviewDialogOpen(true),
       icon: <Clock className="h-4 w-4" />
+    },
+    {
+      label: "Video Interview",
+      onClick: handleStartVideoInterview,
+      icon: <Video className="h-4 w-4" />,
+      variant: "outline" as const
     },
     {
       label: "Post Job",
@@ -157,6 +170,17 @@ const RecruiterDashboard = () => {
         onOpenChange={setIsScheduleInterviewDialogOpen}
         onSchedule={handleScheduleInterview}
       />
+      
+      <Dialog open={isVideoInterviewOpen} onOpenChange={setIsVideoInterviewOpen}>
+        <DialogContent className="max-w-5xl h-[80vh] p-0">
+          <VideoInterviewPanel
+            candidateName="Ahmed Al Mansouri"
+            candidateEmail="ahmed.almansouri@example.com"
+            positionTitle="Software Engineer"
+            onClose={() => setIsVideoInterviewOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </RoleDashboardLayout>
   );
 };
