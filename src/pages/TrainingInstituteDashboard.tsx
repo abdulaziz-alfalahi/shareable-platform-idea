@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import RoleDashboardLayout, { DashboardTab, DashboardMetric } from "@/components/dashboard/RoleDashboardLayout";
 import { TabsContent } from "@/components/ui/tabs";
-import { GraduationCap, Users, Award, Trending, PlusCircle, FileText, BarChart2 } from "lucide-react";
+import { GraduationCap, Users, Award, TrendingUp, PlusCircle, FileText, BarChart2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";

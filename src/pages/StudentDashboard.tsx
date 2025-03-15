@@ -6,16 +6,35 @@ import { BookOpen, Trophy, Users, Calendar, PlusCircle, FileText } from "lucide-
 import PassportWidget from "@/components/passport/PassportWidget";
 import LeaderboardCard from "@/components/passport/LeaderboardCard";
 import { useNavigate } from "react-router-dom";
+import { Student } from "@/types/student";
 
-// Mock student data
-const studentData = {
-  id: "student-123",
+// Mock student data that conforms to the Student type
+const studentData: Student = {
+  id: 123,
   name: "Mohammed Al Mansoori",
   email: "mohammed@example.com",
+  program: "Computer Science",
+  year: 3,
+  gradeLevel: "university-3",
+  gpa: 3.75,
+  advisingStatus: "On Track",
+  riskLevel: "Low",
+  progress: 65,
+  lastMeeting: "2023-10-10",
+  nextMeeting: "2023-11-15",
+  careerPath: "Software Engineering",
+  flagged: false,
+  coursesCompleted: 12,
+  totalCourses: 32,
+  achievements: ["Dean's List 2023", "Hackathon Winner"],
+  notes: "Mohammed is making excellent progress in his studies.",
+  goals: [],
+  feedback: [],
+  passportStamps: [],
+  careerMilestones: [],
   passportLevel: 3,
   totalPoints: 3620,
   leaderboardRank: 4,
-  completedCourses: 12,
   inProgressCourses: 3,
   nextAssessment: "2023-11-15T13:00:00"
 };
