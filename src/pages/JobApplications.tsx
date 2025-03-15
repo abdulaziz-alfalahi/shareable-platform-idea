@@ -17,8 +17,8 @@ import {
   trainingProgramsData, 
   jobLocationsData 
 } from "@/components/jobs/mockData";
-import MyApplicationsTab from "@/components/jobs/MyApplicationsTab";
-import MatchingVacanciesTab, { Vacancy, JobApplication } from "@/components/jobs/MatchingVacanciesTab";
+import MyApplicationsTab, { JobApplication } from "@/components/jobs/MyApplicationsTab";
+import MatchingVacanciesTab, { Vacancy } from "@/components/jobs/MatchingVacanciesTab";
 import UpskillingTab from "@/components/jobs/UpskillingTab";
 import JobLocationTab from "@/components/jobs/JobLocationTab";
 import { students } from "@/data/mockData";
@@ -36,9 +36,24 @@ const enrichVacancyData = (vacancies: any[]): Vacancy[] => {
   }));
 };
 
+// Transform initialApplications to the expected JobApplication format
+const transformInitialApplications = (): JobApplication[] => {
+  return initialApplications.map(app => ({
+    id: app.id,
+    company: app.company,
+    position: app.position,
+    date: app.date,
+    status: app.status,
+    notes: app.notes,
+    jobTitle: app.position,
+    appliedDate: app.date,
+    priority: "medium"
+  }));
+};
+
 const JobApplications = () => {
   const navigate = useNavigate();
-  const [applications, setApplications] = useState<JobApplication[]>(initialApplications);
+  const [applications, setApplications] = useState<JobApplication[]>(transformInitialApplications());
   const [matchedVacancies, setMatchedVacancies] = useState<Vacancy[]>(enrichVacancyData(vacanciesData));
   const [careerAlignedVacancies, setCareerAlignedVacancies] = useState<Vacancy[]>(enrichVacancyData(vacanciesData));
   const [activeTab, setActiveTab] = useState("applications");
@@ -105,37 +120,8 @@ const JobApplications = () => {
 
         <TabsContent value="applications">
           <MyApplicationsTab 
-            applications={applications.map(app => ({
-              id: app.id,
-              position: app.jobTitle,
-              company: app.company,
-              date: app.appliedDate,
-              status: app.status.toLowerCase() as any, // Convert to MyApplicationsTab status format
-              notes: ""
-            }))} 
-            setApplications={(newApps) => {
-              // Convert from MyApplicationsTab format to our JobApplication format
-              setApplications(
-                (typeof newApps === 'function' 
-                  ? newApps(applications.map(app => ({
-                      id: app.id,
-                      position: app.jobTitle,
-                      company: app.company,
-                      date: app.appliedDate,
-                      status: app.status.toLowerCase() as any,
-                      notes: ""
-                    }))) 
-                  : newApps
-                ).map(app => ({
-                  id: app.id,
-                  jobTitle: app.position,
-                  company: app.company,
-                  appliedDate: app.date,
-                  status: app.status.charAt(0).toUpperCase() + app.status.slice(1) as any,
-                  priority: "medium" // Default priority
-                }))
-              );
-            }} 
+            applications={applications} 
+            setApplications={setApplications}
           />
         </TabsContent>
 

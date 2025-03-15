@@ -35,7 +35,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'UAE Tech Institute',
       duration: '6 weeks',
       level: 'beginner',
-      format: 'hybrid'
+      format: 'hybrid',
+      description: 'Learn the fundamentals of data analytics including data visualization, statistical analysis, and tools like Excel and Tableau.'
     },
     {
       id: 'da002',
@@ -43,7 +44,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'Dubai Data Academy',
       duration: '8 weeks',
       level: 'intermediate',
-      format: 'online'
+      format: 'online',
+      description: 'Master advanced data visualization techniques and tools to transform complex data into compelling visual stories.'
     }
   ],
   'artificial intelligence': [
@@ -53,7 +55,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'MBZUAI',
       duration: '4 weeks',
       level: 'beginner',
-      format: 'online'
+      format: 'online',
+      description: 'An introduction to artificial intelligence concepts and their practical applications in business settings.'
     },
     {
       id: 'ai002',
@@ -61,7 +64,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'Khalifa University',
       duration: '12 weeks',
       level: 'advanced',
-      format: 'in-person'
+      format: 'in-person',
+      description: 'Comprehensive course on implementing machine learning algorithms for real-world applications across various industries.'
     }
   ],
   'cybersecurity': [
@@ -71,7 +75,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'Emirates Cyber Academy',
       duration: '8 weeks',
       level: 'beginner',
-      format: 'online'
+      format: 'online',
+      description: 'Learn the fundamentals of cybersecurity, including threat detection, prevention, and best practices for digital safety.'
     },
     {
       id: 'cs002',
@@ -79,7 +84,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'UAE Secure Networks Institute',
       duration: '10 weeks',
       level: 'intermediate',
-      format: 'hybrid'
+      format: 'hybrid',
+      description: 'Comprehensive certification program focused on securing network infrastructure and identifying vulnerabilities.'
     }
   ],
   'project management': [
@@ -89,7 +95,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'Emirates Leadership Institute',
       duration: '6 weeks',
       level: 'intermediate',
-      format: 'hybrid'
+      format: 'hybrid',
+      description: 'Learn agile methodologies and frameworks for effective project delivery in fast-paced environments.'
     },
     {
       id: 'pm002',
@@ -97,7 +104,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'Dubai Knowledge Park',
       duration: '12 weeks',
       level: 'advanced',
-      format: 'in-person'
+      format: 'in-person',
+      description: 'Comprehensive preparation course for the Project Management Professional (PMP) certification exam.'
     }
   ],
   'uae business culture': [
@@ -107,7 +115,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'Emirati Cultural Center',
       duration: '2 weeks',
       level: 'beginner',
-      format: 'hybrid'
+      format: 'hybrid',
+      description: 'Essential course on UAE business customs, protocols, and cultural considerations for professional success.'
     }
   ],
   'arabic language': [
@@ -117,7 +126,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'Arabic Language Academy',
       duration: '8 weeks',
       level: 'beginner',
-      format: 'in-person'
+      format: 'in-person',
+      description: 'Practical Arabic language training focused on business vocabulary and common professional scenarios.'
     }
   ],
   'digital marketing': [
@@ -127,7 +137,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'UAE Marketing Institute',
       duration: '6 weeks',
       level: 'intermediate',
-      format: 'online'
+      format: 'online',
+      description: 'Comprehensive digital marketing course covering SEO, social media, content strategy, and analytics.'
     }
   ],
   'blockchain': [
@@ -137,7 +148,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'Dubai Blockchain Center',
       duration: '4 weeks',
       level: 'beginner',
-      format: 'online'
+      format: 'online',
+      description: 'Introduction to blockchain technology and its applications in various business sectors including finance and supply chain.'
     }
   ],
   'mobile app development': [
@@ -147,7 +159,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'Abu Dhabi Coding School',
       duration: '10 weeks',
       level: 'intermediate',
-      format: 'hybrid'
+      format: 'hybrid',
+      description: 'Practical course on building cross-platform mobile applications using React Native framework.'
     }
   ],
   'user experience design': [
@@ -157,7 +170,8 @@ export const trainingRecommendations: Record<string, TrainingRecommendation[]> =
       provider: 'Dubai Design Academy',
       duration: '8 weeks',
       level: 'beginner',
-      format: 'online'
+      format: 'online',
+      description: 'Learn the fundamentals of user experience design, including research methods, wireframing, prototyping and usability testing.'
     }
   ]
 };

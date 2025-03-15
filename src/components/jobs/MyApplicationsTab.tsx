@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Card, 
@@ -27,6 +26,9 @@ export interface JobApplication {
   date: string;
   status: "applied" | "interview" | "offer" | "rejected";
   notes: string;
+  jobTitle?: string;
+  appliedDate?: string;
+  priority?: "high" | "medium" | "low";
 }
 
 interface MyApplicationsTabProps {
@@ -39,7 +41,7 @@ export const MyApplicationsTab = ({
   setApplications 
 }: MyApplicationsTabProps) => {
   const [showNewForm, setShowNewForm] = useState(false);
-  const [newApplication, setNewApplication] = useState<Omit<JobApplication, "id">>({
+  const [newApplication, setNewApplication] = useState<Omit<JobApplication, "id" | "jobTitle" | "appliedDate" | "priority">>({
     company: "",
     position: "",
     date: new Date().toISOString().split('T')[0],
@@ -58,7 +60,10 @@ export const MyApplicationsTab = ({
   const handleAddApplication = () => {
     const application: JobApplication = {
       ...newApplication,
-      id: Date.now().toString()
+      id: Date.now().toString(),
+      jobTitle: newApplication.position,
+      appliedDate: newApplication.date,
+      priority: "medium"
     };
     
     setApplications([application, ...applications]);

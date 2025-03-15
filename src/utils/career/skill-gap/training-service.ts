@@ -47,7 +47,8 @@ export const searchTrainingPrograms = (keyword: string): TrainingRecommendation[
   
   return allPrograms.filter(program => 
     program.title.toLowerCase().includes(searchTerm) || 
-    program.provider.toLowerCase().includes(searchTerm)
+    program.provider.toLowerCase().includes(searchTerm) ||
+    (program.description && program.description.toLowerCase().includes(searchTerm))
   );
 };
 
