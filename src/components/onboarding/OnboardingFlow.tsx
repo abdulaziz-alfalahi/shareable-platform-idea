@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,14 +10,20 @@ import {
   User, 
   ChevronRight, 
   CheckCircle, 
-  Target 
+  Target,
+  Map,
+  Calendar,
+  MessageSquare
 } from "lucide-react";
 import { UserRole } from "@/components/notifications/RoleNotifications";
+import { uaeLocations } from "@/utils/locationUtils";
 
-// Steps in the onboarding process
+// Steps in the onboarding process - now with a cultural elements step
 const STEPS = [
   "profile", 
   "role", 
+  "location",
+  "cultural",
   "interests", 
   "goals", 
   "complete"
@@ -68,6 +74,7 @@ interface InterestOption {
   name: string;
 }
 
+// Extended interests list with more UAE-specific sectors
 const interestOptions: InterestOption[] = [
   { id: "technology", name: "Technology & Innovation" },
   { id: "business", name: "Business & Finance" },
@@ -78,7 +85,22 @@ const interestOptions: InterestOption[] = [
   { id: "tourism", name: "Tourism & Hospitality" },
   { id: "engineering", name: "Engineering & Construction" },
   { id: "arts", name: "Arts & Culture" },
-  { id: "aerospace", name: "Aerospace & Defense" }
+  { id: "aerospace", name: "Aerospace & Defense" },
+  { id: "logistics", name: "Logistics & Supply Chain" },
+  { id: "maritime", name: "Maritime & Port Operations" },
+  { id: "financial-services", name: "Financial Services" },
+  { id: "cybersecurity", name: "Cybersecurity" },
+  { id: "smart-cities", name: "Smart Cities & Urban Planning" }
+];
+
+// Cultural values aligned with UAE Vision
+const culturalValues = [
+  { id: "tolerance", name: "Tolerance & Respect", description: "Embracing diversity and promoting respect for all cultures" },
+  { id: "excellence", name: "Pursuit of Excellence", description: "Striving for the highest standards in all endeavors" },
+  { id: "innovation", name: "Innovation & Creativity", description: "Finding new solutions to challenges" },
+  { id: "leadership", name: "Leadership & Responsibility", description: "Taking initiative and responsibility in professional and community roles" },
+  { id: "heritage", name: "Cultural Heritage", description: "Honoring and preserving Emirati traditions and culture" },
+  { id: "sustainability", name: "Sustainability", description: "Contributing to environmental and economic sustainability" }
 ];
 
 interface OnboardingFlowProps {
@@ -90,6 +112,8 @@ export interface OnboardingData {
   name: string;
   interests: string[];
   goals: string[];
+  culturalValues: string[];
+  location: string;
   profileImage?: string;
 }
 
@@ -100,6 +124,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
     name: "",
     interests: [],
     goals: [],
+    culturalValues: [],
+    location: "",
   });
   
   const progress = ((currentStep + 1) / STEPS.length) * 100;
@@ -117,6 +143,9 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   };
   
   const handleComplete = () => {
+    // In a real app, save to localStorage or database
+    localStorage.setItem('hasCompletedOnboarding', 'true');
+    localStorage.setItem('userProfile', JSON.stringify(data));
     onComplete(data);
   };
 
@@ -129,6 +158,10 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
     setData({ ...data, name: e.target.value });
   };
   
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setData({ ...data, location: e.target.value });
+  };
+  
   const toggleInterest = (interestId: string) => {
     if (data.interests.includes(interestId)) {
       setData({
@@ -139,6 +172,20 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
       setData({
         ...data,
         interests: [...data.interests, interestId]
+      });
+    }
+  };
+  
+  const toggleCulturalValue = (valueId: string) => {
+    if (data.culturalValues.includes(valueId)) {
+      setData({
+        ...data,
+        culturalValues: data.culturalValues.filter(id => id !== valueId)
+      });
+    } else {
+      setData({
+        ...data,
+        culturalValues: [...data.culturalValues, valueId]
       });
     }
   };
@@ -159,14 +206,86 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
       goals: data.goals.filter((_, i) => i !== index)
     });
   };
+
+  // Filter location suggestions based on user input
+  const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
+  const handleLocationSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setData({ ...data, location: value });
+    
+    if (value.length >= 2) {
+      // Filter UAE locations based on input
+      const suggestions = uaeLocations.filter(
+        location => location.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 5);
+      setLocationSuggestions(suggestions);
+    } else {
+      setLocationSuggestions([]);
+    }
+  };
+
+  const selectLocation = (location: string) => {
+    setData({ ...data, location });
+    setLocationSuggestions([]);
+  };
+
+  // Get role-specific content for the completion page
+  const getRoleSpecificContent = () => {
+    switch(data.role) {
+      case "student":
+        return {
+          title: "Ready to Begin Your Learning Journey!",
+          message: "Explore courses, connect with mentors, build your skills portfolio, and set your career path.",
+          nextSteps: ["Explore available courses", "Connect with mentors in your field", "Complete your skills assessment"]
+        };
+      case "recruiter":
+        return {
+          title: "Ready to Find Top Emirati Talent!",
+          message: "Post job opportunities, search for qualified candidates, and connect with training institutes.",
+          nextSteps: ["Post your first job opportunity", "Browse candidate profiles", "Set up your company profile"]
+        };
+      case "advisor":
+        return {
+          title: "Ready to Guide the Next Generation!",
+          message: "Help students discover their potential, provide career guidance, and track their progress.",
+          nextSteps: ["View your assigned students", "Schedule guidance sessions", "Create career path recommendations"]
+        };
+      case "training":
+        return {
+          title: "Ready to Upskill the Workforce!",
+          message: "Offer training programs, certifications, and skills development opportunities.",
+          nextSteps: ["Add your training programs", "Connect with industry partners", "View skill gaps in the market"]
+        };
+      case "parent":
+        return {
+          title: "Ready to Support Your Child's Journey!",
+          message: "Monitor progress, communicate with educators, and help guide educational decisions.",
+          nextSteps: ["Link to your child's account", "View upcoming assessments", "Explore career options together"]
+        };
+      default:
+        return {
+          title: "Setup Complete!",
+          message: "Your Emirati Journey profile is now ready.",
+          nextSteps: ["Complete your profile", "Explore the platform", "Connect with others"]
+        };
+    }
+  };
   
   const renderStep = () => {
     switch (STEPS[currentStep]) {
       case 'profile':
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-emirati-desertRed text-center">Welcome to Emirati Journey</h2>
-            <p className="text-center text-muted-foreground">Let's set up your profile to get started.</p>
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-emirati-desertRed">مرحباً | Welcome to Emirati Journey</h2>
+              <p className="text-center text-muted-foreground">Let's set up your profile to personalize your journey.</p>
+              
+              <div className="mt-6 flex justify-center">
+                <div className="p-4 w-20 h-20 rounded-full bg-emirati-sandBeige/40 flex items-center justify-center">
+                  <User className="w-10 h-10 text-emirati-oasisGreen" />
+                </div>
+              </div>
+            </div>
             
             <div className="space-y-4">
               <div>
@@ -228,6 +347,104 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               </Button>
               <Button 
                 onClick={handleNext}
+                className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90"
+              >
+                Continue <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        );
+
+      case 'location':
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-emirati-desertRed text-center">Where Are You Located?</h2>
+            <p className="text-center text-muted-foreground">This helps us personalize opportunities near you.</p>
+            
+            <div className="space-y-4 mt-6">
+              <div className="relative">
+                <label htmlFor="location" className="block text-sm font-medium mb-1">
+                  Your Location in UAE
+                </label>
+                <div className="flex items-center">
+                  <Map className="h-5 w-5 text-emirati-camelBrown absolute left-3" />
+                  <input 
+                    type="text" 
+                    id="location" 
+                    value={data.location} 
+                    onChange={handleLocationSearch}
+                    className="w-full pl-10 px-4 py-2 border border-emirati-sandBeige rounded-md focus:outline-none focus:ring-2 focus:ring-emirati-oasisGreen"
+                    placeholder="Enter your city or emirate"
+                  />
+                </div>
+                
+                {locationSuggestions.length > 0 && (
+                  <div className="absolute w-full mt-1 bg-white shadow-lg border border-emirati-sandBeige rounded-md z-10">
+                    {locationSuggestions.map((location, index) => (
+                      <div 
+                        key={index}
+                        onClick={() => selectLocation(location)}
+                        className="px-4 py-2 cursor-pointer hover:bg-emirati-sandBeige/20"
+                      >
+                        {location}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-4">
+                <p className="text-sm text-muted-foreground">
+                  The UAE consists of seven emirates: Abu Dhabi, Dubai, Sharjah, Ajman, Umm Al Quwain, Ras Al Khaimah, and Fujairah.
+                </p>
+              </div>
+            </div>
+            
+            <div className="mt-6 flex justify-between">
+              <Button variant="outline" onClick={handleBack}>
+                Back
+              </Button>
+              <Button 
+                onClick={handleNext}
+                disabled={!data.location.trim()}
+                className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90"
+              >
+                Continue <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        );
+
+      case 'cultural':
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-emirati-desertRed text-center">Cultural Values</h2>
+            <p className="text-center text-muted-foreground">Select values that align with your personal and professional journey.</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              {culturalValues.map((value) => (
+                <div 
+                  key={value.id}
+                  onClick={() => toggleCulturalValue(value.id)}
+                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                    data.culturalValues.includes(value.id) 
+                      ? 'border-emirati-oasisGreen bg-emirati-sandBeige/10' 
+                      : 'border-emirati-sandBeige hover:border-emirati-desertGold'
+                  }`}
+                >
+                  <h3 className="font-semibold">{value.name}</h3>
+                  <p className="text-sm text-muted-foreground">{value.description}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-6 flex justify-between">
+              <Button variant="outline" onClick={handleBack}>
+                Back
+              </Button>
+              <Button 
+                onClick={handleNext}
+                disabled={data.culturalValues.length === 0}
                 className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90"
               >
                 Continue <ChevronRight className="ml-2 h-4 w-4" />
@@ -328,16 +545,30 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
         );
         
       case 'complete':
+        const roleContent = getRoleSpecificContent();
+        
         return (
           <div className="space-y-6 text-center">
             <div className="flex justify-center">
               <CheckCircle className="w-16 h-16 text-emirati-oasisGreen" />
             </div>
             
-            <h2 className="text-2xl font-bold text-emirati-desertRed">Setup Complete!</h2>
+            <h2 className="text-2xl font-bold text-emirati-desertRed">{roleContent.title}</h2>
             <p className="text-muted-foreground">
-              Thank you, {data.name}. Your Emirati Journey profile is now ready.
+              Thank you, {data.name}. {roleContent.message}
             </p>
+            
+            <div className="mt-4 bg-emirati-sandBeige/10 p-4 rounded-md">
+              <h3 className="font-semibold text-emirati-oasisGreen mb-2">Recommended Next Steps:</h3>
+              <ul className="space-y-1 text-left">
+                {roleContent.nextSteps.map((step, index) => (
+                  <li key={index} className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-emirati-desertGold mr-2" />
+                    {step}
+                  </li>
+                ))}
+              </ul>
+            </div>
             
             <div className="mt-8">
               <Button 
