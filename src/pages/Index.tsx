@@ -11,6 +11,7 @@ import CareerJourneyTimeline from "@/components/home/CareerJourneyTimeline";
 import ThemeToggle from "@/components/home/theme/ThemeToggle";
 import OnboardingWrapper from "@/components/onboarding/OnboardingWrapper";
 import { toast } from "@/components/ui/use-toast";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 export default function Index() {
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
@@ -33,9 +34,27 @@ export default function Index() {
       }
     } catch (error) {
       console.error("Error initializing index page:", error);
+      toast({
+        title: "Error initializing",
+        description: "There was a problem loading your profile. Some features may not work correctly.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
+
+    // Add event listener for unhandled promise rejections
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.error("Unhandled promise rejection:", event.reason);
+      // Prevent the default browser behavior (which might show an error)
+      event.preventDefault();
+    };
+
+    window.addEventListener("unhandledrejection", handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener("unhandledrejection", handleUnhandledRejection);
+    };
   }, []);
 
   const handleGetStartedClick = () => {
@@ -74,17 +93,24 @@ export default function Index() {
           style={decorationStyle}
         ></div>
         
-        <HeroSection onGetStartedClick={handleGetStartedClick} />
-        
-        <div className="hidden md:block">
-          <ThemeToggle />
-        </div>
-        
-        <ServicesSection />
-        <CareerJourneyTimeline />
-        <TestimonialsSection />
-        <FeaturedResourcesSection />
-        <CallToActionSection onGetStartedClick={handleGetStartedClick} />
+        <ErrorBoundary fallback={
+          <div className="p-4 border border-red-300 bg-red-50 rounded-md text-red-900">
+            <h3 className="text-lg font-semibold mb-2">Something went wrong</h3>
+            <p>We're sorry, but there was an error loading this section. Please try refreshing the page.</p>
+          </div>
+        }>
+          <HeroSection onGetStartedClick={handleGetStartedClick} />
+          
+          <div className="hidden md:block">
+            <ThemeToggle />
+          </div>
+          
+          <ServicesSection />
+          <CareerJourneyTimeline />
+          <TestimonialsSection />
+          <FeaturedResourcesSection />
+          <CallToActionSection onGetStartedClick={handleGetStartedClick} />
+        </ErrorBoundary>
         
         {/* Decorative element inspired by UAE desert patterns */}
         <div 

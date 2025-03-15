@@ -3,15 +3,8 @@ import React from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { Student } from "@/types/student";
 import PassportMainContent from "../PassportMainContent";
-import ProgressTracking from "../ProgressTracking";
-import CareerMilestones from "../CareerMilestones";
-import CulturalAchievements from "../CulturalAchievements";
-import MentorMatchingCard from "../MentorMatchingCard";
-import LeaderboardCard from "../LeaderboardCard";
-import SkillGapAnalysis from "../skill-gap/SkillGapAnalysis";
-import PublicProfileTab from "./PublicProfileTab";
-import SettingsTab from "./SettingsTab";
-import CulturalAchievementsGuide from "../CulturalAchievementsGuide";
+import SkillGapTabs from "../skill-gap/SkillGapTabs";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 interface PassportTabsContentProps {
   activeTab: string;
@@ -22,50 +15,36 @@ const PassportTabsContent: React.FC<PassportTabsContentProps> = ({
   activeTab,
   student,
 }) => {
+  const fallbackUI = (
+    <div className="p-4 border border-amber-300 bg-amber-50 rounded-md text-amber-900">
+      <h3 className="text-lg font-semibold mb-2">Unable to load this section</h3>
+      <p>We're sorry, but there was an error loading this content. Please try again later.</p>
+    </div>
+  );
+
   return (
-    <div className="mt-4">
-      <TabsContent value="passport" className="space-y-8">
-        <PassportMainContent student={student} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ProgressTracking 
-            student={student} 
-            serviceId="career-progress" 
-            serviceName="Career Progress" 
-            currentProgress={student.progress || 0} 
-          />
-          <LeaderboardCard 
-            data={[
-              { name: student.name, score: student.totalPoints || 0, isCurrentUser: true, position: student.leaderboardRank || 0 },
-              { name: "Ahmed K.", score: 450 },
-              { name: "Fatima S.", score: 380 },
-              { name: "Mohammed A.", score: 320 },
-              { name: "Noura H.", score: 290 }
-            ]}
-            currentUserRank={student.leaderboardRank || 0}
-          />
-        </div>
+    <div className="mt-6">
+      <TabsContent value="passport" forceMount hidden={activeTab !== "passport"}>
+        <ErrorBoundary fallback={fallbackUI}>
+          <PassportMainContent student={student} />
+        </ErrorBoundary>
       </TabsContent>
-
-      <TabsContent value="achievements" className="space-y-8">
-        <CareerMilestones student={student} />
-        <CulturalAchievements student={student} />
-        <CulturalAchievementsGuide student={student} />
+      
+      <TabsContent value="skill-gaps" forceMount hidden={activeTab !== "skill-gaps"}>
+        <ErrorBoundary fallback={fallbackUI}>
+          <SkillGapTabs student={student} />
+        </ErrorBoundary>
       </TabsContent>
-
-      <TabsContent value="skill-gap" className="space-y-8">
-        <SkillGapAnalysis student={student} />
-      </TabsContent>
-
-      <TabsContent value="mentorship" className="space-y-8">
-        <MentorMatchingCard student={student} />
-      </TabsContent>
-
-      <TabsContent value="public-profile">
-        <PublicProfileTab student={student} />
-      </TabsContent>
-
-      <TabsContent value="settings">
-        <SettingsTab student={student} />
+      
+      <TabsContent value="settings" forceMount hidden={activeTab !== "settings"}>
+        <ErrorBoundary fallback={fallbackUI}>
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h2 className="text-xl font-semibold mb-4">Passport Settings</h2>
+            <p className="text-muted-foreground">
+              Configure your career passport settings and notification preferences here.
+            </p>
+          </div>
+        </ErrorBoundary>
       </TabsContent>
     </div>
   );
