@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TrendingUp, BarChart, BookOpen } from "lucide-react";
@@ -7,7 +8,7 @@ import AllSkillGapsTab from "./AllSkillGapsTab";
 import TrainingProgramsTab from "./TrainingProgramsTab";
 import { searchTrainingPrograms } from "@/utils/career/skill-gap";
 
-interface SkillGapTabsProps {
+export interface SkillGapTabsProps {
   student: Student;
   activeTab: string;
   onTabChange: (tab: string) => void;

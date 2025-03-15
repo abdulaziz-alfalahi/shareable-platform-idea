@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { Student } from "@/types/student";
 import PassportMainContent from "../PassportMainContent";
@@ -15,6 +15,9 @@ const PassportTabsContent: React.FC<PassportTabsContentProps> = ({
   activeTab,
   student,
 }) => {
+  // Add state for skill gap sub-tabs
+  const [skillGapActiveTab, setSkillGapActiveTab] = useState("recommendations");
+
   const fallbackUI = (
     <div className="p-4 border border-amber-300 bg-amber-50 rounded-md text-amber-900">
       <h3 className="text-lg font-semibold mb-2">Unable to load this section</h3>
@@ -32,7 +35,11 @@ const PassportTabsContent: React.FC<PassportTabsContentProps> = ({
       
       <TabsContent value="skill-gaps" forceMount hidden={activeTab !== "skill-gaps"}>
         <ErrorBoundary fallback={fallbackUI}>
-          <SkillGapTabs student={student} />
+          <SkillGapTabs 
+            student={student} 
+            activeTab={skillGapActiveTab}
+            onTabChange={setSkillGapActiveTab}
+          />
         </ErrorBoundary>
       </TabsContent>
       
