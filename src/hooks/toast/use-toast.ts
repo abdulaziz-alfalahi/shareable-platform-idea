@@ -1,56 +1,66 @@
 
-import * as React from "react"
-import { dispatch, genId, memoryState, subscribe } from "./store"
-import type { Toast, ToasterToast } from "./types"
+import { useState, useEffect } from "react";
+import { toast as sonnerToast } from "sonner";
+import { ToastType } from "./types";
 
-function toast({ ...props }: Toast) {
-  const id = genId()
+interface ToastProps {
+  title: string;
+  description?: string;
+  type?: ToastType;
+  duration?: number;
+}
 
-  const update = (props: ToasterToast) =>
-    dispatch({
-      type: "UPDATE_TOAST",
-      toast: { ...props, id },
-    })
-  
-  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
-  
-  const markAsRead = () => dispatch({ type: "MARK_AS_READ", toastId: id })
+export function toast({
+  title,
+  description,
+  type = "default",
+  duration = 5000,
+}: ToastProps) {
+  const toastOptions = {
+    description,
+    duration,
+  };
 
-  dispatch({
-    type: "ADD_TOAST",
-    toast: {
-      ...props,
-      id,
-      open: true,
-      read: false,
-      onOpenChange: (open) => {
-        if (!open) dismiss()
-      },
-    },
-  })
-
-  return {
-    id: id,
-    dismiss,
-    update,
-    markAsRead,
+  switch (type) {
+    case "success":
+      return sonnerToast.success(title, toastOptions);
+    case "error":
+      return sonnerToast.error(title, toastOptions);
+    case "warning":
+      return sonnerToast(title, {
+        ...toastOptions,
+        className: "warning-toast",
+      });
+    case "destructive":
+      return sonnerToast.error(title, toastOptions);
+    case "info":
+      return sonnerToast.info(title, toastOptions);
+    case "celebratory":
+      // Special styling for achievements and celebrations
+      return sonnerToast.success(title, {
+        ...toastOptions,
+        className: "celebratory-toast",
+        icon: "🎉", // Celebration emoji
+        duration: duration || 7000, // Longer default duration for celebrations
+      });
+    default:
+      return sonnerToast(title, toastOptions);
   }
 }
 
-function useToast() {
-  const [state, setState] = React.useState(memoryState)
+// React hook to manage toast states
+export function useToast() {
+  const [toasts, setToasts] = useState<string[]>([]);
 
-  React.useEffect(() => {
-    const unsubscribe = subscribe(setState)
-    return unsubscribe
-  }, [state])
+  // Effect to clean up toast state if needed in a real implementation
+  useEffect(() => {
+    return () => {
+      // Clean up logic if needed
+    };
+  }, []);
 
   return {
-    ...state,
     toast,
-    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
-    markAsRead: (toastId: string) => dispatch({ type: "MARK_AS_READ", toastId }),
-  }
+    toasts,
+  };
 }
-
-export { useToast, toast }

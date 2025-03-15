@@ -1,135 +1,105 @@
 
 import { CulturalAchievement } from '../types';
 
-// Define cultural achievements tied to Emirati heritage
 export const culturalAchievements: CulturalAchievement[] = [
   {
     id: "bedouin-resilience",
     name: "Bedouin Resilience",
-    description: "Displayed remarkable persistence by completing 10 challenges, embodying the resilience of Bedouin ancestors who thrived in challenging environments.",
-    iconName: "palm-tree",
+    description: "Demonstrated resilience by completing 10 challenges",
     requiredCount: 10,
     category: "Resilience",
+    iconName: "mountain",
     stampLevel: "Silver",
-    culturalBackground: "The Bedouin people of the UAE have thrived in one of the world's harshest environments for generations, displaying incredible adaptability and strength."
+    culturalBackground: "Inspired by the Bedouin tribes who thrived in harsh desert conditions through resilience and adaptation"
   },
   {
     id: "falcon-vision",
     name: "Falcon Vision",
-    description: "Demonstrated exceptional mentorship by guiding 5 peers, honoring the UAE's reverence for falcons as symbols of vision and guidance.",
-    iconName: "eagle",
+    description: "Mentored 5 peers, sharing your wisdom and insights",
     requiredCount: 5,
     category: "Mentorship",
+    iconName: "eagle",
     stampLevel: "Gold",
-    culturalBackground: "Falconry is a treasured Emirati tradition, with the falcon symbolizing precision, vision, and noble guidance."
+    culturalBackground: "Inspired by the UAE's national bird, the falcon, known for its sharp vision and hunting skills passed down through generations"
   },
   {
     id: "majlis-wisdom",
     name: "Majlis Wisdom",
-    description: "Shared knowledge in 3 discussion forums, continuing the tradition of the majlis as a place of community learning and discourse.",
-    iconName: "users",
+    description: "Participated in 3 discussion forums, sharing perspectives and learning from others",
     requiredCount: 3,
     category: "Leadership",
+    iconName: "users",
     stampLevel: "Bronze",
-    culturalBackground: "The majlis is a traditional Emirati gathering space where community members exchange ideas, solve problems, and make collective decisions."
+    culturalBackground: "Inspired by the traditional Majlis gatherings where community members share knowledge and make collective decisions"
   },
   {
     id: "pearl-diver",
     name: "Pearl Diver",
-    description: "Discovered valuable opportunities by completing 5 assessment challenges, embodying the spirit of traditional pearl divers who sought treasures beneath the surface.",
-    iconName: "gem",
+    description: "Completed 5 in-depth career assessments",
     requiredCount: 5,
     category: "Innovation",
+    iconName: "gem",
     stampLevel: "Silver",
-    culturalBackground: "For generations before oil, pearl diving was the economic backbone of the UAE, requiring courage, patience, and the ability to find hidden treasures."
+    culturalBackground: "Inspired by UAE's traditional pearl diving industry that required precision, patience, and the ability to identify value"
   },
   {
     id: "desert-navigator",
     name: "Desert Navigator",
-    description: "Successfully guided your career journey through 3 major milestones, much like traditional navigators who used stars to cross the vast deserts.",
-    iconName: "compass",
+    description: "Successfully navigated to 3 career milestones",
     requiredCount: 3,
-    category: "Heritage",
-    stampLevel: "Bronze",
-    culturalBackground: "Desert navigation was an essential skill for Emiratis, who developed sophisticated methods to traverse the vast sands using stars and landmarks."
+    category: "Navigation",
+    iconName: "compass",
+    stampLevel: "Silver",
+    culturalBackground: "Inspired by the traditional navigation skills of desert travelers who could find their way using stars and landmarks"
   },
   {
     id: "coffee-hospitality",
-    name: "Arabic Coffee Master",
-    description: "Demonstrated exceptional hospitality by hosting or supporting 4 career networking events, honoring the Arabic coffee tradition of welcome.",
-    iconName: "coffee",
+    name: "Arabic Coffee Hospitality",
+    description: "Hosted 4 career networking events",
     requiredCount: 4,
     category: "Hospitality",
-    stampLevel: "Gold",
-    culturalBackground: "In Emirati culture, Arabic coffee (gahwa) is a symbol of hospitality and generosity. The elaborate serving ritual welcomes guests and builds relationships."
+    iconName: "coffee",
+    stampLevel: "Bronze",
+    culturalBackground: "Inspired by the traditional Emirati hospitality symbolized by offering Arabic coffee (qahwa) to guests"
   },
   {
     id: "dhow-builder",
     name: "Dhow Builder",
-    description: "Constructed a comprehensive portfolio showcasing 5 major projects, inspired by the master craftsmen who built the traditional dhow boats.",
-    iconName: "sailboat",
+    description: "Added 5 projects to your portfolio showcasing your craftsmanship",
     requiredCount: 5,
     category: "Craftsmanship",
-    stampLevel: "Silver",
-    culturalBackground: "The dhow is a traditional sailing vessel that enabled trade and pearling, with construction techniques passed down through generations of skilled craftsmen."
+    iconName: "ship",
+    stampLevel: "Gold",
+    culturalBackground: "Inspired by the traditional dhow boat builders whose craftsmanship and attention to detail created vessels that connected the UAE to the world"
   },
   {
     id: "date-palm-cultivator",
     name: "Date Palm Cultivator",
-    description: "Nurtured professional relationships with 6 industry mentors, reflecting the care with which Emiratis have cultivated date palms for centuries.",
-    iconName: "palm-tree",
+    description: "Connected with 6 industry mentors who helped your growth",
     requiredCount: 6,
-    category: "Mentorship",
-    stampLevel: "Bronze",
-    culturalBackground: "The date palm has been central to Emirati life for thousands of years, providing food, building materials, and shade in the desert climate."
+    category: "Heritage",
+    iconName: "palm-tree",
+    stampLevel: "Silver",
+    culturalBackground: "Inspired by the date palm tree, a symbol of prosperity and sustainability in UAE culture"
   },
   {
     id: "desert-bloom",
     name: "Desert Bloom",
-    description: "Transformed challenges into opportunities by completing 8 skill development courses during career transitions.",
-    iconName: "sun",
+    description: "Completed 8 skill development courses to grow your capabilities",
     requiredCount: 8,
-    category: "Resilience",
+    category: "Innovation",
+    iconName: "sun",
     stampLevel: "Gold",
-    culturalBackground: "The desert may seem barren, but after rare rainfall, it erupts with vibrant blooms. This natural phenomenon symbolizes the Emirati ability to find opportunity in challenge."
+    culturalBackground: "Inspired by the desert plants that bloom despite harsh conditions, representing resilience and the ability to thrive with limited resources"
   },
   {
     id: "oasis-builder",
     name: "Oasis Builder",
-    description: "Created a supportive professional community by connecting 7 peers with valuable resources or opportunities.",
-    iconName: "land-plot",
+    description: "Connected 7 peers with resources/opportunities",
     requiredCount: 7,
-    category: "Leadership",
-    stampLevel: "Silver",
-    culturalBackground: "Desert oases have been vital gathering points for Emirati communities, providing water, shade, and spaces for trade and cultural exchange."
-  }
-];
-
-// Additional achievement categories specific to UAE culture
-export const culturalAchievementCategories = [
-  {
-    id: "heritage",
-    name: "Heritage & Tradition",
-    description: "Achievements that honor and preserve Emirati cultural heritage"
-  },
-  {
-    id: "hospitality",
-    name: "Arabic Hospitality",
-    description: "Achievements that demonstrate the renowned Emirati spirit of welcome and generosity"
-  },
-  {
-    id: "craftsmanship",
-    name: "Traditional Craftsmanship",
-    description: "Achievements inspired by traditional Emirati crafts and skills"
-  },
-  {
-    id: "resilience",
-    name: "Desert Resilience",
-    description: "Achievements that reflect the adaptability and strength developed through desert living"
-  },
-  {
-    id: "navigation",
-    name: "Maritime & Desert Navigation",
-    description: "Achievements honoring the UAE's rich history of sea and desert exploration"
+    category: "Hospitality",
+    iconName: "land-plot",
+    stampLevel: "Bronze",
+    culturalBackground: "Inspired by the traditional oasis communities where resources were shared for the collective benefit"
   }
 ];
