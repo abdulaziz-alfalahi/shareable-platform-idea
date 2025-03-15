@@ -35,6 +35,7 @@ const MentorsTab = () => {
   const [activeMentors, setActiveMentors] = useState<Mentor[]>([]);
   const [pendingRequests, setPendingRequests] = useState<MentorshipRequest[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("explore");
   
   // Use the student data object for the MentorMatchingCard
   const student = studentData;
@@ -139,7 +140,7 @@ const MentorsTab = () => {
     <div className="space-y-6">
       <MentorMatchingCard student={student} />
       
-      <Tabs defaultValue="explore" className="w-full mt-6">
+      <Tabs defaultValue="explore" className="w-full mt-6" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-4">
           <TabsTrigger value="explore">Explore Mentors</TabsTrigger>
           <TabsTrigger value="requests">
@@ -221,7 +222,11 @@ const MentorsTab = () => {
             <Card>
               <CardContent className="p-6 text-center">
                 <p>You haven't sent any mentorship requests yet.</p>
-                <Button variant="outline" className="mt-4" onClick={() => document.querySelector('[data-value="explore"]')?.click()}>
+                <Button 
+                  variant="outline" 
+                  className="mt-4" 
+                  onClick={() => setActiveTab("explore")}
+                >
                   Explore Mentors
                 </Button>
               </CardContent>
