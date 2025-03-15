@@ -26,5 +26,6 @@ export {
   calculateSkillMatch,
   identifyMissingSkills,
   getRecommendedJobs,
-  getCareerPathAlignedJobs
+  getCareerPathAlignedJobs,
+  getDetailedJobMatch
 } from './job-matching-service';

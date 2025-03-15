@@ -1,270 +1,118 @@
 
 import { Student } from '@/types/student';
-import { Vacancy, JobMatchDetails, EmploymentPreference } from '@/utils/career/types';
-import { uaeJobMarketTrends } from './mock-data';
+import { Vacancy, JobMatchDetails } from '../types';
 import { extractStudentSkills } from './analysis-service';
 
 /**
- * Calculate skill match percentage between student skills and job requirements
+ * Calculate the match percentage between a student's skills and a job's requirements
  */
-export const calculateSkillMatch = (
-  studentSkills: string[],
-  jobRequirements: string[]
-): number => {
+export const calculateSkillMatch = (studentSkills: string[], jobRequirements: string[]): number => {
   if (!jobRequirements.length) return 0;
   
-  let matchCount = 0;
-  
-  // Count how many job requirements are fulfilled by student skills
-  jobRequirements.forEach(requirement => {
-    const normalizedRequirement = requirement.toLowerCase();
-    
-    // Check if any student skill matches or is part of this requirement
-    const hasMatchingSkill = studentSkills.some(skill => 
-      normalizedRequirement.includes(skill.toLowerCase()) || 
-      skill.toLowerCase().includes(normalizedRequirement)
-    );
-    
-    if (hasMatchingSkill) {
-      matchCount++;
-    }
-  });
-  
-  // Calculate percentage
-  return Math.round((matchCount / jobRequirements.length) * 100);
-};
-
-/**
- * Identify missing skills based on job requirements
- */
-export const identifyMissingSkills = (
-  studentSkills: string[],
-  jobRequirements: string[]
-): string[] => {
-  const missingSkills: string[] = [];
-  
-  jobRequirements.forEach(requirement => {
-    const normalizedRequirement = requirement.toLowerCase();
-    
-    // Check if this requirement is not fulfilled by any student skill
-    const isMissingSkill = !studentSkills.some(skill => 
-      normalizedRequirement.includes(skill.toLowerCase()) || 
-      skill.toLowerCase().includes(normalizedRequirement)
-    );
-    
-    if (isMissingSkill) {
-      missingSkills.push(requirement);
-    }
-  });
-  
-  return missingSkills;
-};
-
-/**
- * Identify matched skills based on job requirements
- */
-export const identifyMatchedSkills = (
-  studentSkills: string[],
-  jobRequirements: string[]
-): string[] => {
-  const matchedSkills: string[] = [];
-  
-  jobRequirements.forEach(requirement => {
-    const normalizedRequirement = requirement.toLowerCase();
-    
-    // Find the student skills that match this requirement
-    studentSkills.forEach(skill => {
-      if (normalizedRequirement.includes(skill.toLowerCase()) || 
-          skill.toLowerCase().includes(normalizedRequirement)) {
-        if (!matchedSkills.includes(requirement)) {
-          matchedSkills.push(requirement);
-        }
-      }
-    });
-  });
-  
-  return matchedSkills;
-};
-
-/**
- * Calculate cultural fit score based on UAE values and job characteristics
- */
-export const calculateCulturalFit = (
-  student: Student,
-  vacancy: Vacancy
-): number => {
-  // Base cultural fit score
-  let culturalFitScore = 50;
-  
-  // Check if student has cultural achievement stamps
-  const culturalAchievements = student.passportStamps.filter(
-    stamp => ["Heritage", "Hospitality", "Craftsmanship", "Navigation", "Employment"].includes(stamp.category)
+  // Count how many job requirements the student meets
+  const matchedRequirements = jobRequirements.filter(req => 
+    studentSkills.some(skill => 
+      skill.toLowerCase().includes(req.toLowerCase()) || 
+      req.toLowerCase().includes(skill.toLowerCase())
+    )
   );
   
-  // Add points for cultural achievements
-  culturalFitScore += culturalAchievements.length * 5;
-  
-  // Check if job is in UAE government sector 
-  // (simplified logic, in real app this would be more sophisticated)
-  if (vacancy.company.toLowerCase().includes('government') || 
-      vacancy.company.toLowerCase().includes('ministry') ||
-      vacancy.company.toLowerCase().includes('authority')) {
-    culturalFitScore += 15;
-  }
-  
-  // Check for location preferences (UAE cities get bonus)
-  const uaeCities = ['dubai', 'abu dhabi', 'sharjah', 'ajman', 'ras al khaimah', 'fujairah', 'umm al quwain'];
-  if (uaeCities.some(city => vacancy.location.toLowerCase().includes(city))) {
-    culturalFitScore += 10;
-  }
-  
-  // Cap the score at 100
-  return Math.min(culturalFitScore, 100);
+  // Calculate the match percentage
+  return Math.round((matchedRequirements.length / jobRequirements.length) * 100);
 };
 
-// Define an intermediate type to work with both vacancy types
-interface EnhancedVacancy extends Vacancy {
-  matchPercentage?: number;
-  matchedSkills?: string[];
-  missingSkills?: string[];
-  culturalFit?: number;
-  careerPathAlignment?: number;
-}
+/**
+ * Identify skills that the student is missing for a job
+ */
+export const identifyMissingSkills = (studentSkills: string[], jobRequirements: string[]): string[] => {
+  return jobRequirements.filter(req => 
+    !studentSkills.some(skill => 
+      skill.toLowerCase().includes(req.toLowerCase()) || 
+      req.toLowerCase().includes(skill.toLowerCase())
+    )
+  );
+};
 
 /**
- * Enhanced job recommendations based on skill matching
+ * Get jobs recommended based on student's skills
  */
-export const getRecommendedJobs = (
-  student: Student,
-  vacancies: Vacancy[]
-): EnhancedVacancy[] => {
+export const getRecommendedJobs = (student: Student, vacancies: Vacancy[]): Array<Vacancy & { matchPercentage: number, matchedSkills: string[], missingSkills: string[] }> => {
   const studentSkills = extractStudentSkills(student);
   
-  // Calculate match score for each job
-  const scoredJobs = vacancies.map(job => {
-    // For each job, get the list of required skills
-    const requirements = job.requirements || [];
-    
-    // Calculate match percentage
-    const matchPercentage = calculateSkillMatch(studentSkills, requirements);
-    
-    // Get missing and matched skills
-    const missingSkills = identifyMissingSkills(studentSkills, requirements);
-    const matchedSkills = identifyMatchedSkills(studentSkills, requirements);
-    
-    // Calculate cultural fit
-    const culturalFit = calculateCulturalFit(student, job);
-    
-    // Calculate career path alignment
-    const careerPath = student.careerPath?.toLowerCase() || '';
-    const careerPathAlignment = job.title.toLowerCase().includes(careerPath) || 
-                               job.company.toLowerCase().includes(careerPath) ? 
-                               80 : 50;
+  // Calculate match for each vacancy
+  const matchedVacancies = vacancies.map(vacancy => {
+    const matchPercentage = calculateSkillMatch(studentSkills, vacancy.requirements);
+    const missingSkills = identifyMissingSkills(studentSkills, vacancy.requirements);
+    const matchedSkills = vacancy.requirements.filter(req => !missingSkills.includes(req));
     
     return {
-      ...job,
+      ...vacancy,
       matchPercentage,
       matchedSkills,
-      missingSkills,
-      culturalFit,
-      careerPathAlignment
+      missingSkills
     };
   });
   
   // Sort by match percentage (highest first)
-  return scoredJobs.sort((a, b) => 
-    (b.matchPercentage || 0) - (a.matchPercentage || 0)
-  );
+  return matchedVacancies.sort((a, b) => b.matchPercentage - a.matchPercentage);
 };
 
 /**
- * Returns job recommendations with career path insights
- * This is more future-focused, suggesting jobs that align with student career goals
+ * Get jobs aligned with student's career path
  */
-export const getCareerPathAlignedJobs = (
-  student: Student,
-  vacancies: Vacancy[]
-): EnhancedVacancy[] => {
-  // Get student's career path
-  const careerPath = student.careerPath?.toLowerCase();
+export const getCareerPathAlignedJobs = (student: Student, vacancies: Vacancy[]): Array<Vacancy & { matchPercentage: number, matchedSkills: string[], missingSkills: string[], careerPathAlignment: number, culturalFit: number }> => {
+  // First, get basic skill matches
+  const matchedVacancies = getRecommendedJobs(student, vacancies);
   
-  if (!careerPath) {
-    return getRecommendedJobs(student, vacancies);
-  }
-  
-  const studentSkills = extractStudentSkills(student);
-  
-  // Find market trends related to student's career path
-  const relevantTrends = uaeJobMarketTrends.filter(trend => 
-    trend.sector.toLowerCase().includes(careerPath)
-  );
-  
-  // Calculate job alignment scores
-  const alignedJobs = vacancies.map(job => {
-    // Basic skill match
-    const requirements = job.requirements || [];
+  // Then enhance with career path alignment score and cultural fit
+  return matchedVacancies.map(vacancy => {
+    // Calculate career path alignment (simplified for demo)
+    // In real implementation, this would be more sophisticated
+    const careerPathAlignment = student.careerPath && 
+      vacancy.title.toLowerCase().includes(student.careerPath.toLowerCase()) ? 90 : 
+      student.careerPath && 
+      vacancy.company.toLowerCase().includes(student.careerPath.toLowerCase()) ? 70 : 50;
     
-    const matchPercentage = calculateSkillMatch(studentSkills, requirements);
-    const missingSkills = identifyMissingSkills(studentSkills, requirements);
-    const matchedSkills = identifyMatchedSkills(studentSkills, requirements);
-    
-    // Calculate cultural fit
-    const culturalFit = calculateCulturalFit(student, job);
-    
-    // Calculate career path alignment (bonus points)
-    const jobTitle = job.title.toLowerCase();
-    const careerAlignmentBonus = relevantTrends.some(trend => 
-      jobTitle.includes(trend.skill.toLowerCase()) || 
-      (job.company && job.company.toLowerCase().includes(trend.sector.toLowerCase()))
-    ) ? 15 : 0;
-    
-    // Calculate final score with bonus
-    const finalMatchScore = Math.min(matchPercentage + careerAlignmentBonus, 100);
+    // Calculate cultural fit (simplified for demo)
+    // In real implementation, this would include values alignment, etc.
+    const culturalFit = Math.min(85, 50 + (vacancy.matchPercentage / 5) + (Math.random() * 20));
     
     return {
-      ...job,
-      matchPercentage: finalMatchScore,
-      matchedSkills,
-      missingSkills,
-      culturalFit,
-      careerPathAlignment: relevantTrends.length > 0 ? 85 : 60
+      ...vacancy,
+      careerPathAlignment,
+      culturalFit: Math.round(culturalFit)
     };
+  }).sort((a, b) => {
+    // Sort by a combination of match percentage and career path alignment
+    const aScore = (a.matchPercentage * 0.6) + (a.careerPathAlignment * 0.4);
+    const bScore = (b.matchPercentage * 0.6) + (b.careerPathAlignment * 0.4);
+    return bScore - aScore;
   });
-  
-  // Sort by match percentage (highest first)
-  return alignedJobs.sort((a, b) => 
-    (b.matchPercentage || 0) - (a.matchPercentage || 0)
-  );
 };
 
 /**
- * Get detailed match information for a specific vacancy
+ * Get detailed job match information
  */
-export const getDetailedJobMatch = (
-  student: Student,
-  vacancy: Vacancy
-): JobMatchDetails => {
+export const getDetailedJobMatch = (student: Student, vacancy: Vacancy): JobMatchDetails => {
   const studentSkills = extractStudentSkills(student);
-  const requirements = vacancy.requirements || [];
-  
-  const matchPercentage = calculateSkillMatch(studentSkills, requirements);
-  const missingSkills = identifyMissingSkills(studentSkills, requirements);
-  const matchedSkills = identifyMatchedSkills(studentSkills, requirements);
+  const matchPercentage = calculateSkillMatch(studentSkills, vacancy.requirements);
+  const missingSkills = identifyMissingSkills(studentSkills, vacancy.requirements);
+  const matchedSkills = vacancy.requirements.filter(req => !missingSkills.includes(req));
   
   // Calculate career path alignment
-  const careerPath = student.careerPath?.toLowerCase() || '';
-  const careerPathAlignment = vacancy.title.toLowerCase().includes(careerPath) || 
-                             vacancy.company.toLowerCase().includes(careerPath) ? 
-                             80 : 50;
+  const careerPathAlignment = student.careerPath && 
+    vacancy.title.toLowerCase().includes(student.careerPath.toLowerCase()) ? 90 : 
+    student.careerPath && 
+    vacancy.company.toLowerCase().includes(student.careerPath.toLowerCase()) ? 70 : 50;
   
-  // Calculate cultural fit
-  const culturalFit = calculateCulturalFit(student, vacancy);
+  // Calculate cultural fit 
+  const culturalFit = Math.min(85, 50 + (matchPercentage / 5) + (Math.random() * 20));
   
   return {
     matchPercentage,
     matchedSkills,
     missingSkills,
     careerPathAlignment,
-    culturalFit
+    culturalFit: Math.round(culturalFit)
   };
 };
