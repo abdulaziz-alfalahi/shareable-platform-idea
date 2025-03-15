@@ -6,7 +6,8 @@ import LocationIcon from "./location/LocationIcon";
 import LocationSuggestions from "./location/LocationSuggestions";
 import MapToggleButton from "./location/MapToggleButton";
 import { filterLocationSuggestions } from "@/utils/locationUtils";
-import JobMap from "@/components/JobMap";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { MapIcon } from "lucide-react";
 
 interface LocationFieldProps {
   location: string;
@@ -56,16 +57,6 @@ const LocationField: React.FC<LocationFieldProps> = ({
     setShowMap(!showMap);
   };
 
-  // Handle location updates from map
-  const handleLocationUpdate = (jobs: any[]) => {
-    if (jobs && jobs.length > 0) {
-      const workplace = jobs.find(job => job.id === "workplace");
-      if (workplace && workplace.location && workplace.location.address) {
-        setLocation(workplace.location.address);
-      }
-    }
-  };
-
   return (
     <div className="grid gap-2">
       <div className="flex justify-between items-center">
@@ -94,22 +85,14 @@ const LocationField: React.FC<LocationFieldProps> = ({
       </div>
 
       {showMap && (
-        <div className="mt-2 border rounded-md p-2">
-          <JobMap 
-            jobs={[
-              {
-                id: "workplace",
-                title: "Interview Location",
-                company: "Interview",
-                location: {
-                  latitude: 25.2048,  // Default to Dubai coordinates
-                  longitude: 55.2708,
-                  address: location || "Dubai, UAE"
-                }
-              }
-            ]}
-            onLocationUpdate={handleLocationUpdate}
-          />
+        <div className="mt-2 border rounded-md p-4">
+          <Alert className="bg-emirati-sandBeige/10 border-emirati-oasisGreen">
+            <MapIcon className="h-5 w-5 text-emirati-oasisGreen" />
+            <AlertTitle>Map Feature Temporarily Unavailable</AlertTitle>
+            <AlertDescription>
+              We're currently improving our map functionality. Please enter the location manually.
+            </AlertDescription>
+          </Alert>
         </div>
       )}
     </div>

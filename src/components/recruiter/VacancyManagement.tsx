@@ -7,8 +7,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogC
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Plus, ChevronRight, Users, FileEdit, Briefcase, MapPin, Clock, Calendar } from "lucide-react";
-import JobMap from "@/components/JobMap";
+import { Search, Plus, ChevronRight, Users, FileEdit, Briefcase, MapPin, Clock, Calendar, Map } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 
 interface Vacancy {
@@ -119,44 +119,6 @@ const VacancyManagement: React.FC<VacancyManagementProps> = ({ vacancies }) => {
     setIsAIMatchDialogOpen(true);
   };
 
-  const handleLocationUpdate = (updatedJobs: any[]) => {
-    if (updatedJobs.length > 0 && updatedJobs[0].id === "workplace") {
-      const workplaceJob = updatedJobs[0];
-      setNewVacancy({
-        ...newVacancy,
-        location: workplaceJob.location.address || "",
-        coordinates: {
-          latitude: workplaceJob.location.latitude,
-          longitude: workplaceJob.location.longitude
-        }
-      });
-    }
-  };
-
-  const createWorkplaceJob = (latitude: number, longitude: number, address: string = "") => {
-    return [{
-      id: "workplace",
-      title: "Workplace Location",
-      company: newVacancy.title || "New Position",
-      location: {
-        latitude,
-        longitude,
-        address: address || newVacancy.location || "Workplace Location"
-      }
-    }];
-  };
-
-  const selectedVacancyJobs = selectedVacancy ? [{
-    id: selectedVacancy.id.toString(),
-    title: selectedVacancy.title,
-    company: selectedVacancy.department,
-    location: {
-      latitude: selectedVacancy.coordinates.latitude,
-      longitude: selectedVacancy.coordinates.longitude,
-      address: selectedVacancy.location
-    }
-  }] : [];
-
   return (
     <>
       <div className="flex justify-between items-center mb-6">
@@ -248,18 +210,21 @@ const VacancyManagement: React.FC<VacancyManagementProps> = ({ vacancies }) => {
             
             <div className="grid gap-2">
               <Label>Location</Label>
-              <div className="h-[200px] rounded-md overflow-hidden">
-                <JobMap 
-                  jobs={createWorkplaceJob(newVacancy.coordinates.latitude, newVacancy.coordinates.longitude)}
-                  onLocationUpdate={handleLocationUpdate}
+              <div className="border rounded-md p-4">
+                <Alert className="bg-emirati-sandBeige/10 border-emirati-oasisGreen">
+                  <Map className="h-5 w-5 text-emirati-oasisGreen" />
+                  <AlertTitle>Map Feature Temporarily Unavailable</AlertTitle>
+                  <AlertDescription>
+                    Please enter the address manually below.
+                  </AlertDescription>
+                </Alert>
+                <Input
+                  value={newVacancy.location}
+                  onChange={(e) => setNewVacancy({ ...newVacancy, location: e.target.value })}
+                  placeholder="Address"
+                  className="mt-4"
                 />
               </div>
-              <Input
-                value={newVacancy.location}
-                onChange={(e) => setNewVacancy({ ...newVacancy, location: e.target.value })}
-                placeholder="Address"
-                className="mt-2"
-              />
             </div>
             
             <div className="grid gap-2">
@@ -363,10 +328,10 @@ const VacancyManagement: React.FC<VacancyManagementProps> = ({ vacancies }) => {
               <div>
                 <p className="text-sm font-medium">Location</p>
                 <p>{selectedVacancy.location}</p>
-                <div className="h-[200px] rounded-md overflow-hidden mt-2">
-                  <JobMap 
-                    jobs={selectedVacancyJobs}
-                  />
+                <div className="p-4 mt-2 border rounded-md bg-slate-50">
+                  <p className="text-center text-sm text-muted-foreground">
+                    Location map view temporarily unavailable
+                  </p>
                 </div>
               </div>
               

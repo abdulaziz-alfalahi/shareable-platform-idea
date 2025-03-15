@@ -1,9 +1,11 @@
 
 import { useState } from 'react';
 import { jobLocationsData } from '@/components/jobs/mockData';
-import JobMap from '@/components/JobMap';
 import LocationMatchingHeader from '@/components/jobs/location/LocationMatchingHeader';
 import FilterTabs, { FilterType } from '@/components/jobs/location/FilterTabs';
+import { Card, CardContent } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { MapIcon } from 'lucide-react';
 
 const JobLocationMatching = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
@@ -41,7 +43,33 @@ const JobLocationMatching = () => {
         filteredJobsCount={filteredJobs.length}
       />
 
-      <JobMap jobs={filteredJobs} />
+      <Card className="border-emirati-sandBeige mb-6">
+        <CardContent className="p-6">
+          <Alert className="bg-emirati-sandBeige/10 border-emirati-oasisGreen">
+            <MapIcon className="h-5 w-5 text-emirati-oasisGreen" />
+            <AlertTitle>Map Feature Temporarily Unavailable</AlertTitle>
+            <AlertDescription>
+              We're currently improving our map functionality to better display job locations across the UAE.
+              This feature will be available again soon with enhanced capabilities.
+            </AlertDescription>
+          </Alert>
+          
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredJobs.map(job => (
+              <Card key={job.id} className="p-3 border-emirati-sandBeige/40">
+                <h3 className="font-medium text-emirati-oasisGreen">{job.title}</h3>
+                <p className="text-sm">{job.company}</p>
+                <p className="text-sm text-muted-foreground">{job.location.address}</p>
+                {job.matchPercentage && (
+                  <div className="mt-2 text-sm font-medium">
+                    {job.matchPercentage}% Match
+                  </div>
+                )}
+              </Card>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
