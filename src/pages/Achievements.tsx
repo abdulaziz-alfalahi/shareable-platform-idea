@@ -1,10 +1,12 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Award, Trophy, Star, Medal, Check } from "lucide-react";
+import { Award, Trophy, Star, Medal, Check, Flame, Calendar, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
+import { studentData } from "@/data/studentMockData";
+import DailyChallenges from "@/components/gamification/DailyChallenges";
+import { useGamification } from "@/hooks/useGamification";
 
 // Define types for our achievements system
 interface Achievement {
@@ -197,6 +199,26 @@ const Achievements = () => {
     }
   };
 
+  const student = studentData;
+  const { 
+    challenges, 
+    loading, 
+    updateProgress, 
+    refreshChallenges 
+  } = useGamification(student);
+
+  // Login streak tracking
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [longestStreak, setLongestStreak] = useState(0);
+  
+  // Initialize streak on component mount
+  useEffect(() => {
+    // This would normally come from the database
+    // Simulating a streak of 5 days
+    setCurrentStreak(5);
+    setLongestStreak(14);
+  }, []);
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6">
@@ -210,34 +232,89 @@ const Achievements = () => {
       </div>
 
       {/* User points and level section */}
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Your Progress</CardTitle>
-          <CardDescription>Level up by completing achievements</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="font-medium">Total Points</span>
-              <Badge variant="outline" className="text-lg">{userPoints.total}</Badge>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-medium">Current Level</span>
-              <Badge className="bg-blue-500">{userPoints.level}</Badge>
-            </div>
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm">Progress to Level {userPoints.level + 1}</span>
-                <span className="text-sm">{userPoints.total} / {userPoints.nextLevelAt}</span>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <CardTitle>Your Progress</CardTitle>
+            <CardDescription>Level up by completing achievements</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="font-medium">Total Points</span>
+                <Badge variant="outline" className="text-lg">{userPoints.total}</Badge>
               </div>
-              <Progress 
-                value={(userPoints.total / userPoints.nextLevelAt) * 100} 
-                className="h-2" 
-              />
+              <div className="flex justify-between items-center">
+                <span className="font-medium">Current Level</span>
+                <Badge className="bg-blue-500">{userPoints.level}</Badge>
+              </div>
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm">Progress to Level {userPoints.level + 1}</span>
+                  <span className="text-sm">{userPoints.total} / {userPoints.nextLevelAt}</span>
+                </div>
+                <Progress 
+                  value={(userPoints.total / userPoints.nextLevelAt) * 100} 
+                  className="h-2" 
+                />
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+        
+        {/* New Login Streak Card */}
+        <Card className="bg-gradient-to-br from-amber-50 to-white border-amber-100">
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <Flame className="h-5 w-5 text-amber-500" />
+              <CardTitle>Login Streak</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-4">
+              <div className="text-5xl font-bold text-amber-500 mb-2">{currentStreak}</div>
+              <p className="text-sm text-gray-600 mb-6">consecutive days</p>
+              
+              <div className="flex items-center justify-center mb-2">
+                <Badge variant="outline" className="bg-amber-50">
+                  <Trophy className="h-3 w-3 mr-1 text-amber-500" />
+                  Longest: {longestStreak} days
+                </Badge>
+              </div>
+              
+              <div className="flex justify-center gap-1 my-3">
+                {[...Array(7)].map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      index < currentStreak % 7 
+                        ? "bg-amber-100 text-amber-700 border border-amber-200" 
+                        : "bg-gray-100 text-gray-400 border border-gray-200"
+                    }`}
+                  >
+                    {index < currentStreak % 7 ? <Check className="h-4 w-4" /> : ""}
+                  </div>
+                ))}
+              </div>
+              
+              <p className="text-xs text-gray-500 mt-2">
+                Come back tomorrow to continue your streak!
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Daily Challenges Section */}
+      <div className="mb-8">
+        <DailyChallenges 
+          student={student}
+          challenges={challenges}
+          loading={loading}
+          onRefresh={refreshChallenges}
+          onUpdateProgress={updateProgress}
+        />
+      </div>
 
       {/* Achievements section */}
       <h2 className="text-2xl font-bold mb-4">Your Achievements</h2>

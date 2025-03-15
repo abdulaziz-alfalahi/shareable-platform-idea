@@ -1,114 +1,66 @@
 
 /**
- * Simple in-memory cache implementation for the Career Passport data
- * In a production environment, this would be replaced with Redis, Supabase Edge Functions, 
- * or another distributed caching solution.
+ * Simple client-side cache utility
+ * Used for storing temporal data like recently viewed items
  */
-
-interface CacheItem<T> {
-  data: T;
-  expiry: number;
-}
 
 interface CacheOptions {
   ttl?: number; // Time to live in seconds
 }
 
-class PassportCache {
-  private cache: Map<string, CacheItem<any>> = new Map();
-  private defaultTTL: number = 3600; // Default 1 hour in seconds
+class ClientCache {
+  private cache: Map<string, any>;
+  private expiry: Map<string, number>;
+
+  constructor() {
+    this.cache = new Map();
+    this.expiry = new Map();
+  }
 
   /**
-   * Get data from cache
+   * Set a value in the cache
+   */
+  set<T>(key: string, value: T, options: CacheOptions = {}): void {
+    this.cache.set(key, value);
+    
+    if (options.ttl) {
+      const expiryTime = Date.now() + options.ttl * 1000;
+      this.expiry.set(key, expiryTime);
+    }
+  }
+
+  /**
+   * Get a value from the cache
    */
   get<T>(key: string): T | null {
-    const item = this.cache.get(key);
-    
-    // Return null if not found or expired
-    if (!item || item.expiry < Date.now()) {
-      if (item) {
-        this.cache.delete(key); // Clean up expired item
-      }
+    // Check if expired
+    const expiryTime = this.expiry.get(key);
+    if (expiryTime && Date.now() > expiryTime) {
+      this.delete(key);
       return null;
     }
     
-    return item.data as T;
+    const value = this.cache.get(key);
+    return value !== undefined ? value : null;
   }
 
   /**
-   * Set data in cache
-   */
-  set<T>(key: string, data: T, options: CacheOptions = {}): void {
-    const ttl = options.ttl || this.defaultTTL;
-    const expiry = Date.now() + (ttl * 1000);
-    
-    this.cache.set(key, {
-      data,
-      expiry
-    });
-  }
-
-  /**
-   * Delete item from cache
+   * Delete a key from the cache
    */
   delete(key: string): void {
     this.cache.delete(key);
+    this.expiry.delete(key);
   }
 
   /**
-   * Clear all cache
+   * Clear the entire cache
    */
   clear(): void {
     this.cache.clear();
-  }
-
-  /**
-   * Get or set cache with a loader function
-   * This implements the "cache-aside" pattern
-   */
-  async getOrSet<T>(key: string, loader: () => Promise<T>, options: CacheOptions = {}): Promise<T> {
-    const cachedData = this.get<T>(key);
-    
-    if (cachedData) {
-      return cachedData;
-    }
-    
-    const data = await loader();
-    this.set(key, data, options);
-    return data;
+    this.expiry.clear();
   }
 }
 
-// Singleton instance
-export const passportCache = new PassportCache();
-
-// Helper functions
-export const getCachedPassportData = async (studentId: number) => {
-  return passportCache.getOrSet(
-    `passport:${studentId}`, 
-    async () => {
-      // In a real application, this would be a call to the database
-      // For this demo, we'll simulate a delay
-      const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-      await delay(300); // Simulate database latency
-      
-      // Fetch from our mock data source
-      // In production, this would be a call to Supabase or another data source
-      const passportDataModule = await import('./career/passportData');
-      return passportDataModule.fetchStudentPassportData(studentId);
-    },
-    { ttl: 600 } // Cache for 10 minutes
-  );
-};
-
-export const checkAndNotifyNearMilestone = (progress: number, milestoneTitle: string) => {
-  if (progress >= 90 && progress < 100) {
-    const { notifyNearMilestone } = require('./notification');
-    notifyNearMilestone({
-      title: "Almost there!",
-      description: `You're ${progress}% of the way to your "${milestoneTitle}" milestone!`
-    });
-    return true;
-  }
-  return false;
-};
+// Export singleton instances for different types of cached data
+export const passportCache = new ClientCache();
+export const gamificationCache = new ClientCache();
