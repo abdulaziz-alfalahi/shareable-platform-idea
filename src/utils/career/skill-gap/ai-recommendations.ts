@@ -152,7 +152,7 @@ export const calculateCulturalFitScore = (
   // In a real implementation, this would come from preferences stored in the profile
   const workStylePreference: 'remote' | 'hybrid' | 'in-office' = 'hybrid'; // placeholder - would be from student profile
   
-  // Fix: Use simple string equality checks instead of type comparisons
+  // Fixed: Rewrite the conditional logic to avoid type comparison errors
   let workStyleFit = 0;
   
   if (workStylePreference === employerWorkStyle) {
