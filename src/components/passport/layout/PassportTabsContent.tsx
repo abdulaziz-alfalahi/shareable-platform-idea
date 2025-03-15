@@ -2,51 +2,58 @@
 import React from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { Student } from "@/types/student";
-import CareerMilestones from "@/components/passport/CareerMilestones";
-import ActiveChallenges from "@/components/passport/ActiveChallenges";
-import CulturalAchievements from "@/components/passport/CulturalAchievements";
-import SkillGapAnalysis from "@/components/passport/skill-gap/SkillGapAnalysis";
-import PathwaySimulator from "@/components/career/PathwaySimulator";
 import PassportMainContent from "../PassportMainContent";
+import ProgressTracking from "../ProgressTracking";
+import CareerMilestones from "../CareerMilestones";
+import CulturalAchievements from "../CulturalAchievements";
+import MentorMatchingCard from "../MentorMatchingCard";
+import LeaderboardCard from "../LeaderboardCard";
+import SkillGapAnalysis from "../skill-gap/SkillGapAnalysis";
+import PublicProfileTab from "./PublicProfileTab";
+import SettingsTab from "./SettingsTab";
+import CulturalAchievementsGuide from "../CulturalAchievementsGuide";
 
 interface PassportTabsContentProps {
   activeTab: string;
   student: Student;
 }
 
-const PassportTabsContent: React.FC<PassportTabsContentProps> = ({ 
-  activeTab, 
-  student 
+const PassportTabsContent: React.FC<PassportTabsContentProps> = ({
+  activeTab,
+  student,
 }) => {
   return (
-    <>
-      <TabsContent value="passport">
+    <div className="mt-4">
+      <TabsContent value="passport" className="space-y-8">
         <PassportMainContent student={student} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ProgressTracking student={student} />
+          <LeaderboardCard student={student} />
+        </div>
       </TabsContent>
 
-      <TabsContent value="milestones">
+      <TabsContent value="achievements" className="space-y-8">
         <CareerMilestones student={student} />
+        <CulturalAchievements student={student} />
+        <CulturalAchievementsGuide student={student} />
       </TabsContent>
 
-      <TabsContent value="challenges">
-        <ActiveChallenges 
-          challenges={student.activeChallenges || []} 
-          onViewDetails={(id) => console.log(`View challenge ${id}`)}
-        />
-      </TabsContent>
-      
-      <TabsContent value="cultural">
-        <CulturalAchievements student={student} />
-      </TabsContent>
-      
-      <TabsContent value="skill-gaps">
+      <TabsContent value="skill-gap" className="space-y-8">
         <SkillGapAnalysis student={student} />
       </TabsContent>
 
-      <TabsContent value="pathways">
-        <PathwaySimulator student={student} />
+      <TabsContent value="mentorship" className="space-y-8">
+        <MentorMatchingCard student={student} />
       </TabsContent>
-    </>
+
+      <TabsContent value="public-profile">
+        <PublicProfileTab student={student} />
+      </TabsContent>
+
+      <TabsContent value="settings">
+        <SettingsTab student={student} />
+      </TabsContent>
+    </div>
   );
 };
 

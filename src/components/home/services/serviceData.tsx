@@ -12,7 +12,9 @@ import {
   Clock,
   TrendingUp,
   Heart,
-  Wallet
+  Wallet,
+  FileText,
+  Globe
 } from "lucide-react";
 import { ServiceData } from "./types";
 
@@ -90,6 +92,24 @@ export const servicesData: ServiceData[] = [
     hoverInfo: "Build a digital showcase of your accomplishments, projects, and skills to impress potential employers."
   },
   {
+    icon: <FileText className="w-8 h-8" />,
+    title: "Industry Guides",
+    description: "Explore comprehensive guides to key UAE industries with career pathways and required skills.",
+    link: "/industry-guides",
+    iconBg: "bg-emirati-oasisGreen/10",
+    stage: ["early", "mid", "late"],
+    hoverInfo: "Get detailed insights into the UAE's key industries, employment trends, and growth opportunities."
+  },
+  {
+    icon: <BookOpen className="w-8 h-8" />,
+    title: "Educational Resources",
+    description: "Access tailored learning materials for every career stage from entry-level to leadership.",
+    link: "/educational-resources",
+    iconBg: "bg-emirati-camelBrown/10",
+    stage: ["early", "mid", "late"],
+    hoverInfo: "Discover curated learning resources specific to your career stage and development needs."
+  },
+  {
     icon: <Clock className="w-8 h-8" />,
     title: "Mid-Career Transition",
     description: "Navigate career changes with personalized guidance and reskilling opportunities.",
@@ -99,13 +119,13 @@ export const servicesData: ServiceData[] = [
     hoverInfo: "Plan and execute successful career transitions with expert guidance and targeted skill development."
   },
   {
-    icon: <BookOpen className="w-8 h-8" />,
-    title: "Continuous Learning",
-    description: "Access lifelong learning resources to stay relevant in an evolving job market.",
-    link: "/training-centers",
-    iconBg: "bg-emirati-camelBrown/10",
-    stage: ["mid", "late"],
-    hoverInfo: "Explore our vast library of courses, workshops, and resources designed for ongoing professional growth."
+    icon: <Globe className="w-8 h-8" />,
+    title: "Cultural Achievement",
+    description: "Earn special recognition by completing challenges that reflect UAE heritage and values.",
+    link: "/achievements",
+    iconBg: "bg-emirati-desertGold/10",
+    stage: ["early", "mid"],
+    hoverInfo: "Showcase your connection to Emirati culture and values through special achievement badges."
   },
   {
     icon: <Heart className="w-8 h-8" />,
