@@ -75,6 +75,8 @@ export interface Student {
   certificationsProgress?: number;
   activeChallenges?: Challenge[];
   leaderboardRank?: number;
+  inProgressCourses?: number;
+  nextAssessment?: string;
 }
 
 export interface FeedbackForm {
