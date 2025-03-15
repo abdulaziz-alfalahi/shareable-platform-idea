@@ -32,8 +32,9 @@ export interface CulturalAchievement {
   description: string;
   iconName: string;
   requiredCount: number;
-  category: "Mentorship" | "Resilience" | "Leadership" | "Innovation" | "Heritage";
+  category: "Mentorship" | "Resilience" | "Leadership" | "Innovation" | "Heritage" | "Hospitality" | "Craftsmanship" | "Navigation";
   stampLevel: "Bronze" | "Silver" | "Gold";
+  culturalBackground?: string;
 }
 
 // Re-export skill gap types for backward compatibility

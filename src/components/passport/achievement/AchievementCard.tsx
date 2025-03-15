@@ -15,6 +15,7 @@ interface AchievementData {
   totalRequired: number;
   progressPercentage: number;
   isCompleted: boolean;
+  culturalBackground?: string;
 }
 
 interface AchievementCardProps {
@@ -69,6 +70,12 @@ const AchievementCard: React.FC<AchievementCardProps> = ({ achievement }) => {
           </div>
           
           <p className="text-sm text-muted-foreground mt-1">{achievement.description}</p>
+          
+          {achievement.culturalBackground && (
+            <div className="mt-2 text-xs text-emirati-desertRed bg-emirati-sandBeige/20 p-2 rounded-md italic">
+              {achievement.culturalBackground}
+            </div>
+          )}
           
           <div className="mt-3">
             <div className="flex justify-between text-xs mb-1">

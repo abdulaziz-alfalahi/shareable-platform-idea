@@ -6,10 +6,19 @@ import {
   Compass, 
   Palmtree, 
   Gem,
-  Award
+  Award,
+  Sun,
+  Coffee,
+  Ship,
+  Sailboat,
+  LandPlot,
+  Mountain,
+  MapPin,
+  Star
 } from "lucide-react";
 
-type IconName = "users" | "eagle" | "compass" | "palm-tree" | "gem" | "award";
+type IconName = "users" | "eagle" | "compass" | "palm-tree" | "gem" | "award" | "sun" | "coffee" | 
+                "ship" | "sailboat" | "land-plot" | "mountain" | "map-pin" | "star";
 
 interface AchievementIconProps {
   iconName: string;
@@ -26,6 +35,14 @@ export const AchievementIcon: React.FC<AchievementIconProps> = ({
     case "compass": return <Compass className={className} />;
     case "palm-tree": return <Palmtree className={className} />;
     case "gem": return <Gem className={className} />;
+    case "sun": return <Sun className={className} />;
+    case "coffee": return <Coffee className={className} />;
+    case "ship": return <Ship className={className} />;
+    case "sailboat": return <Sailboat className={className} />;
+    case "land-plot": return <LandPlot className={className} />;
+    case "mountain": return <Mountain className={className} />;
+    case "map-pin": return <MapPin className={className} />;
+    case "star": return <Star className={className} />;
     default: return <Award className={className} />;
   }
 };
@@ -45,6 +62,10 @@ export const getProgressLabel = (category: string) => {
     case "Resilience": return "challenges";
     case "Leadership": return "discussions";
     case "Innovation": return "assessments";
+    case "Heritage": return "traditions";
+    case "Hospitality": return "events";
+    case "Craftsmanship": return "creations";
+    case "Navigation": return "journeys";
     default: return "milestones";
   }
 };

@@ -1,9 +1,10 @@
 
 // Re-export all achievement-related functionality from their dedicated modules
-export { culturalAchievements } from './achievements/culturalAchievementData';
+export { culturalAchievements, culturalAchievementCategories } from './achievements/culturalAchievementData';
 export { 
   checkCulturalAchievements,
-  getStudentCulturalAchievementProgress 
+  getStudentCulturalAchievementProgress,
+  filterAchievementsByCategory 
 } from './achievements/achievementChecker';
 export { 
   awardCulturalAchievement,
