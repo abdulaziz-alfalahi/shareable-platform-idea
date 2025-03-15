@@ -1,241 +1,179 @@
 
-import React, { useState, useEffect } from "react";
-import { User, BarChart2, FileText, Bell } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState } from "react";
+import RoleDashboardLayout, { DashboardTab, DashboardMetric } from "@/components/dashboard/RoleDashboardLayout";
+import { Target, Users, Calendar, FileSpreadsheet, PlusCircle, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/toast";
-import { notifyAdvisor, notifySuccess } from "@/utils/notification";
+import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
-// Import custom components
-import StudentList from "@/components/advisor/StudentList";
-import AnalyticsSection from "@/components/advisor/AnalyticsSection";
-import ReportsSection from "@/components/advisor/ReportsSection";
-import DashboardHeader from "@/components/advisor/DashboardHeader";
-import DashboardFilters from "@/components/advisor/DashboardFilters";
-import StudentDialogs from "@/components/advisor/StudentDialogs";
-
-// Import utilities
-import { getStatusBadgeVariant, getRiskBadgeVariant, formatDate } from "@/utils/advisorUtils";
-
-// Import types and data
-import { Student, FeedbackForm, GoalForm } from "@/types/student";
-import { students, performanceData } from "@/data/mockData";
+// Mock data
+const advisorData = {
+  name: "Fatima Al Hashemi",
+  specialization: "Technology & Engineering Careers",
+  assignedStudents: 18,
+  upcomingMeetings: 3,
+  feedback: 24,
+  completedAssessments: 72
+};
 
 const AdvisorDashboard = () => {
-  const { toast, toasts, markAsRead } = useToast();
   const [activeTab, setActiveTab] = useState("students");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const [riskFilter, setRiskFilter] = useState("All");
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [isViewStudentDialogOpen, setIsViewStudentDialogOpen] = useState(false);
-  const [isAddFeedbackDialogOpen, setIsAddFeedbackDialogOpen] = useState(false);
-  const [isAddGoalDialogOpen, setIsAddGoalDialogOpen] = useState(false);
-  const [showNotificationsPanel, setShowNotificationsPanel] = useState(false);
-  const [feedbackForm, setFeedbackForm] = useState<FeedbackForm>({
-    studentId: 0,
-    type: "Academic",
-    content: ""
-  });
-  const [goalForm, setGoalForm] = useState<GoalForm>({
-    studentId: 0,
-    title: "",
-    deadline: ""
-  });
+  const navigate = useNavigate();
 
-  // Demo notifications on component mount
-  useEffect(() => {
-    // Simulate notifications for demo purposes
-    setTimeout(() => {
-      notifyAdvisor({
-        title: "Student at Risk",
-        description: "Ahmed Al-Mansoori has missed 3 consecutive classes",
-      });
-    }, 2000);
+  const dashboardTabs: DashboardTab[] = [
+    { value: "students", label: "My Students" },
+    { value: "meetings", label: "Meetings" },
+    { value: "feedback", label: "Feedback" },
+    { value: "reports", label: "Reports" },
+    { value: "resources", label: "Resources" }
+  ];
 
-    setTimeout(() => {
-      notifyAdvisor({
-        title: "Upcoming Meetings",
-        description: "You have 3 student meetings scheduled for today",
-      });
-    }, 4000);
-  }, []);
+  const dashboardMetrics: DashboardMetric[] = [
+    { 
+      label: "Assigned Students", 
+      value: advisorData.assignedStudents, 
+      change: "+2 new", 
+      trend: "up", 
+      icon: <Users className="w-4 h-4" />
+    },
+    { 
+      label: "Upcoming Meetings", 
+      value: advisorData.upcomingMeetings, 
+      description: "Next: Today at 3:00 PM", 
+      icon: <Calendar className="w-4 h-4" />
+    },
+    { 
+      label: "Pending Feedback", 
+      value: 7, 
+      change: "-2 this week", 
+      trend: "down", 
+      icon: <MessageSquare className="w-4 h-4" />
+    },
+    { 
+      label: "Assessments", 
+      value: advisorData.completedAssessments, 
+      description: "Completed this year", 
+      icon: <FileSpreadsheet className="w-4 h-4" />
+    }
+  ];
 
-  const handleViewStudent = (student: Student) => {
-    setSelectedStudent(student);
-    setIsViewStudentDialogOpen(true);
+  const dashboardActions = [
+    {
+      label: "Schedule Meeting",
+      onClick: () => console.log("Schedule meeting clicked"),
+      icon: <Calendar className="h-4 w-4" />
+    },
+    {
+      label: "Add Student",
+      onClick: () => navigate("/student-dashboard"),
+      icon: <PlusCircle className="h-4 w-4" />,
+      variant: "outline" as const
+    }
+  ];
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "students":
+        return <StudentsTab />;
+      case "meetings":
+        return <MeetingsTab />;
+      case "feedback":
+        return <FeedbackTab />;
+      case "reports":
+        return <ReportsTab />;
+      case "resources":
+        return <ResourcesTab />;
+      default:
+        return null;
+    }
   };
-
-  const handleOpenAddFeedback = (student: Student) => {
-    setSelectedStudent(student);
-    setFeedbackForm({
-      studentId: student.id,
-      type: "Academic",
-      content: ""
-    });
-    setIsAddFeedbackDialogOpen(true);
-  };
-
-  const handleOpenAddGoal = (student: Student) => {
-    setSelectedStudent(student);
-    setGoalForm({
-      studentId: student.id,
-      title: "",
-      deadline: ""
-    });
-    setIsAddGoalDialogOpen(true);
-  };
-
-  const handleSubmitFeedback = () => {
-    console.log("Submitting feedback:", feedbackForm);
-    notifySuccess({
-      title: "Feedback Added",
-      description: `Feedback has been added for ${selectedStudent?.name}.`
-    });
-    setIsAddFeedbackDialogOpen(false);
-  };
-
-  const handleSubmitGoal = () => {
-    console.log("Submitting goal:", goalForm);
-    notifySuccess({
-      title: "Goal Added",
-      description: `A new goal has been added for ${selectedStudent?.name}.`
-    });
-    setIsAddGoalDialogOpen(false);
-  };
-
-  const unreadNotificationsCount = toasts.filter(toast => !toast.read).length;
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-6">
-        <DashboardHeader title="Advisor Dashboard" />
-        
-        <div className="relative">
-          <Button 
-            variant="outline"
-            size="icon"
-            className="relative"
-            onClick={() => setShowNotificationsPanel(!showNotificationsPanel)}
-          >
-            <Bell className="h-5 w-5" />
-            {unreadNotificationsCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {unreadNotificationsCount}
-              </span>
-            )}
-          </Button>
-          
-          {showNotificationsPanel && (
-            <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 shadow-lg rounded-md border z-50">
-              <div className="p-3 border-b">
-                <h3 className="font-medium">Notifications</h3>
-              </div>
-              <div className="max-h-96 overflow-y-auto">
-                {toasts.length > 0 ? (
-                  <div className="divide-y">
-                    {toasts.map((notification) => (
-                      <div 
-                        key={notification.id} 
-                        className={`p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer ${!notification.read ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
-                        onClick={() => markAsRead(notification.id)}
-                      >
-                        <div className="flex items-center gap-2">
-                          {!notification.read && <span className="h-2 w-2 rounded-full bg-blue-500"></span>}
-                          <h4 className="font-medium">{notification.title}</h4>
-                        </div>
-                        {notification.description && (
-                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{notification.description}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-3 text-center text-gray-500">
-                    No notifications
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-1 md:grid-cols-3">
-          <TabsTrigger value="students">
-            <User className="mr-2 h-4 w-4" /> Student Management
-          </TabsTrigger>
-          <TabsTrigger value="analytics">
-            <BarChart2 className="mr-2 h-4 w-4" /> Analytics
-          </TabsTrigger>
-          <TabsTrigger value="reports">
-            <FileText className="mr-2 h-4 w-4" /> Reports
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="students" className="mt-6">
-          {activeTab === "students" && (
-            <>
-              <DashboardFilters 
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                statusFilter={statusFilter}
-                setStatusFilter={setStatusFilter}
-                riskFilter={riskFilter}
-                setRiskFilter={setRiskFilter}
-              />
-              
-              <StudentList 
-                students={students}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                statusFilter={statusFilter}
-                setStatusFilter={setStatusFilter}
-                riskFilter={riskFilter}
-                setRiskFilter={setRiskFilter}
-                onViewStudent={handleViewStudent}
-                onAddFeedback={handleOpenAddFeedback}
-                onAddGoal={handleOpenAddGoal}
-                getStatusBadgeVariant={getStatusBadgeVariant}
-                getRiskBadgeVariant={getRiskBadgeVariant}
-                formatDate={formatDate}
-              />
-            </>
-          )}
-        </TabsContent>
-
-        <TabsContent value="analytics" className="mt-6">
-          <AnalyticsSection performanceData={performanceData} />
-        </TabsContent>
-
-        <TabsContent value="reports" className="mt-6">
-          <ReportsSection />
-        </TabsContent>
-      </Tabs>
-
-      <StudentDialogs 
-        selectedStudent={selectedStudent}
-        isViewStudentDialogOpen={isViewStudentDialogOpen}
-        setIsViewStudentDialogOpen={setIsViewStudentDialogOpen}
-        isAddFeedbackDialogOpen={isAddFeedbackDialogOpen}
-        setIsAddFeedbackDialogOpen={setIsAddFeedbackDialogOpen}
-        isAddGoalDialogOpen={isAddGoalDialogOpen}
-        setIsAddGoalDialogOpen={setIsAddGoalDialogOpen}
-        feedbackForm={feedbackForm}
-        setFeedbackForm={setFeedbackForm}
-        goalForm={goalForm}
-        setGoalForm={setGoalForm}
-        handleSubmitFeedback={handleSubmitFeedback}
-        handleSubmitGoal={handleSubmitGoal}
-        getStatusBadgeVariant={getStatusBadgeVariant}
-        getRiskBadgeVariant={getRiskBadgeVariant}
-        formatDate={formatDate}
-        onAddFeedback={handleOpenAddFeedback}
-        onAddGoal={handleOpenAddGoal}
-      />
-    </div>
+    <RoleDashboardLayout
+      title="Advisor Dashboard"
+      subtitle="Guide students on their career journey"
+      tabs={dashboardTabs}
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+      role="advisor"
+      metrics={dashboardMetrics}
+      actions={dashboardActions}
+    >
+      {renderTabContent()}
+    </RoleDashboardLayout>
   );
 };
+
+// Tab contents
+const StudentsTab = () => (
+  <div>
+    <h2 className="text-xl font-bold mb-4">My Students</h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {[1, 2, 3, 4, 5, 6].map((student) => (
+        <Card key={student} className="p-4 hover:shadow-md transition-shadow">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 rounded-full bg-emirati-sandBeige/50 flex items-center justify-center">
+              <Users className="w-6 h-6 text-emirati-desertRed" />
+            </div>
+            <div>
+              <h3 className="font-medium">Student {student}</h3>
+              <p className="text-sm text-muted-foreground">Computer Science, Year 3</p>
+            </div>
+          </div>
+          <div className="mt-3 pt-3 border-t flex justify-between items-center">
+            <span className="text-sm text-emirati-oasisGreen font-medium">Progress: 78%</span>
+            <Button variant="link" size="sm" className="p-0">
+              View Profile
+            </Button>
+          </div>
+        </Card>
+      ))}
+    </div>
+  </div>
+);
+
+const MeetingsTab = () => (
+  <div>
+    <h2 className="text-xl font-bold mb-4">Scheduled Meetings</h2>
+    <div className="space-y-4">
+      {[1, 2, 3].map((meeting) => (
+        <Card key={meeting} className="p-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="font-medium">Career Guidance Session</h3>
+              <p className="text-sm text-muted-foreground">With Ahmed Al Mansouri</p>
+              <p className="text-sm">Today at {3 + meeting}:00 PM</p>
+            </div>
+            <div className="space-x-2">
+              <Button variant="outline" size="sm">Reschedule</Button>
+              <Button size="sm">Join</Button>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
+  </div>
+);
+
+const FeedbackTab = () => (
+  <div>
+    <h2 className="text-xl font-bold mb-4">Student Feedback</h2>
+    <p>Feedback and assessment forms will be displayed here.</p>
+  </div>
+);
+
+const ReportsTab = () => (
+  <div>
+    <h2 className="text-xl font-bold mb-4">Progress Reports</h2>
+    <p>Student progress reports and analytics will be displayed here.</p>
+  </div>
+);
+
+const ResourcesTab = () => (
+  <div>
+    <h2 className="text-xl font-bold mb-4">Career Resources</h2>
+    <p>Resources to share with students will be displayed here.</p>
+  </div>
+);
 
 export default AdvisorDashboard;

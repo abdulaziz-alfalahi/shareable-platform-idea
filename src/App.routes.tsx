@@ -23,6 +23,8 @@ import CareerPassportPage from "@/pages/CareerPassportPage";
 import Achievements from "@/pages/Achievements";
 import EducationalResources from "@/pages/EducationalResources";
 import IndustryGuides from "@/pages/IndustryGuides";
+import ParentDashboard from "@/pages/ParentDashboard";
+import TrainingInstituteDashboard from "@/pages/TrainingInstituteDashboard";
 
 const AppRoutes = () => {
   return (
@@ -31,10 +33,12 @@ const AppRoutes = () => {
       <Route path="/student-dashboard" element={<StudentDashboard />} />
       <Route path="/student/:id" element={<StudentProfile />} />
       <Route path="/advisor-dashboard" element={<AdvisorDashboard />} />
+      <Route path="/parent-dashboard" element={<ParentDashboard />} />
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="/job-applications" element={<JobApplications />} />
       <Route path="/job-location-matching" element={<JobLocationMatching />} />
       <Route path="/training-centers" element={<TrainingCenters />} />
+      <Route path="/training-dashboard" element={<TrainingInstituteDashboard />} />
       <Route path="/assessment-centers" element={<AssessmentCenters />} />
       <Route path="/data-entry" element={<DataEntryPage />} />
       <Route path="/mindmap" element={<MindMap />} />

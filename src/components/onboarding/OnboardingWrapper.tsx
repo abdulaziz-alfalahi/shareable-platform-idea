@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -58,10 +59,10 @@ const OnboardingWrapper: React.FC<OnboardingWrapperProps> = ({
         navigate("/advisor-dashboard");
         break;
       case "training":
-        navigate("/training-centers");
+        navigate("/training-dashboard");
         break;
       case "parent":
-        navigate("/student-dashboard"); // Parents see a view similar to students
+        navigate("/parent-dashboard");
         break;
       default:
         navigate("/");
