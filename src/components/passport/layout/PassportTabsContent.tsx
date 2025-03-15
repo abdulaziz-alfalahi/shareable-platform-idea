@@ -27,15 +27,23 @@ const PassportTabsContent: React.FC<PassportTabsContentProps> = ({
       <TabsContent value="passport" className="space-y-8">
         <PassportMainContent student={student} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ProgressTracking student={student} />
-          <LeaderboardCard student={student} />
+          <ProgressTracking 
+            student={student} 
+            serviceId="career-progress" 
+            serviceName="Career Progress" 
+            currentProgress={student.progress || 0} 
+          />
+          <LeaderboardCard 
+            rank={student.leaderboardRank || 0} 
+            points={student.totalPoints || 0} 
+          />
         </div>
       </TabsContent>
 
       <TabsContent value="achievements" className="space-y-8">
         <CareerMilestones student={student} />
         <CulturalAchievements student={student} />
-        <CulturalAchievementsGuide student={student} />
+        <CulturalAchievementsGuide />
       </TabsContent>
 
       <TabsContent value="skill-gap" className="space-y-8">

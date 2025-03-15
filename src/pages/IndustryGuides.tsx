@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -7,7 +6,7 @@ import {
   Globe, 
   Building, 
   Layers, 
-  PalmTree, 
+  Palmtree, 
   Landmark, 
   Plane, 
   Briefcase,
@@ -166,7 +165,7 @@ const IndustryGuides = () => {
     "energy": {
       title: "Energy & Sustainability",
       description: "While traditionally strong in oil and gas, the UAE is diversifying its energy sector with major investments in renewable energy through initiatives like Masdar City and the Mohammed bin Rashid Al Maktoum Solar Park.",
-      icon: <PalmTree className="h-6 w-6" />,
+      icon: <Palmtree className="h-6 w-6" />,
       coverImage: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1600&auto=format&fit=crop",
       keyStats: [
         { label: "Contribution to GDP", value: "30%" },
@@ -231,7 +230,7 @@ const IndustryGuides = () => {
             <Globe className="h-4 w-4" /> Technology
           </TabsTrigger>
           <TabsTrigger value="energy" className="flex items-center gap-2">
-            <PalmTree className="h-4 w-4" /> Energy
+            <Palmtree className="h-4 w-4" /> Energy
           </TabsTrigger>
         </TabsList>
 

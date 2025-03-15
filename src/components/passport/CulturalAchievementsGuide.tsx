@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Card, 
@@ -22,7 +21,7 @@ import {
   FileText, 
   MapPin, 
   Bookmark,
-  PalmTree,
+  Palmtree,
   Bird,
   Landmark 
 } from "lucide-react";
@@ -54,7 +53,7 @@ const CulturalAchievementsGuide: React.FC<CulturalAchievementsGuideProps> = ({ s
       id: "energy",
       title: "Energy & Sustainability",
       description: "From traditional oil & gas to renewable energy initiatives like Masdar City, the energy sector offers diverse opportunities.",
-      icon: <PalmTree className="h-5 w-5" />,
+      icon: <Palmtree className="h-5 w-5" />,
       level: "Mid Career",
       resources: ["Renewable energy courses", "Project management certification", "Sustainability analysis"],
       keySkills: ["Technical knowledge", "Project management", "Environmental awareness", "Data analysis"]
@@ -201,7 +200,7 @@ const CulturalAchievementsGuide: React.FC<CulturalAchievementsGuideProps> = ({ s
                   id: "bedouin-resilience",
                   title: "Bedouin Resilience",
                   description: "Display remarkable persistence by completing 10 challenges, embodying the resilience of Bedouin ancestors.",
-                  icon: <PalmTree className="h-5 w-5" />,
+                  icon: <Palmtree className="h-5 w-5" />,
                   progress: "2/10 challenges",
                   level: "Silver"
                 },
