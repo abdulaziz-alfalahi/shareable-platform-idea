@@ -88,7 +88,7 @@ export const getTopSkillRecommendations = (student: Student, limit: number = 3):
  * Calculate the overall skill market fit percentage
  */
 export const calculateSkillMarketFit = (student: Student): number => {
-  const studentSkills = extractStudentSkips(student);
+  const studentSkills = extractStudentSkills(student);
   const skillGaps = analyzeSkillGaps(student);
   
   // Simple calculation: (existing skills) / (existing skills + gaps) * 100

@@ -2,7 +2,7 @@
 import React from "react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { ChartIcon, TrendingUp, BarChart2 } from "lucide-react";
+import { BarChart2, TrendingUp, PieChart } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SkillGap } from "@/utils/career/skill-gap";
 import { getDemandLevelColor, getSkillRelevanceColor } from "./utils";
@@ -32,7 +32,7 @@ const SkillGapVisualization: React.FC<SkillGapVisualizationProps> = ({
     <Card className={className}>
       <CardHeader className="border-b pb-3">
         <CardTitle className="text-lg font-semibold flex items-center text-emirati-deepBlue">
-          <ChartIcon className="mr-2 h-5 w-5 text-emirati-oasisGreen" /> 
+          <PieChart className="mr-2 h-5 w-5 text-emirati-oasisGreen" /> 
           Skills Market Fit Analysis
         </CardTitle>
       </CardHeader>
