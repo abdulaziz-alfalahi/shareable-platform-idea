@@ -1,24 +1,26 @@
 
 import { Student } from '@/types/student';
-import { Vacancy as CareerVacancy, JobMatchDetails } from './types';
+import { Vacancy, JobMatchDetails } from './types';
 import { Vacancy as UIVacancy } from '@/types/jobs';
 import { getRecommendedJobs, getCareerPathAlignedJobs, getDetailedJobMatch } from './skill-gap';
 
 // Convert from UI Vacancy format to Career Vacancy format
-const convertToCareerVacancy = (uiVacancies: UIVacancy[]): CareerVacancy[] => {
+const convertToCareerVacancy = (uiVacancies: UIVacancy[]): Vacancy[] => {
   return uiVacancies.map(vacancy => ({
     id: Number(vacancy.id),
     title: vacancy.title,
     company: vacancy.company,
-    requirements: vacancy.requiredSkills,
+    requiredSkills: vacancy.requiredSkills,
     location: vacancy.location,
-    type: "full-time" // Default value since UI Vacancy doesn't have this
+    type: "full-time", // Default value since UI Vacancy doesn't have this
+    salary: vacancy.salary,
+    description: vacancy.description || ""
   }));
 };
 
 // Convert from Career Vacancy format back to UI Vacancy format
 const convertToUIVacancy = (
-  careerVacancies: Array<CareerVacancy & { 
+  careerVacancies: Array<Vacancy & { 
     matchPercentage?: number, 
     matchedSkills?: string[], 
     missingSkills?: string[],
@@ -40,12 +42,12 @@ const convertToUIVacancy = (
       company: v.company,
       location: v.location,
       matchPercentage: v.matchPercentage || 0,
-      requiredSkills: v.requirements || [],
+      requiredSkills: v.requiredSkills || [],
       missingSkills: v.missingSkills || [],
       matchedSkills: v.matchedSkills || [],
       culturalFit: v.culturalFit,
       careerPathAlignment: v.careerPathAlignment,
-      salary: original?.salary || "Not specified",
+      salary: v.salary || original?.salary || "Not specified",
       postedDate: original?.postedDate || new Date().toLocaleDateString()
     };
   });
@@ -77,13 +79,15 @@ export const recommendCareerAlignedJobs = (student: Student, uiVacancies: UIVaca
 
 // Get detailed match information for a specific job
 export const getJobMatchDetails = (student: Student, vacancy: UIVacancy): JobMatchDetails => {
-  const careerVacancy: CareerVacancy = {
+  const careerVacancy: Vacancy = {
     id: Number(vacancy.id),
     title: vacancy.title,
     company: vacancy.company,
-    requirements: vacancy.requiredSkills,
+    requiredSkills: vacancy.requiredSkills,
     location: vacancy.location,
-    type: "full-time"
+    type: "full-time",
+    salary: vacancy.salary,
+    description: vacancy.description
   };
   
   return getDetailedJobMatch(student, careerVacancy);

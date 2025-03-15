@@ -41,9 +41,9 @@ export const getRecommendedJobs = (student: Student, vacancies: Vacancy[]): Arra
   
   // Calculate match for each vacancy
   const matchedVacancies = vacancies.map(vacancy => {
-    const matchPercentage = calculateSkillMatch(studentSkills, vacancy.requirements);
-    const missingSkills = identifyMissingSkills(studentSkills, vacancy.requirements);
-    const matchedSkills = vacancy.requirements.filter(req => !missingSkills.includes(req));
+    const matchPercentage = calculateSkillMatch(studentSkills, vacancy.requiredSkills);
+    const missingSkills = identifyMissingSkills(studentSkills, vacancy.requiredSkills);
+    const matchedSkills = vacancy.requiredSkills.filter(req => !missingSkills.includes(req));
     
     return {
       ...vacancy,
@@ -95,9 +95,9 @@ export const getCareerPathAlignedJobs = (student: Student, vacancies: Vacancy[])
  */
 export const getDetailedJobMatch = (student: Student, vacancy: Vacancy): JobMatchDetails => {
   const studentSkills = extractStudentSkills(student);
-  const matchPercentage = calculateSkillMatch(studentSkills, vacancy.requirements);
-  const missingSkills = identifyMissingSkills(studentSkills, vacancy.requirements);
-  const matchedSkills = vacancy.requirements.filter(req => !missingSkills.includes(req));
+  const matchPercentage = calculateSkillMatch(studentSkills, vacancy.requiredSkills);
+  const missingSkills = identifyMissingSkills(studentSkills, vacancy.requiredSkills);
+  const matchedSkills = vacancy.requiredSkills.filter(req => !missingSkills.includes(req));
   
   // Calculate career path alignment
   const careerPathAlignment = student.careerPath && 

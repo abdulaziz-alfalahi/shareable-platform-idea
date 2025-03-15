@@ -1,3 +1,4 @@
+
 import { Student } from '@/types/student';
 
 export interface EmployerMatch {
@@ -44,25 +45,30 @@ export interface JobCultureMatch {
   recommendations: string[];
 }
 
-// Add the missing types for Vacancy and JobMatchDetails
+// Updated Vacancy interface to include all required properties
 export interface Vacancy {
   id: number;
   title: string;
   company: string;
   location: string;
-  salary: string;
-  description: string;
-  // Add other necessary fields based on your application's needs
+  type: string;
+  requiredSkills: string[]; // Changed from requirements to requiredSkills
+  salary?: string;
+  description?: string;
 }
 
+// Updated JobMatchDetails interface to include all required properties
 export interface JobMatchDetails {
-  id: number;
-  vacancyId: number;
-  studentId: number;
-  matchScore: number;
-  skillsMatch: string[];
-  // Add other necessary fields based on your application's needs
+  id?: number;
+  vacancyId?: number;
+  studentId?: number;
+  matchPercentage: number;
+  matchedSkills: string[];
+  missingSkills: string[];
+  skillsMatch?: string[];
+  careerPathAlignment: number;
+  culturalFit: number;
 }
 
-// Re-export the CulturalAchievement interface
-export { CulturalAchievement } from './types';
+// Use 'export type' for re-exporting to fix the TS1205 error
+export type { CulturalAchievement as CulturalAchievementType };
