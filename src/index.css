@@ -96,6 +96,12 @@
   .font-serif {
     font-family: 'Amiri', 'Scheherazade New', serif;
   }
+  
+  /* For Arabic text */
+  .arabic {
+    font-family: 'Amiri', 'Scheherazade New', serif;
+    direction: rtl;
+  }
 
   /* UAE Theme Variations */
   .theme-desert {
@@ -190,6 +196,49 @@
 .uae-card::before {
   content: "";
   @apply absolute top-0 right-0 w-20 h-20 bg-emirati-desertGold/10 -translate-x-1/2 -translate-y-1/2 rounded-full;
+}
+
+/* Traditional Arabic patterns */
+.arabic-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a373' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.geometric-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232c4a2e' fill-opacity='0.1'%3E%3Cpath d='M0 0h10v10H0V0zm10 10h10v10H10V10z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.mashrabiya-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%238b5e34' fill-opacity='0.1'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* UAE flag colors utility classes */
+.uae-flag-red {
+  @apply bg-red-600;
+}
+
+.uae-flag-green {
+  @apply bg-green-700;
+}
+
+.uae-flag-white {
+  @apply bg-white;
+}
+
+.uae-flag-black {
+  @apply bg-black;
+}
+
+/* UAE-inspired gradients */
+.uae-desert-gradient {
+  @apply bg-gradient-to-r from-emirati-sandBeige to-emirati-desertGold;
+}
+
+.uae-oasis-gradient {
+  @apply bg-gradient-to-r from-green-600 to-emirati-oasisGreen;
+}
+
+.uae-coastal-gradient {
+  @apply bg-gradient-to-r from-blue-300 to-blue-500;
 }
 
 /* Mobile navigation styles */
