@@ -71,9 +71,9 @@ export default function Index() {
   };
 
   // Style for decorative elements inspired by UAE heritage
-  const decorationStyle = {
+  const decorationStyle: React.CSSProperties = {
     backgroundImage: "radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 40%, rgba(204,170,102,0.1) 100%)",
-    pointerEvents: "none", // Make sure decorative elements don't capture clicks
+    pointerEvents: "none" as const, // Type assertion to match CSSProperties type
   };
 
   if (isLoading) {
