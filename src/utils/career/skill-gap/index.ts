@@ -6,7 +6,7 @@
 
 // Re-export types
 export type { SkillGap, TrainingRecommendation } from './types';
-export type { AssessmentResult, AssessmentQuestion } from './assessment-service';
+export type { AssessmentResult, AssessmentQuestion } from './assessment-types';
 
 // Re-export core analysis functions
 export {
