@@ -156,7 +156,10 @@ export const calculateCulturalFitScore = (
   let workStyleFit = 0;
   if (workStylePreference === employerWorkStyle) {
     workStyleFit = 100; // Perfect match
-  } else if (workStylePreference === 'hybrid' || employerWorkStyle === 'hybrid') {
+  } else if (
+    (workStylePreference === 'hybrid' && (employerWorkStyle === 'remote' || employerWorkStyle === 'in-office')) || 
+    (employerWorkStyle === 'hybrid' && (workStylePreference === 'remote' || workStylePreference === 'in-office'))
+  ) {
     workStyleFit = 70; // Partial match through hybrid flexibility
   } else {
     workStyleFit = 40; // No match
