@@ -6,6 +6,7 @@
 
 // Re-export types
 export type { SkillGap, TrainingRecommendation } from './types';
+export type { AssessmentResult, AssessmentQuestion } from './assessment-service';
 
 // Re-export core analysis functions
 export {
@@ -29,3 +30,10 @@ export {
   getCareerPathAlignedJobs,
   getDetailedJobMatch
 } from './job-matching-service';
+
+// Re-export assessment functions
+export {
+  analyzeSelfAssessment,
+  getAssessmentQuestions,
+  submitAssessmentResults
+} from './assessment-service';
