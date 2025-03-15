@@ -12,12 +12,18 @@ const getStudentChallenges = (studentId: number): Challenge[] => {
   // This is a wrapper function that converts the returned challenges to the correct type
   const challenges = fetchActiveChallenges(studentId);
   
-  // Ensure all challenge categories conform to the Challenge type
-  return challenges.map(challenge => ({
-    ...challenge,
-    // Force the category to be one of the allowed types
-    category: challenge.category as "Workshop" | "Assessment" | "Training" | "Employment" | "Education" | "Skills"
-  }));
+  // Filter and map challenges to ensure they have valid categories
+  return challenges
+    .filter(challenge => {
+      // Only include challenges with valid categories
+      const validCategories = ["Workshop", "Assessment", "Training", "Employment", "Education", "Skills"];
+      return validCategories.includes(challenge.category);
+    })
+    .map(challenge => ({
+      ...challenge,
+      // Force the category to be one of the allowed types
+      category: challenge.category as "Workshop" | "Assessment" | "Training" | "Employment" | "Education" | "Skills"
+    }));
 };
 
 // Use a different name to avoid naming conflicts
