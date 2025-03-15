@@ -36,26 +36,29 @@ const CallToActionSection: React.FC<CallToActionSectionProps> = ({
         </Button>
         
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-          <Link to="/student-dashboard" className="block">
-            <div className="p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer">
-              <h3 className="font-semibold text-emirati-oasisGreen mb-2">Students & Graduates</h3>
-              <p className="text-sm text-gray-600">Discover career paths, connect with mentors, and find opportunities</p>
-            </div>
-          </Link>
+          <div className="p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300">
+            <h3 className="font-semibold text-emirati-oasisGreen mb-2">Students & Graduates</h3>
+            <p className="text-sm text-gray-600 mb-3">Discover career paths, connect with mentors, and find opportunities</p>
+            <Button variant="ghost" size="sm" className="w-full" asChild>
+              <Link to="/student-dashboard">Explore</Link>
+            </Button>
+          </div>
           
-          <Link to="/career-passport" className="block">
-            <div className="p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer">
-              <h3 className="font-semibold text-emirati-camelBrown mb-2">Professionals</h3>
-              <p className="text-sm text-gray-600">Upskill, find new opportunities, and advance your career</p>
-            </div>
-          </Link>
+          <div className="p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300">
+            <h3 className="font-semibold text-emirati-camelBrown mb-2">Professionals</h3>
+            <p className="text-sm text-gray-600 mb-3">Upskill, find new opportunities, and advance your career</p>
+            <Button variant="ghost" size="sm" className="w-full" asChild>
+              <Link to="/career-passport">Explore</Link>
+            </Button>
+          </div>
           
-          <Link to="/recruiter-dashboard" className="block">
-            <div className="p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer">
-              <h3 className="font-semibold text-emirati-desertGold mb-2">Employers</h3>
-              <p className="text-sm text-gray-600">Find qualified Emirati talent and contribute to Emiratization goals</p>
-            </div>
-          </Link>
+          <div className="p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300">
+            <h3 className="font-semibold text-emirati-desertGold mb-2">Employers</h3>
+            <p className="text-sm text-gray-600 mb-3">Find qualified Emirati talent and contribute to Emiratization goals</p>
+            <Button variant="ghost" size="sm" className="w-full" asChild>
+              <Link to="/recruiter-dashboard">Explore</Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>

@@ -73,6 +73,7 @@ export default function Index() {
   // Style for decorative elements inspired by UAE heritage
   const decorationStyle = {
     backgroundImage: "radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 40%, rgba(204,170,102,0.1) 100%)",
+    pointerEvents: "none", // Make sure decorative elements don't capture clicks
   };
 
   if (isLoading) {
@@ -89,7 +90,7 @@ export default function Index() {
       <main className="container mx-auto px-4 py-4 flex-1">
         {/* Decorative element inspired by UAE desert patterns */}
         <div 
-          className="absolute top-0 right-0 w-64 h-64 -z-10 opacity-30"
+          className="absolute top-0 right-0 w-64 h-64 -z-10 opacity-30 pointer-events-none"
           style={decorationStyle}
         ></div>
         
@@ -114,7 +115,7 @@ export default function Index() {
         
         {/* Decorative element inspired by UAE desert patterns */}
         <div 
-          className="absolute bottom-0 left-0 w-64 h-64 -z-10 opacity-30"
+          className="absolute bottom-0 left-0 w-64 h-64 -z-10 opacity-30 pointer-events-none"
           style={decorationStyle}
         ></div>
       </main>
