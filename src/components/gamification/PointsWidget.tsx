@@ -15,7 +15,7 @@ const PointsWidget: React.FC<PointsWidgetProps> = ({ points, level, nextLevelAt 
   const progressPercentage = Math.min(Math.round((points / nextLevelAt) * 100), 100);
   
   return (
-    <Link to="/achievements" className="block">
+    <Link to="/achievements" className="block no-underline">
       <Card className="overflow-hidden hover:shadow-md transition-all cursor-pointer">
         <CardContent className="p-3">
           <div className="flex items-center justify-between mb-2">

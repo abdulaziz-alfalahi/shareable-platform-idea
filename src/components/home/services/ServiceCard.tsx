@@ -23,10 +23,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   iconBg = "bg-emirati-oasisGreen/10",
   hoverInfo,
 }) => {
+  // Ensure link is valid
+  const safeLink = link && link.startsWith('/') ? link : `/${link}`;
+  
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Link to={link} className="block">
+        <Link to={safeLink} className="block no-underline">
           <div className="bg-white rounded-lg shadow-md border border-emirati-sandstone/30 p-6 transition-all duration-300 
                       hover:shadow-lg hover:border-emirati-oasisGreen/30 group hover:-translate-y-1 cursor-pointer
                       hover:shadow-emirati-oasisGreen/10">

@@ -10,34 +10,59 @@ import FeaturedResourcesSection from "@/components/home/FeaturedResourcesSection
 import CareerJourneyTimeline from "@/components/home/CareerJourneyTimeline";
 import ThemeToggle from "@/components/home/theme/ThemeToggle";
 import OnboardingWrapper from "@/components/onboarding/OnboardingWrapper";
+import { toast } from "@/components/ui/use-toast";
 
 export default function Index() {
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user has completed onboarding
-    const hasCompletedOnboarding = localStorage.getItem('hasCompletedOnboarding') === 'true';
-    setHasSeenOnboarding(hasCompletedOnboarding);
-    
-    // If returning user already has a profile, get their data
-    if (hasCompletedOnboarding) {
-      const userProfile = localStorage.getItem('userProfile');
-      if (userProfile) {
-        console.log("Returning user profile:", JSON.parse(userProfile));
-        // In a real app, you would use this to personalize the experience
+    try {
+      // Check if user has completed onboarding
+      const hasCompletedOnboarding = localStorage.getItem('hasCompletedOnboarding') === 'true';
+      setHasSeenOnboarding(hasCompletedOnboarding);
+      
+      // If returning user already has a profile, get their data
+      if (hasCompletedOnboarding) {
+        const userProfile = localStorage.getItem('userProfile');
+        if (userProfile) {
+          console.log("Returning user profile:", JSON.parse(userProfile));
+          // In a real app, you would use this to personalize the experience
+        }
       }
+    } catch (error) {
+      console.error("Error initializing index page:", error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
   const handleGetStartedClick = () => {
-    setShowOnboarding(true);
+    try {
+      setShowOnboarding(true);
+    } catch (error) {
+      console.error("Error showing onboarding:", error);
+      toast({
+        title: "Error",
+        description: "There was a problem loading the onboarding flow. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   // Style for decorative elements inspired by UAE heritage
   const decorationStyle = {
     backgroundImage: "radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 40%, rgba(204,170,102,0.1) 100%)",
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-emirati-oasisGreen">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col relative">

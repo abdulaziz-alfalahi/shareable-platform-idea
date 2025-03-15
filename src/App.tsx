@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@/components/home/theme/ThemeContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -29,7 +29,24 @@ import EducationalResources from "./pages/EducationalResources";
 import ParentDashboard from "./pages/ParentDashboard";
 import TrainingInstituteDashboard from "./pages/TrainingInstituteDashboard";
 
-const queryClient = new QueryClient();
+// Create a new query client with error handling
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      onError: (error) => {
+        console.error("Query error:", error);
+      }
+    },
+    mutations: {
+      onError: (error) => {
+        console.error("Mutation error:", error);
+      }
+    }
+  }
+});
 
 function App() {
   return (
@@ -54,6 +71,7 @@ function App() {
               <Route path="/training-centers" element={<TrainingCenters />} />
               <Route path="/assessment-centers" element={<AssessmentCenters />} />
               <Route path="/career-passport/:id?" element={<CareerPassportPage />} />
+              <Route path="/career-passport" element={<CareerPassportPage />} />
               <Route path="/retirement-planning" element={<RetirementPlanningPage />} />
               <Route path="/retirement-planner" element={<RetirementPlanning />} />
               <Route path="/enhanced-retirement-planning" element={<EnhancedRetirementPlanning />} />

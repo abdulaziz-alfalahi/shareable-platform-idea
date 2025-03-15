@@ -10,7 +10,7 @@ interface StreakCounterProps {
 
 const StreakCounter: React.FC<StreakCounterProps> = ({ streak }) => {
   return (
-    <Link to="/achievements" className="block">
+    <Link to="/achievements" className="block no-underline">
       <Card className="overflow-hidden hover:shadow-md transition-all cursor-pointer">
         <CardContent className="p-3 flex items-center gap-3">
           <div className="h-10 w-10 rounded-full bg-amber-100 flex items-center justify-center group-hover:bg-amber-200 transition-colors">
