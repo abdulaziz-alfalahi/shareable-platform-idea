@@ -1,4 +1,3 @@
-
 import { Student } from '@/types/student';
 
 export interface EmployerMatch {
@@ -44,3 +43,26 @@ export interface JobCultureMatch {
   }[];
   recommendations: string[];
 }
+
+// Add the missing types for Vacancy and JobMatchDetails
+export interface Vacancy {
+  id: number;
+  title: string;
+  company: string;
+  location: string;
+  salary: string;
+  description: string;
+  // Add other necessary fields based on your application's needs
+}
+
+export interface JobMatchDetails {
+  id: number;
+  vacancyId: number;
+  studentId: number;
+  matchScore: number;
+  skillsMatch: string[];
+  // Add other necessary fields based on your application's needs
+}
+
+// Re-export the CulturalAchievement interface
+export { CulturalAchievement } from './types';

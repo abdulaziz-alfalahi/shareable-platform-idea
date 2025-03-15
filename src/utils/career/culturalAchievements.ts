@@ -1,15 +1,15 @@
+import { CulturalAchievement } from '@/utils/career/types';
+// Fix the import to reference the correct export name
+import { culturalAchievements } from './achievements/culturalAchievementData';
 
-// Re-export all achievement-related functionality from their dedicated modules
-export { culturalAchievements, culturalAchievementCategories } from './achievements/culturalAchievementData';
-export { 
-  checkCulturalAchievements,
-  getStudentCulturalAchievementProgress,
-  filterAchievementsByCategory 
-} from './achievements/achievementChecker';
-export { 
-  awardCulturalAchievement,
-  processCulturalAchievements 
-} from './achievements/achievementAwarder';
-export {
-  calculateEmploymentAchievements
-} from './achievements/employmentAchievements';
+export const getCulturalAchievementById = (id: string): CulturalAchievement | undefined => {
+  return culturalAchievements.find(achievement => achievement.id === id);
+};
+
+export const getCulturalAchievementsByCategory = (category: string): CulturalAchievement[] => {
+  return culturalAchievements.filter(achievement => achievement.category === category);
+};
+
+export const getAllCulturalAchievements = (): CulturalAchievement[] => {
+  return culturalAchievements;
+};

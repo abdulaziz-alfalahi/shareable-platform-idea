@@ -1,26 +1,43 @@
 
 import { useState, useEffect } from "react";
 import { toast as sonnerToast } from "sonner";
-import { ToastType } from "./types";
+import { ToastType, Toast, ToastProps } from "./types";
+import { actionTypes } from "./constants";
+import { dispatch } from "./store";
+import { genId } from "./store";
 
-interface ToastProps {
-  title: string;
-  description?: string;
-  type?: ToastType;
-  duration?: number;
-}
-
+// The main toast function that integrates with sonner
 export function toast({
   title,
   description,
   type = "default",
   duration = 5000,
+  variant,
+  className,
 }: ToastProps) {
+  const id = genId();
+  
   const toastOptions = {
     description,
     duration,
+    className,
   };
 
+  // Add toast to internal state
+  dispatch({
+    type: actionTypes.ADD_TOAST,
+    toast: {
+      id,
+      title,
+      description,
+      type,
+      duration,
+      read: false,
+      variant
+    },
+  });
+
+  // Display using sonner
   switch (type) {
     case "success":
       return sonnerToast.success(title, toastOptions);
@@ -43,6 +60,15 @@ export function toast({
         icon: "🎉", // Celebration emoji
         duration: duration || 7000, // Longer default duration for celebrations
       });
+    case "advisor":
+    case "recruiter":
+    case "student":
+    case "admin":
+      // Role-based toasts
+      return sonnerToast.info(title, {
+        ...toastOptions,
+        className: `${type}-toast`,
+      });
     default:
       return sonnerToast(title, toastOptions);
   }
@@ -50,17 +76,38 @@ export function toast({
 
 // React hook to manage toast states
 export function useToast() {
-  const [toasts, setToasts] = useState<string[]>([]);
+  const [toasts, setToasts] = useState<Toast[]>([]);
 
-  // Effect to clean up toast state if needed in a real implementation
   useEffect(() => {
-    return () => {
-      // Clean up logic if needed
-    };
+    function handleChange(state: { toasts: Toast[] }) {
+      setToasts(state.toasts || []);
+    }
+
+    const unsubscribe = subscribeToStore(handleChange);
+    return unsubscribe;
   }, []);
+
+  function markAsRead(id: string) {
+    dispatch({
+      type: actionTypes.MARK_AS_READ,
+      toastId: id,
+    });
+  }
 
   return {
     toast,
     toasts,
+    markAsRead,
   };
+}
+
+// Helper function to subscribe to the store
+function subscribeToStore(callback: (state: { toasts: Toast[] }) => void) {
+  return subscribe(callback);
+}
+
+// Importing from store.ts
+function subscribe(callback: (state: { toasts: Toast[] }) => void) {
+  const { subscribe } = require("./store");
+  return subscribe(callback);
 }

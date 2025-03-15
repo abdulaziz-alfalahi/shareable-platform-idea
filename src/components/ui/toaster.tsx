@@ -1,5 +1,6 @@
 
-import { useToast } from "@/hooks/toast"
+import * as React from "react";
+import { useToast } from "@/hooks/toast";
 import {
   Toast,
   ToastClose,
@@ -7,11 +8,11 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "@/components/ui/toast"
-import { Bell } from "lucide-react"
+} from "@/components/ui/toast";
+import { Bell } from "lucide-react";
 
 export function Toaster() {
-  const { toasts } = useToast()
+  const { toasts } = useToast();
 
   return (
     <ToastProvider>
@@ -20,7 +21,7 @@ export function Toaster() {
           <Toast key={id} type={type} {...props}>
             <div className="grid gap-1">
               <div className="flex items-center gap-2">
-                {!read && <span className="h-2 w-2 rounded-full bg-blue-500"></span>}
+                {read === false && <span className="h-2 w-2 rounded-full bg-blue-500"></span>}
                 {title && (
                   <ToastTitle className="flex items-center gap-2">
                     {type && type !== "default" && <Bell className="h-4 w-4" />}
@@ -39,5 +40,5 @@ export function Toaster() {
       })}
       <ToastViewport />
     </ToastProvider>
-  )
+  );
 }

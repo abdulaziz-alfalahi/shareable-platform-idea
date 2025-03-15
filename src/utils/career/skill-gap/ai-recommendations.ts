@@ -1,193 +1,168 @@
-
-import { Student } from '@/types/student';
-import { SkillGap } from './types';
-import { analyzeSkillGaps } from './analysis-service';
-import { TrainingRecommendation, getAllTrainingPrograms } from './training-service';
-
-/**
- * Generate AI-powered training recommendations based on skill gaps and job market trends
- */
-export const generateAIRecommendations = (
-  student: Student, 
-  targetJobTitle?: string
-): { 
-  recommendedSkills: SkillGap[], 
-  recommendedPrograms: TrainingRecommendation[],
-  recommendationReason: string 
-}[] => {
-  // Get the student's skill gaps
-  const skillGaps = analyzeSkillGaps(student);
-  const allPrograms = getAllTrainingPrograms();
-  const recommendations: { 
-    recommendedSkills: SkillGap[], 
-    recommendedPrograms: TrainingRecommendation[],
-    recommendationReason: string 
-  }[] = [];
-
-  // Group skill gaps by domain/category for focused learning paths
-  const skillDomains: Record<string, SkillGap[]> = {
-    'technical': [],
-    'management': [],
-    'communication': [],
-    'industry-specific': []
-  };
-
-  // Categorize skills (simplified version - in production this would use ML)
-  skillGaps.forEach(gap => {
-    const skill = gap.skill.toLowerCase();
-    if (skill.includes('programming') || skill.includes('data') || skill.includes('software') || skill.includes('design')) {
-      skillDomains['technical'].push(gap);
-    } else if (skill.includes('leadership') || skill.includes('management') || skill.includes('strategy')) {
-      skillDomains['management'].push(gap);
-    } else if (skill.includes('communication') || skill.includes('presentation') || skill.includes('writing')) {
-      skillDomains['communication'].push(gap);
-    } else {
-      skillDomains['industry-specific'].push(gap);
-    }
-  });
-
-  // Generate learning paths based on skill domains
-  Object.entries(skillDomains).forEach(([domain, domainSkills]) => {
-    if (domainSkills.length === 0) return;
-    
-    // Get top 3 skills per domain
-    const topSkills = domainSkills.slice(0, 3);
-    
-    // Find matching training programs
-    const matchingPrograms = allPrograms.filter(program => 
-      topSkills.some(skill => 
-        program.title.toLowerCase().includes(skill.skill.toLowerCase()) ||
-        (program.description && program.description.toLowerCase().includes(skill.skill.toLowerCase()))
-      )
-    ).slice(0, 3);
-    
-    if (matchingPrograms.length > 0) {
-      recommendations.push({
-        recommendedSkills: topSkills,
-        recommendedPrograms: matchingPrograms,
-        recommendationReason: `These ${domain} skills are highly relevant to ${targetJobTitle || 'your career goals'} and current UAE job market trends.`
-      });
-    }
-  });
-
-  return recommendations;
-};
-
-/**
- * Generate personalized career transition recommendations
- */
-export const generateCareerTransitionRecommendations = (
-  student: Student,
-  desiredIndustry: string
-): {
-  currentPath: string,
-  targetPath: string,
-  requiredSkills: string[],
-  estimatedTimeMonths: number,
-  recommendedTraining: TrainingRecommendation[]
-} => {
-  // This is a simplified version - in production this would use ML models
-  // and real labor market data to generate recommendations
-  
-  const currentPath = student.careerPath || 'Unknown';
-  const studentSkillGaps = analyzeSkillGaps(student);
-  const allPrograms = getAllTrainingPrograms();
-  
-  // Randomly select 3-5 skills that would be needed for transition
-  const requiredSkills = studentSkillGaps
-    .sort(() => 0.5 - Math.random())
-    .slice(0, 3 + Math.floor(Math.random() * 3))
-    .map(gap => gap.skill);
-  
-  // Find matching training programs
-  const recommendedTraining = allPrograms.filter(program => 
-    requiredSkills.some(skill => 
-      program.title.toLowerCase().includes(skill.toLowerCase()) ||
-      (program.description && program.description.toLowerCase().includes(skill.toLowerCase()))
-    )
-  ).slice(0, 3);
-  
-  return {
-    currentPath,
-    targetPath: desiredIndustry,
-    requiredSkills,
-    estimatedTimeMonths: 3 + Math.floor(Math.random() * 9), // 3-12 months
-    recommendedTraining
-  };
-};
-
-/**
- * Calculate the cultural fit score between a student and an employer
- */
-export const calculateCulturalFitScore = (
-  student: Student,
-  employerValues: string[],
-  employerWorkStyle: 'remote' | 'hybrid' | 'in-office',
-  employerIndustry: string
-): {
-  overallScore: number,
-  valueFit: number,
-  industryFit: number,
-  workStyleFit: number,
-  improvementAreas: string[]
-} => {
-  // Extract cultural indicators from student profile
-  // In a real implementation, this would come from assessments
-  const studentValues = student.passportStamps
-    .filter(stamp => stamp.category === 'Cultural')
-    .map(stamp => stamp.title);
-    
-  // Calculate value alignment (30% of overall score)
-  const sharedValues = employerValues.filter(value => 
-    studentValues.some(sv => sv.toLowerCase().includes(value.toLowerCase()))
-  );
-  const valueFit = Math.min(100, Math.round((sharedValues.length / employerValues.length) * 100));
-  
-  // Calculate industry alignment (40% of overall score)
-  const industryFit = student.careerPath && 
-    student.careerPath.toLowerCase().includes(employerIndustry.toLowerCase()) ? 
-    90 : 60;
-  
-  // Work style fit (30% of overall score)
-  // In a real implementation, this would come from preferences stored in the profile
-  const workStylePreference: 'remote' | 'hybrid' | 'in-office' = 'hybrid'; // placeholder - would be from student profile
-  
-  // Fixed: Rewrite the conditional logic to avoid type comparison errors
-  let workStyleFit = 0;
-  
-  if (workStylePreference === employerWorkStyle) {
-    workStyleFit = 100; // Perfect match
-  } else if (
-    (workStylePreference === 'hybrid' && (employerWorkStyle === 'remote' || employerWorkStyle === 'in-office')) || 
-    (employerWorkStyle === 'hybrid' && (workStylePreference === 'remote' || workStylePreference === 'in-office'))
-  ) {
-    workStyleFit = 70; // Partial match through hybrid flexibility
+// This function calculates a cultural fit score based on location preferences
+export function calculateCulturalFitScore(studentPreference: string, jobLocation: string): number {
+  // Fix type comparison errors by using string equality checks
+  if (studentPreference === "hybrid") {
+    // Student prefers hybrid, which is flexible
+    return 100; // Full match for any job location type
+  } else if (studentPreference === "remote" && jobLocation === "remote") {
+    // Student wants remote, job is remote
+    return 100;
+  } else if (studentPreference === "in-office" && jobLocation === "in-office") {
+    // Student wants in-office, job is in-office
+    return 100;
+  } else if (studentPreference === "remote" && jobLocation === "hybrid") {
+    // Student wants remote, job offers hybrid (partial match)
+    return 75;
+  } else if (studentPreference === "in-office" && jobLocation === "hybrid") {
+    // Student wants in-office, job offers hybrid (partial match)
+    return 75;
   } else {
-    workStyleFit = 40; // No match
+    // Complete mismatch
+    return 0;
   }
+}
+
+// Calculate skill match score between student skills and job requirements
+export function calculateSkillMatchScore(studentSkills: string[], jobSkills: string[]): number {
+  if (!studentSkills.length || !jobSkills.length) return 0;
   
-  // Calculate overall score
-  const overallScore = Math.round(
-    (valueFit * 0.3) + (industryFit * 0.4) + (workStyleFit * 0.3)
+  // Count matching skills
+  const matchingSkills = studentSkills.filter(skill => 
+    jobSkills.some(jobSkill => jobSkill.toLowerCase() === skill.toLowerCase())
   );
   
-  // Generate improvement areas
-  const improvementAreas: string[] = [];
-  if (valueFit < 70) {
-    improvementAreas.push(`Align more with ${employerIndustry} industry values`);
+  // Calculate percentage match
+  return (matchingSkills.length / jobSkills.length) * 100;
+}
+
+// Calculate experience level match
+export function calculateExperienceMatch(studentExperience: number, jobRequiredExperience: number): number {
+  if (studentExperience >= jobRequiredExperience) {
+    return 100; // Full match
+  } else if (studentExperience >= jobRequiredExperience * 0.75) {
+    return 75; // Good match
+  } else if (studentExperience >= jobRequiredExperience * 0.5) {
+    return 50; // Partial match
+  } else {
+    return 25; // Poor match but not zero to allow for potential
   }
-  if (industryFit < 70) {
-    improvementAreas.push(`Gain more experience in the ${employerIndustry} industry`);
+}
+
+// Calculate education level match
+export function calculateEducationMatch(studentEducationLevel: string, jobRequiredEducation: string): number {
+  const educationLevels = [
+    "high school",
+    "associate's degree",
+    "bachelor's degree",
+    "master's degree",
+    "doctorate"
+  ];
+  
+  const studentLevel = educationLevels.indexOf(studentEducationLevel.toLowerCase());
+  const jobLevel = educationLevels.indexOf(jobRequiredEducation.toLowerCase());
+  
+  if (studentLevel === -1 || jobLevel === -1) return 0;
+  
+  if (studentLevel >= jobLevel) {
+    return 100; // Student meets or exceeds required education
+  } else {
+    // Partial match based on how close they are
+    return Math.max(0, (studentLevel / jobLevel) * 100);
   }
-  if (workStyleFit < 70) {
-    improvementAreas.push(`Adapt to ${employerWorkStyle} work environments`);
+}
+
+// Generate AI recommendations based on skill gaps
+export function generateSkillGapRecommendations(
+  studentSkills: string[], 
+  jobSkills: string[],
+  studentInterests: string[]
+): string[] {
+  // Find missing skills
+  const missingSkills = jobSkills.filter(skill => 
+    !studentSkills.some(studentSkill => 
+      studentSkill.toLowerCase() === skill.toLowerCase()
+    )
+  );
+  
+  if (missingSkills.length === 0) {
+    return ["Your skills match all the requirements for this position!"];
   }
   
-  return {
-    overallScore,
-    valueFit,
-    industryFit,
-    workStyleFit,
-    improvementAreas
-  };
-};
+  // Generate recommendations
+  const recommendations: string[] = [];
+  
+  // Add general recommendation
+  recommendations.push(
+    `Consider developing these ${missingSkills.length} skills to improve your match: ${missingSkills.join(', ')}.`
+  );
+  
+  // Add specific recommendations based on interests
+  const interestRelatedSkills = missingSkills.filter(skill => 
+    studentInterests.some(interest => 
+      skill.toLowerCase().includes(interest.toLowerCase()) || 
+      interest.toLowerCase().includes(skill.toLowerCase())
+    )
+  );
+  
+  if (interestRelatedSkills.length > 0) {
+    recommendations.push(
+      `Based on your interests, focus first on: ${interestRelatedSkills.join(', ')}.`
+    );
+  }
+  
+  // Add learning resource recommendation
+  recommendations.push(
+    "Check online learning platforms like Coursera, Udemy, or LinkedIn Learning for courses on these skills."
+  );
+  
+  return recommendations;
+}
+
+// Calculate overall job match score
+export function calculateOverallJobMatch(
+  skillScore: number,
+  experienceScore: number,
+  educationScore: number,
+  culturalFitScore: number
+): number {
+  // Weighted average
+  return (
+    (skillScore * 0.4) +
+    (experienceScore * 0.25) +
+    (educationScore * 0.2) +
+    (culturalFitScore * 0.15)
+  );
+}
+
+// Generate personalized job application tips
+export function generateApplicationTips(
+  matchScore: number,
+  studentSkills: string[],
+  jobSkills: string[],
+  jobTitle: string
+): string[] {
+  const tips: string[] = [];
+  
+  if (matchScore >= 80) {
+    tips.push(`You're a strong match for this ${jobTitle} position! Highlight your relevant experience.`);
+  } else if (matchScore >= 60) {
+    tips.push(`You're a good match for this ${jobTitle} role. Focus on transferable skills in your application.`);
+  } else {
+    tips.push(`This ${jobTitle} position may be a stretch, but don't be discouraged. Emphasize your learning potential.`);
+  }
+  
+  // Find matching skills to highlight
+  const matchingSkills = studentSkills.filter(skill => 
+    jobSkills.some(jobSkill => jobSkill.toLowerCase() === skill.toLowerCase())
+  );
+  
+  if (matchingSkills.length > 0) {
+    tips.push(`Highlight these relevant skills in your resume: ${matchingSkills.join(', ')}.`);
+  }
+  
+  // Add general application tips
+  tips.push("Tailor your resume and cover letter specifically for this position.");
+  tips.push("Research the company before your interview to demonstrate genuine interest.");
+  
+  return tips;
+}
