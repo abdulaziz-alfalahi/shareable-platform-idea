@@ -2,14 +2,9 @@
 import React, { useState } from "react";
 import RoleDashboardLayout from "@/components/dashboard/RoleDashboardLayout";
 import { PlusCircle, FileText, BarChart2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
-// Import tabs
-import ProgramsTab from "@/components/training/dashboard/tabs/ProgramsTab";
-import StudentsTab from "@/components/training/dashboard/tabs/StudentsTab";
-import AssessmentsTab from "@/components/training/dashboard/tabs/AssessmentsTab";
-import MetricsTab from "@/components/training/dashboard/tabs/MetricsTab";
-import PartnersTab from "@/components/training/dashboard/tabs/PartnersTab";
+// Import TabContent
+import TabContent from "@/components/training/dashboard/TabContent";
 
 // Import helpers
 import { generateTrainingMetrics } from "@/components/training/dashboard/TrainingMetrics";
@@ -20,7 +15,6 @@ import { trainingData } from "@/data/trainingInstituteMockData";
 
 const TrainingInstituteDashboard = () => {
   const [activeTab, setActiveTab] = useState("programs");
-  const navigate = useNavigate();
 
   const dashboardTabs = [
     { value: "programs", label: "Programs" },
@@ -38,23 +32,6 @@ const TrainingInstituteDashboard = () => {
     onViewAnalytics: () => console.log("Analytics clicked")
   });
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "programs":
-        return <ProgramsTab trainingData={trainingData} />;
-      case "students":
-        return <StudentsTab />;
-      case "assessments":
-        return <AssessmentsTab />;
-      case "metrics":
-        return <MetricsTab />;
-      case "partners":
-        return <PartnersTab />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <RoleDashboardLayout
       title="Training Institute Dashboard"
@@ -66,7 +43,7 @@ const TrainingInstituteDashboard = () => {
       metrics={dashboardMetrics}
       actions={dashboardActions}
     >
-      {renderTabContent()}
+      <TabContent activeTab={activeTab} trainingData={trainingData} />
     </RoleDashboardLayout>
   );
 };
