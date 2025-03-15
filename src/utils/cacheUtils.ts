@@ -94,8 +94,8 @@ export const getCachedPassportData = async (studentId: number) => {
       
       // Fetch from our mock data source
       // In production, this would be a call to Supabase or another data source
-      const { fetchStudentPassportData } = await import('./career/passportData');
-      return fetchStudentPassportData(studentId);
+      const passportDataModule = await import('./career/passportData');
+      return passportDataModule.fetchStudentPassportData(studentId);
     },
     { ttl: 600 } // Cache for 10 minutes
   );

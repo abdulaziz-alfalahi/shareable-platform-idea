@@ -7,7 +7,7 @@ import {
   SheetTrigger,
   SheetClose
 } from "@/components/ui/sheet";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Home, Briefcase, GraduationCap, Building, Map, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ThemeToggle from "./theme/ThemeToggle";
@@ -18,12 +18,12 @@ interface MobileNavigationProps {
 }
 
 const navLinks = [
-  { to: "/student-dashboard", label: "Dashboard" },
-  { to: "/career-passport", label: "Career Passport" },
-  { to: "/job-applications", label: "Jobs" },
-  { to: "/training-centers", label: "Training" },
-  { to: "/mindmap", label: "Mindmap" },
-  { to: "/data-entry", label: "Data Entry" },
+  { to: "/student-dashboard", label: "Dashboard", icon: <Home className="h-5 w-5 mr-3" /> },
+  { to: "/career-passport", label: "Career Passport", icon: <GraduationCap className="h-5 w-5 mr-3" /> },
+  { to: "/job-applications", label: "Jobs", icon: <Briefcase className="h-5 w-5 mr-3" /> },
+  { to: "/training-centers", label: "Training", icon: <Building className="h-5 w-5 mr-3" /> },
+  { to: "/mindmap", label: "Mindmap", icon: <Map className="h-5 w-5 mr-3" /> },
+  { to: "/data-entry", label: "Data Entry", icon: <Database className="h-5 w-5 mr-3" /> },
 ];
 
 const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, setIsOpen }) => {
@@ -44,7 +44,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, setIsOpen }
           <span className="sr-only">Toggle navigation</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[85%] max-w-[300px] pt-10">
+      <SheetContent side="left" className="w-[85%] max-w-[300px] pt-10 bg-white">
         <div className="flex flex-col h-full">
           <div className="absolute right-4 top-4">
             <SheetClose asChild>
@@ -61,20 +61,21 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, setIsOpen }
             </Link>
           </div>
 
-          <nav className="flex flex-col space-y-4">
+          <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => (
               <SheetClose asChild key={link.to}>
                 <Link 
                   to={link.to} 
-                  className="text-gray-700 hover:text-emirati-oasisGreen transition py-2 px-1 border-b border-emirati-sandBeige/20"
+                  className="flex items-center text-gray-700 hover:text-emirati-oasisGreen hover:bg-emirati-sandBeige/10 transition py-3 px-3 rounded-md"
                 >
+                  {link.icon}
                   {link.label}
                 </Link>
               </SheetClose>
             ))}
           </nav>
 
-          <div className="mt-10">
+          <div className="mt-10 px-3">
             <ThemeToggle />
           </div>
 

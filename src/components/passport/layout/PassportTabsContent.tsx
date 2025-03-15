@@ -57,13 +57,11 @@ const PassportTabsContent: React.FC<PassportTabsContentProps> = ({
       </TabsContent>
 
       <TabsContent value="mentorship" className="space-y-8">
-        {/* Pass the student prop to MentorMatchingCard as required */}
         <MentorMatchingCard student={student} />
       </TabsContent>
 
       <TabsContent value="public-profile">
-        {/* Public profile tab doesn't accept a student prop, so we don't pass it */}
-        <PublicProfileTab />
+        <PublicProfileTab student={student} />
       </TabsContent>
 
       <TabsContent value="settings">
