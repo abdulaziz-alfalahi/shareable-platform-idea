@@ -17,7 +17,7 @@ interface MentorMatchingCardProps {
 }
 
 const MentorMatchingCard: React.FC<MentorMatchingCardProps> = ({ student }) => {
-  const [potentialMentors, setPotentialMentors] = useState<{id: number, name: string, stamps: number}[]>([]);
+  const [potentialMentors, setPotentialMentors] = useState<{id: number, name: string, industry: string, stamps: number}[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showMentors, setShowMentors] = useState(false);
   
@@ -27,7 +27,10 @@ const MentorMatchingCard: React.FC<MentorMatchingCardProps> = ({ student }) => {
     setIsLoading(true);
     try {
       const mentors = await findPotentialMentors(student);
-      setPotentialMentors(mentors);
+      setPotentialMentors(mentors.map(mentor => ({
+        ...mentor,
+        id: parseInt(mentor.id.replace('m', ''))
+      })));
       setShowMentors(true);
     } catch (error) {
       console.error("Error finding mentors:", error);
