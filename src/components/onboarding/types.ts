@@ -1,5 +1,5 @@
 
-import { UserRole } from "@/components/notifications/RoleNotifications";
+import { UserRole } from "@/components/notifications/types";
 
 export interface OnboardingData {
   role: UserRole;

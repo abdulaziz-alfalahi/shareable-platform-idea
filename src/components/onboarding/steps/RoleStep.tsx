@@ -1,10 +1,9 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { OnboardingStepProps } from "../types";
 import { roleOptions } from "../data";
-import { UserRole } from "@/components/notifications/RoleNotifications";
+import { UserRole } from "@/components/notifications/types";
 
 const RoleStep: React.FC<OnboardingStepProps> = ({ 
   data, 

@@ -1,4 +1,3 @@
-
 import { 
   GraduationCap, 
   Briefcase, 
@@ -6,12 +5,12 @@ import {
   User, 
   Target
 } from "lucide-react";
-import { UserRole } from "@/components/notifications/RoleNotifications";
+import { UserRole } from "@/components/notifications/types";
 
 export interface RoleOption {
   id: UserRole;
   name: string;
-  icon: React.ElementType; // Changed from React.ReactNode to React.ElementType
+  icon: React.ElementType;
   description: string;
 }
 
@@ -19,31 +18,31 @@ export const roleOptions: RoleOption[] = [
   {
     id: "student",
     name: "Student",
-    icon: GraduationCap, // Using the component type, not JSX
+    icon: GraduationCap,
     description: "Find your career path, build skills, and connect with mentors"
   },
   {
     id: "recruiter",
     name: "Recruiter",
-    icon: Briefcase, // Using the component type, not JSX
+    icon: Briefcase,
     description: "Find qualified Emirati talent for your organization"
   },
   {
     id: "advisor",
     name: "Career Advisor",
-    icon: Target, // Using the component type, not JSX
+    icon: Target,
     description: "Guide students and professionals in their career journey"
   },
   {
     id: "training",
     name: "Training Institute",
-    icon: Building, // Using the component type, not JSX
+    icon: Building,
     description: "Offer training programs to upskill Emirati workforce"
   },
   {
     id: "parent",
     name: "Parent",
-    icon: User, // Using the component type, not JSX
+    icon: User,
     description: "Support and monitor your child's educational journey"
   }
 ];

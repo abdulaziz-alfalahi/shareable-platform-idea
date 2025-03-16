@@ -1,9 +1,8 @@
-
 import React, { ReactNode } from "react";
 import Header from "@/components/home/Header";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserRole } from "@/components/notifications/RoleNotifications";
+import { UserRole } from "@/components/notifications/types";
 
 interface DashboardLayoutProps {
   title: string;

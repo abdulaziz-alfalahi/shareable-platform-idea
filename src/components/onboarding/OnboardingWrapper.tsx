@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import OnboardingFlow, { OnboardingData } from "./OnboardingFlow";
-import { UserRole } from "@/components/notifications/RoleNotifications";
+import { UserRole } from "@/components/notifications/types";
 
 interface OnboardingWrapperProps {
   hasCompletedOnboarding?: boolean;
@@ -15,7 +14,6 @@ const OnboardingWrapper: React.FC<OnboardingWrapperProps> = ({
   const [showOnboarding, setShowOnboarding] = useState(!hasCompletedOnboarding);
   const navigate = useNavigate();
 
-  // Check if the user has already completed onboarding
   useEffect(() => {
     const hasCompleted = localStorage.getItem('hasCompletedOnboarding') === 'true';
     if (hasCompleted) {
@@ -24,10 +22,8 @@ const OnboardingWrapper: React.FC<OnboardingWrapperProps> = ({
   }, []);
 
   const handleOnboardingComplete = (data: OnboardingData) => {
-    // In a real app, this would save to a database or state management
     console.log("Onboarding completed with data:", data);
     
-    // Show culturally relevant success toast based on role
     const messages = {
       student: "مرحباً بك في رحلة الإماراتي! Your learning journey begins now.",
       recruiter: "مرحباً بك في رحلة الإماراتي! Ready to find exceptional Emirati talent.",
@@ -40,10 +36,8 @@ const OnboardingWrapper: React.FC<OnboardingWrapperProps> = ({
       description: `Your ${data.role} profile has been set up successfully.`,
     });
     
-    // Close onboarding flow
     setShowOnboarding(false);
     
-    // Redirect based on role
     redirectBasedOnRole(data.role);
   };
 

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "./Logo";
@@ -8,7 +7,7 @@ import PersonaSwitcher, { personas } from "./PersonaSwitcher";
 import MobileNavigation from "../MobileNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import RoleNotifications from "@/components/notifications/RoleNotifications";
-import { UserRole } from "@/components/notifications/RoleNotifications";
+import { UserRole } from "@/components/notifications/types";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

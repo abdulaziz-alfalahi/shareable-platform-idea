@@ -1,7 +1,7 @@
 
 import React, { ReactNode } from "react";
 import Header from "@/components/home/Header";
-import { UserRole } from "@/components/notifications/RoleNotifications";
+import { UserRole } from "@/components/notifications/types";
 import { UaeStatCard } from "@/components/ui/uae/UaeStatCard";
 import { useNavigate } from "react-router-dom";
 import RoleNotifications from "@/components/notifications/RoleNotifications";
