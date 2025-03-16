@@ -1,3 +1,3 @@
 
 export { default as RoleNotifications } from './RoleNotifications';
-export { UserRole } from './types';
+export type { UserRole } from './types';
