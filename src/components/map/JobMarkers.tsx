@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { JobLocation } from '@/types/map';
@@ -6,7 +7,7 @@ interface JobMarkersProps {
   map: React.MutableRefObject<mapboxgl.Map | null>;
   jobs: JobLocation[];
   onLocationUpdate?: (jobs: JobLocation[]) => void;
-  reverseGeocode: (lat: number, lng: number) => Promise<void>;
+  reverseGeocode: (lat: number, lng: number, jobs: JobLocation[]) => Promise<void>;
 }
 
 const JobMarkers: React.FC<JobMarkersProps> = ({
@@ -45,6 +46,8 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
           workplaceMarker.current = null;
         }
 
+        console.log(`Adding ${jobs.length} markers to map`);
+
         // Add job markers
         jobs.forEach(job => {
           if (!map.current || !job.location) return;
@@ -70,9 +73,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
                 if (workplaceMarker.current) {
                   const lngLat = workplaceMarker.current.getLngLat();
                   // Reverse geocode to get address
-                  reverseGeocode(lngLat.lat, lngLat.lng).catch(err => {
-                    console.error('Error in reverse geocoding:', err);
-                  });
+                  reverseGeocode(lngLat.lat, lngLat.lng, jobs);
                 }
               });
             } else {
@@ -81,7 +82,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
                 .setLngLat([job.location.longitude, job.location.latitude])
                 .setPopup(
                   new mapboxgl.Popup().setHTML(
-                    `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || ""}</p>`
+                    `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || ""}</p><p>Match: ${job.matchPercentage || 0}%</p>`
                   )
                 );
               
@@ -92,9 +93,11 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
               }
             }
           } catch (error) {
-            console.error("Error adding marker:", error);
+            console.error("Error adding marker:", error, job);
           }
         });
+        
+        console.log(`Added ${markersRef.current.length} markers to the map`);
       } catch (error) {
         console.error("Error in marker addition process:", error);
       } finally {
@@ -108,6 +111,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     } else {
       // Set up a load event listener for when the map is ready
       const loadHandler = () => {
+        console.log('Map loaded, adding markers');
         setTimeout(() => {
           addMarkers();
         }, 500); // Small delay to ensure map is fully initialized
@@ -127,9 +131,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
         
         if (workplaceMarker.current) {
           workplaceMarker.current.setLngLat([e.lngLat.lng, e.lngLat.lat]);
-          reverseGeocode(e.lngLat.lat, e.lngLat.lng).catch(err => {
-            console.error('Error in reverse geocoding after click:', err);
-          });
+          reverseGeocode(e.lngLat.lat, e.lngLat.lng, jobs);
         }
       };
 

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { JobMapProps } from '@/types/map';
 import { useJobMapState } from '@/hooks/map/useJobMapState';
@@ -22,6 +22,12 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
     findNearbyJobs,
     reverseGeocode
   } = useJobMapState(jobs, onLocationUpdate);
+  
+  useEffect(() => {
+    if (jobs.length > 0) {
+      console.log(`JobMap received ${jobs.length} jobs to display`);
+    }
+  }, [jobs]);
 
   return (
     <div className="space-y-4">

@@ -14,6 +14,7 @@ const JobLocationMatching = () => {
   // Handle location updates from the map
   const handleLocationUpdate = (updatedJobs: JobLocation[]) => {
     setJobs(updatedJobs);
+    console.log('Jobs updated in JobLocationMatching:', updatedJobs.length);
   };
   
   // Filter jobs based on selected filter

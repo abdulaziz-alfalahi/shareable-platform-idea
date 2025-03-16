@@ -20,6 +20,7 @@ export const JobLocationTab = ({ jobs: initialJobs }: JobLocationTabProps) => {
   
   // Handle location updates from the map
   const handleLocationUpdate = (updatedJobs: JobLocation[]) => {
+    console.log('JobLocationTab received updated jobs:', updatedJobs.length);
     setJobs(updatedJobs);
   };
 
@@ -91,7 +92,10 @@ export const JobLocationTab = ({ jobs: initialJobs }: JobLocationTabProps) => {
 
       <Card className="border-emirati-sandBeige mb-6">
         <CardContent className="p-6">
-          <JobMap jobs={filteredLocationJobs} onLocationUpdate={handleLocationUpdate} />
+          <JobMap 
+            jobs={filteredLocationJobs} 
+            onLocationUpdate={handleLocationUpdate} 
+          />
         </CardContent>
       </Card>
     </div>
