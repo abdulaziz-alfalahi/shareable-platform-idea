@@ -48,7 +48,12 @@ const MindMapContent: React.FC<MindMapContentProps> = ({ activeTab, setActiveTab
         <TabNavigation activeTab={activeTab} />
         
         {(displayAllPersonas ? filteredJourneyData : journeyData.filter(p => p.id === activeTab)).map(persona => (
-          <TabsContent key={persona.id} value={displayAllPersonas ? "search-results" : persona.id} className="mt-4" forceMount={displayAllPersonas}>
+          <TabsContent 
+            key={persona.id} 
+            value={displayAllPersonas ? "search-results" : persona.id} 
+            className="mt-4" 
+            forceMount={displayAllPersonas ? true : undefined}
+          >
             {displayAllPersonas && (
               <div className="mb-8 pb-4 border-b border-emirati-sandBeige">
                 <h3 className="text-xl font-medium text-emirati-deepBlue mb-2">Search results for: "{searchQuery}"</h3>
