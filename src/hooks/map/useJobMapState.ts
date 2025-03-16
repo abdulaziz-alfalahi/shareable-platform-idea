@@ -30,8 +30,9 @@ export const useJobMapState = (jobs: JobLocation[], onLocationUpdate?: (jobs: Jo
     findNearbyJobsBase(latitude, longitude, jobs);
   };
 
+  // Corrected function to only pass the event parameter
   const handleRadiusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleRadiusChangeBase(e, userLocation, jobs);
+    handleRadiusChangeBase(e);
   };
 
   const searchLocation = () => {
