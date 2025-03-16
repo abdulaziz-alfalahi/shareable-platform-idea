@@ -49,6 +49,13 @@ export interface TopTrainingCenter {
   logo?: string;
 }
 
+export interface JobseekerData {
+  category: string;
+  count: number;
+  hired: number;
+  growthRate: number;
+}
+
 export interface AdminDashboardData {
   totalStudents: PlatformMetric;
   totalRecruiters: PlatformMetric;
@@ -74,4 +81,9 @@ export interface AdminDashboardData {
   jobApplicationsStatus: ChartData[];
   placementRate: number;
   averageTimeToHire: number;
+  
+  // Added for jobseekers
+  totalJobseekers: PlatformMetric;
+  jobseekersByCategory: JobseekerData[];
+  jobseekersOverTime: TimeSeriesData[];
 }

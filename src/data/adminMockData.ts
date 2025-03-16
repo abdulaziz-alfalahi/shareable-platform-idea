@@ -88,6 +88,14 @@ export const adminDashboardData: AdminDashboardData = {
     change: 7.6,
     icon: "UserPlus"
   },
+  // Added jobseekers metric
+  totalJobseekers: {
+    id: "total-jobseekers",
+    name: "Active Jobseekers",
+    value: 5430,
+    change: 14.2,
+    icon: "Briefcase"
+  },
   
   usersByType: [
     { type: "School Students", count: 6245, active: 4812, growth: 14.2 },
@@ -147,5 +155,14 @@ export const adminDashboardData: AdminDashboardData = {
   ],
   
   placementRate: 68.4,
-  averageTimeToHire: 23 // days
+  averageTimeToHire: 23, // days
+  
+  // Added jobseeker data
+  jobseekersByCategory: [
+    { category: "Recent Graduates", count: 2450, hired: 870, growthRate: 18.5 },
+    { category: "Mid-Career Professionals", count: 1680, hired: 520, growthRate: 12.3 },
+    { category: "Career Changers", count: 850, hired: 210, growthRate: 22.7 },
+    { category: "Returning to Workforce", count: 450, hired: 140, growthRate: 15.2 }
+  ],
+  jobseekersOverTime: generateTimeSeriesData(12, 350, 0.2, 0.07)
 };

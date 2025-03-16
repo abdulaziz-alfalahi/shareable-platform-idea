@@ -1,4 +1,3 @@
-
 import React from "react";
 import StatCard from "@/components/admin/StatCard";
 import AgeDistributionChart from "@/components/admin/AgeDistributionChart";
@@ -11,6 +10,7 @@ import { AdminDashboardData } from "@/types/admin";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { UserRound, Users } from "lucide-react";
+import JobseekersCard from "@/components/admin/JobseekersCard";
 
 interface StudentsTabProps {
   adminDashboardData: AdminDashboardData;
@@ -103,7 +103,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
         <StatCard metric={adminDashboardData.totalStudents} />
         <StatCard metric={adminDashboardData.totalAdvisors} />
         <StatCard metric={adminDashboardData.totalParents} />
-        <StatCard metric={adminDashboardData.totalInternships} />
+        <StatCard metric={adminDashboardData.totalJobseekers} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -124,13 +124,9 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
           description="Active students over time"
           data={adminDashboardData.activeUsersOverTime}
         />
-        <PlacementMetrics
-          placementRate={adminDashboardData.placementRate}
-          averageTimeToHire={adminDashboardData.averageTimeToHire}
-        />
+        <JobseekersCard data={adminDashboardData.jobseekersByCategory} />
       </div>
 
-      {/* New skill insights section */}
       <h3 className="text-xl font-semibold mt-8 mb-4">Career & Skills Analytics</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <SkillGapInsightsCard data={skillGapData} />
