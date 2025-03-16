@@ -28,7 +28,7 @@ const JobDetails = () => {
     handleApply
   } = useJobDetail({
     vacancyId: id,
-    vacanciesData,
+    vacanciesData, // Pass the raw vacanciesData, our hook will enrich it
     student
   });
 

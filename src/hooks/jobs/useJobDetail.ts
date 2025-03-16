@@ -8,7 +8,7 @@ import { notifySuccess } from "@/utils/notification";
 
 interface UseJobDetailProps {
   vacancyId: string | undefined;
-  vacanciesData: Vacancy[];
+  vacanciesData: any[]; // Change this from Vacancy[] to any[] to avoid type issues during conversion
   student: Student;
 }
 
@@ -22,6 +22,7 @@ interface UseJobDetailReturn {
   handleApply: () => void;
 }
 
+// This function enriches a vacancy data object to ensure it has all required properties
 const enrichVacancy = (vacancy: any): Vacancy => {
   return {
     ...vacancy,
