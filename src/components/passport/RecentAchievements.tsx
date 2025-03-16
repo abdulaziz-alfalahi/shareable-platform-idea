@@ -1,7 +1,7 @@
 
 import React from "react";
 import { PassportStamp } from "@/types/student";
-import AchievementIcon from "./achievement/AchievementIcon";
+import { AchievementIcon, getLevelColor } from "./achievement/AchievementIcon";
 
 interface RecentAchievementsProps {
   achievements: PassportStamp[];
