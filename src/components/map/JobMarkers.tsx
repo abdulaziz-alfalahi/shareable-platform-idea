@@ -7,7 +7,7 @@ interface JobMarkersProps {
   map: React.MutableRefObject<mapboxgl.Map | null>;
   jobs: JobLocation[];
   onLocationUpdate?: (jobs: JobLocation[]) => void;
-  reverseGeocode: (lat: number, lng: number, jobs: JobLocation[]) => Promise<void>;
+  reverseGeocode: (lat: number, lng: number) => Promise<void>;
 }
 
 const JobMarkers: React.FC<JobMarkersProps> = ({
@@ -20,18 +20,22 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const isAddingMarkers = useRef(false);
   const prevJobsLength = useRef<number>(0);
+  const prevJobsRef = useRef<JobLocation[]>([]);
 
   useEffect(() => {
     // Only proceed if map is fully loaded
     if (!map.current) return;
-
-    // Check if jobs have changed to avoid unnecessary marker refreshes
-    const jobsChanged = prevJobsLength.current !== jobs.length;
-    prevJobsLength.current = jobs.length;
-
-    if (!jobsChanged && markersRef.current.length > 0) {
+    
+    // Compare jobs using JSON to prevent unnecessary re-renders
+    const currentJobsString = JSON.stringify(jobs.map(job => job.id));
+    const prevJobsString = JSON.stringify(prevJobsRef.current.map(job => job.id));
+    
+    if (currentJobsString === prevJobsString && markersRef.current.length > 0) {
       return; // Skip if jobs haven't changed and we already have markers
     }
+    
+    prevJobsRef.current = [...jobs];
+    prevJobsLength.current = jobs.length;
 
     // Flag to prevent multiple attempts to add markers simultaneously
     if (isAddingMarkers.current) return;
@@ -82,7 +86,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
                 if (workplaceMarker.current) {
                   const lngLat = workplaceMarker.current.getLngLat();
                   // Reverse geocode to get address
-                  reverseGeocode(lngLat.lat, lngLat.lng, jobs);
+                  reverseGeocode(lngLat.lat, lngLat.lng);
                 }
               });
             } else {
@@ -129,42 +133,12 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
       map.current.on('load', loadHandler);
       
       return () => {
-        map.current?.off('load', loadHandler);
-      };
-    }
-
-    // Add click handler to set location if we're in edit mode
-    if (onLocationUpdate) {
-      const clickHandler = (e: mapboxgl.MapMouseEvent) => {
-        if (!map.current || !map.current.loaded()) return;
-        
-        if (workplaceMarker.current) {
-          workplaceMarker.current.setLngLat([e.lngLat.lng, e.lngLat.lat]);
-          reverseGeocode(e.lngLat.lat, e.lngLat.lng, jobs);
-        }
-      };
-
-      if (map.current.loaded()) {
-        map.current.on('click', clickHandler);
-      } else {
-        map.current.on('load', () => {
-          map.current?.on('click', clickHandler);
-        });
-      }
-      
-      return () => {
         if (map.current) {
-          map.current.off('click', clickHandler);
-        }
-        
-        // Clean up markers
-        markersRef.current.forEach(marker => marker.remove());
-        if (workplaceMarker.current) {
-          workplaceMarker.current.remove();
+          map.current?.off('load', loadHandler);
         }
       };
     }
-    
+
     return () => {
       // Clean up markers
       markersRef.current.forEach(marker => marker.remove());

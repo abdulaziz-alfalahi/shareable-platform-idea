@@ -12,7 +12,7 @@ interface MapContainerProps {
   userLocation: [number, number] | null;
   setUserLocation: (location: [number, number]) => void;
   onLocationUpdate?: (jobs: JobLocation[]) => void;
-  reverseGeocode: (lat: number, lng: number, jobs: JobLocation[]) => Promise<void>;
+  reverseGeocode: (lat: number, lng: number) => Promise<void>;
   findNearbyJobs: (latitude: number, longitude: number) => void;
 }
 
@@ -39,12 +39,6 @@ const MapContainer: React.FC<MapContainerProps> = ({
     }
   });
 
-  useEffect(() => {
-    if (jobs.length > 0) {
-      console.log(`MapContainer has ${jobs.length} jobs to display`);
-    }
-  }, [jobs]);
-
   return (
     <div ref={mapContainer} className="h-[500px] rounded-lg border border-gray-200 shadow-sm">
       {map.current && mapReady && (
@@ -58,7 +52,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
             map={map} 
             jobs={jobs} 
             onLocationUpdate={onLocationUpdate} 
-            reverseGeocode={(lat, lng) => reverseGeocode(lat, lng, jobs)}
+            reverseGeocode={reverseGeocode}
           />
         </>
       )}

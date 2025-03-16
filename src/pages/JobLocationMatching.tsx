@@ -21,7 +21,7 @@ const JobLocationMatching = () => {
     switch (activeFilter) {
       case 'ai-top-10':
         return [...jobs]
-          .sort((a, b) => b.matchPercentage - a.matchPercentage)
+          .sort((a, b) => (b.matchPercentage || 0) - (a.matchPercentage || 0))
           .slice(0, 10);
       case 'portfolio-match':
         return jobs.filter(job => job.portfolioMatch);
@@ -56,7 +56,10 @@ const JobLocationMatching = () => {
 
       <Card className="border-emirati-sandBeige mb-6">
         <CardContent className="p-6">
-          <JobMap jobs={displayJobs} onLocationUpdate={handleLocationUpdate} />
+          <JobMap 
+            jobs={displayJobs} 
+            onLocationUpdate={handleLocationUpdate} 
+          />
         </CardContent>
       </Card>
     </div>

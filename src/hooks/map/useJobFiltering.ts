@@ -15,6 +15,8 @@ export const useJobFiltering = () => {
   const findNearbyJobs = (latitude: number, longitude: number, jobs: JobLocation[]) => {
     if (!jobs.length) return;
 
+    console.log(`Finding jobs near [${latitude}, ${longitude}] within ${searchRadius}km radius`);
+    
     setUserCoordinates([longitude, latitude]);
     setAllJobs(jobs);
 
@@ -56,6 +58,8 @@ export const useJobFiltering = () => {
   const handleRadiusChange = (e: React.ChangeEvent<HTMLInputElement>, userLocation: [number, number] | null, jobs: JobLocation[]) => {
     const radius = Number(e.target.value);
     setSearchRadius(radius);
+    console.log(`Radius changed to ${radius}km`);
+    
     if (userLocation) {
       findNearbyJobs(userLocation[1], userLocation[0], jobs);
     }

@@ -10,7 +10,7 @@ export const useReverseGeocoding = (
   const { toast } = useToast();
 
   // Reverse geocode to get address from coordinates
-  const reverseGeocode = async (lat: number, lng: number, jobs: JobLocation[]) => {
+  const reverseGeocode = async (lat: number, lng: number, jobs: JobLocation[] = []) => {
     if (!mapboxToken) return;
     
     try {
@@ -29,6 +29,8 @@ export const useReverseGeocoding = (
       if (data.features && data.features.length > 0) {
         const address = data.features[0].place_name;
         console.log('Address found:', address);
+        
+        if (jobs.length === 0) return;
         
         // Store current jobs for position calculation
         localStorage.setItem('currentJobs', JSON.stringify(jobs));

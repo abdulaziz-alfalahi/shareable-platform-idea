@@ -59,6 +59,9 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
     );
   }
 
+  // For map display, we want to show the filtered jobs from the parent
+  const displayJobs = jobs;
+
   // Display map and controls if token is provided
   return (
     <div className="space-y-4">
@@ -73,7 +76,7 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
 
       <MapContainer
         mapboxToken={mapboxToken}
-        jobs={jobs.length > 0 ? jobs : nearbyJobs}
+        jobs={displayJobs}
         userLocation={userLocation}
         setUserLocation={setUserLocation}
         onLocationUpdate={onLocationUpdate}
