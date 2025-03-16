@@ -5,9 +5,11 @@ import LocationMatchingHeader from '@/components/jobs/location/LocationMatchingH
 import FilterTabs, { FilterType } from '@/components/jobs/location/FilterTabs';
 import { Card, CardContent } from '@/components/ui/card';
 import JobMap from '@/components/JobMap';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const JobLocationMatching = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  const { t } = useLanguage();
   
   // Filter jobs based on selected filter
   const getFilteredJobs = () => {
@@ -32,7 +34,7 @@ const JobLocationMatching = () => {
 
       <div className="mb-6">
         <p className="text-gray-600">
-          Discover job opportunities near you! Enable location services to see jobs within your preferred radius.
+          {t('discoverJobsNear')}
         </p>
       </div>
 
