@@ -21,126 +21,132 @@ const useMapInitialization = ({
   const map = useRef<mapboxgl.Map | null>(null);
   const [initializationAttempted, setInitializationAttempted] = useState(false);
   const [tokenValidated, setTokenValidated] = useState(false);
+  const [previousToken, setPreviousToken] = useState('');
+  const mapInitRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Validate token format
+  // Validate token format and reset map when token changes
   useEffect(() => {
     if (!mapboxToken) return;
+    if (mapboxToken === previousToken) return;
     
-    try {
-      // Basic validation - token starts with 'pk.'
-      if (!mapboxToken.startsWith('pk.')) {
-        console.error('Invalid token format');
-        toast({
-          title: 'Invalid Token Format',
-          description: 'Mapbox token must start with "pk."',
-          variant: 'destructive'
-        });
-        return;
-      }
-      
-      setTokenValidated(true);
-    } catch (error) {
-      console.error('Token validation error:', error);
-      setTokenValidated(false);
+    // Basic validation - token starts with 'pk.'
+    if (!mapboxToken.startsWith('pk.')) {
+      console.error('Invalid token format');
+      toast({
+        title: 'Invalid Token Format',
+        description: 'Mapbox token must start with "pk."',
+        variant: 'destructive'
+      });
+      return;
     }
-  }, [mapboxToken]);
+    
+    // Clean up previous map instance if token changed
+    if (map.current && previousToken !== '' && previousToken !== mapboxToken) {
+      map.current.remove();
+      map.current = null;
+    }
+    
+    setPreviousToken(mapboxToken);
+    setTokenValidated(true);
+    
+  }, [mapboxToken, previousToken]);
 
   useEffect(() => {
+    // Clear any existing initialization timeout
+    if (mapInitRef.current) {
+      clearTimeout(mapInitRef.current);
+      mapInitRef.current = null;
+    }
+    
     if (!containerRef.current) return;
     if (!mapboxToken || !tokenValidated) return;
     
     setInitializationAttempted(true);
 
     try {
-      // Clean up previous map instance if it exists
+      // Set the Mapbox access token
+      mapboxgl.accessToken = mapboxToken;
+      
+      // Add a small delay to ensure the container is fully rendered
+      mapInitRef.current = setTimeout(() => {
+        try {
+          // Create a new map instance
+          map.current = new mapboxgl.Map({
+            container: containerRef.current as HTMLElement,
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: initialCenter,
+            zoom: initialZoom,
+            pitchWithRotate: false,
+            attributionControl: false,
+          });
+
+          // Add navigation controls
+          map.current.addControl(
+            new mapboxgl.NavigationControl(),
+            'top-right'
+          );
+
+          // Add attribution control
+          map.current.addControl(
+            new mapboxgl.AttributionControl({ compact: true }),
+            'bottom-right'
+          );
+
+          // Call onMapLoaded callback when map is loaded
+          map.current.on('load', () => {
+            console.log('Map loaded successfully');
+            if (onMapLoaded) {
+              onMapLoaded();
+            }
+          });
+
+          // Handle errors
+          map.current.on('error', (e) => {
+            console.error('Map error:', e);
+            
+            // Check for token-related errors
+            if (e.error && typeof e.error.message === 'string' && (
+              e.error.message.toLowerCase().includes('token') || 
+              e.error.message.toLowerCase().includes('access') ||
+              e.error.message.toLowerCase().includes('api key')
+            )) {
+              toast({
+                title: 'Mapbox Token Error',
+                description: 'The Mapbox token is invalid or has insufficient permissions.',
+                variant: 'destructive'
+              });
+              
+              // Remove the map to prevent cascading errors
+              if (map.current) {
+                map.current.remove();
+                map.current = null;
+              }
+            }
+          });
+        } catch (error) {
+          console.error('Error initializing map:', error);
+          toast({
+            title: 'Map Initialization Failed',
+            description: 'Could not initialize the map. Please try a different token.',
+            variant: 'destructive'
+          });
+        }
+      }, 300);
+    } catch (error) {
+      console.error('Error setting up map:', error);
+    }
+
+    return () => {
+      if (mapInitRef.current) {
+        clearTimeout(mapInitRef.current);
+      }
+      
       if (map.current) {
         map.current.remove();
         map.current = null;
       }
-
-      // Set the Mapbox access token
-      mapboxgl.accessToken = mapboxToken;
-      
-      // Create a new map instance with error handling
-      map.current = new mapboxgl.Map({
-        container: containerRef.current,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: initialCenter,
-        zoom: initialZoom,
-        failIfMajorPerformanceCaveat: false,
-        attributionControl: false, // Removes attribution control which can cause issues in some cases
-      });
-
-      // Add navigation controls
-      map.current.addControl(
-        new mapboxgl.NavigationControl(),
-        'top-right'
-      );
-
-      // Add attribution control in a better position
-      map.current.addControl(new mapboxgl.AttributionControl({
-        compact: true
-      }), 'bottom-right');
-
-      // Call onMapLoaded callback when map is loaded
-      map.current.on('load', () => {
-        console.log('Map loaded successfully');
-        if (onMapLoaded) {
-          onMapLoaded();
-        }
-      });
-
-      // Handle errors
-      map.current.on('error', (e) => {
-        console.error('Map error:', e);
-        
-        // Check for token-related errors
-        if (e.error && (
-          (e.error.message || '').toLowerCase().includes('token') || 
-          (e.error.message || '').toLowerCase().includes('access') ||
-          (e.error.message || '').toLowerCase().includes('api key')
-        )) {
-          toast({
-            title: 'Mapbox Token Error',
-            description: 'The Mapbox token is invalid or has insufficient permissions.',
-            variant: 'destructive'
-          });
-        } else {
-          toast({
-            title: 'Map Error',
-            description: 'An error occurred with the map. Please try again later.',
-            variant: 'destructive'
-          });
-        }
-      });
-
-      return () => {
-        if (map.current) {
-          map.current.remove();
-          map.current = null;
-        }
-      };
-    } catch (error) {
-      console.error('Error initializing map:', error);
-      toast({
-        title: 'Map Error',
-        description: 'Failed to initialize map. Please check your network connection and try again.',
-        variant: 'destructive'
-      });
-      return undefined;
-    }
+    };
   }, [mapboxToken, containerRef, initialCenter, initialZoom, onMapLoaded, tokenValidated]);
-
-  useEffect(() => {
-    // Show a toast if initialization was attempted but map is still null
-    if (initializationAttempted && !map.current) {
-      toast({
-        title: 'Map Initialization Failed',
-        description: 'The map could not be initialized. Please try refreshing the page or use a different browser.',
-        variant: 'destructive'
-      });
-    }
-  }, [initializationAttempted]);
 
   return map;
 };

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useToast } from '@/components/ui/use-toast';
 import TokenInput from './map/TokenInput';
@@ -37,25 +37,41 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
   const [locationSearch, setLocationSearch] = useState<string>('');
   const { toast } = useToast();
 
+  // Reset the tokenSubmitted state if the token is cleared
+  useEffect(() => {
+    if (!mapboxToken && tokenSubmitted) {
+      setTokenSubmitted(false);
+    }
+  }, [mapboxToken, tokenSubmitted]);
+
   // Find jobs within the search radius
   const findNearbyJobs = (latitude: number, longitude: number) => {
     if (!jobs.length) return;
 
-    const nearby = jobs.map(job => {
-      if (!job.location) return { ...job, distance: Infinity };
+    try {
+      const nearby = jobs.map(job => {
+        if (!job.location) return { ...job, distance: Infinity };
 
-      // Calculate distance using Haversine formula
-      const distance = calculateDistance(
-        latitude, 
-        longitude, 
-        job.location.latitude, 
-        job.location.longitude
-      );
+        // Calculate distance using Haversine formula
+        const distance = calculateDistance(
+          latitude, 
+          longitude, 
+          job.location.latitude, 
+          job.location.longitude
+        );
 
-      return { ...job, distance };
-    }).filter(job => job.distance !== undefined && job.distance <= searchRadius);
+        return { ...job, distance };
+      }).filter(job => job.distance !== undefined && job.distance <= searchRadius);
 
-    setNearbyJobs(nearby);
+      setNearbyJobs(nearby);
+    } catch (error) {
+      console.error('Error finding nearby jobs:', error);
+      toast({
+        title: 'Error',
+        description: 'Could not calculate nearby jobs.',
+        variant: 'destructive'
+      });
+    }
   };
 
   // Handle radius change
@@ -75,6 +91,11 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
       const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(locationSearch)}.json?access_token=${mapboxToken}`
       );
+      
+      if (!response.ok) {
+        throw new Error(`Geocoding request failed with status: ${response.status}`);
+      }
+      
       const data = await response.json();
       
       if (data.features && data.features.length > 0) {
@@ -112,6 +133,11 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
       }
     } catch (error) {
       console.error('Error searching location:', error);
+      toast({
+        title: 'Geocoding Error',
+        description: 'Could not search for the location. Please check your Mapbox token.',
+        variant: 'destructive'
+      });
     }
   };
 
@@ -123,6 +149,11 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
       const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxToken}`
       );
+      
+      if (!response.ok) {
+        throw new Error(`Reverse geocoding request failed with status: ${response.status}`);
+      }
+      
       const data = await response.json();
       
       if (data.features && data.features.length > 0) {
@@ -150,6 +181,11 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
       }
     } catch (error) {
       console.error('Error in reverse geocoding:', error);
+      toast({
+        title: 'Geocoding Error',
+        description: 'Could not get address for the selected location.',
+        variant: 'destructive'
+      });
     }
   };
 

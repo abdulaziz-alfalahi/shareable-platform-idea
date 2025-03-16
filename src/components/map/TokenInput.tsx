@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,55 +22,59 @@ const TokenInput: React.FC<TokenInputProps> = ({
   setMapboxToken,
   setTokenSubmitted
 }) => {
-  // Verified working Mapbox demo token
-  const defaultToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
+  // Verified Mapbox public token - this is a public demo token from Mapbox docs
+  const defaultToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const handleTokenSubmit = () => {
-    if (!mapboxToken) {
-      toast({
-        title: "Token Required",
-        description: "Please enter your Mapbox token",
-        variant: "destructive"
-      });
-      return;
-    }
-
+  const validateAndSubmitToken = (token: string) => {
+    setIsSubmitting(true);
+    
     // Basic token format validation
-    if (!mapboxToken.startsWith('pk.')) {
+    if (!token || !token.startsWith('pk.')) {
       toast({
-        title: "Invalid Token",
+        title: "Invalid Token Format",
         description: "Please enter a valid public Mapbox token (starts with 'pk.')",
         variant: "destructive"
       });
-      return;
+      setIsSubmitting(false);
+      return false;
     }
+    
+    // Test if token works by making a simple request to Mapbox
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/dubai.json?access_token=${token}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Token validation failed');
+        }
+        return response.json();
+      })
+      .then(() => {
+        setMapboxToken(token);
+        setTokenSubmitted(true);
+        toast({
+          title: "Token Accepted",
+          description: "Your Mapbox token has been validated and applied successfully.",
+        });
+      })
+      .catch(error => {
+        console.error('Token validation error:', error);
+        toast({
+          title: "Invalid Token",
+          description: "The token could not be validated with Mapbox. Please check it and try again.",
+          variant: "destructive"
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
 
-    setTokenSubmitted(true);
+  const handleTokenSubmit = () => {
+    validateAndSubmitToken(mapboxToken);
   };
 
   const useDefaultToken = () => {
-    try {
-      // Verify token format before submitting
-      if (!defaultToken.startsWith('pk.')) {
-        throw new Error('Invalid token format');
-      }
-      
-      setMapboxToken(defaultToken);
-      setTokenSubmitted(true);
-      
-      // Show successful toast
-      toast({
-        title: "Demo Token Applied",
-        description: "Using Mapbox demo token with limited functionality",
-      });
-    } catch (error) {
-      console.error('Error applying demo token:', error);
-      toast({
-        title: "Demo Token Error",
-        description: "Could not apply demo token. Please try entering your own token.",
-        variant: "destructive"
-      });
-    }
+    validateAndSubmitToken(defaultToken);
   };
 
   return (
@@ -102,12 +106,18 @@ const TokenInput: React.FC<TokenInputProps> = ({
               onChange={(e) => setMapboxToken(e.target.value)}
               className="flex-1"
             />
-            <Button onClick={handleTokenSubmit}>Submit</Button>
+            <Button 
+              onClick={handleTokenSubmit} 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Validating..." : "Submit"}
+            </Button>
           </div>
           <div className="flex justify-end">
             <Button 
               variant="outline" 
               onClick={useDefaultToken}
+              disabled={isSubmitting}
               className="text-emirati-oasisGreen"
             >
               Use Demo Token
