@@ -18,8 +18,10 @@ export const useJobFiltering = () => {
     
     setUserCoordinates([longitude, latitude]);
     
+    // Store all jobs received for later reference
     if (jobs.length > 0) {
       setAllJobs(jobs);
+      console.log('Updated allJobs with', jobs.length, 'jobs');
     }
 
     try {
@@ -32,6 +34,7 @@ export const useJobFiltering = () => {
         return;
       }
 
+      console.log('Filtering', jobsToFilter.length, 'jobs');
       const nearby = jobsToFilter.map(job => {
         if (!job.location) return { ...job, distance: Infinity };
 

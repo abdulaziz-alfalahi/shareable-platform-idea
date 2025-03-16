@@ -49,7 +49,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
 
   return (
     <div ref={mapContainer} className="h-[500px] rounded-lg border border-gray-200 shadow-sm">
-      {map.current && mapReady && (
+      {map.current && (
         <>
           <UserLocationMarker 
             map={map} 
