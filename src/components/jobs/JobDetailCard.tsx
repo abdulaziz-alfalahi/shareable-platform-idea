@@ -10,6 +10,7 @@ import JobOverviewTab from "./JobOverviewTab";
 import CompanyTab from "./CompanyTab";
 import SkillMatchVisualization from "./SkillMatchVisualization";
 import { Student } from "@/types/student";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface JobDetailCardProps {
   vacancy: Vacancy;
@@ -34,16 +35,18 @@ const JobDetailCard: React.FC<JobDetailCardProps> = ({
   isSubmitting,
   onApply
 }) => {
+  const isMobile = useIsMobile();
+
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between space-y-2 sm:space-y-0">
         <div>
           <CardTitle className="text-xl font-bold">{vacancy.company}</CardTitle>
           <div className="flex items-center mt-1 text-muted-foreground">
             <MapPin className="h-4 w-4 mr-1" /> {vacancy.location}
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Badge variant="outline" className="bg-emirati-sandBeige/20">
             {vacancy.salary}
           </Badge>
@@ -54,7 +57,7 @@ const JobDetailCard: React.FC<JobDetailCardProps> = ({
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-4 bg-emirati-sandBeige/20">
+          <TabsList className={`mb-4 bg-emirati-sandBeige/20 ${isMobile ? 'grid grid-cols-3 w-full' : ''}`}>
             <TabsTrigger value="overview" className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white">
               Overview
             </TabsTrigger>
