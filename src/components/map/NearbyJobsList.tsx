@@ -1,19 +1,23 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SearchIcon } from 'lucide-react';
 import { JobLocation } from '@/types/map';
+import { useLanguage } from '@/components/i18n/LanguageContext';
 
 interface NearbyJobsListProps {
   nearbyJobs: JobLocation[];
 }
 
 const NearbyJobsList: React.FC<NearbyJobsListProps> = ({ nearbyJobs }) => {
+  const { t } = useLanguage();
+  
   return (
     <Card className="h-[500px] overflow-auto">
       <CardHeader>
         <CardTitle className="text-emirati-oasisGreen flex items-center">
           <SearchIcon className="mr-2 h-5 w-5" />
-          Nearby Jobs ({nearbyJobs.length})
+          {t('jobs.nearby')} ({nearbyJobs.length})
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -26,7 +30,7 @@ const NearbyJobsList: React.FC<NearbyJobsListProps> = ({ nearbyJobs }) => {
                 <p className="text-sm">{job.location.address}</p>
                 {job.distance !== undefined && (
                   <p className="text-xs text-emirati-oasisGreen mt-1">
-                    {job.distance.toFixed(1)} km away
+                    {job.distance.toFixed(1)} {t('jobs.km.away')}
                   </p>
                 )}
               </div>
@@ -34,7 +38,7 @@ const NearbyJobsList: React.FC<NearbyJobsListProps> = ({ nearbyJobs }) => {
           </div>
         ) : (
           <div className="text-center py-10 text-gray-500">
-            No jobs found within the search radius
+            {t('jobs.no.jobs')}
           </div>
         )}
       </CardContent>
