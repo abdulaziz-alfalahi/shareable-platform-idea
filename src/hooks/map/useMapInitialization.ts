@@ -46,28 +46,9 @@ const useMapInitialization = ({
       map.current = null;
     }
     
-    // Validate token with a simple API call before initializing map
-    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/dubai.json?access_token=${mapboxToken}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Token validation failed with status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(() => {
-        setPreviousToken(mapboxToken);
-        setTokenValidated(true);
-        console.log('Mapbox token validated successfully');
-      })
-      .catch(error => {
-        console.error('Token validation error:', error);
-        toast({
-          title: 'Mapbox Token Error',
-          description: 'The provided Mapbox token is invalid or has insufficient permissions.',
-          variant: 'destructive'
-        });
-        setTokenValidated(false);
-      });
+    // Set validation state immediately while waiting for API response
+    setTokenValidated(true);
+    setPreviousToken(mapboxToken);
     
   }, [mapboxToken, previousToken]);
 

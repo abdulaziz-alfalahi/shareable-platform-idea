@@ -22,8 +22,9 @@ const TokenInput: React.FC<TokenInputProps> = ({
   setMapboxToken,
   setTokenSubmitted
 }) => {
-  // Updated Mapbox public token - this is a valid public demo token
-  const defaultToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+  // Updated Mapbox public token - this is a valid public token
+  const defaultToken = 'pk.eyJ1IjoiYWhtYWRmYXdhZCIsImEiOiJjbG95MHFlMXAwYnJsMmtvMDZ3bnZ2Z2phIn0.qsp0opK6G6EiJ1sMhbLaZQ';
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   
