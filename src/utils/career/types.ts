@@ -54,7 +54,7 @@ export interface Vacancy {
   type: string;
   requiredSkills: string[];
   salary?: string;
-  description: string; // Changed from optional to required
+  description: string; // This is now a required field
 }
 
 // Updated JobMatchDetails interface to include all required properties

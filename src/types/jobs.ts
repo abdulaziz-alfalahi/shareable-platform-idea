@@ -26,6 +26,7 @@ export interface Vacancy {
   requiredSkills: string[];
   matchedSkills: string[];
   missingSkills: string[];
+  description?: string; // Added to ensure consistency with Career Vacancy
   culturalFit?: number;
   careerPathAlignment?: number;
 }
