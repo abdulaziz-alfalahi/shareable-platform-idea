@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { Vacancy } from "@/types/jobs";
 import { JobMatchDetails } from "@/utils/career/types";
-import { useLanguage } from "@/components/i18n/LanguageContext";
 
 interface JobOverviewTabProps {
   vacancy: Vacancy;
@@ -32,12 +31,10 @@ const JobOverviewTab: React.FC<JobOverviewTabProps> = ({
   isSubmitting, 
   onApply 
 }) => {
-  const { t, language } = useLanguage();
-
   return (
-    <div className={`space-y-4 ${language === 'ar' ? 'rtl' : 'ltr'}`}>
+    <div className="space-y-4">
       <div>
-        <h3 className="font-medium mb-2">{t('job.description')}</h3>
+        <h3 className="font-medium mb-2">Job Description</h3>
         <p className="text-sm text-muted-foreground">
           This is an exciting opportunity to join {vacancy.company} as a {vacancy.title}. 
           In this role, you will be responsible for various tasks and projects in a dynamic environment.
@@ -47,28 +44,28 @@ const JobOverviewTab: React.FC<JobOverviewTabProps> = ({
       
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
-          <h3 className="text-sm font-medium">{t('job.posted.date')}</h3>
+          <h3 className="text-sm font-medium">Posted Date</h3>
           <p className="text-sm flex items-center">
             <Calendar className="h-4 w-4 mr-1 text-muted-foreground" />
             {vacancy.postedDate}
           </p>
         </div>
         <div className="space-y-1">
-          <h3 className="text-sm font-medium">{t('job.salary.range')}</h3>
+          <h3 className="text-sm font-medium">Salary Range</h3>
           <p className="text-sm flex items-center">
             <DollarSign className="h-4 w-4 mr-1 text-muted-foreground" />
             {vacancy.salary}
           </p>
         </div>
         <div className="space-y-1">
-          <h3 className="text-sm font-medium">{t('job.location')}</h3>
+          <h3 className="text-sm font-medium">Location</h3>
           <p className="text-sm flex items-center">
             <MapPin className="h-4 w-4 mr-1 text-muted-foreground" />
             {vacancy.location}
           </p>
         </div>
         <div className="space-y-1">
-          <h3 className="text-sm font-medium">{t('job.company')}</h3>
+          <h3 className="text-sm font-medium">Company</h3>
           <p className="text-sm flex items-center">
             <Building className="h-4 w-4 mr-1 text-muted-foreground" />
             {vacancy.company}
@@ -77,7 +74,7 @@ const JobOverviewTab: React.FC<JobOverviewTabProps> = ({
       </div>
       
       <div>
-        <h3 className="font-medium mb-2">{t('job.required.skills')}</h3>
+        <h3 className="font-medium mb-2">Required Skills</h3>
         <div className="flex flex-wrap gap-2">
           {vacancy.requiredSkills.map((skill, index) => (
             <Badge key={index} variant="outline" 
@@ -104,27 +101,27 @@ const JobOverviewTab: React.FC<JobOverviewTabProps> = ({
           {isSubmitting ? (
             <>
               <Clock className="h-4 w-4 mr-2 animate-spin" />
-              {t('job.applying')}
+              Submitting...
             </>
           ) : hasApplied ? (
             <>
               <CheckCircle className="h-4 w-4 mr-2" />
-              {t('job.applied')}
+              Applied
             </>
           ) : (
             <>
               <Briefcase className="h-4 w-4 mr-2" />
-              {t('job.apply')}
+              Apply Now
             </>
           )}
         </Button>
         <Button variant="outline" className="flex-1 sm:flex-none">
           <Share2 className="h-4 w-4 mr-2" />
-          {t('job.share')}
+          Share
         </Button>
         <Button variant="outline" className="flex-1 sm:flex-none">
           <ExternalLink className="h-4 w-4 mr-2" />
-          {t('job.visit.website')}
+          Visit Website
         </Button>
       </div>
     </div>
