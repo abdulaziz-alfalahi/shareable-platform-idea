@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Map, User, Search, Briefcase, GraduationCap, Database, ChevronDown, School, Building, Target } from "lucide-react";
+import { Map, User, Search, Briefcase, GraduationCap, Database, ChevronDown, School, Building, Target, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,7 +19,7 @@ import { UserRole } from "@/components/notifications/RoleNotifications";
 // Define our personas
 const personas = [
   { id: "student", name: "Student", path: "/student-dashboard", icon: <GraduationCap className="h-4 w-4 mr-2" /> },
-  { id: "parent", name: "Parent", path: "/student-dashboard", icon: <User className="h-4 w-4 mr-2" /> },
+  { id: "parent", name: "Parent", path: "/parent-dashboard", icon: <User className="h-4 w-4 mr-2" /> },
   { id: "advisor", name: "Career Advisor", path: "/advisor-dashboard", icon: <User className="h-4 w-4 mr-2" /> },
   { id: "recruiter", name: "Recruiter", path: "/recruiter-dashboard", icon: <Briefcase className="h-4 w-4 mr-2" /> },
   { id: "school", name: "School Administrator", path: "/data-entry", icon: <School className="h-4 w-4 mr-2" /> },
@@ -39,6 +39,13 @@ const Header = () => {
   const handlePersonaChange = (persona) => {
     setCurrentPersona(persona);
     navigate(persona.path);
+    if (isMobile) {
+      setMobileMenuOpen(false);
+    }
+  };
+
+  const handleHomeClick = () => {
+    navigate('/');
     if (isMobile) {
       setMobileMenuOpen(false);
     }
@@ -72,6 +79,13 @@ const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
+          <Button 
+            variant="ghost" 
+            className="text-gray-700 hover:text-emirati-oasisGreen transition flex items-center"
+            onClick={handleHomeClick}
+          >
+            <Home className="w-4 h-4 mr-1" /> Home
+          </Button>
           <Link to="/student-dashboard" className="text-gray-700 hover:text-emirati-oasisGreen transition">
             Dashboard
           </Link>
@@ -149,6 +163,18 @@ const Header = () => {
             <DropdownMenuContent align="end" className="bg-white w-56">
               <DropdownMenuItem className="py-2 px-3 text-sm text-muted-foreground" disabled>
                 Switch Persona
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              {/* Home option */}
+              <DropdownMenuItem 
+                key="home" 
+                className="py-2"
+                onClick={handleHomeClick}
+              >
+                <div className="flex items-center">
+                  <Home className="h-4 w-4 mr-2" />
+                  <span>Home Page</span>
+                </div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {personas.map((persona) => (

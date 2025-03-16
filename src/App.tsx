@@ -1,26 +1,22 @@
 
-import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import StudentDashboard from "@/pages/StudentDashboard";
-import TrainingStudentDashboard from "@/pages/TrainingStudentDashboard";
-import Achievements from "@/pages/Achievements";
-import GamificationDashboard from "@/pages/GamificationDashboard";
-import Index from "@/pages/Index";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/home/theme";
+import { routes } from "./App.routes";
 
 function App() {
-  // State and other logic here
-  
   return (
     <ThemeProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/student-dashboard" element={<StudentDashboard />} />
-          <Route path="/training" element={<TrainingStudentDashboard />} />
-          <Route path="/achievements" element={<Achievements />} />
-          <Route path="/gamification" element={<GamificationDashboard />} />
+          {routes.map((route) => (
+            <Route 
+              key={route.path} 
+              path={route.path} 
+              element={route.element} 
+              errorElement={route.errorElement} 
+            />
+          ))}
         </Routes>
         <Toaster richColors position="top-right" />
       </Router>
