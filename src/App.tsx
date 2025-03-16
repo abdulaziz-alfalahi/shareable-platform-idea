@@ -7,21 +7,24 @@ import Achievements from "@/pages/Achievements";
 import GamificationDashboard from "@/pages/GamificationDashboard";
 import Index from "@/pages/Index";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/home/theme";
 
 function App() {
   // State and other logic here
   
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/student-dashboard" element={<StudentDashboard />} />
-        <Route path="/training" element={<TrainingStudentDashboard />} />
-        <Route path="/achievements" element={<Achievements />} />
-        <Route path="/gamification" element={<GamificationDashboard />} />
-      </Routes>
-      <Toaster richColors position="top-right" />
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/student-dashboard" element={<StudentDashboard />} />
+          <Route path="/training" element={<TrainingStudentDashboard />} />
+          <Route path="/achievements" element={<Achievements />} />
+          <Route path="/gamification" element={<GamificationDashboard />} />
+        </Routes>
+        <Toaster richColors position="top-right" />
+      </Router>
+    </ThemeProvider>
   );
 }
 
