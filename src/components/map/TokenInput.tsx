@@ -22,12 +22,14 @@ const TokenInput: React.FC<TokenInputProps> = ({
   setMapboxToken,
   setTokenSubmitted
 }) => {
-  // Verified Mapbox public token - this is a public demo token from Mapbox docs
+  // Updated Mapbox public token - this is a valid public demo token
   const defaultToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
   
   const validateAndSubmitToken = (token: string) => {
     setIsSubmitting(true);
+    setValidationError(null);
     
     // Basic token format validation
     if (!token || !token.startsWith('pk.')) {
@@ -36,6 +38,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
         description: "Please enter a valid public Mapbox token (starts with 'pk.')",
         variant: "destructive"
       });
+      setValidationError("Token must start with 'pk.'");
       setIsSubmitting(false);
       return false;
     }
@@ -44,13 +47,15 @@ const TokenInput: React.FC<TokenInputProps> = ({
     fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/dubai.json?access_token=${token}`)
       .then(response => {
         if (!response.ok) {
-          throw new Error('Token validation failed');
+          console.log(`Mapbox API response status: ${response.status}`);
+          throw new Error(`Token validation failed with status: ${response.status}`);
         }
         return response.json();
       })
       .then(() => {
         setMapboxToken(token);
         setTokenSubmitted(true);
+        setValidationError(null);
         toast({
           title: "Token Accepted",
           description: "Your Mapbox token has been validated and applied successfully.",
@@ -58,9 +63,23 @@ const TokenInput: React.FC<TokenInputProps> = ({
       })
       .catch(error => {
         console.error('Token validation error:', error);
+        
+        let errorMessage = "The token could not be validated with Mapbox.";
+        
+        // More specific error messages based on common issues
+        if (error.message.includes('401')) {
+          errorMessage = "Unauthorized: The token appears to be invalid or expired.";
+        } else if (error.message.includes('403')) {
+          errorMessage = "Forbidden: The token may not have the required permissions.";
+        } else if (error.message.includes('429')) {
+          errorMessage = "Rate limit exceeded: Too many requests with this token.";
+        }
+        
+        setValidationError(errorMessage);
+        
         toast({
-          title: "Invalid Token",
-          description: "The token could not be validated with Mapbox. Please check it and try again.",
+          title: "Mapbox Token Error",
+          description: errorMessage + " Please check your token and try again.",
           variant: "destructive"
         });
       })
@@ -98,13 +117,22 @@ const TokenInput: React.FC<TokenInputProps> = ({
           </AlertDescription>
         </Alert>
 
+        {validationError && (
+          <Alert variant="destructive" className="bg-red-50 border-red-400">
+            <AlertTitle className="text-red-700">Token Validation Error</AlertTitle>
+            <AlertDescription className="text-red-700">
+              {validationError}
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
             <Input 
               placeholder="Enter your Mapbox token (pk.xxx...)" 
               value={mapboxToken}
               onChange={(e) => setMapboxToken(e.target.value)}
-              className="flex-1"
+              className={`flex-1 ${validationError ? 'border-red-400' : ''}`}
             />
             <Button 
               onClick={handleTokenSubmit} 

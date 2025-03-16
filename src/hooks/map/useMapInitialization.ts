@@ -24,14 +24,14 @@ const useMapInitialization = ({
   const [previousToken, setPreviousToken] = useState('');
   const mapInitRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Validate token format and reset map when token changes
+  // Pre-validate token before trying to initialize the map
   useEffect(() => {
     if (!mapboxToken) return;
     if (mapboxToken === previousToken) return;
     
     // Basic validation - token starts with 'pk.'
     if (!mapboxToken.startsWith('pk.')) {
-      console.error('Invalid token format');
+      console.error('Invalid token format - must start with pk.');
       toast({
         title: 'Invalid Token Format',
         description: 'Mapbox token must start with "pk."',
@@ -46,12 +46,35 @@ const useMapInitialization = ({
       map.current = null;
     }
     
-    setPreviousToken(mapboxToken);
-    setTokenValidated(true);
+    // Validate token with a simple API call before initializing map
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/dubai.json?access_token=${mapboxToken}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Token validation failed with status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(() => {
+        setPreviousToken(mapboxToken);
+        setTokenValidated(true);
+        console.log('Mapbox token validated successfully');
+      })
+      .catch(error => {
+        console.error('Token validation error:', error);
+        toast({
+          title: 'Mapbox Token Error',
+          description: 'The provided Mapbox token is invalid or has insufficient permissions.',
+          variant: 'destructive'
+        });
+        setTokenValidated(false);
+      });
     
   }, [mapboxToken, previousToken]);
 
   useEffect(() => {
+    // Don't proceed if token isn't validated
+    if (!tokenValidated) return;
+    
     // Clear any existing initialization timeout
     if (mapInitRef.current) {
       clearTimeout(mapInitRef.current);
@@ -59,7 +82,7 @@ const useMapInitialization = ({
     }
     
     if (!containerRef.current) return;
-    if (!mapboxToken || !tokenValidated) return;
+    if (!mapboxToken) return;
     
     setInitializationAttempted(true);
 
@@ -112,7 +135,7 @@ const useMapInitialization = ({
             )) {
               toast({
                 title: 'Mapbox Token Error',
-                description: 'The Mapbox token is invalid or has insufficient permissions.',
+                description: 'There was a problem with your Mapbox token. Please try a different one.',
                 variant: 'destructive'
               });
               
