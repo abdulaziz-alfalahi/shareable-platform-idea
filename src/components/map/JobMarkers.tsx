@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { JobLocation } from '@/types/map';
 
@@ -18,9 +18,8 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
 }) => {
   const workplaceMarker = useRef<mapboxgl.Marker | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
-  const prevJobsRef = useRef<JobLocation[]>([]);
-  const markerAdded = useRef<boolean>(false);
-
+  const [mapReady, setMapReady] = useState(false);
+  
   // Clear all markers
   const clearAllMarkers = () => {
     console.log('Clearing all markers, count:', markersRef.current.length);
@@ -31,61 +30,74 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
       workplaceMarker.current.remove();
       workplaceMarker.current = null;
     }
-    markerAdded.current = false;
   };
 
   // Add markers for jobs
   const addMarkers = () => {
-    if (!map.current || !map.current.loaded()) {
-      console.log('Map not ready, cannot add markers yet');
+    if (!map.current) {
+      console.error('Cannot add markers: map not initialized');
       return;
     }
     
-    console.log(`Adding ${jobs.length} markers to map`, jobs);
+    if (!map.current.loaded()) {
+      console.warn('Map not fully loaded yet, deferring marker addition');
+      return;
+    }
+    
+    console.log(`Adding ${jobs.length} job markers to map`);
+    console.table(jobs.map(job => ({
+      id: job.id,
+      title: job.title,
+      lat: job.location?.latitude,
+      lng: job.location?.longitude
+    })));
 
     // Clear existing markers first
     clearAllMarkers();
     
     if (jobs.length === 0) {
-      console.log('No jobs to add markers for');
+      console.log('No jobs to display on map');
       return;
     }
     
     // Create new markers
     jobs.forEach(job => {
       if (!job.location || !job.location.latitude || !job.location.longitude) {
-        console.log(`Skipping job ${job.id} - missing or invalid location`);
+        console.warn(`Skipping job ${job.id} - missing location data`);
         return;
       }
 
       // Skip jobs with invalid coordinates
       if (isNaN(job.location.latitude) || isNaN(job.location.longitude)) {
-        console.log(`Skipping job ${job.id} - invalid coordinates:`, job.location);
+        console.warn(`Skipping job ${job.id} - invalid coordinates:`, job.location);
         return;
       }
 
       try {
         if (job.id === "workplace" && onLocationUpdate) {
           // Create a draggable marker for the workplace
-          workplaceMarker.current = new mapboxgl.Marker({ color: '#f59e0b', draggable: true })
+          const workplace = new mapboxgl.Marker({ 
+            color: '#f59e0b', 
+            draggable: true 
+          })
             .setLngLat([job.location.longitude, job.location.latitude])
             .setPopup(
               new mapboxgl.Popup().setHTML(
                 `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || "Drag to set location"}</p>`
               )
-            );
+            )
+            .addTo(map.current);
           
-          // Add to map  
-          workplaceMarker.current.addTo(map.current);
+          workplaceMarker.current = workplace;
           
           // Update job location when marker is dragged
-          workplaceMarker.current.on('dragend', () => {
-            if (workplaceMarker.current) {
-              const lngLat = workplaceMarker.current.getLngLat();
-              // Reverse geocode to get address
-              reverseGeocode(lngLat.lat, lngLat.lng);
-            }
+          workplace.on('dragend', () => {
+            const lngLat = workplace.getLngLat();
+            console.log('Workplace marker dragged to:', lngLat);
+            reverseGeocode(lngLat.lat, lngLat.lng);
           });
+          
+          console.log('Added workplace marker at:', [job.location.longitude, job.location.latitude]);
         } else {
           // Regular non-draggable marker
           const marker = new mapboxgl.Marker({ color: '#f59e0b' })
@@ -96,63 +108,68 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
               )
             );
           
-          // Add to map
+          // Add to map and track in our ref
           marker.addTo(map.current);
           markersRef.current.push(marker);
+          console.log('Added job marker at:', [job.location.longitude, job.location.latitude]);
         }
       } catch (error) {
         console.error("Error adding marker:", error, job);
       }
     });
     
-    console.log(`Added ${markersRef.current.length} markers to the map`);
-    prevJobsRef.current = [...jobs];
-    markerAdded.current = true;
+    console.log(`Successfully added ${markersRef.current.length} markers to the map`);
   };
 
-  // Handle map load event separately
-  useEffect(() => {
-    if (!map.current) return;
-    
-    const onMapLoad = () => {
-      console.log('Map loaded in JobMarkers component, adding markers');
-      addMarkers();
-    };
-
-    if (map.current.loaded()) {
-      console.log('Map already loaded, adding markers immediately');
-      addMarkers();
-    } else {
-      console.log('Setting up load event listener for map');
-      map.current.once('load', onMapLoad);
-    }
-
-    return () => {
-      if (map.current) {
-        map.current.off('load', onMapLoad);
-      }
-      clearAllMarkers();
-    };
-  }, [map.current]);
-
-  // Handle job changes
+  // Set up event listener for map load
   useEffect(() => {
     if (!map.current) {
-      console.log('Map ref is null, cannot add markers');
+      console.warn('Map reference is not available');
       return;
     }
     
-    console.log('Jobs changed:', jobs.length);
+    const handleMapLoad = () => {
+      console.log('Map loaded event detected in JobMarkers');
+      setMapReady(true);
+      addMarkers();
+    };
     
     if (map.current.loaded()) {
-      console.log('Map is loaded, adding markers after job change');
+      console.log('Map already loaded in JobMarkers component');
+      setMapReady(true);
       addMarkers();
+    } else {
+      console.log('Waiting for map to load in JobMarkers');
+      map.current.on('load', handleMapLoad);
     }
     
     return () => {
+      if (map.current) {
+        map.current.off('load', handleMapLoad);
+      }
+    };
+  }, [map.current]);
+
+  // Update markers when jobs change
+  useEffect(() => {
+    if (!map.current) return;
+    
+    console.log('Jobs data changed, job count:', jobs.length);
+    
+    if (mapReady) {
+      console.log('Map is ready, updating markers');
+      addMarkers();
+    } else {
+      console.log('Map not ready yet, will add markers when map loads');
+    }
+  }, [jobs, mapReady]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
       clearAllMarkers();
     };
-  }, [jobs]);
+  }, []);
 
   return null; // This is a logic-only component
 };

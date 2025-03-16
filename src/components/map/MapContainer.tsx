@@ -28,6 +28,14 @@ const MapContainer: React.FC<MapContainerProps> = ({
   const mapContainer = useRef<HTMLDivElement>(null);
   const [mapReady, setMapReady] = useState(false);
   
+  // Log jobs for debugging
+  useEffect(() => {
+    console.log(`MapContainer received ${jobs.length} jobs to display`);
+    if (jobs.length > 0) {
+      console.log('First job sample:', jobs[0]);
+    }
+  }, [jobs]);
+
   // Initialize the map with our custom hook
   const map = useMapInitialization({
     mapboxToken,
@@ -38,14 +46,6 @@ const MapContainer: React.FC<MapContainerProps> = ({
       setMapReady(true);
     }
   });
-
-  // Log jobs for debugging
-  useEffect(() => {
-    console.log(`MapContainer received ${jobs.length} jobs to display`);
-    if (jobs.length > 0) {
-      console.log('First job sample:', jobs[0]);
-    }
-  }, [jobs]);
 
   return (
     <div ref={mapContainer} className="h-[500px] rounded-lg border border-gray-200 shadow-sm">

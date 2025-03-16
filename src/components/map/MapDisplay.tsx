@@ -44,15 +44,12 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
   findNearbyJobs,
   reverseGeocode
 }) => {
-  // Log job counts (moved outside of useEffect to avoid conditional hooks)
-  console.log(`MapDisplay received ${jobs.length} jobs and ${nearbyJobs.length} nearby jobs`);
+  // Log job counts for debugging
+  console.log(`MapDisplay: ${jobs.length} total jobs, ${nearbyJobs.length} nearby jobs`);
   
-  // For map display, we want to show the filtered jobs if there are any, or all jobs otherwise
+  // For map display, we want to show all jobs initially, then nearby jobs if filtered
   const displayJobs = nearbyJobs.length > 0 ? nearbyJobs : jobs;
   
-  // Log what we're displaying (moved outside of useEffect to avoid conditional hooks)
-  console.log(`MapDisplay displaying ${displayJobs.length} jobs on the map`);
-
   // Display token input if no token is provided
   if (!tokenSubmitted) {
     return (
