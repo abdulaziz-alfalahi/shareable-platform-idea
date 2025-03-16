@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useParams } from "react-router-dom";
-import { vacanciesData } from "@/components/jobs/mockData";
+import { vacanciesData } from "@/components/jobs/mock";
 import { students } from "@/data/mockData";
 import AiSkillRecommendations from "@/components/jobs/AiSkillRecommendations";
 import CulturalFitAssessment from "@/components/jobs/CulturalFitAssessment";

@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { jobLocationsData } from '@/components/jobs/mockData';
+import { allJobLocationsData } from '@/components/jobs/mock';
 import LocationMatchingHeader from '@/components/jobs/location/LocationMatchingHeader';
 import FilterTabs, { FilterType } from '@/components/jobs/location/FilterTabs';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,15 +8,13 @@ import { JobLocation } from '@/types/map';
 
 const JobLocationMatching = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
-  const [jobs, setJobs] = useState<JobLocation[]>(jobLocationsData);
+  const [jobs, setJobs] = useState<JobLocation[]>(allJobLocationsData);
   
-  // Handle location updates from the map
   const handleLocationUpdate = (updatedJobs: JobLocation[]) => {
     setJobs(updatedJobs);
     console.log('Jobs updated in JobLocationMatching:', updatedJobs.length);
   };
-  
-  // Filter jobs based on selected filter
+
   const getFilteredJobs = () => {
     switch (activeFilter) {
       case 'ai-top-10':

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -15,8 +14,8 @@ import {
   initialApplications, 
   vacanciesData, 
   trainingProgramsData, 
-  jobLocationsData 
-} from "@/components/jobs/mockData";
+  allJobLocationsData 
+} from "@/components/jobs/mock";
 import MyApplicationsTab from "@/components/jobs/MyApplicationsTab";
 import MatchingVacanciesTab from "@/components/jobs/MatchingVacanciesTab";
 import UpskillingTab from "@/components/jobs/UpskillingTab";
@@ -26,7 +25,6 @@ import { recommendJobs, recommendCareerAlignedJobs } from "@/utils/career/recomm
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { JobApplication, Vacancy } from "@/types/jobs";
 
-// Add matchedSkills to mockVacancies if they don't already have them
 const enrichVacancyData = (vacancies: any[]): Vacancy[] => {
   return vacancies.map(vacancy => ({
     ...vacancy,
@@ -37,7 +35,6 @@ const enrichVacancyData = (vacancies: any[]): Vacancy[] => {
   }));
 };
 
-// Transform initialApplications to the expected JobApplication format
 const transformInitialApplications = (): JobApplication[] => {
   return initialApplications.map(app => ({
     id: app.id,
@@ -60,17 +57,13 @@ const JobApplications = () => {
   const [activeTab, setActiveTab] = useState("applications");
   const [matchingSubTab, setMatchingSubTab] = useState("skill-match"); // 'skill-match' or 'career-path'
   
-  // Use the first student from mock data for demonstration
   const mockStudent = students[0];
 
-  // Update matched vacancies based on student profile when it loads
   useEffect(() => {
     if (mockStudent) {
-      // Get skill-based matches
       const skillRecommendedJobs = recommendJobs(mockStudent, matchedVacancies);
       setMatchedVacancies(skillRecommendedJobs);
       
-      // Get career path aligned matches
       const careerRecommendedJobs = recommendCareerAlignedJobs(mockStudent, matchedVacancies);
       setCareerAlignedVacancies(careerRecommendedJobs);
     }
@@ -84,7 +77,6 @@ const JobApplications = () => {
     setMatchingSubTab(value);
   };
 
-  // Get the appropriate vacancies based on the sub-tab
   const displayedVacancies = matchingSubTab === "skill-match" 
     ? matchedVacancies 
     : careerAlignedVacancies;
@@ -156,7 +148,7 @@ const JobApplications = () => {
           <ErrorBoundary fallback={<div className="p-6 border rounded-md bg-red-50 text-red-800">
             There was an error loading the map. Please try again later.
           </div>}>
-            <JobLocationTab jobs={jobLocationsData} />
+            <JobLocationTab jobs={allJobLocationsData} />
           </ErrorBoundary>
         </TabsContent>
       </Tabs>
