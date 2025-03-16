@@ -23,7 +23,7 @@ const MindMapContent: React.FC<MindMapContentProps> = ({ activeTab, setActiveTab
         
         {journeyData.map(persona => (
           <TabsContent key={persona.id} value={persona.id} className="mt-4">
-            <PersonaTab title={persona.title} steps={persona.steps} />
+            <PersonaTab id={persona.id} />
           </TabsContent>
         ))}
       </Tabs>
