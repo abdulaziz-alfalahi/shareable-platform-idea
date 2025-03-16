@@ -44,11 +44,12 @@ const TokenInput: React.FC<TokenInputProps> = ({
       return false;
     }
     
-    // Test if token works by making a simple request to Mapbox
-    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/dubai.json?access_token=${token}`)
+    // Updated validation approach - use a simple static resources request
+    // that's less likely to be rate-limited or have permission issues
+    fetch(`https://api.mapbox.com/styles/v1/mapbox/streets-v11?access_token=${token}`)
       .then(response => {
+        console.log(`Mapbox API response status: ${response.status}`);
         if (!response.ok) {
-          console.log(`Mapbox API response status: ${response.status}`);
           throw new Error(`Token validation failed with status: ${response.status}`);
         }
         return response.json();
@@ -69,9 +70,9 @@ const TokenInput: React.FC<TokenInputProps> = ({
         
         // More specific error messages based on common issues
         if (error.message.includes('401')) {
-          errorMessage = "Unauthorized: The token appears to be invalid or expired.";
+          errorMessage = "Unauthorized: The token may not have the required permissions. Make sure it's a public token.";
         } else if (error.message.includes('403')) {
-          errorMessage = "Forbidden: The token may not have the required permissions.";
+          errorMessage = "Forbidden: The token may not have the required permissions or domain restrictions.";
         } else if (error.message.includes('429')) {
           errorMessage = "Rate limit exceeded: Too many requests with this token.";
         }
@@ -94,7 +95,26 @@ const TokenInput: React.FC<TokenInputProps> = ({
   };
 
   const useDefaultToken = () => {
+    // Try the built-in default token
     validateAndSubmitToken(defaultToken);
+  };
+
+  const handleSkipValidation = () => {
+    // For users who are certain their token is valid but are having validation issues
+    if (mapboxToken && mapboxToken.startsWith('pk.')) {
+      setMapboxToken(mapboxToken);
+      setTokenSubmitted(true);
+      toast({
+        title: "Token Accepted",
+        description: "Using your token without validation. If map doesn't load, please try again.",
+      });
+    } else {
+      toast({
+        title: "Invalid Token Format",
+        description: "Even when skipping validation, token must start with 'pk.'",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -123,6 +143,15 @@ const TokenInput: React.FC<TokenInputProps> = ({
             <AlertTitle className="text-red-700">Token Validation Error</AlertTitle>
             <AlertDescription className="text-red-700">
               {validationError}
+              <div className="mt-2 text-sm">
+                <strong>Common fixes:</strong>
+                <ul className="list-disc pl-5 mt-1">
+                  <li>Ensure it's a <strong>public</strong> token (starts with pk.)</li>
+                  <li>Check URL restrictions in your Mapbox account settings</li>
+                  <li>Try generating a new token with appropriate scopes</li>
+                  <li>Make sure your Mapbox account is active</li>
+                </ul>
+              </div>
             </AlertDescription>
           </Alert>
         )}
@@ -142,7 +171,15 @@ const TokenInput: React.FC<TokenInputProps> = ({
               {isSubmitting ? "Validating..." : "Submit"}
             </Button>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <Button 
+              variant="ghost" 
+              onClick={handleSkipValidation}
+              className="text-orange-600 hover:text-orange-700"
+              disabled={isSubmitting}
+            >
+              Skip Validation
+            </Button>
             <Button 
               variant="outline" 
               onClick={useDefaultToken}

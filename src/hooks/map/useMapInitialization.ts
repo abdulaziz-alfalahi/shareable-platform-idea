@@ -23,6 +23,7 @@ const useMapInitialization = ({
   const [tokenValidated, setTokenValidated] = useState(false);
   const [previousToken, setPreviousToken] = useState('');
   const mapInitRef = useRef<NodeJS.Timeout | null>(null);
+  const initErrorDisplayed = useRef(false);
 
   // Pre-validate token before trying to initialize the map
   useEffect(() => {
@@ -32,11 +33,14 @@ const useMapInitialization = ({
     // Basic validation - token starts with 'pk.'
     if (!mapboxToken.startsWith('pk.')) {
       console.error('Invalid token format - must start with pk.');
-      toast({
-        title: 'Invalid Token Format',
-        description: 'Mapbox token must start with "pk."',
-        variant: 'destructive'
-      });
+      if (!initErrorDisplayed.current) {
+        toast({
+          title: 'Invalid Token Format',
+          description: 'Mapbox token must start with "pk."',
+          variant: 'destructive'
+        });
+        initErrorDisplayed.current = true;
+      }
       return;
     }
     
@@ -45,6 +49,9 @@ const useMapInitialization = ({
       map.current.remove();
       map.current = null;
     }
+    
+    // Reset error flag
+    initErrorDisplayed.current = false;
     
     // Set validation state immediately while waiting for API response
     setTokenValidated(true);
@@ -74,6 +81,8 @@ const useMapInitialization = ({
       // Add a small delay to ensure the container is fully rendered
       mapInitRef.current = setTimeout(() => {
         try {
+          console.log('Initializing Mapbox with token:', mapboxToken);
+          
           // Create a new map instance
           map.current = new mapboxgl.Map({
             container: containerRef.current as HTMLElement,
@@ -82,6 +91,11 @@ const useMapInitialization = ({
             zoom: initialZoom,
             pitchWithRotate: false,
             attributionControl: false,
+            // Use transformRequest to add debugging information
+            transformRequest: (url, resourceType) => {
+              console.log(`Mapbox resource request: ${resourceType} - ${url}`);
+              return { url };
+            }
           });
 
           // Add navigation controls
@@ -112,13 +126,17 @@ const useMapInitialization = ({
             if (e.error && typeof e.error.message === 'string' && (
               e.error.message.toLowerCase().includes('token') || 
               e.error.message.toLowerCase().includes('access') ||
-              e.error.message.toLowerCase().includes('api key')
+              e.error.message.toLowerCase().includes('api key') ||
+              e.error.message.toLowerCase().includes('unauthorized')
             )) {
-              toast({
-                title: 'Mapbox Token Error',
-                description: 'There was a problem with your Mapbox token. Please try a different one.',
-                variant: 'destructive'
-              });
+              if (!initErrorDisplayed.current) {
+                toast({
+                  title: 'Mapbox Token Error',
+                  description: 'There was a problem with your Mapbox token. Please try a different one.',
+                  variant: 'destructive'
+                });
+                initErrorDisplayed.current = true;
+              }
               
               // Remove the map to prevent cascading errors
               if (map.current) {
@@ -129,11 +147,14 @@ const useMapInitialization = ({
           });
         } catch (error) {
           console.error('Error initializing map:', error);
-          toast({
-            title: 'Map Initialization Failed',
-            description: 'Could not initialize the map. Please try a different token.',
-            variant: 'destructive'
-          });
+          if (!initErrorDisplayed.current) {
+            toast({
+              title: 'Map Initialization Failed',
+              description: 'Could not initialize the map. Please try a different token.',
+              variant: 'destructive'
+            });
+            initErrorDisplayed.current = true;
+          }
         }
       }, 300);
     } catch (error) {

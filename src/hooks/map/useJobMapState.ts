@@ -59,11 +59,23 @@ export const useJobMapState = (jobs: JobLocation[], onLocationUpdate?: (jobs: Jo
     }
   };
 
-  // Search for a location
+  // Search for a location - using a more reliable endpoint
   const searchLocation = async () => {
     if (!locationSearch || !mapboxToken) return;
     
     try {
+      console.log('Searching for location:', locationSearch, 'with token:', mapboxToken.substring(0, 10) + '...');
+      
+      // Use the styles endpoint first to validate the token works at all
+      const validationCheck = await fetch(
+        `https://api.mapbox.com/styles/v1/mapbox/streets-v11?access_token=${mapboxToken}`
+      );
+      
+      if (!validationCheck.ok) {
+        throw new Error(`Token validation failed with status: ${validationCheck.status}`);
+      }
+      
+      // Now proceed with geocoding
       const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(locationSearch)}.json?access_token=${mapboxToken}`
       );
@@ -77,6 +89,8 @@ export const useJobMapState = (jobs: JobLocation[], onLocationUpdate?: (jobs: Jo
       if (data.features && data.features.length > 0) {
         const [lng, lat] = data.features[0].center;
         const address = data.features[0].place_name;
+        
+        console.log('Location found:', {lng, lat, address});
         
         // Update the map and nearby jobs
         setUserLocation([lng, lat]);
@@ -122,6 +136,8 @@ export const useJobMapState = (jobs: JobLocation[], onLocationUpdate?: (jobs: Jo
     if (!mapboxToken) return;
     
     try {
+      console.log('Reverse geocoding coordinates:', {lat, lng});
+      
       const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxToken}`
       );
@@ -134,6 +150,7 @@ export const useJobMapState = (jobs: JobLocation[], onLocationUpdate?: (jobs: Jo
       
       if (data.features && data.features.length > 0) {
         const address = data.features[0].place_name;
+        console.log('Address found:', address);
         
         // Update the job data with new coordinates and address
         const updatedJobs = jobs.map(job => 

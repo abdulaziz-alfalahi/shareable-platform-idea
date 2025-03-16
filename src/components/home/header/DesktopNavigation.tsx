@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Home, Map, Database } from "lucide-react";
+import { Home, Map, Database, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface DesktopNavigationProps {
@@ -26,6 +26,9 @@ const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ handleHomeClick }
       </Link>
       <Link to="/job-applications" className="text-gray-700 hover:text-emirati-oasisGreen transition">
         Jobs
+      </Link>
+      <Link to="/job-location-matching" className="text-gray-700 hover:text-emirati-oasisGreen transition flex items-center">
+        <MapPin className="w-4 h-4 mr-1" /> Job Map
       </Link>
       <Link to="/training-centers" className="text-gray-700 hover:text-emirati-oasisGreen transition">
         Training
