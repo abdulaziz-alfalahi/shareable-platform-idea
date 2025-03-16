@@ -24,12 +24,41 @@ type IconName = "users" | "eagle" | "compass" | "palm-tree" | "gem" | "award" | 
 interface AchievementIconProps {
   iconName: string;
   className?: string;
+  level?: "Bronze" | "Silver" | "Gold";
+  size?: "sm" | "md" | "lg";
 }
 
 export const AchievementIcon: React.FC<AchievementIconProps> = ({ 
   iconName, 
-  className = "h-5 w-5" 
+  className,
+  level,
+  size = "md"
 }) => {
+  // Determine className based on size if not explicitly provided
+  if (!className) {
+    if (size === "sm") className = "h-4 w-4";
+    else if (size === "lg") className = "h-6 w-6";
+    else className = "h-5 w-5"; // Default "md" size
+  }
+
+  // Apply level-based styling if level is provided
+  if (level) {
+    const bgColor = getLevelColor(level);
+    const iconStyle = `${className} text-white`;
+    
+    return (
+      <div className={`${bgColor} p-1.5 rounded-full flex items-center justify-center`}>
+        {renderIcon(iconName, iconStyle)}
+      </div>
+    );
+  }
+  
+  // Render just the icon if no level is provided
+  return renderIcon(iconName, className);
+};
+
+// Helper function to render the correct icon
+function renderIcon(iconName: string, className: string) {
   switch (iconName) {
     case "users": return <Users className={className} />;
     case "eagle": return <Bird className={className} />;
@@ -47,7 +76,7 @@ export const AchievementIcon: React.FC<AchievementIconProps> = ({
     case "briefcase": return <Briefcase className={className} />;
     default: return <Award className={className} />;
   }
-};
+}
 
 export const getLevelColor = (level: "Bronze" | "Silver" | "Gold") => {
   switch (level) {
