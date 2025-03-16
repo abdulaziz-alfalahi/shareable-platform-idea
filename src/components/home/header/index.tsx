@@ -9,7 +9,6 @@ import MobileNavigation from "../MobileNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import RoleNotifications from "@/components/notifications/RoleNotifications";
 import { UserRole } from "@/components/notifications/types";
-import LanguageToggle from "./LanguageToggle";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -50,9 +49,6 @@ const Header = () => {
         <DesktopNavigation handleHomeClick={handleHomeClick} />
 
         <div className="flex items-center space-x-2">
-          {/* Language Toggle */}
-          <LanguageToggle />
-          
           <HeaderActions />
           
           {/* Role-based notifications */}

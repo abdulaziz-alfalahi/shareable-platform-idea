@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 export type FilterType = 'all' | 'ai-top-10' | 'portfolio-match';
 
@@ -16,24 +15,22 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
   setActiveFilter,
   filteredJobsCount
 }) => {
-  const { t } = useLanguage();
-  
   return (
     <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
       <ToggleGroup type="single" value={activeFilter} onValueChange={(value) => value && setActiveFilter(value as FilterType)}>
         <ToggleGroupItem value="all" className="text-sm">
-          {t('allJobs')}
+          All Jobs
         </ToggleGroupItem>
         <ToggleGroupItem value="ai-top-10" className="text-sm">
-          {t('aiTopTen')}
+          AI Top 10
         </ToggleGroupItem>
         <ToggleGroupItem value="portfolio-match" className="text-sm">
-          {t('portfolioMatch')}
+          Portfolio Match
         </ToggleGroupItem>
       </ToggleGroup>
       
       <div className="mt-2 sm:mt-0 text-sm text-gray-500">
-        {t('showingJobs')}: <span className="font-medium">{filteredJobsCount}</span>
+        Showing: <span className="font-medium">{filteredJobsCount}</span>
       </div>
     </div>
   );
