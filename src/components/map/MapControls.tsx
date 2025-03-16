@@ -3,7 +3,6 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MapPinIcon } from 'lucide-react';
-import { useLanguage } from '@/components/i18n/LanguageContext';
 
 interface MapControlsProps {
   locationSearch: string;
@@ -22,15 +21,13 @@ const MapControls: React.FC<MapControlsProps> = ({
   handleRadiusChange,
   onLocationUpdate
 }) => {
-  const { t, language } = useLanguage();
-  
   return (
-    <div className={`space-y-4 ${language === 'ar' ? 'rtl' : 'ltr'}`}>
+    <div className="space-y-4">
       {onLocationUpdate && (
         <div className="mb-4">
           <div className="flex gap-2">
             <Input
-              placeholder={t('map.location')}
+              placeholder="Search for a location..."
               value={locationSearch}
               onChange={(e) => setLocationSearch(e.target.value)}
               className="flex-1"
@@ -38,10 +35,10 @@ const MapControls: React.FC<MapControlsProps> = ({
                 if (e.key === 'Enter') searchLocation();
               }}
             />
-            <Button onClick={searchLocation}>{t('action.search')}</Button>
+            <Button onClick={searchLocation}>Search</Button>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            {t('map.tip')}
+            Search for a location or click on the map to place the marker. Drag the marker to adjust the position.
           </p>
         </div>
       )}
@@ -50,7 +47,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         <MapPinIcon className="text-emirati-oasisGreen" />
         <div className="flex-1">
           <label htmlFor="radius" className="block text-sm font-medium mb-1">
-            {t('map.radius')}: {searchRadius} km
+            Search Radius: {searchRadius} km
           </label>
           <Input
             id="radius"

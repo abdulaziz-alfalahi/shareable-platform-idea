@@ -10,117 +10,268 @@
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
- 
+
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
- 
-    --primary: 222.2 47.4% 11.2%;
+
+    --primary: 120 30% 24%; /* Oasis green */
     --primary-foreground: 210 40% 98%;
- 
-    --secondary: 210 40% 96.1%;
+
+    --secondary: 36 45% 64%; /* Desert gold */
     --secondary-foreground: 222.2 47.4% 11.2%;
- 
-    --muted: 210 40% 96.1%;
+
+    --muted: 42 54% 87%; /* Light sandstone */
     --muted-foreground: 215.4 16.3% 46.9%;
- 
-    --accent: 210 40% 96.1%;
+
+    --accent: 36 45% 64%; /* Desert gold */
     --accent-foreground: 222.2 47.4% 11.2%;
- 
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
- 
+    --border: 36 45% 64%; /* Desert gold */
+    --input: 36 45% 64%; /* Desert gold */
+    --ring: 120 30% 24%; /* Oasis green */
+
     --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
- 
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
- 
+
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
- 
+
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
- 
+
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
- 
+
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
- 
+
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
- 
+
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
- 
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
- 
+
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-emirati-sandstone text-emirati-oasisGreen;
+  }
+  
+  .font-serif {
+    font-family: 'Amiri', 'Scheherazade New', serif;
+  }
+  
+  /* For Arabic text */
+  .arabic {
+    font-family: 'Amiri', 'Scheherazade New', serif;
+    direction: rtl;
+  }
+
+  /* UAE Theme Variations */
+  .theme-desert {
+    @apply bg-emirati-sandBeige;
+  }
+  
+  .theme-desert .uae-card {
+    @apply bg-amber-50 border-amber-200/50;
+  }
+
+  .theme-desert .decorative-element div {
+    @apply bg-amber-700;
+  }
+  
+  .theme-desert .decorative-element div div {
+    @apply bg-amber-500;
+  }
+
+  .theme-oasis {
+    @apply bg-emerald-50;
+  }
+  
+  .theme-oasis .uae-card {
+    @apply bg-emerald-50 border-emerald-200/50;
+  }
+  
+  .theme-oasis .decorative-element div {
+    @apply bg-emerald-700;
+  }
+  
+  .theme-oasis .decorative-element div div {
+    @apply bg-emerald-500;
+  }
+
+  .theme-modern {
+    @apply bg-slate-50;
+  }
+  
+  .theme-modern .uae-card {
+    @apply bg-white border-slate-200/50 shadow-md;
+  }
+  
+  .theme-modern .decorative-element div {
+    @apply bg-blue-700;
+  }
+  
+  .theme-modern .decorative-element div div {
+    @apply bg-blue-500;
   }
 }
 
-/* RTL Support */
-.rtl {
-  direction: rtl;
-  text-align: right;
+.btn-success {
+  @apply bg-emirati-oasisGreen hover:bg-[#3d6b40] text-white;
 }
 
-.rtl .flex-row {
-  flex-direction: row-reverse;
+.btn-primary {
+  @apply bg-emirati-camelBrown hover:bg-[#a67447] text-white;
 }
 
-.rtl .ml-2 {
-  margin-left: 0;
-  margin-right: 0.5rem;
+.btn-linkedin {
+  @apply bg-emirati-linkedinBlue hover:bg-[#005f91] text-white;
 }
 
-.rtl .mr-2 {
-  margin-right: 0;
-  margin-left: 0.5rem;
+.btn-danger {
+  @apply bg-emirati-subtleRed hover:bg-[#c9302c] text-white;
 }
 
-.rtl .ml-4 {
-  margin-left: 0;
-  margin-right: 1rem;
+/* Add UAE-inspired decorative elements */
+.uae-pattern-divider {
+  @apply h-px w-full bg-gradient-to-r from-transparent via-emirati-desertGold to-transparent my-8 relative;
 }
 
-.rtl .mr-4 {
-  margin-right: 0;
-  margin-left: 1rem;
+.uae-pattern-divider::before,
+.uae-pattern-divider::after {
+  content: "";
+  @apply absolute h-2 w-2 rounded-full bg-emirati-oasisGreen top-1/2 transform -translate-y-1/2;
 }
 
-/* Arabic font */
-@font-face {
-  font-family: 'Dubai';
-  src: url('/fonts/Dubai-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
+.uae-pattern-divider::before {
+  @apply left-1/3;
 }
 
-@font-face {
-  font-family: 'Dubai';
-  src: url('/fonts/Dubai-Bold.woff2') format('woff2');
-  font-weight: bold;
-  font-style: normal;
+.uae-pattern-divider::after {
+  @apply right-1/3;
 }
 
-.font-arabic {
-  font-family: 'Dubai', 'Arial', sans-serif;
+/* Card with UAE-inspired styling */
+.uae-card {
+  @apply bg-white rounded-lg shadow-md border border-emirati-sandstone/30 p-6 transition-all duration-300 relative overflow-hidden;
+}
+
+.uae-card::before {
+  content: "";
+  @apply absolute top-0 right-0 w-20 h-20 bg-emirati-desertGold/10 -translate-x-1/2 -translate-y-1/2 rounded-full;
+}
+
+/* Traditional Arabic patterns */
+.arabic-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a373' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.geometric-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232c4a2e' fill-opacity='0.1'%3E%3Cpath d='M0 0h10v10H0V0zm10 10h10v10H10V10z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.mashrabiya-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%238b5e34' fill-opacity='0.1'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* UAE flag colors utility classes */
+.uae-flag-red {
+  @apply bg-red-600;
+}
+
+.uae-flag-green {
+  @apply bg-green-700;
+}
+
+.uae-flag-white {
+  @apply bg-white;
+}
+
+.uae-flag-black {
+  @apply bg-black;
+}
+
+/* UAE-inspired gradients */
+.uae-desert-gradient {
+  @apply bg-gradient-to-r from-emirati-sandBeige to-emirati-desertGold;
+}
+
+.uae-oasis-gradient {
+  @apply bg-gradient-to-r from-green-600 to-emirati-oasisGreen;
+}
+
+.uae-coastal-gradient {
+  @apply bg-gradient-to-r from-blue-300 to-blue-500;
+}
+
+/* Mobile navigation styles */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .mobile-nav-active {
+    overflow: hidden;
+  }
+}
+
+/* Mobile navigation slide effect */
+.mobile-nav-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.mobile-nav-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.mobile-nav-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mobile-nav-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 300ms, transform 300ms;
 }
