@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SearchIcon } from 'lucide-react';
-import { JobLocation } from '../JobMap';
+import { JobLocation } from '@/types/map';
 
 interface NearbyJobsListProps {
   nearbyJobs: JobLocation[];

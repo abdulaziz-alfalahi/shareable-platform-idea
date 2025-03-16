@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 
 interface UserLocationMarkerProps {
   map: React.MutableRefObject<mapboxgl.Map | null>;
@@ -16,6 +16,7 @@ const UserLocationMarker: React.FC<UserLocationMarkerProps> = ({
 }) => {
   const markerRef = useRef<mapboxgl.Marker | null>(null);
   const isLocating = useRef(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!map.current) return;

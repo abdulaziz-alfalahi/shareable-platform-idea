@@ -1,4 +1,5 @@
-
+import React from 'react';
+import { JobLocation } from '@/types/map';
 import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";

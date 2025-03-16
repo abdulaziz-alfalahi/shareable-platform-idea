@@ -1,7 +1,6 @@
-
 import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { JobLocation } from '../JobMap';
+import { JobLocation } from '@/types/map';
 
 interface JobMarkersProps {
   map: React.MutableRefObject<mapboxgl.Map | null>;

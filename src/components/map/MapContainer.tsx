@@ -1,7 +1,7 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { JobLocation } from '../JobMap';
+import { JobLocation } from '@/types/map';
 import useMapInitialization from '@/hooks/map/useMapInitialization';
 import UserLocationMarker from './UserLocationMarker';
 import JobMarkers from './JobMarkers';
@@ -27,17 +27,14 @@ const MapContainer: React.FC<MapContainerProps> = ({
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [mapReady, setMapReady] = useState(false);
+  
+  // Initialize the map with our custom hook
   const map = useMapInitialization({
     mapboxToken,
     containerRef: mapContainer,
     initialCenter: userLocation || undefined,
     onMapLoaded: () => setMapReady(true)
   });
-
-  // Reset the map ready state if mapbox token changes
-  useEffect(() => {
-    setMapReady(false);
-  }, [mapboxToken]);
 
   return (
     <div ref={mapContainer} className="h-[500px] rounded-lg border border-gray-200 shadow-sm">
