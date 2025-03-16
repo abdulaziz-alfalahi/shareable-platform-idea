@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { JobLocation } from '@/types/map';
 import { useState } from 'react';
@@ -8,7 +9,7 @@ import {
   UserCheckIcon, 
   DatabaseIcon
 } from "lucide-react";
-import JobMap, { JobLocation } from '@/components/JobMap';
+import JobMap from '@/components/JobMap';
 
 interface JobLocationTabProps {
   jobs: JobLocation[];
