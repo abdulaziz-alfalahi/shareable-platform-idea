@@ -15,6 +15,7 @@ export interface JobLocation {
   distance?: number;
   matchPercentage?: number;
   portfolioMatch?: boolean;
+  distanceFromUser?: number; // Added for dynamic position calculation
 }
 
 export interface JobMapProps {

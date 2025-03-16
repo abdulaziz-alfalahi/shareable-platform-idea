@@ -238,5 +238,214 @@ export const jobLocationsData = [
     },
     matchPercentage: 88,
     portfolioMatch: true
+  },
+  // Additional job listings at increasing distances (5km+)
+  {
+    id: '6',
+    title: 'UI/UX Designer',
+    company: 'Creative Solutions',
+    location: {
+      latitude: 0, // Will be calculated dynamically
+      longitude: 0, // Will be calculated dynamically
+      address: 'Approximately 5km from your location'
+    },
+    matchPercentage: 89,
+    portfolioMatch: true,
+    distanceFromUser: 5 // in km
+  },
+  {
+    id: '7',
+    title: 'DevOps Engineer',
+    company: 'Cloud Technologies',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 8km from your location'
+    },
+    matchPercentage: 75,
+    portfolioMatch: false,
+    distanceFromUser: 8
+  },
+  {
+    id: '8',
+    title: 'Product Manager',
+    company: 'Innovation Hub',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 11km from your location'
+    },
+    matchPercentage: 82,
+    portfolioMatch: true,
+    distanceFromUser: 11
+  },
+  {
+    id: '9',
+    title: 'Data Scientist',
+    company: 'Analytics Solutions',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 14km from your location'
+    },
+    matchPercentage: 78,
+    portfolioMatch: false,
+    distanceFromUser: 14
+  },
+  {
+    id: '10',
+    title: 'Front-end Developer',
+    company: 'Web Solutions',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 17km from your location'
+    },
+    matchPercentage: 91,
+    portfolioMatch: true,
+    distanceFromUser: 17
+  },
+  {
+    id: '11',
+    title: 'Backend Developer',
+    company: 'Server Technologies',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 20km from your location'
+    },
+    matchPercentage: 88,
+    portfolioMatch: true,
+    distanceFromUser: 20
+  },
+  {
+    id: '12',
+    title: 'Systems Architect',
+    company: 'Enterprise Solutions',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 23km from your location'
+    },
+    matchPercentage: 76,
+    portfolioMatch: false,
+    distanceFromUser: 23
+  },
+  {
+    id: '13',
+    title: 'Database Administrator',
+    company: 'Data Systems Inc',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 26km from your location'
+    },
+    matchPercentage: 82,
+    portfolioMatch: true,
+    distanceFromUser: 26
+  },
+  {
+    id: '14',
+    title: 'AI Specialist',
+    company: 'Future Technologies',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 29km from your location'
+    },
+    matchPercentage: 95,
+    portfolioMatch: true,
+    distanceFromUser: 29
+  },
+  {
+    id: '15',
+    title: 'Network Engineer',
+    company: 'Connected Systems',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 32km from your location'
+    },
+    matchPercentage: 73,
+    portfolioMatch: false,
+    distanceFromUser: 32
+  },
+  {
+    id: '16',
+    title: 'Cloud Architect',
+    company: 'Sky Computing',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 35km from your location'
+    },
+    matchPercentage: 85,
+    portfolioMatch: true,
+    distanceFromUser: 35
+  },
+  {
+    id: '17',
+    title: 'Cybersecurity Analyst',
+    company: 'Security Solutions',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 38km from your location'
+    },
+    matchPercentage: 79,
+    portfolioMatch: false,
+    distanceFromUser: 38
+  },
+  {
+    id: '18',
+    title: 'Mobile App Developer',
+    company: 'App Technologies',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 41km from your location'
+    },
+    matchPercentage: 87,
+    portfolioMatch: true,
+    distanceFromUser: 41
+  },
+  {
+    id: '19',
+    title: 'QA Engineer',
+    company: 'Quality Systems',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 44km from your location'
+    },
+    matchPercentage: 81,
+    portfolioMatch: true,
+    distanceFromUser: 44
+  },
+  {
+    id: '20',
+    title: 'Technical Writer',
+    company: 'Documentation Solutions',
+    location: {
+      latitude: 0,
+      longitude: 0,
+      address: 'Approximately 47km from your location'
+    },
+    matchPercentage: 72,
+    portfolioMatch: false,
+    distanceFromUser: 47
+  },
+  // Additional workplace entry for setting user's work location
+  {
+    id: 'workplace',
+    title: 'Your Workplace',
+    company: 'Set your workplace location',
+    location: {
+      latitude: 25.1972,
+      longitude: 55.2744,
+      address: 'Your workplace location'
+    },
+    matchPercentage: 100,
+    portfolioMatch: true
   }
 ];

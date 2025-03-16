@@ -1,7 +1,8 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { JobLocation } from '@/types/map';
+import { calculateDistanceCoordinates } from '@/components/map/mapUtils';
 
 export const useMapLocationState = (onLocationUpdate?: (jobs: JobLocation[]) => void) => {
   const [mapboxToken, setMapboxToken] = useState<string>('');
@@ -17,6 +18,50 @@ export const useMapLocationState = (onLocationUpdate?: (jobs: JobLocation[]) => 
       setTokenSubmitted(false);
     }
   };
+
+  // Dynamic job position calculation based on user's location
+  useEffect(() => {
+    if (!userLocation || !onLocationUpdate) return;
+
+    const userLat = userLocation[1];
+    const userLng = userLocation[0];
+
+    // Calculate positions for jobs with specified distances
+    const calculateJobPositions = (jobs: JobLocation[]) => {
+      return jobs.map(job => {
+        // Skip jobs without distanceFromUser property
+        if (!job.distanceFromUser) return job;
+
+        // Calculate new coordinates based on distance
+        const bearing = Math.random() * 360; // Random direction
+        const { latitude, longitude } = calculateDistanceCoordinates(
+          userLat, 
+          userLng, 
+          job.distanceFromUser, 
+          bearing
+        );
+
+        return {
+          ...job,
+          location: {
+            ...job.location,
+            latitude,
+            longitude
+          }
+        };
+      });
+    };
+
+    // Update job positions when user location changes
+    const updateJobPositions = (jobs: JobLocation[]) => {
+      const updatedJobs = calculateJobPositions(jobs);
+      onLocationUpdate(updatedJobs);
+    };
+
+    updateJobPositions(
+      JSON.parse(localStorage.getItem('currentJobs') || '[]')
+    );
+  }, [userLocation, onLocationUpdate]);
 
   // Search for a location - using a more reliable endpoint
   const searchLocation = async (jobs: JobLocation[], findNearbyJobs: (lat: number, lng: number) => void) => {
@@ -55,9 +100,37 @@ export const useMapLocationState = (onLocationUpdate?: (jobs: JobLocation[]) => 
         setUserLocation([lng, lat]);
         findNearbyJobs(lat, lng);
         
+        // Store current jobs in local storage for position calculation
+        localStorage.setItem('currentJobs', JSON.stringify(jobs));
+        
         // Update the location if onLocationUpdate is provided
         if (onLocationUpdate) {
-          const updatedJobs = jobs.map(job => 
+          // Calculate dynamic job positions based on this location
+          const dynamicJobs = jobs.map(job => {
+            // Skip jobs without distanceFromUser property
+            if (!job.distanceFromUser) return job;
+
+            // Calculate new coordinates based on distance
+            const bearing = Math.random() * 360; // Random direction
+            const { latitude, longitude } = calculateDistanceCoordinates(
+              lat, 
+              lng, 
+              job.distanceFromUser, 
+              bearing
+            );
+
+            return {
+              ...job,
+              location: {
+                ...job.location,
+                latitude,
+                longitude
+              }
+            };
+          });
+          
+          // Find workplace job and update if it exists
+          const updatedJobs = dynamicJobs.map(job => 
             job.id === "workplace" 
               ? { 
                   ...job, 
@@ -111,6 +184,9 @@ export const useMapLocationState = (onLocationUpdate?: (jobs: JobLocation[]) => 
         const address = data.features[0].place_name;
         console.log('Address found:', address);
         
+        // Store current jobs for position calculation
+        localStorage.setItem('currentJobs', JSON.stringify(jobs));
+        
         // Update the job data with new coordinates and address
         const updatedJobs = jobs.map(job => 
           job.id === "workplace" 
@@ -126,9 +202,32 @@ export const useMapLocationState = (onLocationUpdate?: (jobs: JobLocation[]) => 
             : job
         );
         
-        // Call the callback with updated job data
+        // Calculate positions for dynamic jobs
         if (onLocationUpdate) {
-          onLocationUpdate(updatedJobs);
+          const dynamicJobs = updatedJobs.map(job => {
+            // Skip jobs without distanceFromUser property
+            if (!job.distanceFromUser) return job;
+
+            // Calculate new coordinates based on distance
+            const bearing = Math.random() * 360; // Random direction
+            const { latitude, longitude } = calculateDistanceCoordinates(
+              lat, 
+              lng, 
+              job.distanceFromUser, 
+              bearing
+            );
+
+            return {
+              ...job,
+              location: {
+                ...job.location,
+                latitude,
+                longitude
+              }
+            };
+          });
+          
+          onLocationUpdate(dynamicJobs);
         }
       }
     } catch (error) {
