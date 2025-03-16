@@ -70,6 +70,10 @@ export const routes: RouteObject[] = [
     element: <MindMap />,
   },
   {
+    path: "/mindmap",
+    element: <MindMap />,
+  },
+  {
     path: "/data-entry",
     element: <DataEntryPage />,
   },
@@ -124,5 +128,9 @@ export const routes: RouteObject[] = [
   {
     path: "/resume-builder",
     element: <ResumeBuilder />,
+  },
+  {
+    path: "/gamification-dashboard",
+    element: <GamificationDashboard />,
   },
 ];

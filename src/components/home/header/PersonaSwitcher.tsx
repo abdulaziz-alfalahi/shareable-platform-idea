@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, GraduationCap, Briefcase, School, Building, Target, Database, ChevronDown, Home } from "lucide-react";
+import { User, GraduationCap, Briefcase, School, Building, Target, Database, ChevronDown, Home, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -47,6 +47,10 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
     navigate('/career-passport');
   };
 
+  const handleMindMapClick = () => {
+    navigate('/mind-map');
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -82,6 +86,18 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
           <div className="flex items-center">
             <GraduationCap className="h-4 w-4 mr-2" />
             <span>Career Passport</span>
+          </div>
+        </DropdownMenuItem>
+        
+        {/* Mind Map option */}
+        <DropdownMenuItem 
+          key="mind-map" 
+          className="py-2"
+          onClick={handleMindMapClick}
+        >
+          <div className="flex items-center">
+            <Map className="h-4 w-4 mr-2" />
+            <span>Mind Map</span>
           </div>
         </DropdownMenuItem>
         
