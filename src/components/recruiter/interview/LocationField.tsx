@@ -5,9 +5,8 @@ import { Label } from "@/components/ui/label";
 import LocationIcon from "./location/LocationIcon";
 import LocationSuggestions from "./location/LocationSuggestions";
 import MapToggleButton from "./location/MapToggleButton";
+import JobMap from "@/components/JobMap";
 import { filterLocationSuggestions } from "@/utils/locationUtils";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { MapIcon } from "lucide-react";
 
 interface LocationFieldProps {
   location: string;
@@ -22,6 +21,18 @@ const LocationField: React.FC<LocationFieldProps> = ({
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [showMap, setShowMap] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Create a single job location object for the interview location
+  const workplaceJob = {
+    id: "workplace",
+    title: "Interview Location",
+    company: "Set Interview Location",
+    location: {
+      latitude: 25.2048, // Default Dubai coordinates
+      longitude: 55.2708,
+      address: location || "Dubai, UAE"
+    }
+  };
 
   useEffect(() => {
     // Update suggestions when location input changes
@@ -57,6 +68,14 @@ const LocationField: React.FC<LocationFieldProps> = ({
     setShowMap(!showMap);
   };
 
+  // Handle location updates from the map
+  const handleLocationUpdate = (updatedJobs: any[]) => {
+    const updatedWorkplace = updatedJobs.find(job => job.id === "workplace");
+    if (updatedWorkplace && updatedWorkplace.location.address) {
+      setLocation(updatedWorkplace.location.address);
+    }
+  };
+
   return (
     <div className="grid gap-2">
       <div className="flex justify-between items-center">
@@ -85,14 +104,13 @@ const LocationField: React.FC<LocationFieldProps> = ({
       </div>
 
       {showMap && (
-        <div className="mt-2 border rounded-md p-4">
-          <Alert className="bg-emirati-sandBeige/10 border-emirati-oasisGreen">
-            <MapIcon className="h-5 w-5 text-emirati-oasisGreen" />
-            <AlertTitle>Map Feature Temporarily Unavailable</AlertTitle>
-            <AlertDescription>
-              We're currently improving our map functionality. Please enter the location manually.
-            </AlertDescription>
-          </Alert>
+        <div className="mt-2 border rounded-md">
+          <div className="h-96">
+            <JobMap 
+              jobs={[workplaceJob]} 
+              onLocationUpdate={handleLocationUpdate}
+            />
+          </div>
         </div>
       )}
     </div>

@@ -5,23 +5,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { 
   BriefcaseIcon, 
   UserCheckIcon, 
-  DatabaseIcon,
-  MapIcon
+  DatabaseIcon
 } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-export interface JobLocation {
-  id: string;
-  title: string;
-  company: string;
-  location: {
-    latitude: number;
-    longitude: number;
-    address: string;
-  };
-  matchPercentage?: number;
-  portfolioMatch?: boolean;
-}
+import JobMap, { JobLocation } from '@/components/JobMap';
 
 interface JobLocationTabProps {
   jobs: JobLocation[];
@@ -41,10 +27,8 @@ export const JobLocationTab = ({ jobs }: JobLocationTabProps) => {
           })
           .slice(0, 10);
       case 'portfolio-match':
-        // If portfolioMatch isn't available, we'll just return a random subset
-        // This ensures we don't break when the property doesn't exist
         return jobs.filter(job => 
-          job.portfolioMatch === true || Math.random() > 0.7 // Fallback for test data
+          job.portfolioMatch === true || Math.random() > 0.7
         );
       case 'all':
       default:
@@ -95,29 +79,7 @@ export const JobLocationTab = ({ jobs }: JobLocationTabProps) => {
 
       <Card className="border-emirati-sandBeige mb-6">
         <CardContent className="p-6">
-          <Alert className="bg-emirati-sandBeige/10 border-emirati-oasisGreen">
-            <MapIcon className="h-5 w-5 text-emirati-oasisGreen" />
-            <AlertTitle>Map Feature Temporarily Unavailable</AlertTitle>
-            <AlertDescription>
-              We're currently improving our map functionality to better display job locations across the UAE.
-              This feature will be available again soon with enhanced capabilities.
-            </AlertDescription>
-          </Alert>
-          
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredLocationJobs.map(job => (
-              <Card key={job.id} className="p-3 border-emirati-sandBeige/40">
-                <h3 className="font-medium text-emirati-oasisGreen">{job.title}</h3>
-                <p className="text-sm">{job.company}</p>
-                <p className="text-sm text-muted-foreground">{job.location.address}</p>
-                {job.matchPercentage && (
-                  <div className="mt-2 text-sm font-medium">
-                    {job.matchPercentage}% Match
-                  </div>
-                )}
-              </Card>
-            ))}
-          </div>
+          <JobMap jobs={filteredLocationJobs} />
         </CardContent>
       </Card>
     </div>

@@ -7,9 +7,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogC
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Plus, ChevronRight, Users, FileEdit, Briefcase, MapPin, Clock, Calendar, Map } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Search, Plus, ChevronRight, Users, FileEdit, Briefcase, MapPin, Clock, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import JobMap from "@/components/JobMap";
 
 interface Vacancy {
   id: number;
@@ -211,19 +211,40 @@ const VacancyManagement: React.FC<VacancyManagementProps> = ({ vacancies }) => {
             <div className="grid gap-2">
               <Label>Location</Label>
               <div className="border rounded-md p-4">
-                <Alert className="bg-emirati-sandBeige/10 border-emirati-oasisGreen">
-                  <Map className="h-5 w-5 text-emirati-oasisGreen" />
-                  <AlertTitle>Map Feature Temporarily Unavailable</AlertTitle>
-                  <AlertDescription>
-                    Please enter the address manually below.
-                  </AlertDescription>
-                </Alert>
                 <Input
                   value={newVacancy.location}
                   onChange={(e) => setNewVacancy({ ...newVacancy, location: e.target.value })}
                   placeholder="Address"
-                  className="mt-4"
+                  className="mb-4"
                 />
+                
+                <div className="h-64 mt-4 border rounded">
+                  <JobMap 
+                    jobs={[{
+                      id: "workplace",
+                      title: "Vacancy Location",
+                      company: newVacancy.department || "Your Company",
+                      location: {
+                        latitude: newVacancy.coordinates.latitude,
+                        longitude: newVacancy.coordinates.longitude,
+                        address: newVacancy.location || "Dubai, UAE"
+                      }
+                    }]}
+                    onLocationUpdate={(jobs) => {
+                      const workplace = jobs.find(job => job.id === "workplace");
+                      if (workplace && workplace.location) {
+                        setNewVacancy({
+                          ...newVacancy,
+                          location: workplace.location.address || newVacancy.location,
+                          coordinates: {
+                            latitude: workplace.location.latitude,
+                            longitude: workplace.location.longitude
+                          }
+                        });
+                      }
+                    }}
+                  />
+                </div>
               </div>
             </div>
             
