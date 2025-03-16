@@ -52,9 +52,9 @@ export interface Vacancy {
   company: string;
   location: string;
   type: string;
-  requiredSkills: string[]; // Changed from requirements to requiredSkills
+  requiredSkills: string[];
   salary?: string;
-  description?: string;
+  description?: string; // Added description property
 }
 
 // Updated JobMatchDetails interface to include all required properties
