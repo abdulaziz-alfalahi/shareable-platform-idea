@@ -41,11 +41,13 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     
     console.log(`Adding ${jobs.length} markers to map`);
 
+    // Clear existing markers first
     clearAllMarkers();
     
+    // Create new markers
     jobs.forEach(job => {
-      if (!job.location) {
-        console.log(`Skipping job ${job.id} - missing location`);
+      if (!job.location || !job.location.latitude || !job.location.longitude) {
+        console.log(`Skipping job ${job.id} - missing or invalid location`);
         return;
       }
 
@@ -83,7 +85,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
             .setLngLat([job.location.longitude, job.location.latitude])
             .setPopup(
               new mapboxgl.Popup().setHTML(
-                `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || ""}</p><p>Match: ${job.matchPercentage || 0}%</p>`
+                `<h3>${job.title || 'Job'}</h3><p>${job.company || 'Company'}</p><p>${job.location.address || ""}</p><p>Match: ${job.matchPercentage || 0}%</p>`
               )
             );
           
@@ -101,22 +103,26 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
   };
 
   useEffect(() => {
-    // Only add markers if the jobs array actually changed
-    const jobsChanged = jobs.length !== prevJobsRef.current.length ||
-      jobs.some((job, index) => {
-        const prevJob = prevJobsRef.current[index];
-        return !prevJob || job.id !== prevJob.id;
-      });
-
-    if (jobsChanged && map.current && map.current.loaded()) {
-      console.log('Jobs changed, updating markers');
+    // Always add markers when the component mounts or jobs change
+    if (map.current && map.current.loaded()) {
+      console.log('Map is ready, adding markers');
       addMarkers();
+    } else {
+      console.log('Map not ready yet, waiting for load event');
+      
+      // If map is not ready yet, set up a load event listener
+      if (map.current) {
+        map.current.once('load', () => {
+          console.log('Map loaded, now adding markers');
+          addMarkers();
+        });
+      }
     }
     
     return () => {
       clearAllMarkers();
     };
-  }, [map, jobs, onLocationUpdate, reverseGeocode]);
+  }, [map, jobs, reverseGeocode]);
 
   return null; // This is a logic-only component
 };

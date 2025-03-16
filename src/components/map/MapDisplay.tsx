@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import TokenInput from './TokenInput';
 import MapContainer from './MapContainer';
@@ -44,9 +44,14 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
   findNearbyJobs,
   reverseGeocode
 }) => {
-  useEffect(() => {
-    console.log(`MapDisplay received ${jobs.length} jobs and ${nearbyJobs.length} nearby jobs`);
-  }, [jobs, nearbyJobs]);
+  // Log job counts (moved outside of useEffect to avoid conditional hooks)
+  console.log(`MapDisplay received ${jobs.length} jobs and ${nearbyJobs.length} nearby jobs`);
+  
+  // For map display, we want to show the filtered jobs if there are any, or all jobs otherwise
+  const displayJobs = nearbyJobs.length > 0 ? nearbyJobs : jobs;
+  
+  // Log what we're displaying (moved outside of useEffect to avoid conditional hooks)
+  console.log(`MapDisplay displaying ${displayJobs.length} jobs on the map`);
 
   // Display token input if no token is provided
   if (!tokenSubmitted) {
@@ -58,14 +63,6 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
       />
     );
   }
-
-  // For map display, we want to show the filtered jobs if there are any, or all jobs otherwise
-  const displayJobs = nearbyJobs.length > 0 ? nearbyJobs : jobs;
-  
-  // Log what we're displaying
-  useEffect(() => {
-    console.log(`MapDisplay displaying ${displayJobs.length} jobs on the map`);
-  }, [displayJobs]);
 
   // Display map and controls if token is provided
   return (
