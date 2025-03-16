@@ -1,15 +1,19 @@
+
 import { ArrowUpCircleIcon } from "lucide-react";
 import { Vacancy } from "@/types/jobs";
+import { useLanguage } from "@/components/i18n/LanguageContext";
 
 interface VacancySkillsListProps {
   vacancy: Vacancy;
 }
 
 const VacancySkillsList = ({ vacancy }: VacancySkillsListProps) => {
+  const { t, language } = useLanguage();
+
   return (
-    <div className="space-y-2">
+    <div className={`space-y-2 ${language === 'ar' ? 'rtl' : 'ltr'}`}>
       <div>
-        <p className="text-sm font-medium">Required Skills:</p>
+        <p className="text-sm font-medium">{t('job.required.skills')}:</p>
         <div className="flex flex-wrap gap-1 mt-1">
           {vacancy.requiredSkills.map((skill, index) => (
             <span 
@@ -25,7 +29,7 @@ const VacancySkillsList = ({ vacancy }: VacancySkillsListProps) => {
       {vacancy.missingSkills.length > 0 && (
         <div>
           <p className="text-sm font-medium flex items-center">
-            Skills to Develop
+            {t('job.skills.develop')}
             <ArrowUpCircleIcon size={14} className="ml-1 text-emirati-desertGold" />
           </p>
           <div className="flex flex-wrap gap-1 mt-1">

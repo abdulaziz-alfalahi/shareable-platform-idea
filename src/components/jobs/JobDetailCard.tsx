@@ -11,6 +11,7 @@ import CompanyTab from "./CompanyTab";
 import SkillMatchVisualization from "./SkillMatchVisualization";
 import { Student } from "@/types/student";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLanguage } from "@/components/i18n/LanguageContext";
 
 interface JobDetailCardProps {
   vacancy: Vacancy;
@@ -36,6 +37,7 @@ const JobDetailCard: React.FC<JobDetailCardProps> = ({
   onApply
 }) => {
   const isMobile = useIsMobile();
+  const { t, language } = useLanguage();
 
   return (
     <Card>
@@ -59,13 +61,13 @@ const JobDetailCard: React.FC<JobDetailCardProps> = ({
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className={`mb-4 bg-emirati-sandBeige/20 ${isMobile ? 'grid grid-cols-3 w-full' : ''}`}>
             <TabsTrigger value="overview" className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white">
-              Overview
+              {t('job.tab.overview')}
             </TabsTrigger>
             <TabsTrigger value="match-details" className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white">
-              Match Details
+              {t('job.tab.match')}
             </TabsTrigger>
             <TabsTrigger value="company" className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white">
-              Company
+              {t('job.tab.company')}
             </TabsTrigger>
           </TabsList>
           
