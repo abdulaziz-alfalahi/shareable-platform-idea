@@ -28,8 +28,8 @@ export const useJobFiltering = () => {
           return {
             ...job,
             location: {
-              latitude: 25.2637 + (Math.random() * 0.1 - 0.05),  // Default to near Al Fahidi Fort with slight variation
-              longitude: 55.2972 + (Math.random() * 0.1 - 0.05),
+              latitude: latitude + (Math.random() * 0.1 - 0.05),  // Near current location with slight variation
+              longitude: longitude + (Math.random() * 0.1 - 0.05),
               address: job.company || 'Unknown location'
             }
           };
@@ -42,8 +42,8 @@ export const useJobFiltering = () => {
             ...job,
             location: {
               ...job.location,
-              latitude: 25.2637 + (Math.random() * 0.1 - 0.05),
-              longitude: 55.2972 + (Math.random() * 0.1 - 0.05),
+              latitude: latitude + (Math.random() * 0.1 - 0.05),
+              longitude: longitude + (Math.random() * 0.1 - 0.05),
               address: job.location.address || job.company || 'Unknown location'
             }
           };
@@ -53,6 +53,9 @@ export const useJobFiltering = () => {
       });
       
       setAllJobs(processedJobs);
+      
+      // Store in localStorage for debugging and reuse
+      localStorage.setItem('currentJobs', JSON.stringify(processedJobs));
     }
 
     try {
@@ -60,31 +63,51 @@ export const useJobFiltering = () => {
       const jobsToFilter = jobs.length > 0 ? jobs : allJobs;
       
       if (jobsToFilter.length === 0) {
-        console.log('No jobs to filter');
-        setNearbyJobs([]);
+        console.log('No jobs to filter, generating sample jobs');
+        // Generate sample jobs at various distances
+        const sampleJobs = Array(8).fill(0).map((_, index) => {
+          const distance = (Math.random() * searchRadius * 0.8) + 1; // Random distance up to 80% of radius
+          return {
+            id: `sample-job-${index}`,
+            title: `Sample Position ${index + 1}`,
+            company: `Company ${String.fromCharCode(65 + index)}`,
+            location: {
+              latitude: latitude + (distance * 0.009 * (Math.random() > 0.5 ? 1 : -1)),
+              longitude: longitude + (distance * 0.009 * (Math.random() > 0.5 ? 1 : -1)),
+              address: `${distance.toFixed(1)}km from current location`
+            },
+            matchPercentage: Math.floor(60 + Math.random() * 40),
+            distance: distance
+          };
+        });
+        
+        setNearbyJobs(sampleJobs);
+        setAllJobs(sampleJobs);
+        localStorage.setItem('currentJobs', JSON.stringify(sampleJobs));
+        localStorage.setItem('nearbyJobs', JSON.stringify(sampleJobs));
         return;
       }
 
       console.log('Filtering', jobsToFilter.length, 'jobs');
       
       // Ensure all jobs have valid location data
-      const validJobs = jobsToFilter.map(job => {
-        // Fix any jobs with invalid location data
-        if (!job.location || !job.location.latitude || !job.location.longitude || 
-            isNaN(job.location.latitude) || isNaN(job.location.longitude)) {
-          console.log(`Fixing job ${job.id} with invalid location data`);
-          return {
-            ...job,
-            location: {
-              ...(job.location || {}),
-              latitude: 25.2637 + (Math.random() * 0.1 - 0.05),
-              longitude: 55.2972 + (Math.random() * 0.1 - 0.05),
-              address: job.location?.address || job.company || 'Unknown location'
-            }
-          };
-        }
-        return job;
-      });
+      const validJobs = jobsToFilter.filter(job => 
+        job.location && 
+        typeof job.location.latitude === 'number' && 
+        typeof job.location.longitude === 'number' &&
+        !isNaN(job.location.latitude) && 
+        !isNaN(job.location.longitude)
+      );
+      
+      if (validJobs.length === 0) {
+        console.log('No jobs with valid coordinates found');
+        toast({
+          title: 'No valid job locations',
+          description: 'Could not find any jobs with valid location data.',
+          variant: 'destructive'
+        });
+        return;
+      }
       
       // Calculate distance for each job
       const jobsWithDistance = validJobs.map(job => {
@@ -109,7 +132,6 @@ export const useJobFiltering = () => {
       
       // Store in localStorage for debugging
       localStorage.setItem('nearbyJobs', JSON.stringify(nearby));
-      localStorage.setItem('currentJobs', JSON.stringify(validJobs)); // Store all valid jobs
     } catch (error) {
       console.error('Error finding nearby jobs:', error);
       toast({
@@ -122,20 +144,20 @@ export const useJobFiltering = () => {
 
   // Recalculate when radius changes
   useEffect(() => {
-    if (userCoordinates && allJobs.length > 0) {
+    if (userCoordinates) {
       console.log(`Radius changed to ${searchRadius}km, recalculating nearby jobs`);
       findNearbyJobs(userCoordinates[1], userCoordinates[0], allJobs);
     }
   }, [searchRadius, userCoordinates, allJobs, findNearbyJobs]);
 
   // Handle radius change
-  const handleRadiusChange = (e: React.ChangeEvent<HTMLInputElement>, userLocation: [number, number] | null, jobs: JobLocation[]) => {
+  const handleRadiusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const radius = Number(e.target.value);
+    console.log(`Search radius changed to ${radius}km`);
     setSearchRadius(radius);
-    console.log(`Radius changed to ${radius}km`);
     
-    if (userLocation) {
-      findNearbyJobs(userLocation[1], userLocation[0], jobs);
+    if (userCoordinates) {
+      findNearbyJobs(userCoordinates[1], userCoordinates[0], allJobs);
     }
   };
 

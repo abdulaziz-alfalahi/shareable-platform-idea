@@ -34,13 +34,24 @@ const MapContainer: React.FC<MapContainerProps> = ({
   const defaultLocation: [number, number] = [55.2972, 25.2637];
   const centerLocation = userLocation || defaultLocation;
   
+  // Validate jobs data to ensure we have valid locations
+  const validJobs = jobs.filter(job => 
+    job.location && 
+    typeof job.location.latitude === 'number' && 
+    typeof job.location.longitude === 'number' && 
+    !isNaN(job.location.latitude) && 
+    !isNaN(job.location.longitude)
+  );
+  
   // Log jobs for debugging
   useEffect(() => {
-    console.log(`MapContainer received ${jobs.length} jobs to display`);
-    if (jobs.length > 0) {
-      console.log('First job sample:', jobs[0]);
+    console.log(`MapContainer received ${jobs.length} jobs, ${validJobs.length} valid locations`);
+    if (validJobs.length > 0) {
+      console.log('Valid job sample:', validJobs[0]);
+    } else if (jobs.length > 0) {
+      console.log('Invalid job sample:', jobs[0]);
     }
-  }, [jobs]);
+  }, [jobs, validJobs]);
 
   // Initialize the map with our custom hook
   const map = useMapInitialization({
@@ -58,16 +69,23 @@ const MapContainer: React.FC<MapContainerProps> = ({
       }
       
       // If no jobs have locations yet, find nearby jobs using current center
-      if (jobs.length === 0 || jobs.every(job => !job.location)) {
-        console.log('No jobs with locations, finding nearby jobs');
+      if (validJobs.length === 0) {
+        console.log('No jobs with valid locations, finding nearby jobs');
         findNearbyJobs(centerLocation[1], centerLocation[0]);
       }
     }
   });
 
+  // Force a map resize if the container dimensions change
+  useEffect(() => {
+    if (map.current && mapReady) {
+      map.current.resize();
+    }
+  }, [mapContainer.current?.clientWidth, mapContainer.current?.clientHeight, mapReady]);
+
   return (
     <div ref={mapContainer} className="h-[500px] rounded-lg border border-gray-200 shadow-sm">
-      {map.current && (
+      {mapReady && map.current && (
         <>
           <UserLocationMarker 
             map={map} 
@@ -76,7 +94,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
           />
           <JobMarkers 
             map={map} 
-            jobs={jobs} 
+            jobs={validJobs.length > 0 ? validJobs : jobs} 
             onLocationUpdate={onLocationUpdate} 
             reverseGeocode={reverseGeocode}
           />

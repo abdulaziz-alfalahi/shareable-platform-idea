@@ -11,9 +11,13 @@ export const useDynamicJobPositions = (
   onLocationUpdate?: (jobs: JobLocation[]) => void
 ) => {
   useEffect(() => {
-    if (!userLocation || !onLocationUpdate) return;
+    if (!userLocation || !onLocationUpdate) {
+      console.log('Cannot update job positions: missing userLocation or onLocationUpdate callback');
+      return;
+    }
 
     const [longitude, latitude] = userLocation;
+    console.log(`Calculating dynamic job positions around [${latitude}, ${longitude}]`);
     
     // Get jobs from localStorage for debugging
     const storedJobs = localStorage.getItem('currentJobs');
@@ -22,6 +26,7 @@ export const useDynamicJobPositions = (
     try {
       if (storedJobs) {
         jobs = JSON.parse(storedJobs);
+        console.log(`Retrieved ${jobs.length} jobs from localStorage`);
       }
     } catch (error) {
       console.error('Error parsing jobs from localStorage:', error);
@@ -29,7 +34,7 @@ export const useDynamicJobPositions = (
     
     // If no jobs found, create some sample jobs around the user location
     if (jobs.length === 0) {
-      console.log('No jobs found in localStorage, creating sample jobs');
+      console.log('Creating sample jobs around user location');
       
       // Create 5 sample jobs at various distances
       jobs = Array(5).fill(0).map((_, index) => {
@@ -53,36 +58,39 @@ export const useDynamicJobPositions = (
     
     // Update any jobs that need coordinates
     const updatedJobs = jobs.map(job => {
-      // Skip jobs that already have valid coordinates
-      if (
+      // Check for valid existing coordinates
+      const hasValidCoordinates = 
         job.location && 
-        job.location.latitude !== 0 && 
-        job.location.longitude !== 0 && 
+        typeof job.location.latitude === 'number' && 
+        typeof job.location.longitude === 'number' &&
         !isNaN(job.location.latitude) && 
-        !isNaN(job.location.longitude)
-      ) {
+        !isNaN(job.location.longitude) &&
+        (job.location.latitude !== 0 || job.location.longitude !== 0);
+      
+      // Skip jobs that already have valid coordinates
+      if (hasValidCoordinates) {
         // Calculate the actual distance for these jobs if not present
-        if (!job.distance) {
-          const distance = calculateDistance(
-            latitude,
-            longitude,
-            job.location.latitude,
-            job.location.longitude
-          );
-          return { ...job, distance };
-        }
-        return job;
+        const distance = job.distance || calculateDistance(
+          latitude,
+          longitude,
+          job.location.latitude,
+          job.location.longitude
+        );
+        return { ...job, distance };
       }
       
-      // For jobs without coordinates but with distance, calculate position
+      // For jobs without coordinates or with invalid coordinates, calculate position
       const distance = job.distanceFromUser || (Math.random() * 5) + 2; // 2-7km if no distance
       
       // Convert km to radians
       const earthRadius = 6371; // km
       const distanceRadians = distance / earthRadius;
       
-      // Generate a random angle
-      const angle = (job.id ? parseInt(job.id.replace(/\D/g, '')) || Math.random() : Math.random()) * 2 * Math.PI;
+      // Generate a random angle - use job ID for consistency if available
+      const jobIdHash = job.id ? 
+        Array.from(job.id).reduce((a, c) => a + c.charCodeAt(0), 0) : 
+        Math.floor(Math.random() * 1000);
+      const angle = (jobIdHash % 360) * (Math.PI / 180);
       
       // Calculate new coordinates
       const latRadian = latitude * (Math.PI / 180);
@@ -102,7 +110,7 @@ export const useDynamicJobPositions = (
       const newLat = newLatRadian * (180 / Math.PI);
       const newLon = newLonRadian * (180 / Math.PI);
       
-      console.log(`Calculated position for job ${job.id}: [${newLat}, ${newLon}] at ${distance}km`);
+      console.log(`Generated position for job ${job.id}: [${newLat.toFixed(6)}, ${newLon.toFixed(6)}] at ${distance}km`);
       
       // Create a copy of the job with updated coordinates
       return {
@@ -112,7 +120,7 @@ export const useDynamicJobPositions = (
           latitude: newLat,
           longitude: newLon
         },
-        distance // Store the actual distance
+        distance
       };
     });
     
