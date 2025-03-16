@@ -1,26 +1,33 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { jobLocationsData } from '@/components/jobs/mockData';
 import LocationMatchingHeader from '@/components/jobs/location/LocationMatchingHeader';
 import FilterTabs, { FilterType } from '@/components/jobs/location/FilterTabs';
 import { Card, CardContent } from '@/components/ui/card';
 import JobMap from '@/components/JobMap';
+import { JobLocation } from '@/types/map';
 
 const JobLocationMatching = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  const [jobs, setJobs] = useState<JobLocation[]>(jobLocationsData);
+  
+  // Handle location updates from the map
+  const handleLocationUpdate = (updatedJobs: JobLocation[]) => {
+    setJobs(updatedJobs);
+  };
   
   // Filter jobs based on selected filter
   const getFilteredJobs = () => {
     switch (activeFilter) {
       case 'ai-top-10':
-        return [...jobLocationsData]
+        return [...jobs]
           .sort((a, b) => b.matchPercentage - a.matchPercentage)
           .slice(0, 10);
       case 'portfolio-match':
-        return jobLocationsData.filter(job => job.portfolioMatch);
+        return jobs.filter(job => job.portfolioMatch);
       case 'all':
       default:
-        return jobLocationsData;
+        return jobs;
     }
   };
 
@@ -32,7 +39,7 @@ const JobLocationMatching = () => {
 
       <div className="mb-6">
         <p className="text-gray-600">
-          Discover job opportunities near you! Enable location services to see jobs within your preferred radius.
+          Discover job opportunities near Al Fahidi Fort! Use the map to explore jobs within your preferred radius.
         </p>
       </div>
 
@@ -44,7 +51,7 @@ const JobLocationMatching = () => {
 
       <Card className="border-emirati-sandBeige mb-6">
         <CardContent className="p-6">
-          <JobMap jobs={filteredJobs} />
+          <JobMap jobs={filteredJobs} onLocationUpdate={handleLocationUpdate} />
         </CardContent>
       </Card>
     </div>

@@ -1,7 +1,6 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { JobLocation } from '@/types/map';
-import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
@@ -15,8 +14,19 @@ interface JobLocationTabProps {
   jobs: JobLocation[];
 }
 
-export const JobLocationTab = ({ jobs }: JobLocationTabProps) => {
+export const JobLocationTab = ({ jobs: initialJobs }: JobLocationTabProps) => {
   const [activeLocationFilter, setActiveLocationFilter] = useState<'ai-top-10' | 'portfolio-match' | 'all'>('all');
+  const [jobs, setJobs] = useState<JobLocation[]>(initialJobs);
+  
+  // Handle location updates from the map
+  const handleLocationUpdate = (updatedJobs: JobLocation[]) => {
+    setJobs(updatedJobs);
+  };
+
+  // Update jobs when initialJobs prop changes
+  useEffect(() => {
+    setJobs(initialJobs);
+  }, [initialJobs]);
 
   const getFilteredLocationJobs = () => {
     switch (activeLocationFilter) {
@@ -44,7 +54,7 @@ export const JobLocationTab = ({ jobs }: JobLocationTabProps) => {
     <div>
       <div className="mb-6">
         <p className="text-gray-600">
-          Discover job opportunities near you! Enable location services to see jobs within your preferred radius.
+          Discover job opportunities near Al Fahidi Fort! Use the map to explore jobs within your preferred radius.
         </p>
       </div>
 
@@ -81,7 +91,7 @@ export const JobLocationTab = ({ jobs }: JobLocationTabProps) => {
 
       <Card className="border-emirati-sandBeige mb-6">
         <CardContent className="p-6">
-          <JobMap jobs={filteredLocationJobs} />
+          <JobMap jobs={filteredLocationJobs} onLocationUpdate={handleLocationUpdate} />
         </CardContent>
       </Card>
     </div>

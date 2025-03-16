@@ -1,4 +1,3 @@
-
 // Job applications mock data
 export const initialApplications = [
   {
@@ -177,15 +176,15 @@ export const trainingProgramsData = [
   }
 ];
 
-// Map job locations mock data
+// Map job locations mock data with Al Fahidi Fort as center point
 export const jobLocationsData = [
   {
     id: '1',
     title: 'Software Engineer',
     company: 'Dubai Tech Solutions',
     location: {
-      latitude: 25.2048,
-      longitude: 55.2708,
+      latitude: 25.2635,
+      longitude: 55.2972,
       address: 'Downtown Dubai, UAE'
     },
     matchPercentage: 92,
@@ -196,9 +195,9 @@ export const jobLocationsData = [
     title: 'Marketing Manager',
     company: 'Abu Dhabi Marketing Group',
     location: {
-      latitude: 24.4539,
-      longitude: 54.3773,
-      address: 'Al Reem Island, Abu Dhabi, UAE'
+      latitude: 25.2580,
+      longitude: 55.3047,
+      address: 'Bur Dubai, UAE'
     },
     matchPercentage: 78,
     portfolioMatch: false
@@ -208,9 +207,9 @@ export const jobLocationsData = [
     title: 'Financial Analyst',
     company: 'Emirati Finance',
     location: {
-      latitude: 25.0657,
-      longitude: 55.1713,
-      address: 'Dubai Marina, UAE'
+      latitude: 25.2715,
+      longitude: 55.3020,
+      address: 'Dubai Creek, UAE'
     },
     matchPercentage: 85,
     portfolioMatch: true
@@ -220,9 +219,9 @@ export const jobLocationsData = [
     title: 'HR Specialist',
     company: 'Global HR Solutions',
     location: {
-      latitude: 25.1123,
-      longitude: 55.1862,
-      address: 'Jumeirah, Dubai, UAE'
+      latitude: 25.2690,
+      longitude: 55.2861,
+      address: 'Al Fahidi Historical District, Dubai, UAE'
     },
     matchPercentage: 70,
     portfolioMatch: false
@@ -232,14 +231,14 @@ export const jobLocationsData = [
     title: 'Project Manager',
     company: 'Construction UAE',
     location: {
-      latitude: 25.2744,
-      longitude: 55.3032,
-      address: 'Deira, Dubai, UAE'
+      latitude: 25.2593,
+      longitude: 55.2887,
+      address: 'Al Seef, Dubai, UAE'
     },
     matchPercentage: 88,
     portfolioMatch: true
   },
-  // Additional job listings at increasing distances (5km+)
+  // Additional job listings at increasing distances from Al Fahidi Fort
   {
     id: '6',
     title: 'UI/UX Designer',
@@ -247,7 +246,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0, // Will be calculated dynamically
       longitude: 0, // Will be calculated dynamically
-      address: 'Approximately 5km from your location'
+      address: 'Approximately 5km from Al Fahidi Fort'
     },
     matchPercentage: 89,
     portfolioMatch: true,
@@ -260,7 +259,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 8km from your location'
+      address: 'Approximately 8km from Al Fahidi Fort'
     },
     matchPercentage: 75,
     portfolioMatch: false,
@@ -273,7 +272,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 11km from your location'
+      address: 'Approximately 11km from Al Fahidi Fort'
     },
     matchPercentage: 82,
     portfolioMatch: true,
@@ -286,7 +285,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 14km from your location'
+      address: 'Approximately 14km from Al Fahidi Fort'
     },
     matchPercentage: 78,
     portfolioMatch: false,
@@ -299,7 +298,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 17km from your location'
+      address: 'Approximately 17km from Al Fahidi Fort'
     },
     matchPercentage: 91,
     portfolioMatch: true,
@@ -312,7 +311,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 20km from your location'
+      address: 'Approximately 20km from Al Fahidi Fort'
     },
     matchPercentage: 88,
     portfolioMatch: true,
@@ -325,7 +324,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 23km from your location'
+      address: 'Approximately 23km from Al Fahidi Fort'
     },
     matchPercentage: 76,
     portfolioMatch: false,
@@ -338,7 +337,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 26km from your location'
+      address: 'Approximately 26km from Al Fahidi Fort'
     },
     matchPercentage: 82,
     portfolioMatch: true,
@@ -351,7 +350,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 29km from your location'
+      address: 'Approximately 29km from Al Fahidi Fort'
     },
     matchPercentage: 95,
     portfolioMatch: true,
@@ -364,7 +363,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 32km from your location'
+      address: 'Approximately 32km from Al Fahidi Fort'
     },
     matchPercentage: 73,
     portfolioMatch: false,
@@ -377,7 +376,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 35km from your location'
+      address: 'Approximately 35km from Al Fahidi Fort'
     },
     matchPercentage: 85,
     portfolioMatch: true,
@@ -390,7 +389,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 38km from your location'
+      address: 'Approximately 38km from Al Fahidi Fort'
     },
     matchPercentage: 79,
     portfolioMatch: false,
@@ -403,7 +402,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 41km from your location'
+      address: 'Approximately 41km from Al Fahidi Fort'
     },
     matchPercentage: 87,
     portfolioMatch: true,
@@ -416,7 +415,7 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 44km from your location'
+      address: 'Approximately 44km from Al Fahidi Fort'
     },
     matchPercentage: 81,
     portfolioMatch: true,
@@ -429,21 +428,21 @@ export const jobLocationsData = [
     location: {
       latitude: 0,
       longitude: 0,
-      address: 'Approximately 47km from your location'
+      address: 'Approximately 47km from Al Fahidi Fort'
     },
     matchPercentage: 72,
     portfolioMatch: false,
     distanceFromUser: 47
   },
-  // Additional workplace entry for setting user's work location
+  // Additional workplace entry for Al Fahidi Fort
   {
     id: 'workplace',
-    title: 'Your Workplace',
-    company: 'Set your workplace location',
+    title: 'Your Location',
+    company: 'Al Fahidi Fort',
     location: {
-      latitude: 25.1972,
-      longitude: 55.2744,
-      address: 'Your workplace location'
+      latitude: 25.2637,
+      longitude: 55.2972,
+      address: 'Al Fahidi Fort, Dubai, UAE'
     },
     matchPercentage: 100,
     portfolioMatch: true

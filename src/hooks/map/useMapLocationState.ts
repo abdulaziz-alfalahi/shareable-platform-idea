@@ -6,7 +6,8 @@ import { calculateDistanceCoordinates } from '@/components/map/mapUtils';
 
 export const useMapLocationState = (onLocationUpdate?: (jobs: JobLocation[]) => void) => {
   const [mapboxToken, setMapboxToken] = useState<string>('');
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  // Set default location to Al Fahidi Fort
+  const [userLocation, setUserLocation] = useState<[number, number] | null>([55.2972, 25.2637]);
   const [tokenSubmitted, setTokenSubmitted] = useState<boolean>(false);
   const [locationSearch, setLocationSearch] = useState<string>('');
   const { toast } = useToast();
