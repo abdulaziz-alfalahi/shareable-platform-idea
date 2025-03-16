@@ -21,7 +21,38 @@ export const useJobFiltering = () => {
     // Store all jobs received for later reference
     if (jobs.length > 0) {
       console.log('Storing job data:', jobs);
-      setAllJobs(jobs);
+      // Process jobs to ensure each has valid location data
+      const processedJobs = jobs.map(job => {
+        // Ensure location object exists
+        if (!job.location) {
+          return {
+            ...job,
+            location: {
+              latitude: 25.2637 + (Math.random() * 0.1 - 0.05),  // Default to near Al Fahidi Fort with slight variation
+              longitude: 55.2972 + (Math.random() * 0.1 - 0.05),
+              address: job.company || 'Unknown location'
+            }
+          };
+        }
+        
+        // Ensure latitude and longitude exist and are valid numbers
+        if (!job.location.latitude || !job.location.longitude || 
+            isNaN(job.location.latitude) || isNaN(job.location.longitude)) {
+          return {
+            ...job,
+            location: {
+              ...job.location,
+              latitude: 25.2637 + (Math.random() * 0.1 - 0.05),
+              longitude: 55.2972 + (Math.random() * 0.1 - 0.05),
+              address: job.location.address || job.company || 'Unknown location'
+            }
+          };
+        }
+        
+        return job;
+      });
+      
+      setAllJobs(processedJobs);
     }
 
     try {
@@ -37,12 +68,22 @@ export const useJobFiltering = () => {
       console.log('Filtering', jobsToFilter.length, 'jobs');
       
       // Ensure all jobs have valid location data
-      const validJobs = jobsToFilter.filter(job => {
-        if (!job.location || !job.location.latitude || !job.location.longitude) {
-          console.warn(`Job ${job.id} has invalid location data, skipping`);
-          return false;
+      const validJobs = jobsToFilter.map(job => {
+        // Fix any jobs with invalid location data
+        if (!job.location || !job.location.latitude || !job.location.longitude || 
+            isNaN(job.location.latitude) || isNaN(job.location.longitude)) {
+          console.log(`Fixing job ${job.id} with invalid location data`);
+          return {
+            ...job,
+            location: {
+              ...(job.location || {}),
+              latitude: 25.2637 + (Math.random() * 0.1 - 0.05),
+              longitude: 55.2972 + (Math.random() * 0.1 - 0.05),
+              address: job.location?.address || job.company || 'Unknown location'
+            }
+          };
         }
-        return true;
+        return job;
       });
       
       // Calculate distance for each job
@@ -68,7 +109,7 @@ export const useJobFiltering = () => {
       
       // Store in localStorage for debugging
       localStorage.setItem('nearbyJobs', JSON.stringify(nearby));
-      localStorage.setItem('currentJobs', JSON.stringify(nearby));
+      localStorage.setItem('currentJobs', JSON.stringify(validJobs)); // Store all valid jobs
     } catch (error) {
       console.error('Error finding nearby jobs:', error);
       toast({

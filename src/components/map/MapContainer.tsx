@@ -5,6 +5,7 @@ import { JobLocation } from '@/types/map';
 import useMapInitialization from '@/hooks/map/useMapInitialization';
 import UserLocationMarker from './UserLocationMarker';
 import JobMarkers from './JobMarkers';
+import { useToast } from '@/components/ui/use-toast';
 
 interface MapContainerProps {
   mapboxToken: string;
@@ -27,6 +28,11 @@ const MapContainer: React.FC<MapContainerProps> = ({
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [mapReady, setMapReady] = useState(false);
+  const { toast } = useToast();
+  
+  // Use Al Fahidi Fort as default if user location is null
+  const defaultLocation: [number, number] = [55.2972, 25.2637];
+  const centerLocation = userLocation || defaultLocation;
   
   // Log jobs for debugging
   useEffect(() => {
@@ -40,10 +46,22 @@ const MapContainer: React.FC<MapContainerProps> = ({
   const map = useMapInitialization({
     mapboxToken,
     containerRef: mapContainer,
-    initialCenter: userLocation || [55.2972, 25.2637], // Default to Al Fahidi Fort
+    initialCenter: centerLocation,
     onMapLoaded: () => {
       console.log('Map is initialized and ready');
       setMapReady(true);
+      
+      // Set user location if not already set
+      if (!userLocation) {
+        console.log('Setting default user location to', defaultLocation);
+        setUserLocation(defaultLocation);
+      }
+      
+      // If no jobs have locations yet, find nearby jobs using current center
+      if (jobs.length === 0 || jobs.every(job => !job.location)) {
+        console.log('No jobs with locations, finding nearby jobs');
+        findNearbyJobs(centerLocation[1], centerLocation[0]);
+      }
     }
   });
 
