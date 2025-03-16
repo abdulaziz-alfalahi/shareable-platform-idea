@@ -83,7 +83,8 @@ export function useToast() {
       setToasts(state.toasts || []);
     }
 
-    const unsubscribe = subscribeToStore(handleChange);
+    // Direct import from store to avoid require() issues
+    const unsubscribe = subscribe(handleChange);
     return unsubscribe;
   }, []);
 
@@ -101,13 +102,5 @@ export function useToast() {
   };
 }
 
-// Helper function to subscribe to the store
-function subscribeToStore(callback: (state: { toasts: Toast[] }) => void) {
-  return subscribe(callback);
-}
-
-// Importing from store.ts
-function subscribe(callback: (state: { toasts: Toast[] }) => void) {
-  const { subscribe } = require("./store");
-  return subscribe(callback);
-}
+// Import directly from store.ts instead of using require()
+import { subscribe } from "./store";

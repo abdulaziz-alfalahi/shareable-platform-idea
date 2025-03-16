@@ -14,7 +14,7 @@ const convertToCareerVacancy = (uiVacancies: UIVacancy[]): Vacancy[] => {
     location: vacancy.location,
     type: "full-time", // Default value since UI Vacancy doesn't have this
     salary: vacancy.salary || "",
-    description: vacancy.description || ""
+    description: vacancy.description || "" // Always provide a default value
   }));
 };
 
@@ -87,7 +87,7 @@ export const getJobMatchDetails = (student: Student, vacancy: UIVacancy): JobMat
     location: vacancy.location,
     type: "full-time",
     salary: vacancy.salary || "",
-    description: vacancy.description || ""
+    description: vacancy.description || "" // Ensure description is provided
   };
   
   return getDetailedJobMatch(student, careerVacancy);

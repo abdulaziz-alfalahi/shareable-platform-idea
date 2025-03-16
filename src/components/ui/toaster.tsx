@@ -18,7 +18,7 @@ export function Toaster() {
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, type, read, ...props }) {
         return (
-          <Toast key={id} {...props} variant={type as any} type={type as any}>
+          <Toast key={id} {...props} variant={type as any}>
             <div className="grid gap-1">
               <div className="flex items-center gap-2">
                 {read === false && <span className="h-2 w-2 rounded-full bg-blue-500"></span>}
