@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,7 +21,7 @@ const PersonalInfoFields: React.FC<PersonalInfoFieldsProps> = ({
           name="studentName" 
           value={formData.studentName}
           onChange={handleChange}
-          placeholder="e.g. Mohammed Al Maktoum"
+          placeholder="e.g. Abdulaziz Alfalahi"
           required
         />
       </div>

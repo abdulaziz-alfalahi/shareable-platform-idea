@@ -24,7 +24,7 @@ const sampleCertificate: Certificate = {
   id: "cert-123",
   programName: "Advanced Digital Marketing",
   centerName: "Emirates Skills Hub",
-  studentName: "Mohammed Al Maktoum",
+  studentName: "Abdulaziz Alfalahi",
   completionDate: "October 15, 2023",
   certificateNumber: "ESH-DM-2023-0042"
 };
