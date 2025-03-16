@@ -28,6 +28,7 @@ export const useJobFiltering = () => {
       
       if (jobsToFilter.length === 0) {
         console.log('No jobs to filter');
+        setNearbyJobs([]);
         return;
       }
 
@@ -50,6 +51,7 @@ export const useJobFiltering = () => {
       
       // Store in localStorage for debugging
       localStorage.setItem('nearbyJobs', JSON.stringify(nearby));
+      localStorage.setItem('currentJobs', JSON.stringify(nearby));
     } catch (error) {
       console.error('Error finding nearby jobs:', error);
       toast({

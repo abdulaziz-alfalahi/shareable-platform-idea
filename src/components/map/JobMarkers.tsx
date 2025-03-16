@@ -18,117 +18,103 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
 }) => {
   const workplaceMarker = useRef<mapboxgl.Marker | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
-  const isAddingMarkers = useRef(false);
-  const prevJobsLength = useRef<number>(0);
+  const prevJobsRef = useRef<JobLocation[]>([]);
 
-  useEffect(() => {
-    // Only proceed if map is fully loaded
+  // Clear all markers
+  const clearAllMarkers = () => {
+    console.log('Clearing all markers, count:', markersRef.current.length);
+    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current = [];
+    
+    if (workplaceMarker.current) {
+      workplaceMarker.current.remove();
+      workplaceMarker.current = null;
+    }
+  };
+
+  // Add markers for jobs
+  const addMarkers = () => {
     if (!map.current || !map.current.loaded()) {
-      console.log('Map not loaded yet, skipping marker addition');
+      console.log('Map not ready, skipping marker addition');
       return;
     }
     
-    // Flag to prevent multiple attempts to add markers simultaneously
-    if (isAddingMarkers.current) {
-      console.log('Already adding markers, skipping');
-      return;
-    }
+    console.log(`Adding ${jobs.length} markers to map`);
 
-    console.log(`JobMarkers useEffect triggered with ${jobs.length} jobs`);
+    clearAllMarkers();
     
-    // Function to add markers to the map
-    const addMarkers = () => {
-      if (!map.current || !map.current.loaded()) {
-        console.log('Map not loaded yet, will retry');
+    jobs.forEach(job => {
+      if (!job.location) {
+        console.log(`Skipping job ${job.id} - missing location`);
         return;
       }
-      
-      isAddingMarkers.current = true;
+
+      // Skip jobs with invalid coordinates
+      if (isNaN(job.location.latitude) || isNaN(job.location.longitude)) {
+        console.log(`Skipping job ${job.id} - invalid coordinates:`, job.location);
+        return;
+      }
 
       try {
-        // Clear any existing markers
-        markersRef.current.forEach(marker => marker.remove());
-        markersRef.current = [];
-
-        if (workplaceMarker.current) {
-          workplaceMarker.current.remove();
-          workplaceMarker.current = null;
-        }
-
-        console.log(`Adding ${jobs.length} markers to map`);
-
-        // Add job markers
-        jobs.forEach(job => {
-          if (!map.current || !job.location) {
-            console.log(`Skipping job ${job.id} - missing map or location`);
-            return;
-          }
-
-          // Skip jobs with invalid coordinates
-          if (isNaN(job.location.latitude) || isNaN(job.location.longitude)) {
-            console.log(`Skipping job ${job.id} - invalid coordinates:`, job.location);
-            return;
-          }
-
-          try {
-            if (job.id === "workplace" && onLocationUpdate) {
-              // Create a draggable marker for the workplace
-              workplaceMarker.current = new mapboxgl.Marker({ color: '#f59e0b', draggable: true })
-                .setLngLat([job.location.longitude, job.location.latitude])
-                .setPopup(
-                  new mapboxgl.Popup().setHTML(
-                    `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || "Drag to set location"}</p>`
-                  )
-                );
-              
-              // Add to map  
-              workplaceMarker.current.addTo(map.current);
-              
-              // Update job location when marker is dragged
-              workplaceMarker.current.on('dragend', () => {
-                if (workplaceMarker.current) {
-                  const lngLat = workplaceMarker.current.getLngLat();
-                  // Reverse geocode to get address
-                  reverseGeocode(lngLat.lat, lngLat.lng);
-                }
-              });
-            } else {
-              // Regular non-draggable marker
-              const marker = new mapboxgl.Marker({ color: '#f59e0b' })
-                .setLngLat([job.location.longitude, job.location.latitude])
-                .setPopup(
-                  new mapboxgl.Popup().setHTML(
-                    `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || ""}</p><p>Match: ${job.matchPercentage || 0}%</p>`
-                  )
-                );
-              
-              // Add to map
-              marker.addTo(map.current);
-              markersRef.current.push(marker);
+        if (job.id === "workplace" && onLocationUpdate) {
+          // Create a draggable marker for the workplace
+          workplaceMarker.current = new mapboxgl.Marker({ color: '#f59e0b', draggable: true })
+            .setLngLat([job.location.longitude, job.location.latitude])
+            .setPopup(
+              new mapboxgl.Popup().setHTML(
+                `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || "Drag to set location"}</p>`
+              )
+            );
+          
+          // Add to map  
+          workplaceMarker.current.addTo(map.current);
+          
+          // Update job location when marker is dragged
+          workplaceMarker.current.on('dragend', () => {
+            if (workplaceMarker.current) {
+              const lngLat = workplaceMarker.current.getLngLat();
+              // Reverse geocode to get address
+              reverseGeocode(lngLat.lat, lngLat.lng);
             }
-          } catch (error) {
-            console.error("Error adding marker:", error, job);
-          }
-        });
-        
-        console.log(`Added ${markersRef.current.length} markers to the map`);
-        prevJobsLength.current = jobs.length;
+          });
+        } else {
+          // Regular non-draggable marker
+          const marker = new mapboxgl.Marker({ color: '#f59e0b' })
+            .setLngLat([job.location.longitude, job.location.latitude])
+            .setPopup(
+              new mapboxgl.Popup().setHTML(
+                `<h3>${job.title}</h3><p>${job.company}</p><p>${job.location.address || ""}</p><p>Match: ${job.matchPercentage || 0}%</p>`
+              )
+            );
+          
+          // Add to map
+          marker.addTo(map.current);
+          markersRef.current.push(marker);
+        }
       } catch (error) {
-        console.error("Error in marker addition process:", error);
-      } finally {
-        isAddingMarkers.current = false;
+        console.error("Error adding marker:", error, job);
       }
-    };
+    });
+    
+    console.log(`Added ${markersRef.current.length} markers to the map`);
+    prevJobsRef.current = [...jobs];
+  };
 
-    // Add markers if map is ready
-    addMarkers();
+  useEffect(() => {
+    // Only add markers if the jobs array actually changed
+    const jobsChanged = jobs.length !== prevJobsRef.current.length ||
+      jobs.some((job, index) => {
+        const prevJob = prevJobsRef.current[index];
+        return !prevJob || job.id !== prevJob.id;
+      });
 
+    if (jobsChanged && map.current && map.current.loaded()) {
+      console.log('Jobs changed, updating markers');
+      addMarkers();
+    }
+    
     return () => {
-      // Clean up markers
-      markersRef.current.forEach(marker => marker.remove());
-      if (workplaceMarker.current) {
-        workplaceMarker.current.remove();
-      }
+      clearAllMarkers();
     };
   }, [map, jobs, onLocationUpdate, reverseGeocode]);
 

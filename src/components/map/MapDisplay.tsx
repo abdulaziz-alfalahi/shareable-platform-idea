@@ -59,8 +59,13 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
     );
   }
 
-  // For map display, we want to show the filtered jobs
+  // For map display, we want to show the filtered jobs if there are any, or all jobs otherwise
   const displayJobs = nearbyJobs.length > 0 ? nearbyJobs : jobs;
+  
+  // Log what we're displaying
+  useEffect(() => {
+    console.log(`MapDisplay displaying ${displayJobs.length} jobs on the map`);
+  }, [displayJobs]);
 
   // Display map and controls if token is provided
   return (
