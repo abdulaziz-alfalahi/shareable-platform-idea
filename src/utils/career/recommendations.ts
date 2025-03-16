@@ -13,7 +13,7 @@ const convertToCareerVacancy = (uiVacancies: UIVacancy[]): Vacancy[] => {
     requiredSkills: vacancy.requiredSkills,
     location: vacancy.location,
     type: "full-time", // Default value since UI Vacancy doesn't have this
-    salary: vacancy.salary,
+    salary: vacancy.salary || "",
     description: vacancy.description || ""
   }));
 };
@@ -86,8 +86,8 @@ export const getJobMatchDetails = (student: Student, vacancy: UIVacancy): JobMat
     requiredSkills: vacancy.requiredSkills,
     location: vacancy.location,
     type: "full-time",
-    salary: vacancy.salary,
-    description: vacancy.description
+    salary: vacancy.salary || "",
+    description: vacancy.description || ""
   };
   
   return getDetailedJobMatch(student, careerVacancy);
