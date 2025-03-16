@@ -6,9 +6,11 @@ import { useToast } from "@/hooks/toast";
 import PassportHeader from "./PassportHeader";
 import PassportNavigation from "./layout/PassportNavigation";
 import PassportTabsContent from "./layout/PassportTabsContent";
+import { studentData } from "@/data/studentMockData";
+import { getPassportStamps } from "@/services/passport/passportService";
 
 interface CareerPassportProps {
-  userId?: string; // Make userId optional since we might have a default user
+  userId?: number; // Make userId optional since we might have a default user
   student?: Student; // Make student optional as well
 }
 
@@ -16,47 +18,73 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ userId, student: propSt
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("passport");
   const [student, setStudent] = useState<Student | undefined>(propStudent);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // If we don't have a student from props, and we have a userId, fetch the student data
-    if (!propStudent && userId) {
-      // For now, we'll use a mock student
-      // In a real application, you would fetch the student data from an API
-      const mockStudent: Student = {
-        id: Number(userId) || 1,
-        name: "Ahmed Al Mansouri",
-        program: "Computer Science",
-        year: 3,
-        gradeLevel: "university-3",
-        gpa: 3.8,
-        advisingStatus: "On Track",
-        riskLevel: "Low",
-        progress: 75,
-        lastMeeting: "2023-11-15",
-        nextMeeting: "2023-12-15",
-        careerPath: "Software Engineering",
-        flagged: false,
-        coursesCompleted: 18,
-        totalCourses: 24,
-        achievements: ["Dean's List", "Hackathon Winner"],
-        notes: "Showing great progress in programming courses.",
-        goals: [],
-        feedback: [],
-        passportStamps: [],
-        careerMilestones: [],
-        passportLevel: 3,
-        totalPoints: 450,
-        leaderboardRank: 1
-      };
+    const loadPassportData = async () => {
+      setLoading(true);
+      setError(null);
       
-      setStudent(mockStudent);
-    }
-  }, [userId, propStudent]);
+      try {
+        // If we don't have a student from props, use either the userId or the default mock data
+        const baseStudent = propStudent || (userId ? { ...studentData, id: userId } : studentData);
+        
+        // Fetch passport stamps
+        const stamps = await getPassportStamps(baseStudent.id);
+        console.log("Fetched passport stamps:", stamps);
+        
+        // Update the student with the stamps
+        setStudent({
+          ...baseStudent,
+          passportStamps: stamps
+        });
+      } catch (err) {
+        console.error("Error loading passport data:", err);
+        setError("Failed to load passport data. Please try again.");
+        toast({
+          title: "Error",
+          description: "Failed to load passport data. Please try again.",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadPassportData();
+  }, [userId, propStudent, toast]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-lg text-gray-500">Loading passport data...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-md p-4 text-center">
+        <p className="text-red-700">{error}</p>
+        <button 
+          className="mt-2 bg-emirati-oasisGreen text-white px-4 py-2 rounded"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   if (!student) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-lg text-gray-500">Loading passport data...</p>
+        <p className="text-lg text-gray-500">No passport data available.</p>
       </div>
     );
   }
@@ -68,7 +96,7 @@ const CareerPassport: React.FC<CareerPassportProps> = ({ userId, student: propSt
       <Tabs
         defaultValue="passport"
         value={activeTab}
-        onValueChange={setActiveTab}
+        onValueChange={handleTabChange}
         className="w-full"
       >
         <PassportNavigation />

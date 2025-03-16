@@ -1,59 +1,72 @@
 
 import React from "react";
 import { PassportStamp } from "@/types/student";
-import { Award, Trophy, Star } from "lucide-react";
+import AchievementIcon from "./achievement/AchievementIcon";
 
 interface RecentAchievementsProps {
   achievements: PassportStamp[];
   loading: boolean;
+  error?: string | null;
 }
 
 const RecentAchievements: React.FC<RecentAchievementsProps> = ({ 
   achievements, 
-  loading 
+  loading,
+  error 
 }) => {
-  // Icon component function for displaying the appropriate icon
-  const getIconComponent = (iconName: string) => {
-    switch (iconName) {
-      case "award": return <Award className="h-4 w-4" />;
-      case "trophy": return <Trophy className="h-4 w-4" />;
-      case "star": return <Star className="h-4 w-4" />;
-      default: return <Award className="h-4 w-4" />;
-    }
-  };
-
   if (loading) {
     return (
-      <div className="text-center py-2">
-        <p className="text-sm text-muted-foreground">Loading achievements...</p>
+      <div className="py-2">
+        <h3 className="text-sm font-medium mb-2">Recent Achievements</h3>
+        <div className="animate-pulse space-y-2">
+          <div className="h-8 bg-gray-200 rounded"></div>
+          <div className="h-8 bg-gray-200 rounded"></div>
+        </div>
       </div>
     );
   }
 
-  if (achievements.length === 0) {
+  if (error) {
     return (
-      <div className="text-center py-4">
-        <p className="text-sm text-muted-foreground">No achievements yet</p>
+      <div className="py-2">
+        <h3 className="text-sm font-medium mb-2">Recent Achievements</h3>
+        <div className="text-sm text-red-500">{error}</div>
+      </div>
+    );
+  }
+
+  if (!achievements || achievements.length === 0) {
+    return (
+      <div className="py-2">
+        <h3 className="text-sm font-medium mb-2">Recent Achievements</h3>
+        <p className="text-sm text-gray-500">No achievements yet. Complete challenges to earn stamps!</p>
       </div>
     );
   }
 
   return (
-    <>
-      <h4 className="text-xs font-medium text-muted-foreground">Recent Achievements</h4>
-      {achievements.map((stamp: PassportStamp) => (
-        <div key={stamp.id} className="flex items-center space-x-2 py-1 border-b last:border-0">
-          <div className="p-1 bg-primary/10 rounded">
-            {getIconComponent(stamp.iconName)}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{stamp.title}</p>
-            <p className="text-xs text-muted-foreground">{stamp.dateEarned}</p>
-          </div>
-        </div>
-      ))}
-    </>
+    <div className="py-2">
+      <h3 className="text-sm font-medium mb-2">Recent Achievements</h3>
+      <ul className="space-y-2">
+        {achievements.map((achievement) => (
+          <li key={achievement.id} className="flex items-center gap-2 p-1 hover:bg-gray-50 rounded">
+            <AchievementIcon 
+              name={achievement.iconName} 
+              level={achievement.level} 
+              size="sm" 
+            />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{achievement.title}</p>
+              <p className="text-xs text-gray-500 truncate">{achievement.description}</p>
+            </div>
+            <span className="text-xs text-gray-400">
+              {new Date(achievement.dateEarned).toLocaleDateString()}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
-export default React.memo(RecentAchievements);
+export default RecentAchievements;
