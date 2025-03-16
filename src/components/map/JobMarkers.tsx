@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { JobLocation } from '@/types/map';
 
@@ -18,11 +18,9 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
 }) => {
   const workplaceMarker = useRef<mapboxgl.Marker | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
-  const [mapReady, setMapReady] = useState(false);
   
   // Clear all markers
   const clearAllMarkers = () => {
-    console.log('Clearing all markers, count:', markersRef.current.length);
     markersRef.current.forEach(marker => marker.remove());
     markersRef.current = [];
     
@@ -39,19 +37,8 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
       return;
     }
     
-    if (!map.current.loaded()) {
-      console.warn('Map not fully loaded yet, deferring marker addition');
-      return;
-    }
-    
     console.log(`Adding ${jobs.length} job markers to map`);
-    console.table(jobs.map(job => ({
-      id: job.id,
-      title: job.title,
-      lat: job.location?.latitude,
-      lng: job.location?.longitude
-    })));
-
+    
     // Clear existing markers first
     clearAllMarkers();
     
@@ -121,57 +108,34 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     console.log(`Successfully added ${markersRef.current.length} markers to the map`);
   };
 
-  // Set up event listener for map load
+  // Update markers when map is ready and jobs change
   useEffect(() => {
-    if (!map.current) {
-      console.warn('Map reference is not available');
-      return;
-    }
+    if (!map.current) return;
+    
+    console.log('Checking if map is loaded to add markers');
     
     const handleMapLoad = () => {
-      console.log('Map loaded event detected in JobMarkers');
-      setMapReady(true);
+      console.log('Map loaded event fired, adding markers');
       addMarkers();
     };
     
     if (map.current.loaded()) {
-      console.log('Map already loaded in JobMarkers component');
-      setMapReady(true);
+      console.log('Map already loaded, adding markers now');
       addMarkers();
     } else {
-      console.log('Waiting for map to load in JobMarkers');
-      map.current.on('load', handleMapLoad);
+      console.log('Map not loaded yet, adding load event listener');
+      map.current.once('load', handleMapLoad);
     }
     
     return () => {
       if (map.current) {
         map.current.off('load', handleMapLoad);
       }
-    };
-  }, [map.current]);
-
-  // Update markers when jobs change
-  useEffect(() => {
-    if (!map.current) return;
-    
-    console.log('Jobs data changed, job count:', jobs.length);
-    
-    if (mapReady) {
-      console.log('Map is ready, updating markers');
-      addMarkers();
-    } else {
-      console.log('Map not ready yet, will add markers when map loads');
-    }
-  }, [jobs, mapReady]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
       clearAllMarkers();
     };
-  }, []);
+  }, [map.current, jobs]);
 
-  return null; // This is a logic-only component
+  return null;
 };
 
 export default JobMarkers;

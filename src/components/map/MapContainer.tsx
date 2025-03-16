@@ -40,7 +40,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
   const map = useMapInitialization({
     mapboxToken,
     containerRef: mapContainer,
-    initialCenter: userLocation || undefined,
+    initialCenter: userLocation || [55.2972, 25.2637], // Default to Al Fahidi Fort
     onMapLoaded: () => {
       console.log('Map is initialized and ready');
       setMapReady(true);
