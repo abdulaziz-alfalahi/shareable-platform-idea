@@ -39,6 +39,14 @@ const MapContainer: React.FC<MapContainerProps> = ({
     }
   });
 
+  // Log jobs for debugging
+  useEffect(() => {
+    console.log(`MapContainer received ${jobs.length} jobs to display`);
+    if (jobs.length > 0) {
+      console.log('First job sample:', jobs[0]);
+    }
+  }, [jobs]);
+
   return (
     <div ref={mapContainer} className="h-[500px] rounded-lg border border-gray-200 shadow-sm">
       {map.current && mapReady && (

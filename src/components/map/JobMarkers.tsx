@@ -20,26 +20,22 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const isAddingMarkers = useRef(false);
   const prevJobsLength = useRef<number>(0);
-  const prevJobsRef = useRef<JobLocation[]>([]);
 
   useEffect(() => {
     // Only proceed if map is fully loaded
-    if (!map.current) return;
-    
-    // Compare jobs using JSON to prevent unnecessary re-renders
-    const currentJobsString = JSON.stringify(jobs.map(job => job.id));
-    const prevJobsString = JSON.stringify(prevJobsRef.current.map(job => job.id));
-    
-    if (currentJobsString === prevJobsString && markersRef.current.length > 0) {
-      return; // Skip if jobs haven't changed and we already have markers
+    if (!map.current || !map.current.loaded()) {
+      console.log('Map not loaded yet, skipping marker addition');
+      return;
     }
     
-    prevJobsRef.current = [...jobs];
-    prevJobsLength.current = jobs.length;
-
     // Flag to prevent multiple attempts to add markers simultaneously
-    if (isAddingMarkers.current) return;
+    if (isAddingMarkers.current) {
+      console.log('Already adding markers, skipping');
+      return;
+    }
 
+    console.log(`JobMarkers useEffect triggered with ${jobs.length} jobs`);
+    
     // Function to add markers to the map
     const addMarkers = () => {
       if (!map.current || !map.current.loaded()) {
@@ -63,7 +59,16 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
 
         // Add job markers
         jobs.forEach(job => {
-          if (!map.current || !job.location) return;
+          if (!map.current || !job.location) {
+            console.log(`Skipping job ${job.id} - missing map or location`);
+            return;
+          }
+
+          // Skip jobs with invalid coordinates
+          if (isNaN(job.location.latitude) || isNaN(job.location.longitude)) {
+            console.log(`Skipping job ${job.id} - invalid coordinates:`, job.location);
+            return;
+          }
 
           try {
             if (job.id === "workplace" && onLocationUpdate) {
@@ -76,10 +81,8 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
                   )
                 );
               
-              // Add to map if it's loaded  
-              if (map.current.loaded()) {
-                workplaceMarker.current.addTo(map.current);
-              }
+              // Add to map  
+              workplaceMarker.current.addTo(map.current);
               
               // Update job location when marker is dragged
               workplaceMarker.current.on('dragend', () => {
@@ -99,11 +102,9 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
                   )
                 );
               
-              // Add to map if it's loaded
-              if (map.current && map.current.loaded()) {
-                marker.addTo(map.current);
-                markersRef.current.push(marker);
-              }
+              // Add to map
+              marker.addTo(map.current);
+              markersRef.current.push(marker);
             }
           } catch (error) {
             console.error("Error adding marker:", error, job);
@@ -111,6 +112,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
         });
         
         console.log(`Added ${markersRef.current.length} markers to the map`);
+        prevJobsLength.current = jobs.length;
       } catch (error) {
         console.error("Error in marker addition process:", error);
       } finally {
@@ -118,26 +120,8 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
       }
     };
 
-    // Try to add markers if map is ready
-    if (map.current.loaded()) {
-      addMarkers();
-    } else {
-      // Set up a load event listener for when the map is ready
-      const loadHandler = () => {
-        console.log('Map loaded, adding markers');
-        setTimeout(() => {
-          addMarkers();
-        }, 500); // Small delay to ensure map is fully initialized
-      };
-      
-      map.current.on('load', loadHandler);
-      
-      return () => {
-        if (map.current) {
-          map.current?.off('load', loadHandler);
-        }
-      };
-    }
+    // Add markers if map is ready
+    addMarkers();
 
     return () => {
       // Clean up markers

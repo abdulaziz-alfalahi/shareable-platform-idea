@@ -12,16 +12,26 @@ export const useJobFiltering = () => {
   const { toast } = useToast();
 
   // Find jobs within the search radius
-  const findNearbyJobs = (latitude: number, longitude: number, jobs: JobLocation[]) => {
-    if (!jobs.length) return;
-
+  const findNearbyJobs = (latitude: number, longitude: number, jobs: JobLocation[] = []) => {
     console.log(`Finding jobs near [${latitude}, ${longitude}] within ${searchRadius}km radius`);
+    console.log(`Total jobs to filter: ${jobs.length}`);
     
     setUserCoordinates([longitude, latitude]);
-    setAllJobs(jobs);
+    
+    if (jobs.length > 0) {
+      setAllJobs(jobs);
+    }
 
     try {
-      const nearby = jobs.map(job => {
+      // Use allJobs as fallback if no jobs provided
+      const jobsToFilter = jobs.length > 0 ? jobs : allJobs;
+      
+      if (jobsToFilter.length === 0) {
+        console.log('No jobs to filter');
+        return;
+      }
+
+      const nearby = jobsToFilter.map(job => {
         if (!job.location) return { ...job, distance: Infinity };
 
         // Calculate distance using Haversine formula
@@ -37,6 +47,9 @@ export const useJobFiltering = () => {
 
       console.log(`Found ${nearby.length} jobs within ${searchRadius}km radius`);
       setNearbyJobs(nearby);
+      
+      // Store in localStorage for debugging
+      localStorage.setItem('nearbyJobs', JSON.stringify(nearby));
     } catch (error) {
       console.error('Error finding nearby jobs:', error);
       toast({
@@ -50,6 +63,7 @@ export const useJobFiltering = () => {
   // Recalculate when radius changes
   useEffect(() => {
     if (userCoordinates && allJobs.length > 0) {
+      console.log(`Radius changed to ${searchRadius}km, recalculating nearby jobs`);
       findNearbyJobs(userCoordinates[1], userCoordinates[0], allJobs);
     }
   }, [searchRadius]);

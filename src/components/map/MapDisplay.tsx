@@ -59,8 +59,8 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
     );
   }
 
-  // For map display, we want to show the filtered jobs from the parent
-  const displayJobs = jobs;
+  // For map display, we want to show the filtered jobs
+  const displayJobs = nearbyJobs.length > 0 ? nearbyJobs : jobs;
 
   // Display map and controls if token is provided
   return (
