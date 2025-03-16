@@ -13,9 +13,12 @@ import {
 import { UaeStatCard } from "@/components/ui/uae";
 import DashboardTabs from "./monitoring/DashboardTabs";
 import { UaeDecoContainer, UaeDivider } from "@/components/ui/uae";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const MonitoringDashboard = () => {
   const [timeRange, setTimeRange] = useState("6m");
+  
+  console.log("MonitoringDashboard rendering");
 
   // Map the icon strings to actual icon components
   // Ensure trend is strictly typed as "up" | "down"
@@ -29,41 +32,43 @@ const MonitoringDashboard = () => {
   }));
 
   return (
-    <UaeDecoContainer 
-      variant="desert" 
-      decoration="pattern" 
-      patternUrl="https://www.transparenttextures.com/patterns/arabesque.png"
-      className="space-y-6"
-    >
-      <DashboardHeader timeRange={timeRange} setTimeRange={setTimeRange} />
+    <ErrorBoundary>
+      <UaeDecoContainer 
+        variant="desert" 
+        decoration="pattern" 
+        patternUrl="https://www.transparenttextures.com/patterns/arabesque.png"
+        className="space-y-6"
+      >
+        <DashboardHeader timeRange={timeRange} setTimeRange={setTimeRange} />
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statsCards.map((stat, index) => (
-          <UaeStatCard
-            key={index}
-            variant="desert"
-            title={stat.title}
-            value={stat.value}
-            change={stat.change}
-            trend={stat.trend}
-            icon={stat.icon}
-            description={stat.description}
-          />
-        ))}
-      </div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {statsCards.map((stat, index) => (
+            <UaeStatCard
+              key={index}
+              variant="desert"
+              title={stat.title}
+              value={stat.value}
+              change={stat.change}
+              trend={stat.trend}
+              icon={stat.icon}
+              description={stat.description}
+            />
+          ))}
+        </div>
 
-      <UaeDivider variant="gradient" />
+        <UaeDivider variant="gradient" />
 
-      {/* Charts */}
-      <DashboardTabs 
-        interviewData={interviewData}
-        candidateStatusData={candidateStatusData}
-        vacancyData={vacancyData}
-        advisorySessionsData={advisorySessionsData}
-        userGrowthData={userGrowthData}
-      />
-    </UaeDecoContainer>
+        {/* Charts */}
+        <DashboardTabs 
+          interviewData={interviewData}
+          candidateStatusData={candidateStatusData}
+          vacancyData={vacancyData}
+          advisorySessionsData={advisorySessionsData}
+          userGrowthData={userGrowthData}
+        />
+      </UaeDecoContainer>
+    </ErrorBoundary>
   );
 };
 

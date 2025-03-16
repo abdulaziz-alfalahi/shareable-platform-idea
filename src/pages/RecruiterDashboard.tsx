@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import RoleDashboardLayout, { DashboardTab, DashboardMetric } from "@/components/dashboard/RoleDashboardLayout";
-import { TabsContent } from "@/components/ui/tabs";
+import RoleDashboardLayout, { DashboardMetric } from "@/components/dashboard/RoleDashboardLayout";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Briefcase, UserCheck, ChevronRight, Clock, PlusCircle, BarChart2, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import ScheduleInterviewDialog from "@/components/recruiter/ScheduleInterviewDia
 import RecruiterDashboardTabs from "@/components/recruiter/dashboard/RecruiterDashboardTabs";
 import VideoInterviewPanel from "@/components/recruiter/VideoInterviewPanel";
 import { useNavigate } from "react-router-dom";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const vacancies = [
   {
@@ -66,19 +66,24 @@ const RecruiterDashboard = () => {
 
   // Set up demo notifications
   useEffect(() => {
-    setTimeout(() => {
+    const timer1 = setTimeout(() => {
       notifyRecruiter({
         title: "New Application",
         description: "Sarah Johnson has applied for UI/UX Designer position",
       });
     }, 2500);
 
-    setTimeout(() => {
+    const timer2 = setTimeout(() => {
       notifyRecruiter({
         title: "Upcoming Interview",
         description: "Interview with Michael Brown in 30 minutes",
       });
     }, 4500);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
   }, []);
 
   const dashboardMetrics: DashboardMetric[] = [
@@ -151,37 +156,39 @@ const RecruiterDashboard = () => {
   ];
 
   return (
-    <RoleDashboardLayout
-      title="Recruiter Dashboard"
-      subtitle="Find and connect with top Emirati talent"
-      role="recruiter"
-      metrics={dashboardMetrics}
-      actions={dashboardActions}
-    >
-      <RecruiterDashboardTabs
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onScheduleInterview={() => setIsScheduleInterviewDialogOpen(true)}
-        vacancies={vacancies}
-      />
-      
-      <ScheduleInterviewDialog
-        open={isScheduleInterviewDialogOpen}
-        onOpenChange={setIsScheduleInterviewDialogOpen}
-        onSchedule={handleScheduleInterview}
-      />
-      
-      <Dialog open={isVideoInterviewOpen} onOpenChange={setIsVideoInterviewOpen}>
-        <DialogContent className="max-w-5xl h-[80vh] p-0">
-          <VideoInterviewPanel
-            candidateName="Ahmed Al Mansouri"
-            candidateEmail="ahmed.almansouri@example.com"
-            positionTitle="Software Engineer"
-            onClose={() => setIsVideoInterviewOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
-    </RoleDashboardLayout>
+    <ErrorBoundary>
+      <RoleDashboardLayout
+        title="Recruiter Dashboard"
+        subtitle="Find and connect with top Emirati talent"
+        role="recruiter"
+        metrics={dashboardMetrics}
+        actions={dashboardActions}
+      >
+        <RecruiterDashboardTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onScheduleInterview={() => setIsScheduleInterviewDialogOpen(true)}
+          vacancies={vacancies}
+        />
+        
+        <ScheduleInterviewDialog
+          open={isScheduleInterviewDialogOpen}
+          onOpenChange={setIsScheduleInterviewDialogOpen}
+          onSchedule={handleScheduleInterview}
+        />
+        
+        <Dialog open={isVideoInterviewOpen} onOpenChange={setIsVideoInterviewOpen}>
+          <DialogContent className="max-w-5xl h-[80vh] p-0">
+            <VideoInterviewPanel
+              candidateName="Ahmed Al Mansouri"
+              candidateEmail="ahmed.almansouri@example.com"
+              positionTitle="Software Engineer"
+              onClose={() => setIsVideoInterviewOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      </RoleDashboardLayout>
+    </ErrorBoundary>
   );
 };
 

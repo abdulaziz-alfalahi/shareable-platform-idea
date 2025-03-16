@@ -8,6 +8,7 @@ import InterviewCalendar from "@/components/recruiter/InterviewCalendar";
 import InternTracking from "@/components/recruiter/InternTracking";
 import CompanyPartners from "@/components/recruiter/CompanyPartners";
 import MonitoringDashboard from "@/components/recruiter/MonitoringDashboard";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 interface RecruiterDashboardTabsProps {
   activeTab: string;
@@ -22,45 +23,47 @@ const RecruiterDashboardTabs: React.FC<RecruiterDashboardTabsProps> = ({
   onScheduleInterview,
   vacancies
 }) => {
+  console.log("RecruiterDashboardTabs rendering with activeTab:", activeTab);
+  
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-6">
-        <TabsTrigger value="vacancies">Vacancy Management</TabsTrigger>
-        <TabsTrigger value="candidates">Candidate Search</TabsTrigger>
-        <TabsTrigger value="interviews">Interviews</TabsTrigger>
-        <TabsTrigger value="interns">Intern Tracking</TabsTrigger>
-        <TabsTrigger value="companies">Company Partners</TabsTrigger>
-        <TabsTrigger value="monitoring" className="flex items-center gap-1">
-          <BarChart2 className="h-4 w-4" /> Monitoring
-        </TabsTrigger>
-      </TabsList>
-      
-      <TabsContent value="vacancies" className="mt-6">
-        <VacancyManagement vacancies={vacancies} />
-      </TabsContent>
-      
-      <TabsContent value="candidates" className="mt-6">
-        <CandidateSearch />
-      </TabsContent>
-      
-      <TabsContent value="interviews" className="mt-6">
-        <InterviewCalendar 
-          onScheduleInterview={onScheduleInterview} 
-        />
-      </TabsContent>
-      
-      <TabsContent value="interns" className="mt-6">
-        <InternTracking />
-      </TabsContent>
-      
-      <TabsContent value="companies" className="mt-6">
-        <CompanyPartners />
-      </TabsContent>
+    <ErrorBoundary>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 mb-4">
+          <TabsTrigger value="vacancies">Vacancy Management</TabsTrigger>
+          <TabsTrigger value="candidates">Candidate Search</TabsTrigger>
+          <TabsTrigger value="interviews">Interviews</TabsTrigger>
+          <TabsTrigger value="interns">Intern Tracking</TabsTrigger>
+          <TabsTrigger value="companies">Company Partners</TabsTrigger>
+          <TabsTrigger value="monitoring" className="flex items-center gap-1">
+            <BarChart2 className="h-4 w-4" /> Monitoring
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="vacancies">
+          <VacancyManagement vacancies={vacancies} />
+        </TabsContent>
+        
+        <TabsContent value="candidates">
+          <CandidateSearch />
+        </TabsContent>
+        
+        <TabsContent value="interviews">
+          <InterviewCalendar onScheduleInterview={onScheduleInterview} />
+        </TabsContent>
+        
+        <TabsContent value="interns">
+          <InternTracking />
+        </TabsContent>
+        
+        <TabsContent value="companies">
+          <CompanyPartners />
+        </TabsContent>
 
-      <TabsContent value="monitoring" className="mt-6">
-        <MonitoringDashboard />
-      </TabsContent>
-    </Tabs>
+        <TabsContent value="monitoring">
+          <MonitoringDashboard />
+        </TabsContent>
+      </Tabs>
+    </ErrorBoundary>
   );
 };
 
