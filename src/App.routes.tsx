@@ -8,7 +8,7 @@ import StudentProfile from "@/pages/StudentProfile";
 import AdvisorDashboard from "@/pages/AdvisorDashboard";
 import CareerPassportPage from "@/pages/CareerPassportPage";
 import JobApplications from "@/pages/JobApplications";
-import JobDetails from "@/pages/JobDetails"; // New import
+import JobDetails from "@/pages/JobDetails";
 import RecruiterDashboard from "@/pages/RecruiterDashboard";
 import MindMap from "@/pages/MindMap";
 import DataEntryPage from "@/pages/DataEntryPage";
@@ -25,6 +25,7 @@ import JobLocationMatching from "@/pages/JobLocationMatching";
 import RetirementPlanningPage from "@/pages/RetirementPlanningPage";
 import Achievements from "@/pages/Achievements";
 import ResumeBuilder from "@/pages/ResumeBuilder";
+import GamificationDashboard from "@/pages/GamificationDashboard";
 
 export const routes: RouteObject[] = [
   {
