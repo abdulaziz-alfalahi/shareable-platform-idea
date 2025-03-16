@@ -51,7 +51,7 @@ const RecentAchievements: React.FC<RecentAchievementsProps> = ({
         {achievements.map((achievement) => (
           <li key={achievement.id} className="flex items-center gap-2 p-1 hover:bg-gray-50 rounded">
             <AchievementIcon 
-              name={achievement.iconName} 
+              iconName={achievement.iconName} 
               level={achievement.level} 
               size="sm" 
             />
