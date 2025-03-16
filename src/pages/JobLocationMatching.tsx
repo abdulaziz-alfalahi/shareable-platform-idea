@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { allJobLocationsData } from '@/components/jobs/mock';
 import LocationMatchingHeader from '@/components/jobs/location/LocationMatchingHeader';
@@ -9,6 +10,7 @@ import { JobLocation } from '@/types/map';
 const JobLocationMatching = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [jobs, setJobs] = useState<JobLocation[]>(allJobLocationsData);
+  const [displayJobs, setDisplayJobs] = useState<JobLocation[]>(allJobLocationsData);
   
   const handleLocationUpdate = (updatedJobs: JobLocation[]) => {
     setJobs(updatedJobs);
@@ -29,7 +31,12 @@ const JobLocationMatching = () => {
     }
   };
 
-  const filteredJobs = getFilteredJobs();
+  // Update displayed jobs whenever the filter changes or jobs array changes
+  useEffect(() => {
+    const filtered = getFilteredJobs();
+    setDisplayJobs(filtered);
+    console.log(`Filtering jobs: ${filtered.length} jobs after applying "${activeFilter}" filter`);
+  }, [activeFilter, jobs]);
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -44,12 +51,12 @@ const JobLocationMatching = () => {
       <FilterTabs 
         activeFilter={activeFilter}
         setActiveFilter={setActiveFilter}
-        filteredJobsCount={filteredJobs.length}
+        filteredJobsCount={displayJobs.length}
       />
 
       <Card className="border-emirati-sandBeige mb-6">
         <CardContent className="p-6">
-          <JobMap jobs={filteredJobs} onLocationUpdate={handleLocationUpdate} />
+          <JobMap jobs={displayJobs} onLocationUpdate={handleLocationUpdate} />
         </CardContent>
       </Card>
     </div>

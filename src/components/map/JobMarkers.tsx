@@ -19,10 +19,19 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
   const workplaceMarker = useRef<mapboxgl.Marker | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const isAddingMarkers = useRef(false);
+  const prevJobsLength = useRef<number>(0);
 
   useEffect(() => {
     // Only proceed if map is fully loaded
     if (!map.current) return;
+
+    // Check if jobs have changed to avoid unnecessary marker refreshes
+    const jobsChanged = prevJobsLength.current !== jobs.length;
+    prevJobsLength.current = jobs.length;
+
+    if (!jobsChanged && markersRef.current.length > 0) {
+      return; // Skip if jobs haven't changed and we already have markers
+    }
 
     // Flag to prevent multiple attempts to add markers simultaneously
     if (isAddingMarkers.current) return;

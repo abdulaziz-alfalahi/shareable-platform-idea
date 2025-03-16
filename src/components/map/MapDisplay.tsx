@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import TokenInput from './TokenInput';
 import MapContainer from './MapContainer';
@@ -18,7 +18,7 @@ interface MapDisplayProps {
   handleRadiusChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   nearbyJobs: JobLocation[];
   locationSearch: string;
-  setLocationSearch: (location: string) => void;
+  setLocationSearch: (search: string) => void;
   searchLocation: () => void;
   jobs: JobLocation[];
   onLocationUpdate?: (jobs: JobLocation[]) => void;
@@ -44,19 +44,25 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
   findNearbyJobs,
   reverseGeocode
 }) => {
+  useEffect(() => {
+    console.log(`MapDisplay received ${jobs.length} jobs and ${nearbyJobs.length} nearby jobs`);
+  }, [jobs, nearbyJobs]);
+
+  // Display token input if no token is provided
   if (!tokenSubmitted) {
     return (
-      <TokenInput 
-        mapboxToken={mapboxToken} 
-        setMapboxToken={setMapboxToken} 
-        setTokenSubmitted={setTokenSubmitted} 
+      <TokenInput
+        mapboxToken={mapboxToken}
+        setMapboxToken={setMapboxToken}
+        setTokenSubmitted={setTokenSubmitted}
       />
     );
   }
 
+  // Display map and controls if token is provided
   return (
-    <>
-      <MapControls 
+    <div className="space-y-4">
+      <MapControls
         locationSearch={locationSearch}
         setLocationSearch={setLocationSearch}
         searchLocation={searchLocation}
@@ -64,25 +70,19 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
         handleRadiusChange={handleRadiusChange}
         onLocationUpdate={onLocationUpdate}
       />
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="col-span-1 lg:col-span-2">
-          <MapContainer 
-            mapboxToken={mapboxToken}
-            jobs={jobs}
-            userLocation={userLocation}
-            setUserLocation={setUserLocation}
-            onLocationUpdate={onLocationUpdate}
-            reverseGeocode={reverseGeocode}
-            findNearbyJobs={findNearbyJobs}
-          />
-        </div>
-        
-        <div className="col-span-1">
-          <NearbyJobsList nearbyJobs={nearbyJobs} />
-        </div>
-      </div>
-    </>
+
+      <MapContainer
+        mapboxToken={mapboxToken}
+        jobs={jobs.length > 0 ? jobs : nearbyJobs}
+        userLocation={userLocation}
+        setUserLocation={setUserLocation}
+        onLocationUpdate={onLocationUpdate}
+        reverseGeocode={reverseGeocode}
+        findNearbyJobs={findNearbyJobs}
+      />
+
+      <NearbyJobsList jobs={nearbyJobs} searchRadius={searchRadius} />
+    </div>
   );
 };
 
