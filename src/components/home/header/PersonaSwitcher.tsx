@@ -43,6 +43,10 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
     navigate('/');
   };
 
+  const handleCareerPassportClick = () => {
+    navigate('/career-passport');
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -68,6 +72,19 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
             <span>Home Page</span>
           </div>
         </DropdownMenuItem>
+        
+        {/* Career Passport option */}
+        <DropdownMenuItem 
+          key="career-passport" 
+          className="py-2"
+          onClick={handleCareerPassportClick}
+        >
+          <div className="flex items-center">
+            <GraduationCap className="h-4 w-4 mr-2" />
+            <span>Career Passport</span>
+          </div>
+        </DropdownMenuItem>
+        
         <DropdownMenuSeparator />
         {personas.map((persona) => (
           <DropdownMenuItem 
