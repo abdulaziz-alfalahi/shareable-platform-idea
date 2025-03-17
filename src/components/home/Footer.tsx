@@ -118,7 +118,7 @@ const Footer = () => {
 
         <div className="border-t border-white/20 mt-10 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p>&copy; 2024 Emirati Employment Gateway. All rights reserved.</p>
+            <p>&copy; 2025 Emirati Employment Gateway. All rights reserved.</p>
             <div className="mt-4 md:mt-0">
               <a href="#" className="text-white/80 hover:text-white mx-3">
                 Privacy Policy
