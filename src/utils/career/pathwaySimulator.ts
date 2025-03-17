@@ -1,4 +1,3 @@
 
-// Export all pathway simulator functions
-export * from './pathwayDataService';
-export * from './pathwaySimulation';
+// This file now acts as a barrel export for the reorganized pathway utilities
+export * from './pathway';

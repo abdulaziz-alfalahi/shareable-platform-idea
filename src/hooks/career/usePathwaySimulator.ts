@@ -1,8 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { CareerPath, SimulationResult } from '@/utils/career/pathwayTypes';
-import { getCareerPaths, getCareerPathById } from '@/utils/career/pathwayDataService';
-import { simulateCareerPath } from '@/utils/career/pathwaySimulation';
+import { CareerPath, SimulationResult, getCareerPaths, getCareerPathById, simulateCareerPath } from '@/utils/career/pathway';
 import { Student } from '@/types/student';
 
 export const usePathwaySimulator = (student: Student, toast: any) => {
@@ -101,7 +98,6 @@ export const usePathwaySimulator = (student: Student, toast: any) => {
       const result = await simulateCareerPath(student, selectedPathId, selectedNodes);
       setSimulationResult(result);
       
-      // Show success toast if user is logged in and simulation was likely saved
       if (student.id) {
         toast({
           title: "Simulation saved",

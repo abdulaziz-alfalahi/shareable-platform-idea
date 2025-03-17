@@ -1,5 +1,3 @@
 
-// Re-export all functions from specific service files
-export { getCareerPaths, getCareerPathById } from './services/careerPathService';
-export { saveSimulationResult } from './services/simulationService';
-export { getUserSimulations } from './services/userSimulationService';
+// Re-export all functions from the new path for backward compatibility
+export * from './pathway/dataService';
