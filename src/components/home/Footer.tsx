@@ -101,12 +101,12 @@ const Footer = () => {
                 <MapPin className="h-5 w-5 mr-2 mt-0.5 text-emirati-desertGold" />
                 <span className="text-white/80">
                   Emirati Human Resources Development Council<br />
-                  Abu Dhabi, United Arab Emirates
+                  Dubai, United Arab Emirates
                 </span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 mr-2 text-emirati-desertGold" />
-                <span className="text-white/80">+971 2 xxx xxxx</span>
+                <span className="text-white/80">+971 55 828 5000</span>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 mr-2 text-emirati-desertGold" />
