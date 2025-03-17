@@ -23,6 +23,13 @@ const PassportWidget: React.FC<PassportWidgetProps> = ({ student }) => {
     nextLevelPoints 
   } = usePassportData(student);
   
+  // Fix the navigation handler to ensure proper routing
+  const handleViewPassport = () => {
+    // Navigate to the full passport page with the student ID
+    navigate(`/career-passport/${student.id}`);
+    console.log("Navigating to career passport page for student:", student.id);
+  };
+  
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader className="pb-2">
@@ -57,7 +64,7 @@ const PassportWidget: React.FC<PassportWidgetProps> = ({ student }) => {
           variant="outline" 
           className="w-full" 
           size="sm"
-          onClick={() => navigate(`/career-passport/${student.id}`)}
+          onClick={handleViewPassport}
         >
           View Full Passport <ArrowRight className="ml-1 h-3 w-3" />
         </Button>
