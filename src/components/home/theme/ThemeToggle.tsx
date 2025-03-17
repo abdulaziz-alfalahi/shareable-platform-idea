@@ -9,7 +9,7 @@ const themeOptions = [
   { id: "default" as UaeTheme, icon: <Sun className="h-4 w-4" />, label: "Default" },
   { id: "desert" as UaeTheme, icon: <TreePalm className="h-4 w-4" />, label: "Desert" },
   { id: "oasis" as UaeTheme, icon: <Moon className="h-4 w-4" />, label: "Oasis" },
-  { id: "modern" as UaeTheme, icon: <Building className="h-4 w-4 text-blue-500" />, label: "Modern" }
+  { id: "modern" as UaeTheme, icon: <Building className="h-4 w-4" />, label: "Modern" }
 ];
 
 const ThemeToggle: React.FC = () => {
@@ -22,9 +22,7 @@ const ThemeToggle: React.FC = () => {
         {themeOptions.map((option) => (
           <UaeButton
             key={option.id}
-            variant={theme === option.id ? 
-              option.id === "modern" ? "sea" : "oasis" 
-              : option.id === "modern" ? "flag" : "desert"}
+            variant={theme === option.id ? "oasis" : "desert"}
             size="sm"
             onClick={() => setTheme(option.id)}
             className={cn(
