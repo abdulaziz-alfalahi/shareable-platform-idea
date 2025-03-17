@@ -4,10 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Briefcase, TrendingUp } from 'lucide-react';
 import { Student } from '@/types/student';
-import { useToast } from '@/hooks/toast';
+import PathSelection from './simulator/PathSelection';
+import SimulationResults from './simulator/SimulationResults';
 import { usePathwaySimulator } from '@/hooks/career/usePathwaySimulator';
-import PathSelection from './PathSelection';
-import SimulationResults from './SimulationResults';
+import { useToast } from '@/hooks/toast';
 
 interface PathwaySimulatorProps {
   student: Student;
