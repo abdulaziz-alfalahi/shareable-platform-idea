@@ -1,0 +1,16 @@
+
+.btn-success {
+  @apply bg-emirati-oasisGreen hover:bg-[#3d6b40] text-white;
+}
+
+.btn-primary {
+  @apply bg-emirati-camelBrown hover:bg-[#a67447] text-white;
+}
+
+.btn-linkedin {
+  @apply bg-emirati-linkedinBlue hover:bg-[#005f91] text-white;
+}
+
+.btn-danger {
+  @apply bg-emirati-subtleRed hover:bg-[#c9302c] text-white;
+}

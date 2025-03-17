@@ -1,0 +1,15 @@
+
+/* Import base styles and Tailwind directives */
+@import './base.css';
+
+/* Import theme variations */
+@import './themes.css';
+
+/* Import UAE-specific components */
+@import './uae-components.css';
+
+/* Import button styles */
+@import './buttons.css';
+
+/* Import mobile styles */
+@import './mobile.css';
