@@ -135,33 +135,63 @@
     @apply bg-emerald-500;
   }
 
+  /* Updated Modern Theme - Brighter Overall */
   .theme-modern {
     @apply bg-slate-50;
   }
   
   .theme-modern .uae-card {
-    @apply bg-white border-slate-200/50 shadow-md;
+    @apply bg-white border-blue-100/50 shadow-sm;
   }
   
   .theme-modern .decorative-element div {
-    @apply bg-blue-600;
+    @apply bg-blue-400;
   }
   
   .theme-modern .decorative-element div div {
-    @apply bg-blue-400;
+    @apply bg-blue-300;
   }
   
   /* Brighter modern theme colors */
   .theme-modern .uae-button.variant-sea {
-    @apply bg-blue-500 hover:bg-blue-600 text-white;
+    @apply bg-blue-400 hover:bg-blue-500 text-white;
   }
   
   .theme-modern .uae-button.variant-flag {
-    @apply bg-red-500 hover:bg-red-600 text-white;
+    @apply bg-red-400 hover:bg-red-500 text-white;
   }
   
   .theme-modern .uae-button.variant-gold {
-    @apply bg-yellow-400 hover:bg-yellow-500 text-yellow-900;
+    @apply bg-yellow-300 hover:bg-yellow-400 text-yellow-800;
+  }
+  
+  /* Modern theme text colors */
+  .theme-modern h1, 
+  .theme-modern h2, 
+  .theme-modern h3, 
+  .theme-modern h4 {
+    @apply text-blue-900;
+  }
+  
+  .theme-modern p {
+    @apply text-slate-700;
+  }
+  
+  .theme-modern a:not(.uae-button) {
+    @apply text-blue-500 hover:text-blue-600;
+  }
+  
+  /* Modern theme backgrounds */
+  .theme-modern .bg-primary {
+    @apply bg-blue-50;
+  }
+  
+  .theme-modern .bg-secondary {
+    @apply bg-slate-100;
+  }
+  
+  .theme-modern .border-subtle {
+    @apply border-slate-200;
   }
 }
 
