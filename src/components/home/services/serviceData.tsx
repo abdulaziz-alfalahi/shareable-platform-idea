@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   Briefcase, 
@@ -14,7 +13,8 @@ import {
   Heart,
   Wallet,
   FileText,
-  Globe
+  Globe,
+  Calendar
 } from "lucide-react";
 import { ServiceData } from "./types";
 
@@ -36,6 +36,15 @@ export const servicesData: ServiceData[] = [
     iconBg: "bg-emirati-desertGold/10",
     stage: "early",
     hoverInfo: "Navigate higher education options with personalized recommendations based on your career aspirations."
+  },
+  {
+    icon: <Calendar className="w-8 h-8" />,
+    title: "Summer Knowledge Camps",
+    description: "Discover enriching summer programs offered by schools, universities, and companies.",
+    link: "/summer-camps",
+    iconBg: "bg-emirati-oasisGreen/10",
+    stage: "early",
+    hoverInfo: "Explore educational camps during summer breaks to enhance skills and knowledge."
   },
   {
     icon: <Compass className="w-8 h-8" />,
