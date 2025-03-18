@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Loader2 } from 'lucide-react';
-import { CareerPath } from '@/utils/career/pathwayTypes';
-import PathwayVisualization from './PathwayVisualization';
+import { CareerPath } from '@/utils/career/pathway';
+import PathwayVisualization from '../PathwayVisualization';
 
 interface PathSelectionProps {
   careerPaths: CareerPath[];
