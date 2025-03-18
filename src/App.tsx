@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/home/theme";
-import { routes } from "./App.routes";
+import { routes } from "./App.routes"; // Changed from 'routes' to { routes }
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
             <Route 
               key={route.path} 
               path={route.path} 
-              element={route.element} 
+              element={<route.element />} 
               errorElement={route.errorElement} 
             />
           ))}
