@@ -1,9 +1,10 @@
+
 import React from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { ChevronRight, Loader2 } from 'lucide-react';
 import { CareerPath } from '@/utils/career/pathway';
 import PathwayVisualization from '../PathwayVisualization';
+import PathSelectionHeader from './path-selection/PathSelectionHeader';
+import PathSelectionLoading from './path-selection/PathSelectionLoading';
+import SimulationButton from './path-selection/SimulationButton';
 
 interface PathSelectionProps {
   careerPaths: CareerPath[];
@@ -34,51 +35,15 @@ const PathSelection: React.FC<PathSelectionProps> = ({
 }) => {
   return (
     <div className="space-y-6">
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Select a Career Path</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Select 
-              value={selectedPathId}
-              onValueChange={handlePathChange}
-              disabled={isLoading}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={isLoading ? "Loading paths..." : "Choose a career path"} />
-              </SelectTrigger>
-              <SelectContent>
-                {careerPaths.map(path => (
-                  <SelectItem key={path.id} value={path.id}>
-                    {path.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {selectedPath && (
-            <div className="flex items-center justify-end space-x-2">
-              <div className="text-sm rounded bg-emirati-sandBeige/20 px-2 py-1">
-                <span className="font-medium">Demand:</span> {' '}
-                {selectedPath.popularity >= 7 ? (
-                  <span className="text-green-600 font-medium">High</span>
-                ) : selectedPath.popularity >= 4 ? (
-                  <span className="text-amber-600 font-medium">Medium</span>
-                ) : (
-                  <span className="text-red-600 font-medium">Low</span>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      <PathSelectionHeader
+        careerPaths={careerPaths}
+        selectedPathId={selectedPathId}
+        selectedPath={selectedPath}
+        isLoading={isLoading}
+        handlePathChange={handlePathChange}
+      />
 
-      {isLoading && (
-        <div className="flex justify-center items-center h-40">
-          <Loader2 className="h-8 w-8 animate-spin text-emirati-oasisGreen" />
-          <span className="ml-2 text-lg">Loading career paths...</span>
-        </div>
-      )}
+      {isLoading && <PathSelectionLoading />}
 
       {selectedPath && !isLoading && (
         <div className="mt-8 space-y-6">
@@ -89,25 +54,11 @@ const PathSelection: React.FC<PathSelectionProps> = ({
             canSelectNode={canSelectNode}
           />
           
-          <div className="flex justify-end mt-6">
-            <Button
-              onClick={runSimulation}
-              disabled={!canRunSimulation}
-              className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90"
-            >
-              {isSimulating ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Simulating...
-                </>
-              ) : (
-                <>
-                  Run Simulation
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </>
-              )}
-            </Button>
-          </div>
+          <SimulationButton
+            isSimulating={isSimulating}
+            canRunSimulation={canRunSimulation}
+            runSimulation={runSimulation}
+          />
         </div>
       )}
     </div>
