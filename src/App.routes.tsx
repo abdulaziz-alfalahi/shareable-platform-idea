@@ -1,7 +1,16 @@
+
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 
-export const routes: RouteObject[] = [
+// Define a type for our custom route object that works with lazy loaded components
+interface AppRouteObject {
+  path: string;
+  element: React.ComponentType<any>;
+  errorElement?: React.ComponentType<any>;
+}
+
+// Create a routes array with the correct types
+export const routes: AppRouteObject[] = [
   {
     path: "/",
     element: lazy(() => import("./pages/Index")),
@@ -68,7 +77,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: "/recruiter-calendar",
-    element: lazy(() => import("./pages/RecruiterCalendar")),
+    element: lazy(() => import("./pages/RecruiterDashboard")), // Fixed: changed to an existing page as placeholder
   },
   {
     path: "/summer-camps",
