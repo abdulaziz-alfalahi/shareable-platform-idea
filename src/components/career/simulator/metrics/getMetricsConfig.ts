@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Clock, TrendingUp } from 'lucide-react';
 import { MetricCardProps } from './MetricCard';
 import { challengeLevelConfig, ChallengeLevel } from './challengeLevelConfig';
@@ -20,7 +21,7 @@ export const getMetricsConfig = (
 
   return [
     {
-      icon: <Clock className="h-6 w-6 text-blue-600" />,
+      icon: React.createElement(Clock, { className: "h-6 w-6 text-blue-600" }),
       title: "Time to Complete",
       value: timeToComplete,
       description: "Estimated duration to achieve career path",
@@ -30,7 +31,7 @@ export const getMetricsConfig = (
       delay: 0.1
     },
     {
-      icon: <TrendingUp className="h-6 w-6 text-emerald-600" />,
+      icon: React.createElement(TrendingUp, { className: "h-6 w-6 text-emerald-600" }),
       title: "Potential Salary",
       value: `${potentialSalary.toLocaleString()} AED`,
       description: "Projected annual salary upon completion",
@@ -42,7 +43,7 @@ export const getMetricsConfig = (
     {
       icon: challengeConfig.icon,
       title: "Challenge Level",
-      value: <span className="capitalize">{challengeLevel}</span>,
+      value: React.createElement("span", { className: "capitalize" }, challengeLevel),
       description: "Difficulty level of the career path",
       bgColor: challengeConfig.bgColor,
       borderColor: `border ${challengeConfig.borderColor}`,
