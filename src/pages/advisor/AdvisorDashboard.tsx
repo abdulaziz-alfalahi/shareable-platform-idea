@@ -4,6 +4,7 @@ import DashboardHeader from "@/components/advisor/DashboardHeader";
 import DashboardFilters from "@/components/advisor/DashboardFilters";
 import StudentList from "@/components/advisor/StudentList";
 import { Student } from "@/types/student";
+import { getStatusBadgeVariant, getRiskBadgeVariant, formatDate } from "@/utils/advisorUtils";
 
 const AdvisorDashboard: React.FC = () => {
   // State for filters and search
@@ -65,24 +66,6 @@ const AdvisorDashboard: React.FC = () => {
     }
   ];
 
-  // Utility functions for StudentList
-  const getStatusBadgeVariant = (status: string) => {
-    return status === "Active" ? "success" : "warning";
-  };
-
-  const getRiskBadgeVariant = (risk: string) => {
-    switch (risk) {
-      case "High": return "destructive";
-      case "Medium": return "warning";
-      case "Low": return "success";
-      default: return "outline";
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
-
   const handleAddFeedback = (student: Student) => {
     console.log("Add feedback for student", student.id);
   };
@@ -107,8 +90,11 @@ const AdvisorDashboard: React.FC = () => {
       <StudentList 
         students={students}
         searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
         statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
         riskFilter={riskFilter}
+        setRiskFilter={setRiskFilter}
         onAddFeedback={handleAddFeedback}
         onAddGoal={handleAddGoal}
         getStatusBadgeVariant={getStatusBadgeVariant}

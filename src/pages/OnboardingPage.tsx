@@ -11,9 +11,11 @@ const OnboardingPage: React.FC = () => {
   };
 
   return (
-    <OnboardingWrapper hasCompletedOnboarding={false}>
-      <OnboardingFlow onComplete={handleOnboardingComplete} />
-    </OnboardingWrapper>
+    <div>
+      <OnboardingWrapper hasCompletedOnboarding={false}>
+        <OnboardingFlow onComplete={handleOnboardingComplete} />
+      </OnboardingWrapper>
+    </div>
   );
 };
 
