@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   Briefcase, 
@@ -87,7 +86,7 @@ export const servicesData: ServiceData[] = [
     icon: <Users className="w-8 h-8" />,
     title: "Mentorship",
     description: "Connect with experienced professionals who can guide you through your career journey.",
-    link: "/student-dashboard",
+    link: "/student-dashboard?tab=mentors",
     iconBg: "bg-emirati-camelBrown/10",
     stage: ["early", "mid"],
     hoverInfo: "Learn from successful Emirati professionals who have volunteered to share their knowledge and experience."
@@ -96,7 +95,7 @@ export const servicesData: ServiceData[] = [
     icon: <Award className="w-8 h-8" />,
     title: "Portfolio Building",
     description: "Create a compelling digital portfolio that showcases your achievements and capabilities.",
-    link: "/achievements",
+    link: "/portfolio-builder",
     iconBg: "bg-emirati-desertGold/10",
     stage: ["early", "mid"],
     hoverInfo: "Build a digital showcase of your accomplishments, projects, and skills to impress potential employers."
