@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { JobLocation } from '@/types/map';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { 
   BriefcaseIcon, 
   UserCheckIcon, 
@@ -14,35 +14,30 @@ import NearbyJobsList from '@/components/map/NearbyJobsList';
 
 interface JobLocationTabProps {
   jobs: JobLocation[];
+  onLocationUpdate?: (jobs: JobLocation[]) => void;
 }
 
-export const JobLocationTab = ({ jobs: initialJobs }: JobLocationTabProps) => {
+export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocationTabProps) => {
   const [activeLocationFilter, setActiveLocationFilter] = useState<'ai-top-10' | 'portfolio-match' | 'all'>('all');
-  const [jobs, setJobs] = useState<JobLocation[]>(initialJobs);
   const [nearbyJobs, setNearbyJobs] = useState<JobLocation[]>([]);
   const [searchRadius, setSearchRadius] = useState(5);
   
-  // Handle location updates from the map
-  const handleLocationUpdate = (updatedJobs: JobLocation[]) => {
-    console.log('JobLocationTab received updated jobs:', updatedJobs.length);
-    setJobs(updatedJobs);
-  };
-
   // Handle nearby jobs updates
   const handleNearbyJobsUpdate = (jobs: JobLocation[]) => {
     console.log('JobLocationTab received nearby jobs:', jobs.length);
     setNearbyJobs(jobs);
   };
 
-  // Update jobs when initialJobs prop changes
-  useEffect(() => {
-    setJobs(initialJobs);
-  }, [initialJobs]);
+  // Handle radius change from the map component
+  const handleRadiusChange = (radius: number) => {
+    setSearchRadius(radius);
+  };
 
+  // Get filtered jobs based on the selected filter
   const getFilteredLocationJobs = () => {
     switch (activeLocationFilter) {
       case 'ai-top-10':
-        return [...jobs]
+        return [...initialJobs]
           .sort((a, b) => {
             const aMatch = a.matchPercentage || Math.floor(Math.random() * 40) + 60;
             const bMatch = b.matchPercentage || Math.floor(Math.random() * 40) + 60;
@@ -50,30 +45,19 @@ export const JobLocationTab = ({ jobs: initialJobs }: JobLocationTabProps) => {
           })
           .slice(0, 10);
       case 'portfolio-match':
-        return jobs.filter(job => 
+        return initialJobs.filter(job => 
           job.portfolioMatch === true || Math.random() > 0.7
         );
       case 'all':
       default:
-        return jobs;
+        return initialJobs;
     }
   };
 
   const filteredLocationJobs = getFilteredLocationJobs();
 
-  // Handle radius change from the map component
-  const handleRadiusChange = (radius: number) => {
-    setSearchRadius(radius);
-  };
-
   return (
-    <div>
-      <div className="mb-6">
-        <p className="text-gray-600">
-          Discover job opportunities near Al Fahidi Fort! Use the map to explore jobs within your preferred radius.
-        </p>
-      </div>
-
+    <Card className="border shadow-sm p-4">
       <div className="mb-6">
         <Tabs 
           defaultValue="all" 
@@ -110,7 +94,7 @@ export const JobLocationTab = ({ jobs: initialJobs }: JobLocationTabProps) => {
           <div className="h-full p-4">
             <JobMap 
               jobs={filteredLocationJobs} 
-              onLocationUpdate={handleLocationUpdate} 
+              onLocationUpdate={onLocationUpdate} 
               onNearbyJobsUpdate={handleNearbyJobsUpdate}
               onRadiusChange={handleRadiusChange}
             />
@@ -126,7 +110,7 @@ export const JobLocationTab = ({ jobs: initialJobs }: JobLocationTabProps) => {
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
-    </div>
+    </Card>
   );
 };
 

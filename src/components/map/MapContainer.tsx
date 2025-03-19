@@ -1,5 +1,5 @@
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { JobLocation } from '@/types/map';
 import useMapInitialization from '@/hooks/map/useMapInitialization';
@@ -28,52 +28,58 @@ const MapContainer: React.FC<MapContainerProps> = ({
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [validJobs, setValidJobs] = useState<JobLocation[]>([]);
   const { toast } = useToast();
   
   // Use Al Fahidi Fort as default if user location is null
   const defaultLocation: [number, number] = [55.2972, 25.2637];
   const centerLocation = userLocation || defaultLocation;
   
-  // Validate jobs data to ensure we have valid locations
-  const validJobs = jobs.filter(job => 
-    job.location && 
-    typeof job.location.latitude === 'number' && 
-    typeof job.location.longitude === 'number' && 
-    !isNaN(job.location.latitude) && 
-    !isNaN(job.location.longitude)
-  );
-  
-  // Log jobs for debugging
+  // Validate jobs data only when jobs change, not on every render
   useEffect(() => {
-    console.log(`MapContainer received ${jobs.length} jobs, ${validJobs.length} valid locations`);
-    if (validJobs.length > 0) {
-      console.log('Valid job sample:', validJobs[0]);
-    } else if (jobs.length > 0) {
-      console.log('Invalid job sample:', jobs[0]);
+    const filteredJobs = jobs.filter(job => 
+      job.location && 
+      typeof job.location.latitude === 'number' && 
+      typeof job.location.longitude === 'number' && 
+      !isNaN(job.location.latitude) && 
+      !isNaN(job.location.longitude)
+    );
+    
+    setValidJobs(filteredJobs);
+    
+    if (jobs.length > 0) {
+      console.log(`MapContainer received ${jobs.length} jobs, ${filteredJobs.length} valid locations`);
+      if (filteredJobs.length > 0) {
+        console.log('Valid job sample:', filteredJobs[0]);
+      } else {
+        console.log('Invalid job sample:', jobs[0]);
+      }
     }
-  }, [jobs, validJobs]);
+  }, [jobs]);
 
   // Initialize the map with our custom hook
+  const onMapLoaded = useCallback(() => {
+    console.log('Map is initialized and ready');
+    setMapReady(true);
+    
+    // Set user location if not already set
+    if (!userLocation) {
+      console.log('Setting default user location to', defaultLocation);
+      setUserLocation(defaultLocation);
+    }
+    
+    // If no jobs have locations yet, find nearby jobs using current center
+    if (validJobs.length === 0) {
+      console.log('No jobs with valid locations, finding nearby jobs');
+      findNearbyJobs(centerLocation[1], centerLocation[0]);
+    }
+  }, [centerLocation, defaultLocation, findNearbyJobs, setUserLocation, userLocation, validJobs.length]);
+
   const map = useMapInitialization({
     mapboxToken,
     containerRef: mapContainer,
     initialCenter: centerLocation,
-    onMapLoaded: () => {
-      console.log('Map is initialized and ready');
-      setMapReady(true);
-      
-      // Set user location if not already set
-      if (!userLocation) {
-        console.log('Setting default user location to', defaultLocation);
-        setUserLocation(defaultLocation);
-      }
-      
-      // If no jobs have locations yet, find nearby jobs using current center
-      if (validJobs.length === 0) {
-        console.log('No jobs with valid locations, finding nearby jobs');
-        findNearbyJobs(centerLocation[1], centerLocation[0]);
-      }
-    }
+    onMapLoaded
   });
 
   // Force a map resize if the container dimensions change
@@ -81,7 +87,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
     if (map.current && mapReady) {
       map.current.resize();
     }
-  }, [mapContainer.current?.clientWidth, mapContainer.current?.clientHeight, mapReady]);
+  }, [mapContainer.current?.clientWidth, mapContainer.current?.clientHeight, mapReady, map]);
 
   return (
     <div ref={mapContainer} className="h-full w-full rounded-lg border border-gray-200 shadow-sm">

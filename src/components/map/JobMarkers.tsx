@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { JobLocation } from '@/types/map';
 import { useToast } from '@/components/ui/use-toast';
@@ -20,22 +20,25 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
   const workplaceMarker = useRef<mapboxgl.Marker | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const [mapReady, setMapReady] = useState(false);
+  const jobsRef = useRef<JobLocation[]>([]);
   const { toast } = useToast();
   
-  // Clear all markers
-  const clearAllMarkers = () => {
-    console.log(`Clearing ${markersRef.current.length} markers`);
-    markersRef.current.forEach(marker => marker.remove());
-    markersRef.current = [];
+  // Clear all markers - this can be safely called multiple times
+  const clearAllMarkers = useCallback(() => {
+    if (markersRef.current.length > 0) {
+      console.log(`Clearing ${markersRef.current.length} markers`);
+      markersRef.current.forEach(marker => marker.remove());
+      markersRef.current = [];
+    }
     
     if (workplaceMarker.current) {
       workplaceMarker.current.remove();
       workplaceMarker.current = null;
     }
-  };
+  }, []);
 
-  // Add markers for jobs
-  const addMarkers = () => {
+  // Add markers for jobs - extracted as a function to avoid code duplication
+  const addMarkers = useCallback(() => {
     if (!map.current) {
       console.error('Cannot add markers: map not initialized');
       return;
@@ -50,7 +53,13 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
       return;
     }
     
+    // Only proceed if jobs actually changed
+    if (JSON.stringify(jobs) === JSON.stringify(jobsRef.current) && markersRef.current.length > 0) {
+      return;
+    }
+    
     console.log(`Adding ${jobs.length} job markers to map`);
+    jobsRef.current = [...jobs];
     
     // Clear existing markers first
     clearAllMarkers();
@@ -59,6 +68,9 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
       console.log('No jobs to display on map');
       return;
     }
+    
+    // Create a bounds object to fit all markers later
+    const bounds = new mapboxgl.LngLatBounds();
     
     // Create new markers
     jobs.forEach(job => {
@@ -75,13 +87,18 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
       }
 
       try {
+        const coordinates: [number, number] = [job.location.longitude, job.location.latitude];
+        
+        // Extend bounds with each valid marker position
+        bounds.extend(coordinates);
+        
         if (job.id === "workplace" && onLocationUpdate) {
           // Create a draggable marker for the workplace
           const workplace = new mapboxgl.Marker({ 
             color: '#f59e0b', 
             draggable: true 
           })
-            .setLngLat([job.location.longitude, job.location.latitude])
+            .setLngLat(coordinates)
             .addTo(map.current);
             
           // Add popup only after adding marker to map
@@ -100,13 +117,13 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
             reverseGeocode(lngLat.lat, lngLat.lng);
           });
           
-          console.log('Added workplace marker at:', [job.location.longitude, job.location.latitude]);
+          console.log('Added workplace marker at:', coordinates);
         } else {
           // Regular non-draggable marker
           const marker = new mapboxgl.Marker({ 
             color: job.matchPercentage && job.matchPercentage > 80 ? '#10b981' : '#f59e0b' 
           })
-            .setLngLat([job.location.longitude, job.location.latitude])
+            .setLngLat(coordinates)
             .addTo(map.current);
             
           // Add popup after adding to map
@@ -122,7 +139,6 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
           
           // Add to map and track in our ref
           markersRef.current.push(marker);
-          console.log('Added job marker at:', [job.location.longitude, job.location.latitude]);
         }
       } catch (error) {
         console.error("Error adding marker:", error, job);
@@ -131,21 +147,9 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     
     console.log(`Successfully added ${markersRef.current.length} markers to the map`);
     
-    // Fit bounds if we have markers
-    if (markersRef.current.length > 0 && map.current) {
+    // Fit bounds if we have valid bounds and markers
+    if (markersRef.current.length > 0 && map.current && !bounds.isEmpty()) {
       try {
-        const bounds = new mapboxgl.LngLatBounds();
-        
-        // Add all marker positions to bounds
-        markersRef.current.forEach(marker => {
-          bounds.extend(marker.getLngLat());
-        });
-        
-        // Add workplace marker if it exists
-        if (workplaceMarker.current) {
-          bounds.extend(workplaceMarker.current.getLngLat());
-        }
-        
         // Fit map to bounds with padding
         map.current.fitBounds(bounds, {
           padding: 50,
@@ -155,9 +159,9 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
         console.error("Error fitting bounds:", error);
       }
     }
-  };
+  }, [jobs, map, clearAllMarkers, onLocationUpdate, reverseGeocode]);
 
-  // Update markers when map is ready and jobs change
+  // This effect runs once when the map is first ready
   useEffect(() => {
     if (!map.current) {
       console.log('Map ref is not available yet');
@@ -166,13 +170,11 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     
     if (map.current.loaded()) {
       console.log('Map is already loaded, adding markers now');
-      addMarkers();
       setMapReady(true);
     } else {
       console.log('Map not loaded yet, adding load event listener');
       const handleMapLoad = () => {
         console.log('Map loaded event fired, adding markers');
-        addMarkers();
         setMapReady(true);
       };
       
@@ -184,15 +186,22 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
         }
       };
     }
-  }, [map.current, jobs]);
+  }, [map]);
 
-  // Force marker update when map becomes ready
+  // This effect runs when the map is ready or jobs change
   useEffect(() => {
-    if (mapReady && map.current && jobs.length > 0) {
-      console.log('Map is ready, ensuring markers are added');
+    if (mapReady && map.current) {
+      console.log('Map is ready, adding markers');
       addMarkers();
     }
-  }, [mapReady, jobs]);
+  }, [mapReady, jobs, addMarkers, map]);
+
+  // Clean up markers when component unmounts
+  useEffect(() => {
+    return () => {
+      clearAllMarkers();
+    };
+  }, [clearAllMarkers]);
 
   return null;
 };
