@@ -16,14 +16,26 @@ function App() {
         <Router>
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
-              {routes.map((route) => (
-                <Route 
-                  key={route.path} 
-                  path={route.path} 
-                  element={<route.element />} 
-                  errorElement={route.errorElement && <route.errorElement />} 
-                />
-              ))}
+              {routes.map((route) => {
+                const RouteElement = route.element;
+                const Layout = route.layout;
+                
+                return (
+                  <Route 
+                    key={route.path} 
+                    path={route.path} 
+                    element={
+                      Layout ? (
+                        <Layout>
+                          <RouteElement />
+                        </Layout>
+                      ) : (
+                        <RouteElement />
+                      )
+                    }
+                  />
+                );
+              })}
             </Routes>
           </Suspense>
           <Toaster richColors position="top-right" />

@@ -36,7 +36,7 @@ const personaToRoleMap: Record<string, string> = {
   university: "university_admin",
   training: "training_provider",
   assessment: "assessment_provider",
-  admin: "system_admin",
+  admin: "administrator",
 };
 
 const UserManagement = () => {
@@ -69,7 +69,7 @@ const UserManagement = () => {
         .eq("id", session.user.id)
         .single();
       
-      if (error || !profile || profile.role !== "system_admin") {
+      if (error || !profile || profile.role !== "administrator") {
         toast.error("You don't have permission to access this page");
         navigate("/");
       }
@@ -179,7 +179,7 @@ const UserManagement = () => {
   };
 
   return (
-    <DashboardLayout>
+    <DashboardLayout title="User Management">
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-emirati-deepBlue mb-8">
           User Management
