@@ -50,10 +50,10 @@ export const servicesData: ServiceData[] = [
     icon: <Compass className="w-8 h-8" />,
     title: "Career Exploration",
     description: "Discover potential career paths tailored to your skills, interests, and the UAE market needs.",
-    link: "/mindmap",
+    link: "/mindmap?tab=exploration",
     iconBg: "bg-emirati-oasisGreen/10",
     stage: ["early", "mid"],
-    hoverInfo: "Visualize career possibilities with our interactive mind mapping tools to find your perfect match."
+    hoverInfo: "Visualize career possibilities with our interactive tools to find your perfect match."
   },
   {
     icon: <Building className="w-8 h-8" />,
