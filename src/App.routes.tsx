@@ -87,6 +87,10 @@ export const routes: AppRouteObject[] = [
     path: "/summer-camps",
     element: lazy(() => import("./pages/SummerCamps")),
   },
+  {
+    path: "/internships",
+    element: lazy(() => import("./pages/Internships")),
+  },
   // Add a NotFound page for any other routes
   {
     path: "*",

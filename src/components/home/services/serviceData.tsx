@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   Briefcase, 
@@ -59,7 +60,7 @@ export const servicesData: ServiceData[] = [
     icon: <Building className="w-8 h-8" />,
     title: "Internship Programs",
     description: "Gain practical experience through internships with leading UAE organizations.",
-    link: "/job-location-matching",
+    link: "/internships",
     iconBg: "bg-emirati-camelBrown/10",
     stage: "early",
     hoverInfo: "Connect with top employers offering internship opportunities designed specifically for UAE nationals."
