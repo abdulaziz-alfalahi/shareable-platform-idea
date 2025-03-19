@@ -20,10 +20,10 @@ interface JobLocationTabProps {
 }
 
 export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocationTabProps) => {
-  const [activeLocationFilter, setActiveLocationFilter] = useState<'ai-top-10' | 'portfolio-match' | 'all' | 'career-pins'>('all');
+  const [activeLocationFilter, setActiveLocationFilter] = useState<'ai-top-10' | 'portfolio-match' | 'all' | 'career-pins'>('career-pins');
   const [nearbyJobs, setNearbyJobs] = useState<JobLocation[]>([]);
   const [searchRadius, setSearchRadius] = useState(5);
-  const [currentJobsDisplay, setCurrentJobsDisplay] = useState<JobLocation[]>(initialJobs);
+  const [currentJobsDisplay, setCurrentJobsDisplay] = useState<JobLocation[]>([]);
   
   console.log(`JobLocationTab initial render with ${initialJobs.length} jobs`); 
   console.log('Career path pins available:', careerLocationPins.length, careerLocationPins);
@@ -80,10 +80,11 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
     }
   }, [activeLocationFilter, initialJobs]);
 
-  // Ensure we show career pins when this tab first renders
+  // Initialize with career pins on first render
   useEffect(() => {
     if (careerLocationPins.length > 0) {
-      setActiveLocationFilter('career-pins');
+      console.log('Initializing with career path pins');
+      setCurrentJobsDisplay(JSON.parse(JSON.stringify(careerLocationPins)));
     }
   }, []);
 

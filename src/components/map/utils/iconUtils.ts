@@ -11,7 +11,7 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   console.log(`Creating icon for ${iconName} with color ${color}`);
   const el = document.createElement('div');
   el.className = 'career-path-marker';
-  el.style.width = '40px'; // Increased size for better visibility
+  el.style.width = '40px';
   el.style.height = '40px';
   el.style.display = 'flex';
   el.style.alignItems = 'center';
@@ -21,6 +21,8 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   el.style.boxShadow = '0 3px 6px rgba(0,0,0,0.3)';
   el.style.border = '2px solid white';
   el.style.cursor = 'pointer';
+  el.style.position = 'relative'; // Ensure position is set
+  el.style.zIndex = '10'; // Higher z-index to ensure visibility
   
   // Create inline SVG icons using Lucide icon paths
   const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -38,7 +40,7 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   switch (iconName) {
     case 'cpu':
       // Computer chip icon
-      iconPath = 'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18';
+      iconPath = 'M4 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4zm12 0v16M8 4v16m-4-4h16m-4-4h4m-4-4h4m-4-4h4';
       break;
     case 'trending-up':
       // Trending up chart icon
@@ -58,7 +60,7 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
       break;
     default:
       // Default icon is a map-pin
-      iconPath = 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z';
+      iconPath = 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z M12 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4z';
   }
   
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');

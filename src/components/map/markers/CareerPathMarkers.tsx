@@ -72,24 +72,41 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
           // Create a custom marker for career path pins
           const el = createCareerPathIconElement(job.careerPathPin.icon, job.careerPathPin.color);
           
-          // Create the marker
+          // Create the marker with explicit anchor at bottom
           const marker = new mapboxgl.Marker({ 
             element: el,
             anchor: 'bottom',
+            offset: [0, 0],
           })
             .setLngLat(coordinates);
           
-          // Add to map
-          marker.addTo(map.current!);
+          // Add to map with explicit error checking
+          if (map.current) {
+            marker.addTo(map.current);
+            console.log(`Added marker to map for ${job.id}`);
             
-          // Add popup after adding to map
-          marker.setPopup(
-            new mapboxgl.Popup({ offset: 25 }).setHTML(createCareerPathPopupHtml(job))
-          );
-          
-          // Track in our ref
-          markersRef.current.push(marker);
-          console.log(`Successfully added career path marker for ${job.title} at [${job.location.latitude}, ${job.location.longitude}]`);
+            // Force marker to appear by toggling visibility
+            setTimeout(() => {
+              const markerElement = marker.getElement();
+              if (markerElement) {
+                markerElement.style.visibility = 'hidden';
+                setTimeout(() => {
+                  markerElement.style.visibility = 'visible';
+                }, 50);
+              }
+            }, 100);
+            
+            // Add popup after adding to map
+            marker.setPopup(
+              new mapboxgl.Popup({ offset: 25 }).setHTML(createCareerPathPopupHtml(job))
+            );
+            
+            // Track in our ref
+            markersRef.current.push(marker);
+            console.log(`Successfully added career path marker for ${job.title} at [${job.location.latitude}, ${job.location.longitude}]`);
+          } else {
+            console.error('Map is not available when trying to add marker');
+          }
         } catch (error) {
           console.error("Error adding career path marker:", error, job);
           toast({

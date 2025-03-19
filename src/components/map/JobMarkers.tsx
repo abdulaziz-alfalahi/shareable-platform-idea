@@ -58,9 +58,13 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     }
     
     console.log(`Adding ${jobs.length} job markers to map`);
+    
     // Check for career path pins specifically
+    const regularJobs = jobs.filter(job => !job.careerPathPin && job.id !== 'workplace');
     const careerPathPins = jobs.filter(job => job.careerPathPin);
-    console.log(`Including ${careerPathPins.length} career path pins:`, careerPathPins);
+    const workplaceJobs = jobs.filter(job => job.id === 'workplace');
+    
+    console.log(`Breaking down jobs: ${regularJobs.length} regular, ${careerPathPins.length} career pins, ${workplaceJobs.length} workplace`);
     
     // Save the current jobs for comparison next time
     setJobsRef([...jobs]);
@@ -158,18 +162,20 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
 
   // Special effect just for career path pins to force rerender
   useEffect(() => {
-    if (mapReady && map.current) {
-      const careerPathPins = jobs.filter(job => job.careerPathPin);
-      if (careerPathPins.length > 0) {
-        console.log(`Found ${careerPathPins.length} career path pins, ensuring they're rendered`);
-        // Force clear markers and re-add after a short delay
+    const careerPathPins = jobs.filter(job => job.careerPathPin);
+    if (mapReady && map.current && careerPathPins.length > 0) {
+      console.log(`Found ${careerPathPins.length} career path pins, ensuring they're rendered`);
+      // Force clear markers and re-add after a short delay
+      setTimeout(() => {
+        clearAllMarkers();
+        console.log('Re-rendering all markers after timeout');
         setTimeout(() => {
-          clearAllMarkers();
-          console.log('Re-rendering all markers after timeout');
+          // This will call addMarkers indirectly through the dependency
+          setJobsRef([]);
         }, 100);
-      }
+      }, 100);
     }
-  }, [jobs, mapReady, map, clearAllMarkers]);
+  }, [jobs.length, mapReady, map, clearAllMarkers]);
 
   return (
     <>
@@ -177,7 +183,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
         <>
           <RegularMarkers 
             map={map} 
-            jobs={jobs.filter(job => !job.careerPathPin)} 
+            jobs={jobs.filter(job => !job.careerPathPin && job.id !== 'workplace')} 
             markersRef={markersRef} 
           />
           <CareerPathMarkers 
@@ -187,7 +193,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
           />
           <WorkplaceMarker 
             map={map} 
-            jobs={jobs} 
+            jobs={jobs.filter(job => job.id === 'workplace')} 
             onLocationUpdate={onLocationUpdate} 
             reverseGeocode={reverseGeocode} 
           />
