@@ -99,6 +99,27 @@ export const routes: AppRouteObject[] = [
     path: "/work-life-balance",
     element: lazy(() => import("./pages/WorkLifeBalance")),
   },
+  // Scholarship routes
+  {
+    path: "/scholarships",
+    element: lazy(() => import("./pages/Scholarships")),
+  },
+  {
+    path: "/scholarships/:id",
+    element: lazy(() => import("./pages/ScholarshipDetail")),
+  },
+  {
+    path: "/scholarships/applications/:id",
+    element: lazy(() => import("./pages/ScholarshipApplication")),
+  },
+  {
+    path: "/scholarships/applications/:id/edit",
+    element: lazy(() => import("./pages/ScholarshipApplicationForm")),
+  },
+  {
+    path: "/profile/scholarship",
+    element: lazy(() => import("./pages/ScholarshipProfile")),
+  },
   // Add a NotFound page for any other routes
   {
     path: "*",
