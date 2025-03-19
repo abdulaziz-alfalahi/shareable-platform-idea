@@ -56,3 +56,21 @@ export const createCareerPathPopupHtml = (job: JobLocation): string => {
     </div>
   `;
 };
+
+/**
+ * Creates HTML content for a workplace popup
+ * @param job The workplace location data
+ * @returns HTML string for the popup
+ */
+export const createWorkplacePopupHtml = (job: JobLocation): string => {
+  return `
+    <div class="workplace-popup p-3">
+      <h3 class="text-lg font-bold">${job.title || 'Your Workplace'}</h3>
+      <div class="company text-sm font-medium">${job.company || 'Your Company'}</div>
+      <div class="address text-xs text-gray-500 mt-2">${job.location.address || 'Set your workplace location'}</div>
+      <div class="mt-3 pt-2 border-t border-gray-200 text-xs text-gray-600">
+        Drag this marker to set your workplace location
+      </div>
+    </div>
+  `;
+};
