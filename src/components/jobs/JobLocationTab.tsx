@@ -13,6 +13,7 @@ import JobMap from '@/components/JobMap';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import NearbyJobsList from '@/components/map/NearbyJobsList';
 import { careerLocationPins } from './mock/careerLocationPins';
+import { useToast } from '@/components/ui/use-toast';
 
 interface JobLocationTabProps {
   jobs: JobLocation[];
@@ -24,6 +25,7 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
   const [nearbyJobs, setNearbyJobs] = useState<JobLocation[]>([]);
   const [searchRadius, setSearchRadius] = useState(5);
   const [currentJobsDisplay, setCurrentJobsDisplay] = useState<JobLocation[]>([]);
+  const { toast } = useToast();
   
   console.log(`JobLocationTab initial render with ${initialJobs.length} jobs`); 
   console.log('Career path pins available:', careerLocationPins.length, careerLocationPins);
@@ -62,6 +64,12 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
         // Make sure we always have a fresh copy of the career pins
         filteredJobs = JSON.parse(JSON.stringify(careerLocationPins));
         console.log('Switched to career pins tab, showing pins:', filteredJobs);
+        
+        // Show toast confirming career pins are loaded
+        toast({
+          title: "Career path locations loaded",
+          description: `Showing ${filteredJobs.length} career path opportunities on the map`,
+        });
         break;
       case 'all':
       default:
@@ -71,22 +79,21 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
     
     console.log(`Filtered to ${filteredJobs.length} jobs with filter: ${activeLocationFilter}`);
     setCurrentJobsDisplay(filteredJobs);
-    
-    // Force a small timeout to ensure UI updates before map renders
-    if (activeLocationFilter === 'career-pins') {
-      setTimeout(() => {
-        console.log('Re-rendering map with career pins after filter change');
-      }, 300);
-    }
-  }, [activeLocationFilter, initialJobs]);
+  }, [activeLocationFilter, initialJobs, toast]);
 
   // Initialize with career pins on first render
   useEffect(() => {
     if (careerLocationPins.length > 0) {
       console.log('Initializing with career path pins');
       setCurrentJobsDisplay(JSON.parse(JSON.stringify(careerLocationPins)));
+      
+      // Notify about career pins
+      toast({
+        title: "Career opportunities loaded",
+        description: `Showing ${careerLocationPins.length} career path locations around Al Fahidi Fort`,
+      });
     }
-  }, []);
+  }, [toast]);
 
   return (
     <Card className="border shadow-sm p-4">

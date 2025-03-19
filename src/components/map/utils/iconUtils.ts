@@ -19,10 +19,10 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   el.style.backgroundColor = color;
   el.style.borderRadius = '50%';
   el.style.boxShadow = '0 3px 6px rgba(0,0,0,0.3)';
-  el.style.border = '2px solid white';
+  el.style.border = '3px solid white';
   el.style.cursor = 'pointer';
   el.style.position = 'relative'; // Ensure position is set
-  el.style.zIndex = '10'; // Higher z-index to ensure visibility
+  el.style.zIndex = '999'; // Higher z-index to ensure visibility
   
   // Create inline SVG icons using Lucide icon paths
   const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -40,7 +40,7 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   switch (iconName) {
     case 'cpu':
       // Computer chip icon
-      iconPath = 'M4 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4zm12 0v16M8 4v16m-4-4h16m-4-4h4m-4-4h4m-4-4h4';
+      iconPath = 'M4 4h16v16H4V4zm4 4h8v8H8V8z M12 12h4M12 8v8';
       break;
     case 'trending-up':
       // Trending up chart icon
@@ -52,7 +52,7 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
       break;
     case 'utensils':
       // Food/hospitality icon
-      iconPath = 'M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20m14-9v7a2 2 0 0 1-2 2H9M17 2v7a2 2 0 0 1-2 2h-.5';
+      iconPath = 'M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2 M7 2v20 M21 15v5a2 2 0 0 1-2 2h-5 M21 15l-5-5';
       break;
     case 'zap':
       // Lightning/energy icon
@@ -67,6 +67,19 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   path.setAttribute('d', iconPath);
   iconSvg.appendChild(path);
   el.appendChild(iconSvg);
+  
+  // Add a debug element to test if the marker is actually being created
+  const debugElement = document.createElement('div');
+  debugElement.textContent = iconName;
+  debugElement.style.position = 'absolute';
+  debugElement.style.bottom = '-20px';
+  debugElement.style.left = '0';
+  debugElement.style.width = '100%';
+  debugElement.style.textAlign = 'center';
+  debugElement.style.color = color;
+  debugElement.style.fontSize = '10px';
+  debugElement.style.fontWeight = 'bold';
+  el.appendChild(debugElement);
   
   console.log('Created icon element:', el);
   return el;

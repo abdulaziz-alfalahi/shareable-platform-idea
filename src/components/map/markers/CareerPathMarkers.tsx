@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { JobLocation } from '@/types/map';
 import { createCareerPathIconElement } from '../utils/iconUtils';
@@ -14,9 +14,16 @@ interface CareerPathMarkersProps {
 
 const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, markersRef }) => {
   const { toast } = useToast();
+  const [markersAdded, setMarkersAdded] = useState(false);
   
   // Add career path markers
   useEffect(() => {
+    // Check if we have already added markers
+    if (markersAdded) {
+      console.log("Career path markers already added, skipping");
+      return;
+    }
+    
     // Wait for next render tick to ensure map is fully loaded
     const timer = setTimeout(() => {
       if (!map.current) {
@@ -37,9 +44,14 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
       }
       
       addCareerPathMarkers();
-    }, 500);
+    }, 1000); // Increased timeout
     
     function addCareerPathMarkers() {
+      if (!map.current) {
+        console.error('Map reference lost when adding career path markers');
+        return;
+      }
+      
       // Filter only career path markers
       const careerPathJobs = jobs.filter(job => job.careerPathPin);
       console.log('Career path jobs found:', careerPathJobs.length, careerPathJobs);
@@ -77,6 +89,7 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
             element: el,
             anchor: 'bottom',
             offset: [0, 0],
+            scale: 1.2, // Make it slightly larger
           })
             .setLngLat(coordinates);
           
@@ -85,6 +98,23 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
             marker.addTo(map.current);
             console.log(`Added marker to map for ${job.id}`);
             
+            // Create popup before adding to marker
+            const popup = new mapboxgl.Popup({ 
+              offset: 25,
+              closeButton: true,
+              closeOnClick: false
+            }).setHTML(createCareerPathPopupHtml(job));
+            
+            // Add popup to marker
+            marker.setPopup(popup);
+            
+            // Track in our ref
+            markersRef.current.push(marker);
+            console.log(`Successfully added career path marker for ${job.title}`);
+            
+            // Show popup on marker creation to debug
+            // marker.togglePopup();
+            
             // Force marker to appear by toggling visibility
             setTimeout(() => {
               const markerElement = marker.getElement();
@@ -92,18 +122,9 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
                 markerElement.style.visibility = 'hidden';
                 setTimeout(() => {
                   markerElement.style.visibility = 'visible';
-                }, 50);
+                }, 100);
               }
-            }, 100);
-            
-            // Add popup after adding to map
-            marker.setPopup(
-              new mapboxgl.Popup({ offset: 25 }).setHTML(createCareerPathPopupHtml(job))
-            );
-            
-            // Track in our ref
-            markersRef.current.push(marker);
-            console.log(`Successfully added career path marker for ${job.title} at [${job.location.latitude}, ${job.location.longitude}]`);
+            }, 500);
           } else {
             console.error('Map is not available when trying to add marker');
           }
@@ -116,10 +137,21 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
           });
         }
       });
+      
+      // Mark that we've added the markers
+      setMarkersAdded(true);
+      
+      // Show success toast
+      if (careerPathJobs.length > 0) {
+        toast({
+          title: "Career paths loaded",
+          description: `Added ${careerPathJobs.length} career paths to the map`,
+        });
+      }
     }
     
     return () => clearTimeout(timer);
-  }, [map, jobs, markersRef, toast]);
+  }, [map, jobs, markersRef, toast, markersAdded]);
 
   return null;
 };

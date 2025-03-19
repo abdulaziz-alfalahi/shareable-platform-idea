@@ -2,54 +2,49 @@
 import { JobLocation } from "@/types/map";
 
 /**
- * Creates HTML content for a job popup
- * @param job The job location data
- * @returns HTML string for the popup
+ * Creates HTML content for a regular job marker popup
  */
 export const createJobPopupHtml = (job: JobLocation): string => {
-  const matchHtml = job.matchPercentage 
-    ? `<div class="match-percentage mt-1 font-medium text-emerald-600">${job.matchPercentage}% Match</div>` 
-    : '';
-
   return `
-    <div class="job-popup p-2">
-      <h3 class="text-lg font-bold">${job.title}</h3>
-      <div class="company text-sm text-gray-600">${job.company}</div>
-      <div class="address text-xs text-gray-500 mt-1">${job.location.address}</div>
-      ${matchHtml}
-      <div class="mt-2 pt-2 border-t border-gray-200">
-        <a href="/job-detail/${job.id}" class="text-sm text-blue-600 hover:underline">View Details</a>
-      </div>
+    <div class="popup-content">
+      <h3 class="text-lg font-semibold">${job.title}</h3>
+      <p class="text-sm font-medium">${job.company}</p>
+      <p class="text-xs text-gray-500">${job.location.address}</p>
+      ${job.matchPercentage ? 
+        `<div class="mt-2">
+          <span class="text-xs font-medium ${job.matchPercentage > 80 ? 'text-green-600' : 'text-amber-600'}">
+            ${job.matchPercentage}% match
+          </span>
+        </div>` : ''
+      }
     </div>
   `;
 };
 
 /**
- * Creates HTML content for a career path popup
- * @param job The career path location data
- * @returns HTML string for the popup
+ * Creates HTML content for a career path pin popup
  */
 export const createCareerPathPopupHtml = (job: JobLocation): string => {
-  if (!job.careerPathPin) {
-    return createJobPopupHtml(job);
-  }
-
+  if (!job.careerPathPin) return createJobPopupHtml(job);
+  
   return `
-    <div class="career-path-popup p-3">
-      <div class="flex items-center mb-2">
-        <div class="w-6 h-6 rounded-full mr-2" style="background-color: ${job.careerPathPin.color}"></div>
-        <h3 class="text-lg font-bold">${job.title}</h3>
+    <div class="popup-content">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="inline-block w-3 h-3 rounded-full" style="background-color: ${job.careerPathPin.color}"></span>
+        <span class="text-xs font-medium uppercase">${job.careerPathPin.type} Career Path</span>
       </div>
-      <div class="company text-sm font-medium">${job.company}</div>
-      <div class="career-type text-xs py-1 px-2 bg-gray-100 rounded mt-1 inline-block">
-        ${job.careerPathPin.type} Career Path
-      </div>
-      <div class="address text-xs text-gray-500 mt-2">${job.location.address}</div>
-      <div class="match-percentage mt-2 text-sm font-medium text-emerald-600">
-        ${job.matchPercentage || 85}% Career Match
-      </div>
-      <div class="mt-3 pt-2 border-t border-gray-200">
-        <button class="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-full w-full">
+      <h3 class="text-lg font-semibold">${job.title}</h3>
+      <p class="text-sm font-medium">${job.company}</p>
+      <p class="text-xs text-gray-500">${job.location.address}</p>
+      ${job.matchPercentage ? 
+        `<div class="mt-2">
+          <span class="text-xs font-medium ${job.matchPercentage > 80 ? 'text-green-600' : 'text-amber-600'}">
+            ${job.matchPercentage}% match with your profile
+          </span>
+        </div>` : ''
+      }
+      <div class="mt-2">
+        <button class="text-xs text-white bg-emirati-oasisGreen px-2 py-1 rounded">
           Explore Career Path
         </button>
       </div>
@@ -58,18 +53,16 @@ export const createCareerPathPopupHtml = (job: JobLocation): string => {
 };
 
 /**
- * Creates HTML content for a workplace popup
- * @param job The workplace location data
- * @returns HTML string for the popup
+ * Creates HTML content for the workplace marker popup
  */
 export const createWorkplacePopupHtml = (job: JobLocation): string => {
   return `
-    <div class="workplace-popup p-3">
-      <h3 class="text-lg font-bold">${job.title || 'Your Workplace'}</h3>
-      <div class="company text-sm font-medium">${job.company || 'Your Company'}</div>
-      <div class="address text-xs text-gray-500 mt-2">${job.location.address || 'Set your workplace location'}</div>
-      <div class="mt-3 pt-2 border-t border-gray-200 text-xs text-gray-600">
-        Drag this marker to set your workplace location
+    <div class="popup-content">
+      <h3 class="text-lg font-semibold">${job.title}</h3>
+      <p class="text-sm">${job.company}</p>
+      <p class="text-xs text-gray-500">${job.location.address}</p>
+      <div class="mt-2 text-xs text-gray-600">
+        <p>Drag this marker to set your interview location</p>
       </div>
     </div>
   `;
