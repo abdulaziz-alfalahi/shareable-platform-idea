@@ -6,11 +6,13 @@ import { Card } from "@/components/ui/card";
 import { 
   BriefcaseIcon, 
   UserCheckIcon, 
-  DatabaseIcon
+  DatabaseIcon,
+  Award
 } from "lucide-react";
 import JobMap from '@/components/JobMap';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import NearbyJobsList from '@/components/map/NearbyJobsList';
+import { careerLocationPins } from './mock/careerLocationPins';
 
 interface JobLocationTabProps {
   jobs: JobLocation[];
@@ -18,7 +20,7 @@ interface JobLocationTabProps {
 }
 
 export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocationTabProps) => {
-  const [activeLocationFilter, setActiveLocationFilter] = useState<'ai-top-10' | 'portfolio-match' | 'all'>('all');
+  const [activeLocationFilter, setActiveLocationFilter] = useState<'ai-top-10' | 'portfolio-match' | 'all' | 'career-pins'>('all');
   const [nearbyJobs, setNearbyJobs] = useState<JobLocation[]>([]);
   const [searchRadius, setSearchRadius] = useState(5);
   
@@ -48,6 +50,8 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
         return initialJobs.filter(job => 
           job.portfolioMatch === true || Math.random() > 0.7
         );
+      case 'career-pins':
+        return [...careerLocationPins];
       case 'all':
       default:
         return initialJobs;
@@ -61,7 +65,7 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
       <div className="mb-6">
         <Tabs 
           defaultValue="all" 
-          onValueChange={(value) => setActiveLocationFilter(value as 'ai-top-10' | 'portfolio-match' | 'all')} 
+          onValueChange={(value) => setActiveLocationFilter(value as 'ai-top-10' | 'portfolio-match' | 'all' | 'career-pins')} 
           className="w-full"
         >
           <TabsList className="mb-4 bg-emirati-sandBeige/20 w-full justify-start">
@@ -70,6 +74,9 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
             </TabsTrigger>
             <TabsTrigger value="portfolio-match" className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white">
               <UserCheckIcon size={16} className="mr-2" /> Matching My Portfolio
+            </TabsTrigger>
+            <TabsTrigger value="career-pins" className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white">
+              <Award size={16} className="mr-2" /> Career Path Locations
             </TabsTrigger>
             <TabsTrigger value="all" className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white">
               <DatabaseIcon size={16} className="mr-2" /> All Vacancies
@@ -81,10 +88,11 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
           <p className="font-medium mb-1">
             {activeLocationFilter === 'ai-top-10' && 'Showing top 10 job matches based on your profile and skills'}
             {activeLocationFilter === 'portfolio-match' && 'Showing vacancies that align with your portfolio and experience'}
+            {activeLocationFilter === 'career-pins' && 'Showing career path opportunity locations around Al Fahidi Fort'}
             {activeLocationFilter === 'all' && 'Showing all available job vacancies'}
           </p>
           <p className="text-muted-foreground">
-            {filteredLocationJobs.length} vacancies found
+            {filteredLocationJobs.length} locations found
           </p>
         </div>
       </div>
