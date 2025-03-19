@@ -19,7 +19,7 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   el.style.borderRadius = '50%';
   el.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
   
-  // Create the SVG icon
+  // Create inline SVG icons using Lucide icon paths
   const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   iconSvg.setAttribute('width', '20');
   iconSvg.setAttribute('height', '20');
@@ -30,7 +30,7 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   iconSvg.setAttribute('stroke-linecap', 'round');
   iconSvg.setAttribute('stroke-linejoin', 'round');
   
-  // Add the appropriate path for the icon
+  // Add the appropriate path for the icon based on icon name
   let iconPath = '';
   switch (iconName) {
     case 'cpu':
@@ -49,6 +49,7 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
       iconPath = 'M13 2L3 14h9l-1 8 10-12h-9l1-8z';
       break;
     default:
+      // Default icon is a map-pin
       iconPath = 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z';
   }
   

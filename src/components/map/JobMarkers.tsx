@@ -50,8 +50,10 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
       return;
     }
     
-    // Only proceed if jobs actually changed
-    if (JSON.stringify(jobs) === JSON.stringify(jobsRef.current) && markersRef.current.length > 0) {
+    // Only proceed if jobs actually changed or no markers present yet
+    const jobsChanged = JSON.stringify(jobs) !== JSON.stringify(jobsRef.current);
+    if (!jobsChanged && markersRef.current.length > 0) {
+      console.log('Jobs data unchanged, skipping marker update');
       return;
     }
     
@@ -66,10 +68,17 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
       return;
     }
     
+    // Log career path pins to help debugging
+    const careerPins = jobs.filter(job => job.careerPathPin);
+    if (careerPins.length > 0) {
+      console.log(`Found ${careerPins.length} career path pins to display`, careerPins);
+    }
+    
     // Create a bounds object to fit all markers later
     const bounds = new mapboxgl.LngLatBounds();
     
     // Extend bounds with each valid marker position
+    let validCoordinatesCount = 0;
     jobs.forEach(job => {
       if (job.location && 
           job.location.latitude && 
@@ -77,10 +86,11 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
           !isNaN(job.location.latitude) && 
           !isNaN(job.location.longitude)) {
         bounds.extend([job.location.longitude, job.location.latitude]);
+        validCoordinatesCount++;
       }
     });
     
-    console.log(`Successfully prepared to add ${jobs.length} markers to the map`);
+    console.log(`${validCoordinatesCount} out of ${jobs.length} jobs have valid coordinates`);
     
     // Fit bounds if we have valid bounds and markers
     if (map.current && !bounds.isEmpty()) {
@@ -90,11 +100,20 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
           padding: 50,
           maxZoom: 15
         });
+        
+        // Add toast notification
+        if (jobs.length > 0) {
+          toast({
+            title: "Map updated",
+            description: `Showing ${jobs.length} locations on the map`,
+            duration: 3000
+          });
+        }
       } catch (error) {
         console.error("Error fitting bounds:", error);
       }
     }
-  }, [jobs, map, clearAllMarkers]);
+  }, [jobs, map, clearAllMarkers, toast]);
 
   // This effect runs once when the map is first ready
   useEffect(() => {

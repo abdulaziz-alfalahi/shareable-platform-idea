@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import { JobLocation } from '@/types/map';
 import { createCareerPathIconElement } from '../utils/iconUtils';
 import { createCareerPathPopupHtml } from '../utils/popupUtils';
+import { useToast } from '@/components/ui/use-toast';
 
 interface CareerPathMarkersProps {
   map: React.MutableRefObject<mapboxgl.Map | null>;
@@ -12,17 +13,29 @@ interface CareerPathMarkersProps {
 }
 
 const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, markersRef }) => {
+  const { toast } = useToast();
+  
   // Add career path markers
   useEffect(() => {
-    if (!map.current) return;
+    if (!map.current) {
+      console.log('Career path markers: Map not initialized');
+      return;
+    }
     
     // Filter only career path markers
     const careerPathJobs = jobs.filter(job => job.careerPathPin);
     
+    if (careerPathJobs.length === 0) {
+      console.log('No career path jobs found in data');
+      return;
+    }
+    
+    console.log(`Adding ${careerPathJobs.length} career path markers to the map`);
+    
     // Create markers for career path jobs
     careerPathJobs.forEach(job => {
       if (!job.location || !job.careerPathPin) {
-        console.warn(`Career path job ${job.id} is missing location data or career path info`);
+        console.warn(`Career path job ${job.id} is missing location data or career path info`, job);
         return;
       }
 
@@ -51,14 +64,19 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
         
         // Add to map and track in our ref
         markersRef.current.push(marker);
-        console.log(`Added career path marker for ${job.title}`);
+        console.log(`Added career path marker for ${job.title} at [${job.location.latitude}, ${job.location.longitude}]`);
       } catch (error) {
         console.error("Error adding career path marker:", error, job);
+        toast({
+          title: "Error adding career path marker",
+          description: `Could not add marker for ${job.title}`,
+          variant: "destructive"
+        });
       }
     });
     
     // No cleanup needed here as the parent component handles marker cleanup
-  }, [map, jobs, markersRef]);
+  }, [map, jobs, markersRef, toast]);
 
   return null;
 };

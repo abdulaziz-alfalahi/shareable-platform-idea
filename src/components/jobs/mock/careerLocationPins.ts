@@ -1,91 +1,86 @@
 
-import { JobLocation } from '@/types/map';
+import { JobLocation } from "@/types/map";
 
-// Career path location pins data with Al Fahidi Fort as center point
+// Mock career location pins data with explicit coordinates
 export const careerLocationPins: JobLocation[] = [
   {
-    id: 'career-1',
-    title: 'Technology Hub',
-    company: 'UAE Tech Innovation Center',
-    location: {
-      latitude: 25.2680,
-      longitude: 55.3080,
-      address: 'Dubai Digital Park, UAE'
-    },
-    matchPercentage: 95,
-    portfolioMatch: true,
+    id: "career-tech-hub",
+    title: "Technology Innovation Hub",
+    company: "Dubai Future Foundation",
     careerPathPin: {
-      type: 'technology',
-      icon: 'cpu',
-      color: '#3b82f6'
-    }
+      type: "Technology",
+      icon: "cpu",
+      color: "#3b82f6" // Blue
+    },
+    location: {
+      latitude: 25.2650,
+      longitude: 55.3010,
+      address: "Area 2071, Emirates Towers, Dubai"
+    },
+    matchPercentage: 95
   },
   {
-    id: 'career-2',
-    title: 'Finance District',
-    company: 'UAE Financial Center',
-    location: {
-      latitude: 25.2550,
-      longitude: 55.2850,
-      address: 'Financial District, Dubai, UAE'
-    },
-    matchPercentage: 88,
-    portfolioMatch: true,
+    id: "career-finance-center",
+    title: "Financial Services District",
+    company: "DIFC",
     careerPathPin: {
-      type: 'finance',
-      icon: 'trending-up',
-      color: '#10b981'
-    }
+      type: "Finance",
+      icon: "trending-up",
+      color: "#10b981" // Green
+    },
+    location: {
+      latitude: 25.2644,
+      longitude: 55.2900,
+      address: "Dubai International Financial Centre"
+    },
+    matchPercentage: 88
   },
   {
-    id: 'career-3',
-    title: 'Healthcare Innovation',
-    company: 'Emirates Medical Research',
-    location: {
-      latitude: 25.2750,
-      longitude: 55.3100,
-      address: 'Healthcare City, Dubai, UAE'
-    },
-    matchPercentage: 82,
-    portfolioMatch: false,
+    id: "career-healthcare-hub",
+    title: "Healthcare Excellence Center",
+    company: "Dubai Healthcare City",
     careerPathPin: {
-      type: 'healthcare',
-      icon: 'activity',
-      color: '#ef4444'
-    }
+      type: "Healthcare",
+      icon: "activity",
+      color: "#ef4444" // Red
+    },
+    location: {
+      latitude: 25.2707,
+      longitude: 55.3200,
+      address: "Dubai Healthcare City"
+    },
+    matchPercentage: 75
   },
   {
-    id: 'career-4',
-    title: 'Hospitality Excellence',
-    company: 'UAE Hospitality Group',
+    id: "career-hospitality-academy",
+    title: "Hospitality Management Institute",
+    company: "Emirates Academy of Hospitality",
+    careerPathPin: {
+      type: "Hospitality",
+      icon: "utensils",
+      color: "#f59e0b" // Amber
+    },
     location: {
       latitude: 25.2600,
-      longitude: 55.3150,
-      address: 'Hotel District, Dubai, UAE'
+      longitude: 55.3050,
+      address: "Jumeirah Beach Road, Dubai"
     },
-    matchPercentage: 76,
-    portfolioMatch: false,
-    careerPathPin: {
-      type: 'hospitality',
-      icon: 'utensils',
-      color: '#f59e0b'
-    }
+    matchPercentage: 82
   },
   {
-    id: 'career-5',
-    title: 'Sustainable Energy',
-    company: 'UAE Green Energy Initiative',
-    location: {
-      latitude: 25.2700,
-      longitude: 55.2800,
-      address: 'Sustainable City, Dubai, UAE'
-    },
-    matchPercentage: 91,
-    portfolioMatch: true,
+    id: "career-energy-center",
+    title: "Sustainable Energy Research Center",
+    company: "DEWA Innovation Hub",
     careerPathPin: {
-      type: 'energy',
-      icon: 'zap',
-      color: '#84cc16'
-    }
+      type: "Energy",
+      icon: "zap",
+      color: "#8b5cf6" // Purple
+    },
+    location: {
+      latitude: 25.2730,
+      longitude: 55.3080,
+      address: "Al Quoz, Dubai"
+    },
+    matchPercentage: 90
   }
 ];

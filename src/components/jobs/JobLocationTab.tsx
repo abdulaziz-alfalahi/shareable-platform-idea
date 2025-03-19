@@ -23,6 +23,10 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
   const [activeLocationFilter, setActiveLocationFilter] = useState<'ai-top-10' | 'portfolio-match' | 'all' | 'career-pins'>('all');
   const [nearbyJobs, setNearbyJobs] = useState<JobLocation[]>([]);
   const [searchRadius, setSearchRadius] = useState(5);
+  const [currentJobsDisplay, setCurrentJobsDisplay] = useState<JobLocation[]>(initialJobs);
+  
+  console.log(`JobLocationTab initial render with ${initialJobs.length} jobs`); 
+  console.log('Career path pins available:', careerLocationPins.length);
   
   // Handle nearby jobs updates
   const handleNearbyJobsUpdate = (jobs: JobLocation[]) => {
@@ -36,35 +40,45 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
   };
 
   // Get filtered jobs based on the selected filter
-  const getFilteredLocationJobs = () => {
+  useEffect(() => {
+    let filteredJobs: JobLocation[] = [];
+    
     switch (activeLocationFilter) {
       case 'ai-top-10':
-        return [...initialJobs]
+        filteredJobs = [...initialJobs]
           .sort((a, b) => {
             const aMatch = a.matchPercentage || Math.floor(Math.random() * 40) + 60;
             const bMatch = b.matchPercentage || Math.floor(Math.random() * 40) + 60;
             return bMatch - aMatch;
           })
           .slice(0, 10);
+        break;
       case 'portfolio-match':
-        return initialJobs.filter(job => 
+        filteredJobs = initialJobs.filter(job => 
           job.portfolioMatch === true || Math.random() > 0.7
         );
+        break;
       case 'career-pins':
-        return [...careerLocationPins];
+        filteredJobs = [...careerLocationPins];
+        console.log('Switched to career pins tab, showing', filteredJobs.length, 'pins');
+        break;
       case 'all':
       default:
-        return initialJobs;
+        filteredJobs = initialJobs;
+        break;
     }
-  };
-
-  const filteredLocationJobs = getFilteredLocationJobs();
+    
+    console.log(`Filtered to ${filteredJobs.length} jobs with filter: ${activeLocationFilter}`);
+    setCurrentJobsDisplay(filteredJobs);
+    
+  }, [activeLocationFilter, initialJobs]);
 
   return (
     <Card className="border shadow-sm p-4">
       <div className="mb-6">
         <Tabs 
           defaultValue="all" 
+          value={activeLocationFilter}
           onValueChange={(value) => setActiveLocationFilter(value as 'ai-top-10' | 'portfolio-match' | 'all' | 'career-pins')} 
           className="w-full"
         >
@@ -92,7 +106,7 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
             {activeLocationFilter === 'all' && 'Showing all available job vacancies'}
           </p>
           <p className="text-muted-foreground">
-            {filteredLocationJobs.length} locations found
+            {currentJobsDisplay.length} locations found
           </p>
         </div>
       </div>
@@ -101,7 +115,7 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
         <ResizablePanel defaultSize={60} minSize={40}>
           <div className="h-full p-4">
             <JobMap 
-              jobs={filteredLocationJobs} 
+              jobs={currentJobsDisplay} 
               onLocationUpdate={onLocationUpdate} 
               onNearbyJobsUpdate={handleNearbyJobsUpdate}
               onRadiusChange={handleRadiusChange}
@@ -112,7 +126,7 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
         <ResizablePanel defaultSize={40} minSize={30}>
           <div className="h-full p-4 overflow-auto">
             <NearbyJobsList 
-              jobs={nearbyJobs.length > 0 ? nearbyJobs : filteredLocationJobs} 
+              jobs={nearbyJobs.length > 0 ? nearbyJobs : currentJobsDisplay} 
               searchRadius={searchRadius} 
             />
           </div>
