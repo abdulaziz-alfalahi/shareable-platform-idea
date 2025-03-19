@@ -5,7 +5,17 @@ import { JobMapProps } from '@/types/map';
 import { useJobMapState } from '@/hooks/map/useJobMapState';
 import MapDisplay from './map/MapDisplay';
 
-const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
+interface ExtendedJobMapProps extends JobMapProps {
+  onNearbyJobsUpdate?: (jobs: any[]) => void;
+  onRadiusChange?: (radius: number) => void;
+}
+
+const JobMap = ({ 
+  jobs = [], 
+  onLocationUpdate,
+  onNearbyJobsUpdate,
+  onRadiusChange 
+}: ExtendedJobMapProps) => {
   const {
     mapboxToken,
     setMapboxToken,
@@ -29,8 +39,23 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
     }
   }, [jobs]);
 
+  // Pass nearby jobs to parent component
+  useEffect(() => {
+    if (onNearbyJobsUpdate && nearbyJobs.length > 0) {
+      onNearbyJobsUpdate(nearbyJobs);
+    }
+  }, [nearbyJobs, onNearbyJobsUpdate]);
+
+  // Handle radius changes and propagate to parent
+  const handleRadiusChangeExtended = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleRadiusChange(e);
+    if (onRadiusChange) {
+      onRadiusChange(parseInt(e.target.value));
+    }
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="h-full">
       <MapDisplay
         mapboxToken={mapboxToken}
         setMapboxToken={setMapboxToken}
@@ -39,7 +64,7 @@ const JobMap = ({ jobs = [], onLocationUpdate }: JobMapProps) => {
         userLocation={userLocation}
         setUserLocation={setUserLocation}
         searchRadius={searchRadius}
-        handleRadiusChange={handleRadiusChange}
+        handleRadiusChange={handleRadiusChangeExtended}
         nearbyJobs={nearbyJobs}
         locationSearch={locationSearch}
         setLocationSearch={setLocationSearch}

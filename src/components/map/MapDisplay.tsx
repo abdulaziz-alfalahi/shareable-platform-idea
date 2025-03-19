@@ -4,7 +4,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import TokenInput from './TokenInput';
 import MapContainer from './MapContainer';
 import MapControls from './MapControls';
-import NearbyJobsList from './NearbyJobsList';
 import { JobLocation } from '@/types/map';
 
 interface MapDisplayProps {
@@ -63,7 +62,7 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
 
   // Display map and controls if token is provided
   return (
-    <div className="space-y-4">
+    <div className="space-y-2 h-full flex flex-col">
       <MapControls
         locationSearch={locationSearch}
         setLocationSearch={setLocationSearch}
@@ -73,17 +72,17 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
         onLocationUpdate={onLocationUpdate}
       />
 
-      <MapContainer
-        mapboxToken={mapboxToken}
-        jobs={displayJobs}
-        userLocation={userLocation}
-        setUserLocation={setUserLocation}
-        onLocationUpdate={onLocationUpdate}
-        reverseGeocode={reverseGeocode}
-        findNearbyJobs={findNearbyJobs}
-      />
-
-      <NearbyJobsList jobs={nearbyJobs} searchRadius={searchRadius} />
+      <div className="flex-grow">
+        <MapContainer
+          mapboxToken={mapboxToken}
+          jobs={displayJobs}
+          userLocation={userLocation}
+          setUserLocation={setUserLocation}
+          onLocationUpdate={onLocationUpdate}
+          reverseGeocode={reverseGeocode}
+          findNearbyJobs={findNearbyJobs}
+        />
+      </div>
     </div>
   );
 };

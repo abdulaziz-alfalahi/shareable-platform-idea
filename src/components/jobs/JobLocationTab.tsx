@@ -9,6 +9,8 @@ import {
   DatabaseIcon
 } from "lucide-react";
 import JobMap from '@/components/JobMap';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import NearbyJobsList from '@/components/map/NearbyJobsList';
 
 interface JobLocationTabProps {
   jobs: JobLocation[];
@@ -17,11 +19,19 @@ interface JobLocationTabProps {
 export const JobLocationTab = ({ jobs: initialJobs }: JobLocationTabProps) => {
   const [activeLocationFilter, setActiveLocationFilter] = useState<'ai-top-10' | 'portfolio-match' | 'all'>('all');
   const [jobs, setJobs] = useState<JobLocation[]>(initialJobs);
+  const [nearbyJobs, setNearbyJobs] = useState<JobLocation[]>([]);
+  const [searchRadius, setSearchRadius] = useState(5);
   
   // Handle location updates from the map
   const handleLocationUpdate = (updatedJobs: JobLocation[]) => {
     console.log('JobLocationTab received updated jobs:', updatedJobs.length);
     setJobs(updatedJobs);
+  };
+
+  // Handle nearby jobs updates
+  const handleNearbyJobsUpdate = (jobs: JobLocation[]) => {
+    console.log('JobLocationTab received nearby jobs:', jobs.length);
+    setNearbyJobs(jobs);
   };
 
   // Update jobs when initialJobs prop changes
@@ -50,6 +60,11 @@ export const JobLocationTab = ({ jobs: initialJobs }: JobLocationTabProps) => {
   };
 
   const filteredLocationJobs = getFilteredLocationJobs();
+
+  // Handle radius change from the map component
+  const handleRadiusChange = (radius: number) => {
+    setSearchRadius(radius);
+  };
 
   return (
     <div>
@@ -90,14 +105,27 @@ export const JobLocationTab = ({ jobs: initialJobs }: JobLocationTabProps) => {
         </div>
       </div>
 
-      <Card className="border-emirati-sandBeige mb-6">
-        <CardContent className="p-6">
-          <JobMap 
-            jobs={filteredLocationJobs} 
-            onLocationUpdate={handleLocationUpdate} 
-          />
-        </CardContent>
-      </Card>
+      <ResizablePanelGroup direction="horizontal" className="min-h-[600px] border rounded-lg">
+        <ResizablePanel defaultSize={60} minSize={40}>
+          <div className="h-full p-4">
+            <JobMap 
+              jobs={filteredLocationJobs} 
+              onLocationUpdate={handleLocationUpdate} 
+              onNearbyJobsUpdate={handleNearbyJobsUpdate}
+              onRadiusChange={handleRadiusChange}
+            />
+          </div>
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={40} minSize={30}>
+          <div className="h-full p-4 overflow-auto">
+            <NearbyJobsList 
+              jobs={nearbyJobs.length > 0 ? nearbyJobs : filteredLocationJobs} 
+              searchRadius={searchRadius} 
+            />
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </div>
   );
 };

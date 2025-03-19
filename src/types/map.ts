@@ -21,4 +21,7 @@ export interface JobLocation {
 export interface JobMapProps {
   jobs: JobLocation[];
   onLocationUpdate?: (jobs: JobLocation[]) => void;
+  onNearbyJobsUpdate?: (jobs: JobLocation[]) => void;
+  onRadiusChange?: (radius: number) => void;
 }
+

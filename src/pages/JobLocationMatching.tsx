@@ -3,9 +3,8 @@ import { useState, useEffect } from 'react';
 import { allJobLocationsData } from '@/components/jobs/mock';
 import LocationMatchingHeader from '@/components/jobs/location/LocationMatchingHeader';
 import FilterTabs, { FilterType } from '@/components/jobs/location/FilterTabs';
-import { Card, CardContent } from '@/components/ui/card';
-import JobMap from '@/components/JobMap';
 import { JobLocation } from '@/types/map';
+import JobLocationTab from '@/components/jobs/JobLocationTab';
 
 const JobLocationMatching = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
@@ -54,14 +53,7 @@ const JobLocationMatching = () => {
         filteredJobsCount={displayJobs.length}
       />
 
-      <Card className="border-emirati-sandBeige mb-6">
-        <CardContent className="p-6">
-          <JobMap 
-            jobs={displayJobs} 
-            onLocationUpdate={handleLocationUpdate} 
-          />
-        </CardContent>
-      </Card>
+      <JobLocationTab jobs={displayJobs} />
     </div>
   );
 };
