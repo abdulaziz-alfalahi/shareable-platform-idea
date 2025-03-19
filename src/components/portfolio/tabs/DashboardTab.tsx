@@ -6,13 +6,14 @@ import { PortfolioItem } from "../PortfolioItemCard";
 
 interface DashboardTabProps {
   portfolioItems: PortfolioItem[];
+  onAddItem: (newItem: PortfolioItem) => void;
 }
 
-const DashboardTab: React.FC<DashboardTabProps> = ({ portfolioItems }) => {
+const DashboardTab: React.FC<DashboardTabProps> = ({ portfolioItems, onAddItem }) => {
   return (
     <>
       <h2 className="text-2xl font-bold mb-4">Your Portfolio Overview</h2>
-      <PortfolioItemsGrid items={portfolioItems} />
+      <PortfolioItemsGrid items={portfolioItems} onAddItem={onAddItem} />
       <CompletionStatusSection />
     </>
   );

@@ -6,9 +6,14 @@ import AddItemCard from "./AddItemCard";
 interface PortfolioItemsGridProps {
   items: PortfolioItem[];
   filterType?: string;
+  onAddItem: (newItem: PortfolioItem) => void;
 }
 
-const PortfolioItemsGrid: React.FC<PortfolioItemsGridProps> = ({ items, filterType }) => {
+const PortfolioItemsGrid: React.FC<PortfolioItemsGridProps> = ({ 
+  items, 
+  filterType,
+  onAddItem
+}) => {
   const filteredItems = filterType 
     ? items.filter(item => item.type === filterType)
     : items;
@@ -20,7 +25,7 @@ const PortfolioItemsGrid: React.FC<PortfolioItemsGridProps> = ({ items, filterTy
       ))}
 
       {/* Add new item card */}
-      <AddItemCard />
+      <AddItemCard onAddItem={onAddItem} />
     </div>
   );
 };

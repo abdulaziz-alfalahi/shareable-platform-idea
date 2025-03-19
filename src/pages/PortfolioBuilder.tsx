@@ -9,10 +9,15 @@ import CertificationsTab from "@/components/portfolio/tabs/CertificationsTab";
 import AchievementsTab from "@/components/portfolio/tabs/AchievementsTab";
 import SettingsTab from "@/components/portfolio/tabs/SettingsTab";
 import { initialPortfolioItems } from "@/components/portfolio/portfolioData";
+import { PortfolioItem } from "@/components/portfolio/PortfolioItemCard";
 
 const PortfolioBuilder = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [portfolioItems, setPortfolioItems] = useState(initialPortfolioItems);
+
+  const handleAddItem = (newItem: PortfolioItem) => {
+    setPortfolioItems(prevItems => [...prevItems, newItem]);
+  };
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -33,19 +38,19 @@ const PortfolioBuilder = () => {
         </TabsList>
         
         <TabsContent value="dashboard">
-          <DashboardTab portfolioItems={portfolioItems} />
+          <DashboardTab portfolioItems={portfolioItems} onAddItem={handleAddItem} />
         </TabsContent>
         
         <TabsContent value="projects">
-          <ProjectsTab portfolioItems={portfolioItems} />
+          <ProjectsTab portfolioItems={portfolioItems} onAddItem={handleAddItem} />
         </TabsContent>
         
         <TabsContent value="certifications">
-          <CertificationsTab portfolioItems={portfolioItems} />
+          <CertificationsTab portfolioItems={portfolioItems} onAddItem={handleAddItem} />
         </TabsContent>
         
         <TabsContent value="achievements">
-          <AchievementsTab portfolioItems={portfolioItems} />
+          <AchievementsTab portfolioItems={portfolioItems} onAddItem={handleAddItem} />
         </TabsContent>
         
         <TabsContent value="settings">
