@@ -26,7 +26,7 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
   const [currentJobsDisplay, setCurrentJobsDisplay] = useState<JobLocation[]>(initialJobs);
   
   console.log(`JobLocationTab initial render with ${initialJobs.length} jobs`); 
-  console.log('Career path pins available:', careerLocationPins.length);
+  console.log('Career path pins available:', careerLocationPins.length, careerLocationPins);
   
   // Handle nearby jobs updates
   const handleNearbyJobsUpdate = (jobs: JobLocation[]) => {
@@ -60,7 +60,7 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
         break;
       case 'career-pins':
         filteredJobs = [...careerLocationPins];
-        console.log('Switched to career pins tab, showing', filteredJobs.length, 'pins');
+        console.log('Switched to career pins tab, showing pins:', filteredJobs);
         break;
       case 'all':
       default:

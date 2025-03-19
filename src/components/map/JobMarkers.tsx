@@ -58,6 +58,10 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     }
     
     console.log(`Adding ${jobs.length} job markers to map`);
+    // Check for career path pins specifically
+    const careerPathPins = jobs.filter(job => job.careerPathPin);
+    console.log(`Including ${careerPathPins.length} career path pins:`, careerPathPins);
+    
     setJobsRef([...jobs]);
     
     // Clear existing markers first

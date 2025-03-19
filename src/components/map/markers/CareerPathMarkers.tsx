@@ -24,13 +24,14 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
     
     // Filter only career path markers
     const careerPathJobs = jobs.filter(job => job.careerPathPin);
+    console.log('Career path jobs found:', careerPathJobs);
     
     if (careerPathJobs.length === 0) {
       console.log('No career path jobs found in data');
       return;
     }
     
-    console.log(`Adding ${careerPathJobs.length} career path markers to the map`);
+    console.log(`Adding ${careerPathJobs.length} career path markers to the map`, careerPathJobs);
     
     // Create markers for career path jobs
     careerPathJobs.forEach(job => {
@@ -48,6 +49,7 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
 
       try {
         const coordinates: [number, number] = [job.location.longitude, job.location.latitude];
+        console.log(`Creating marker for ${job.title} at coordinates:`, coordinates);
         
         // Create a custom marker for career path pins
         const el = createCareerPathIconElement(job.careerPathPin.icon, job.careerPathPin.color);
@@ -64,7 +66,7 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
         
         // Add to map and track in our ref
         markersRef.current.push(marker);
-        console.log(`Added career path marker for ${job.title} at [${job.location.latitude}, ${job.location.longitude}]`);
+        console.log(`Successfully added career path marker for ${job.title} at [${job.location.latitude}, ${job.location.longitude}]`);
       } catch (error) {
         console.error("Error adding career path marker:", error, job);
         toast({

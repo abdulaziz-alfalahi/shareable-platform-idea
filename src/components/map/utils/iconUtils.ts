@@ -8,6 +8,7 @@ import { CareerPathPin } from "@/types/map";
  * @returns An HTML div element styled as a marker icon
  */
 export const createCareerPathIconElement = (iconName: string, color: string): HTMLDivElement => {
+  console.log(`Creating icon for ${iconName} with color ${color}`);
   const el = document.createElement('div');
   el.className = 'career-path-marker';
   el.style.width = '36px';
@@ -58,5 +59,6 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   iconSvg.appendChild(path);
   el.appendChild(iconSvg);
   
+  console.log('Created icon element:', el);
   return el;
 };
