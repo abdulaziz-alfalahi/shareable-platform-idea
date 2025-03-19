@@ -1,132 +1,85 @@
-
 import { lazy } from "react";
-import { RouteObject } from "react-router-dom";
 
-// Define a type for our custom route object that works with lazy loaded components
-interface AppRouteObject {
-  path: string;
-  element: React.ComponentType<any>;
-  errorElement?: React.ComponentType<any>;
-}
+// Layouts
+import MainLayout from "./layouts/MainLayout";
+import DashboardLayout from "./components/dashboard/DashboardLayout";
 
-// Create a routes array with the correct types
-export const routes: AppRouteObject[] = [
+// Shared Pages
+import HomePage from "./pages/HomePage";
+import ErrorPage from "./pages/ErrorPage";
+import MindMap from "./pages/MindMap";
+import CareerPassport from "./pages/CareerPassport";
+import OnboardingPage from "./pages/OnboardingPage";
+import UserManagement from "./pages/UserManagement";
+
+// Student Pages
+const StudentDashboard = lazy(() => import("./pages/student/StudentDashboard"));
+
+// Recruiter Pages
+const RecruiterDashboard = lazy(() => import("./pages/recruiter/RecruiterDashboard"));
+
+// Advisor Pages
+const AdvisorDashboard = lazy(() => import("./pages/advisor/AdvisorDashboard"));
+
+// Training Pages
+const TrainingDashboard = lazy(() => import("./pages/training/TrainingDashboard"));
+
+// Parent Pages
+const ParentDashboard = lazy(() => import("./pages/parent/ParentDashboard"));
+
+// Define routes
+export const routes = [
   {
     path: "/",
-    element: lazy(() => import("./pages/Index")),
+    element: HomePage,
+    layout: MainLayout,
+  },
+  {
+    path: "/onboarding",
+    element: OnboardingPage,
+    layout: MainLayout,
   },
   {
     path: "/student-dashboard",
-    element: lazy(() => import("./pages/StudentDashboard")),
+    element: StudentDashboard,
+    layout: DashboardLayout,
   },
   {
     path: "/recruiter-dashboard",
-    element: lazy(() => import("./pages/RecruiterDashboard")),
+    element: RecruiterDashboard,
+    layout: DashboardLayout,
   },
   {
     path: "/advisor-dashboard",
-    element: lazy(() => import("./pages/AdvisorDashboard")),
+    element: AdvisorDashboard,
+    layout: DashboardLayout,
   },
   {
-    path: "/admin-dashboard",
-    element: lazy(() => import("./pages/AdminDashboard")),
+    path: "/training-dashboard",
+    element: TrainingDashboard,
+    layout: DashboardLayout,
   },
   {
-    path: "/training-institute-dashboard",
-    element: lazy(() => import("./pages/TrainingInstituteDashboard")),
-  },
-  {
-    path: "/job-applications",
-    element: lazy(() => import("./pages/JobApplications")),
-  },
-  {
-    path: "/job-location-matching",
-    element: lazy(() => import("./pages/JobLocationMatching")),
-  },
-  {
-    path: "/career-passport",
-    element: lazy(() => import("./pages/CareerPassportPage")),
-  },
-  {
-    path: "/career-passport/:id",
-    element: lazy(() => import("./pages/CareerPassportPage")),
-  },
-  {
-    path: "/achievements",
-    element: lazy(() => import("./pages/Achievements")),
-  },
-  {
-    path: "/industry-guides",
-    element: lazy(() => import("./pages/IndustryGuides")),
-  },
-  {
-    path: "/educational-resources",
-    element: lazy(() => import("./pages/EducationalResources")),
-  },
-  {
-    path: "/enhanced-retirement-planning",
-    element: lazy(() => import("./pages/EnhancedRetirementPlanning")),
+    path: "/parent-dashboard",
+    element: ParentDashboard,
+    layout: DashboardLayout,
   },
   {
     path: "/mindmap",
-    element: lazy(() => import("./pages/MindMap")),
+    element: MindMap,
+    layout: DashboardLayout,
   },
   {
-    path: "/training-centers",
-    element: lazy(() => import("./pages/TrainingCenters")),
+    path: "/career-passport",
+    element: CareerPassport,
+    layout: DashboardLayout,
   },
   {
-    path: "/data-entry",
-    element: lazy(() => import("./pages/DataEntryPage")),
+    path: "/user-management",
+    element: UserManagement
   },
-  {
-    path: "/recruiter-calendar",
-    element: lazy(() => import("./pages/RecruiterDashboard")), // Fixed: changed to an existing page as placeholder
-  },
-  {
-    path: "/summer-camps",
-    element: lazy(() => import("./pages/SummerCamps")),
-  },
-  {
-    path: "/internships",
-    element: lazy(() => import("./pages/Internships")),
-  },
-  {
-    path: "/portfolio-builder",
-    element: lazy(() => import("./pages/PortfolioBuilder")),
-  },
-  {
-    path: "/work-life-balance",
-    element: lazy(() => import("./pages/WorkLifeBalance")),
-  },
-  // Scholarship routes
-  {
-    path: "/scholarships",
-    element: lazy(() => import("./pages/Scholarships")),
-  },
-  {
-    path: "/scholarships/:id",
-    element: lazy(() => import("./pages/ScholarshipDetail")),
-  },
-  {
-    path: "/scholarships/applications/:id",
-    element: lazy(() => import("./pages/ScholarshipApplication")),
-  },
-  {
-    path: "/scholarships/applications/:id/edit",
-    element: lazy(() => import("./pages/ScholarshipApplicationForm")),
-  },
-  {
-    path: "/profile/scholarship",
-    element: lazy(() => import("./pages/ScholarshipProfile")),
-  },
-  // Add a NotFound page for any other routes
   {
     path: "*",
-    element: lazy(() => import("./pages/NotFound")),
+    element: ErrorPage,
   },
 ];
-
-export default function defineRoutes() {
-  return routes;
-}
