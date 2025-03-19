@@ -10,6 +10,16 @@ import PartnersTab from "@/components/training/dashboard/tabs/PartnersTab";
 const TrainingDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("programs");
   
+  // Mock training data
+  const trainingData = {
+    programs: [
+      { id: 1, name: "Web Development Fundamentals", enrolledStudents: 42, duration: "12 weeks" },
+      { id: 2, name: "Data Science with Python", enrolledStudents: 38, duration: "10 weeks" },
+      { id: 3, name: "UI/UX Design Principles", enrolledStudents: 25, duration: "8 weeks" },
+    ],
+    // Add other training data as needed
+  };
+  
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-6">Training Center Dashboard</h1>
@@ -28,7 +38,7 @@ const TrainingDashboard: React.FC = () => {
         </TabsList>
         
         <TabsContent value="programs">
-          <ProgramsTab />
+          <ProgramsTab trainingData={trainingData} />
         </TabsContent>
         
         <TabsContent value="students">
