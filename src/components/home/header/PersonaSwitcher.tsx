@@ -48,7 +48,12 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
   };
 
   const handleMindMapClick = () => {
-    navigate('/mind-map');
+    navigate('/mindmap');
+  };
+  
+  const handleMentorsClick = () => {
+    // Navigate to student dashboard with mentors tab selected
+    navigate('/student-dashboard?tab=mentors');
   };
 
   return (
@@ -98,6 +103,18 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
           <div className="flex items-center">
             <Map className="h-4 w-4 mr-2" />
             <span>Mind Map</span>
+          </div>
+        </DropdownMenuItem>
+        
+        {/* Mentors option */}
+        <DropdownMenuItem 
+          key="mentors" 
+          className="py-2"
+          onClick={handleMentorsClick}
+        >
+          <div className="flex items-center">
+            <User className="h-4 w-4 mr-2" />
+            <span>Mentors</span>
           </div>
         </DropdownMenuItem>
         

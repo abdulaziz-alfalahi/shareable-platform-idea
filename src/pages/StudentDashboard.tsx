@@ -1,8 +1,8 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RoleDashboardLayout, { DashboardTab } from "@/components/dashboard/RoleDashboardLayout";
 import { BookOpen, PlusCircle, FileText, Briefcase } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { studentData } from "@/data/studentMockData";
 import { getStudentDashboardMetrics } from "@/components/student/dashboard/StudentDashboardMetrics";
 
@@ -14,8 +14,25 @@ import CareerPathTab from "@/components/student/dashboard/tabs/CareerPathTab";
 import MentorsTab from "@/components/student/dashboard/tabs/MentorsTab";
 
 const StudentDashboard = () => {
-  const [activeTab, setActiveTab] = useState("overview");
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const tabParam = searchParams.get("tab");
+  
+  const [activeTab, setActiveTab] = useState(tabParam || "overview");
   const navigate = useNavigate();
+
+  // Update URL when tab changes
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    navigate(`/student-dashboard?tab=${tab}`, { replace: true });
+  };
+
+  // Update tab state if URL parameter changes
+  useEffect(() => {
+    if (tabParam && ["overview", "courses", "assessments", "career", "mentors"].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
 
   const dashboardTabs: DashboardTab[] = [
     { value: "overview", label: "Overview" },
@@ -70,7 +87,7 @@ const StudentDashboard = () => {
       subtitle="Welcome back, Mohammed. Continue your journey to excellence."
       tabs={dashboardTabs}
       activeTab={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={handleTabChange}
       role="student"
       metrics={dashboardMetrics}
       actions={dashboardActions}

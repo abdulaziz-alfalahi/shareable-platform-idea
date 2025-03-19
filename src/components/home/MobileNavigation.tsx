@@ -1,13 +1,13 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   Sheet, 
   SheetContent, 
   SheetTrigger,
   SheetClose
 } from "@/components/ui/sheet";
-import { Menu, X, Home, Briefcase, GraduationCap, Building, Map, Database } from "lucide-react";
+import { Menu, X, Home, Briefcase, GraduationCap, Building, Map, Database, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ThemeToggle from "./theme/ThemeToggle";
@@ -17,19 +17,26 @@ interface MobileNavigationProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const navLinks = [
-  { to: "/student-dashboard", label: "Dashboard", icon: <Home className="h-5 w-5 mr-3" /> },
-  { to: "/career-passport", label: "Career Passport", icon: <GraduationCap className="h-5 w-5 mr-3" /> },
-  { to: "/job-applications", label: "Jobs", icon: <Briefcase className="h-5 w-5 mr-3" /> },
-  { to: "/training-centers", label: "Training", icon: <Building className="h-5 w-5 mr-3" /> },
-  { to: "/mindmap", label: "Mindmap", icon: <Map className="h-5 w-5 mr-3" /> },
-  { to: "/data-entry", label: "Data Entry", icon: <Database className="h-5 w-5 mr-3" /> },
-];
-
 const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, setIsOpen }) => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+
+  const navLinks = [
+    { to: "/student-dashboard", label: "Dashboard", icon: <Home className="h-5 w-5 mr-3" /> },
+    { to: "/career-passport", label: "Career Passport", icon: <GraduationCap className="h-5 w-5 mr-3" /> },
+    { to: "/job-applications", label: "Jobs", icon: <Briefcase className="h-5 w-5 mr-3" /> },
+    { to: "/training-centers", label: "Training", icon: <Building className="h-5 w-5 mr-3" /> },
+    { to: "/student-dashboard?tab=mentors", label: "Mentors", icon: <User className="h-5 w-5 mr-3" /> },
+    { to: "/mindmap", label: "Mindmap", icon: <Map className="h-5 w-5 mr-3" /> },
+    { to: "/data-entry", label: "Data Entry", icon: <Database className="h-5 w-5 mr-3" /> },
+  ];
 
   if (!isMobile) return null;
+
+  const handleNavLinkClick = (to: string) => {
+    navigate(to);
+    setIsOpen(false);
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -56,22 +63,21 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, setIsOpen }
           </div>
 
           <div className="text-2xl font-bold text-emirati-desertRed mb-8">
-            <Link to="/" onClick={() => setIsOpen(false)}>
+            <div onClick={() => handleNavLinkClick('/')} className="cursor-pointer">
               Emirati Journey
-            </Link>
+            </div>
           </div>
 
           <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => (
-              <SheetClose asChild key={link.to}>
-                <Link 
-                  to={link.to} 
-                  className="flex items-center text-gray-700 hover:text-emirati-oasisGreen hover:bg-emirati-sandBeige/10 transition py-3 px-3 rounded-md"
-                >
-                  {link.icon}
-                  {link.label}
-                </Link>
-              </SheetClose>
+              <div 
+                key={link.to}
+                className="flex items-center text-gray-700 hover:text-emirati-oasisGreen hover:bg-emirati-sandBeige/10 transition py-3 px-3 rounded-md cursor-pointer"
+                onClick={() => handleNavLinkClick(link.to)}
+              >
+                {link.icon}
+                {link.label}
+              </div>
             ))}
           </nav>
 
