@@ -1,26 +1,24 @@
 
 import React from "react";
 import JourneyList from "./JourneyList";
-import { journeyData } from "./journeyData";
+import { JourneyStep } from "./journeyData";
 
 interface PersonaTabProps {
-  id: string;
+  journeyData: JourneyStep[];
+  id?: string;
   filtered?: boolean;
 }
 
-const PersonaTab: React.FC<PersonaTabProps> = ({ id, filtered = false }) => {
-  const persona = journeyData.find(persona => persona.id === id);
-
-  if (!persona) {
-    return <div>Persona not found</div>;
-  }
-
+const PersonaTab: React.FC<PersonaTabProps> = ({ journeyData, id, filtered = false }) => {
   return (
     <div>
-      {!filtered && (
-        <h2 className="text-2xl font-semibold text-emirati-deepBlue mb-4">{persona.title}</h2>
+      {id && !filtered && (
+        <h2 className="text-2xl font-semibold text-emirati-deepBlue mb-4">
+          {/* Display the title if available */}
+          {journeyData.length > 0 && "title" in journeyData[0] ? journeyData[0].title : "Journey"}
+        </h2>
       )}
-      <JourneyList steps={persona.steps} />
+      <JourneyList steps={journeyData} />
     </div>
   );
 };

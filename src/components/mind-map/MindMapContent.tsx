@@ -11,7 +11,10 @@ interface MindMapContentProps {
 }
 
 const MindMapContent: React.FC<MindMapContentProps> = ({ activeTab, setActiveTab }) => {
-  const currentJourneyData = journeyData[activeTab as keyof typeof journeyData] || [];
+  // Find the persona with the matching ID from the journeyData
+  const currentPersona = journeyData.find(persona => persona.id === activeTab);
+  // Get the steps from the current persona or use an empty array if not found
+  const steps = currentPersona?.steps || [];
 
   return (
     <div className="container mx-auto p-4">
@@ -29,7 +32,7 @@ const MindMapContent: React.FC<MindMapContentProps> = ({ activeTab, setActiveTab
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <PersonaTab journeyData={currentJourneyData} />
+        <PersonaTab journeyData={steps} />
       </motion.div>
     </div>
   );
