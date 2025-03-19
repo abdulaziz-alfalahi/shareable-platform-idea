@@ -1,4 +1,3 @@
-
 export interface StudentGoal {
   id: number;
   title: string;
@@ -77,6 +76,8 @@ export interface Student {
   leaderboardRank?: number;
   inProgressCourses?: number;
   nextAssessment?: string;
+  careerStage?: string;
+  location?: string;
 }
 
 export interface FeedbackForm {

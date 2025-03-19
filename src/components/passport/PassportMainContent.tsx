@@ -92,13 +92,13 @@ const PassportMainContent: React.FC<PassportMainContentProps> = ({ student }) =>
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-medium text-gray-700">Career Position</h3>
                   <span className="text-sm px-2 py-1 bg-emirati-desertGold/10 rounded-full text-emirati-camelBrown">
-                    {student.careerStage || "Early Career"}
+                    {student.careerPath || "Early Career"}
                   </span>
                 </div>
                 <div className="flex items-center mt-2">
                   <MapPin className="h-4 w-4 text-gray-400 mr-2" />
                   <span className="text-sm text-gray-600">
-                    {student.location || "Abu Dhabi, UAE"}
+                    Abu Dhabi, UAE
                   </span>
                 </div>
               </div>

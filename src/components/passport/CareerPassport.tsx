@@ -9,6 +9,7 @@ import PassportLoading from "./PassportLoading";
 import PassportError from "./PassportError";
 import { useCareerPassportData } from "@/hooks/passport/useCareerPassportData";
 import UaeGeometricPattern from "@/components/ui/uae/UaeGeometricPattern";
+import { Award } from "lucide-react";
 
 interface CareerPassportProps {
   userId?: number;
