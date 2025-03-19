@@ -1,99 +1,60 @@
 
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { 
-  Sheet, 
-  SheetContent, 
-  SheetTrigger,
-  SheetClose
-} from "@/components/ui/sheet";
-import { Menu, X, Home, Briefcase, GraduationCap, Building, Map, Database, User, Award } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
-import ThemeToggle from "./theme/ThemeToggle";
+  GraduationCap, 
+  BookOpen, 
+  Briefcase, 
+  Building2, 
+  Map,
+  Award,
+  X 
+} from "lucide-react";
+import { Button } from "../ui/button";
+import { navItems } from "./header/DesktopNavigation";
 
 interface MobileNavigationProps {
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  onClose: () => void;
 }
 
-const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, setIsOpen }) => {
-  const isMobile = useIsMobile();
-  const navigate = useNavigate();
-
-  const navLinks = [
-    { to: "/student-dashboard", label: "Dashboard", icon: <Home className="h-5 w-5 mr-3" /> },
-    { to: "/career-passport", label: "Career Passport", icon: <GraduationCap className="h-5 w-5 mr-3" /> },
-    { to: "/job-applications", label: "Jobs", icon: <Briefcase className="h-5 w-5 mr-3" /> },
-    { to: "/training-centers", label: "Training", icon: <Building className="h-5 w-5 mr-3" /> },
-    { to: "/student-dashboard?tab=mentors", label: "Mentors", icon: <User className="h-5 w-5 mr-3" /> },
-    { to: "/portfolio-builder", label: "Portfolio", icon: <Award className="h-5 w-5 mr-3" /> },
-    { to: "/mindmap", label: "Mindmap", icon: <Map className="h-5 w-5 mr-3" /> },
-    { to: "/data-entry", label: "Data Entry", icon: <Database className="h-5 w-5 mr-3" /> },
-  ];
-
-  if (!isMobile) return null;
-
-  const handleNavLinkClick = (to: string) => {
-    navigate(to);
-    setIsOpen(false);
-  };
+const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="md:hidden"
-          onClick={() => setIsOpen(true)}
-        >
-          <Menu className="h-5 w-5" />
-          <span className="sr-only">Toggle navigation</span>
+    <div className="fixed inset-0 z-50 bg-white md:hidden">
+      <div className="flex justify-between items-center p-4 border-b">
+        <h2 className="text-lg font-semibold">Menu</h2>
+        <Button variant="ghost" size="icon" onClick={onClose}>
+          <X className="h-6 w-6" />
         </Button>
-      </SheetTrigger>
-      <SheetContent side="left" className="w-[85%] max-w-[300px] pt-10 bg-white">
-        <div className="flex flex-col h-full">
-          <div className="absolute right-4 top-4">
-            <SheetClose asChild>
-              <Button variant="ghost" size="icon">
-                <X className="h-5 w-5" />
-                <span className="sr-only">Close</span>
-              </Button>
-            </SheetClose>
-          </div>
-
-          <div className="text-2xl font-bold text-emirati-desertRed mb-8">
-            <div onClick={() => handleNavLinkClick('/')} className="cursor-pointer">
-              Emirati Journey
-            </div>
-          </div>
-
-          <nav className="flex flex-col space-y-1">
-            {navLinks.map((link) => (
-              <div 
-                key={link.to}
-                className="flex items-center text-gray-700 hover:text-emirati-oasisGreen hover:bg-emirati-sandBeige/10 transition py-3 px-3 rounded-md cursor-pointer"
-                onClick={() => handleNavLinkClick(link.to)}
-              >
-                {link.icon}
-                {link.label}
-              </div>
-            ))}
-          </nav>
-
-          <div className="mt-10 px-3">
-            <ThemeToggle />
-          </div>
-
-          <div className="mt-auto mb-6">
-            <p className="text-sm text-emirati-deepBrown/60">
-              Emirati Journey © 2024
-            </p>
-          </div>
+      </div>
+      
+      <nav className="p-4 space-y-2">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            to={item.href}
+            className="flex items-center p-3 rounded-md hover:bg-gray-100"
+            onClick={onClose}
+          >
+            {item.icon && <item.icon className="h-5 w-5 mr-3 text-emirati-desertRed" />}
+            <span>{item.label}</span>
+          </Link>
+        ))}
+        
+        <div className="pt-4 mt-4 border-t">
+          <Link
+            to="/student-dashboard"
+            className="flex items-center p-3 rounded-md bg-emirati-oasisGreen text-white"
+            onClick={onClose}
+          >
+            <GraduationCap className="h-5 w-5 mr-3" />
+            <span>Student Dashboard</span>
+          </Link>
         </div>
-      </SheetContent>
-    </Sheet>
+      </nav>
+    </div>
   );
 };
 
