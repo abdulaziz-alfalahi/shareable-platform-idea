@@ -1,9 +1,9 @@
 
-import React, { useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React from "react";
 import TabNavigation from "./TabNavigation";
-import JourneyList from "./JourneyList";
-import { useLocation, useNavigate } from "react-router-dom";
+import PersonaTab from "./PersonaTab";
+import { motion } from "framer-motion";
+import { journeyData } from "./journeyData";
 
 interface MindMapContentProps {
   activeTab: string;
@@ -11,30 +11,26 @@ interface MindMapContentProps {
 }
 
 const MindMapContent: React.FC<MindMapContentProps> = ({ activeTab, setActiveTab }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const tabParam = new URLSearchParams(location.search).get("tab");
-  
-  // Set the active tab based on the URL parameter or default to "student"
-  const innerActiveTab = tabParam === "student" || tabParam === "parent" || tabParam === "adviser" ? tabParam : "student";
-  
+  const currentJourneyData = journeyData[activeTab as keyof typeof journeyData] || [];
+
   return (
-    <div className="w-full max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold text-emirati-deepBrown mb-4">Mind Map Visualization</h2>
-      <p className="text-muted-foreground mb-6">
-        Explore different career journeys based on your persona and interests.
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold text-emirati-oasisGreen mb-6">
+        Career Mind Map
+      </h1>
+      <p className="text-gray-700 mb-8">
+        Explore different career paths and opportunities based on your role and interests.
       </p>
       
-      <TabNavigation 
-        activeTab={innerActiveTab} 
-        onChange={(tab) => {
-          navigate(`/mindmap?tab=${tab}`, { replace: true });
-        }} 
-      />
+      <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
       
-      <div className="mt-6">
-        <JourneyList persona={innerActiveTab} />
-      </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <PersonaTab journeyData={currentJourneyData} />
+      </motion.div>
     </div>
   );
 };
