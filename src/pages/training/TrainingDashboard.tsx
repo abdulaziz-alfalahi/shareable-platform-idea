@@ -10,14 +10,18 @@ import PartnersTab from "@/components/training/dashboard/tabs/PartnersTab";
 const TrainingDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("programs");
   
-  // Mock training data
+  // Mock training data with required upcomingCourses property
   const trainingData = {
     programs: [
       { id: 1, name: "Web Development Fundamentals", enrolledStudents: 42, duration: "12 weeks" },
       { id: 2, name: "Data Science with Python", enrolledStudents: 38, duration: "10 weeks" },
       { id: 3, name: "UI/UX Design Principles", enrolledStudents: 25, duration: "8 weeks" },
     ],
-    // Add other training data as needed
+    upcomingCourses: [
+      { id: 1, title: "React Advanced", startDate: "2023-07-15", enrolledStudents: 28 },
+      { id: 2, title: "Machine Learning Fundamentals", startDate: "2023-08-01", enrolledStudents: 35 },
+      { id: 3, title: "Mobile App Development", startDate: "2023-07-20", enrolledStudents: 22 },
+    ]
   };
   
   return (

@@ -1,11 +1,13 @@
 
 import React from "react";
 import PassportMainContent from "@/components/passport/PassportMainContent";
-import { usePassportData } from "@/hooks/passport/usePassportData";
+import { studentData } from "@/data/studentMockData";
 
 const CareerPassport: React.FC = () => {
-  // Get the student data from the hook
-  const { student, loading, error } = usePassportData();
+  // Use mock data directly since usePassportData hook is not working as expected
+  const student = studentData;
+  const loading = false;
+  const error = null;
 
   if (loading) {
     return <div>Loading passport data...</div>;

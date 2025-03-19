@@ -7,20 +7,78 @@ import CoursesTab from "@/components/student/dashboard/tabs/CoursesTab";
 import CareerPathTab from "@/components/student/dashboard/tabs/CareerPathTab";
 import MentorsTab from "@/components/student/dashboard/tabs/MentorsTab";
 import ScholarshipsTab from "@/components/student/dashboard/tabs/ScholarshipsTab";
+import { Student } from "@/types/student";
 
 const StudentDashboard: React.FC = () => {
-  // Mock student data
-  const student = {
+  // Mock student data with full Student type properties
+  const student: Student = {
     id: 1,
     name: "Ahmed Mohammed",
-    email: "ahmed.m@example.com",
-    avatar: "/images/avatars/ahmed.jpg",
-    grade: "A",
-    level: 3,
+    program: "Computer Engineering",
+    year: 3,
+    gradeLevel: "university-3",
+    gpa: 3.8,
+    advisingStatus: "Active",
+    riskLevel: "Low",
     progress: 75,
-    completedCourses: 12,
-    enrolledCourses: 4,
-    // Add any other student properties needed by the components
+    lastMeeting: "2023-05-10",
+    nextMeeting: "2023-06-15",
+    careerPath: "Software Development",
+    flagged: false,
+    coursesCompleted: 12,
+    totalCourses: 20,
+    achievements: ["Dean's List", "Hackathon Winner"],
+    notes: "Excellent progress in core subjects",
+    goals: [{
+      id: 1,
+      title: "Complete Advanced Programming Course",
+      deadline: "2023-08-30",
+      status: "In Progress"
+    }],
+    feedback: [{
+      id: 1,
+      type: "Academic",
+      date: "2023-04-15",
+      content: "Excellent work on your last project",
+      advisor: "Dr. Khalid"
+    }],
+    passportStamps: [{
+      id: 1,
+      title: "Technical Skills Achievement",
+      description: "Completed Python certification",
+      category: "Skills",
+      iconName: "code",
+      dateEarned: "2023-03-20",
+      level: "Silver",
+      featured: true
+    }],
+    careerMilestones: [{
+      id: 1,
+      title: "First Internship",
+      description: "Completed internship at Tech Co",
+      dateAchieved: "2022-08-15",
+      points: 100,
+      badgeUrl: "/badges/internship.svg"
+    }],
+    passportLevel: 3,
+    totalPoints: 450,
+    activeChallenges: [{
+      id: 1,
+      title: "Complete 3 Technical Workshops",
+      description: "Attend and complete workshops on emerging technologies",
+      requiredCount: 3,
+      currentProgress: 1,
+      category: "Workshop",
+      startDate: "2023-05-01",
+      endDate: "2023-06-30",
+      rewardTitle: "Workshop Enthusiast",
+      rewardLevel: "Silver"
+    }],
+    leaderboardRank: 15,
+    inProgressCourses: 4,
+    nextAssessment: "2023-06-05",
+    careerStage: "Advanced Learning",
+    location: "Abu Dhabi"
   };
 
   return (
