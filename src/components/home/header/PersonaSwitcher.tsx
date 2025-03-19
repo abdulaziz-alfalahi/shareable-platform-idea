@@ -65,11 +65,16 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-white w-56 z-50">
+      <DropdownMenuContent 
+        align="end" 
+        className="bg-white w-56 z-50 shadow-lg"
+        sideOffset={5}
+      >
         <DropdownMenuItem className="py-2 px-3 text-sm text-muted-foreground" disabled>
           Switch Persona
         </DropdownMenuItem>
         <DropdownMenuSeparator />
+        
         {/* Home option */}
         <DropdownMenuItem 
           key="home" 
@@ -119,6 +124,8 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />
+        
+        {/* Personas list */}
         {personas.map((persona) => (
           <DropdownMenuItem 
             key={persona.id} 
