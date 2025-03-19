@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   Briefcase, 
@@ -140,7 +141,7 @@ export const servicesData: ServiceData[] = [
     icon: <Heart className="w-8 h-8" />,
     title: "Work-Life Balance",
     description: "Strategies and resources for maintaining a healthy balance throughout your career journey.",
-    link: "/student-dashboard",
+    link: "/work-life-balance",
     iconBg: "bg-emirati-desertGold/10",
     stage: ["mid", "late"],
     hoverInfo: "Discover techniques and resources to help you maintain personal wellbeing while achieving professional success."

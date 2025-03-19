@@ -95,6 +95,10 @@ export const routes: AppRouteObject[] = [
     path: "/portfolio-builder",
     element: lazy(() => import("./pages/PortfolioBuilder")),
   },
+  {
+    path: "/work-life-balance",
+    element: lazy(() => import("./pages/WorkLifeBalance")),
+  },
   // Add a NotFound page for any other routes
   {
     path: "*",
