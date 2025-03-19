@@ -1,6 +1,7 @@
 
 import React from "react";
 import JourneyItem from "./JourneyItem";
+import { journeyData } from "./journeyData";
 
 interface JourneyStep {
   title: string;
@@ -8,13 +9,19 @@ interface JourneyStep {
 }
 
 interface JourneyListProps {
-  steps: JourneyStep[];
+  steps?: JourneyStep[];
+  persona?: string; // Added persona prop to the interface
 }
 
-const JourneyList: React.FC<JourneyListProps> = ({ steps }) => {
+const JourneyList: React.FC<JourneyListProps> = ({ steps, persona }) => {
+  // If persona is provided, find the corresponding steps in journeyData
+  const journeySteps = steps || (persona ? 
+    journeyData.find(journey => journey.id === persona)?.steps || [] 
+    : []);
+  
   return (
     <div className="space-y-8 py-6">
-      {steps.map((step, index) => (
+      {journeySteps.map((step, index) => (
         <JourneyItem key={index} step={step} index={index} />
       ))}
     </div>
