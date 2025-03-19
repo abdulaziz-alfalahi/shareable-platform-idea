@@ -22,7 +22,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
 }) => {
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const [mapReady, setMapReady] = useState(false);
-  const jobsRef = useRef<JobLocation[]>([]);
+  const [jobsRef, setJobsRef] = useState<JobLocation[]>([]);
   const { toast } = useToast();
   
   // Clear all markers - this can be safely called multiple times
@@ -51,14 +51,14 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     }
     
     // Only proceed if jobs actually changed or no markers present yet
-    const jobsChanged = JSON.stringify(jobs) !== JSON.stringify(jobsRef.current);
+    const jobsChanged = JSON.stringify(jobs) !== JSON.stringify(jobsRef);
     if (!jobsChanged && markersRef.current.length > 0) {
       console.log('Jobs data unchanged, skipping marker update');
       return;
     }
     
     console.log(`Adding ${jobs.length} job markers to map`);
-    jobsRef.current = [...jobs];
+    setJobsRef([...jobs]);
     
     // Clear existing markers first
     clearAllMarkers();
@@ -113,7 +113,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
         console.error("Error fitting bounds:", error);
       }
     }
-  }, [jobs, map, clearAllMarkers, toast]);
+  }, [jobs, map, clearAllMarkers, toast, jobsRef]);
 
   // This effect runs once when the map is first ready
   useEffect(() => {
