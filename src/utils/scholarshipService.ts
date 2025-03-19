@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Scholarship, 
@@ -25,8 +24,7 @@ export const fetchScholarships = async (): Promise<Scholarship[]> => {
     // Transform the response to match our TypeScript type
     return (data || []).map(item => ({
       ...item,
-      eligibility_criteria: item.eligibility_criteria as Record<string, any>,
-      documents: item.documents as Record<string, any> | null
+      eligibility_criteria: item.eligibility_criteria as Record<string, any>
     })) as Scholarship[];
   } catch (error) {
     console.error("Error fetching scholarships:", error);
@@ -52,8 +50,7 @@ export const fetchScholarshipById = async (id: string): Promise<Scholarship | nu
     // Transform the response to match our TypeScript type
     return {
       ...data,
-      eligibility_criteria: data.eligibility_criteria as Record<string, any>,
-      documents: data.documents as Record<string, any> | null
+      eligibility_criteria: data.eligibility_criteria as Record<string, any>
     } as Scholarship;
   } catch (error) {
     console.error(`Error fetching scholarship with ID ${id}:`, error);
