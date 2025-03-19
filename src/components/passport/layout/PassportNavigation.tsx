@@ -9,44 +9,52 @@ interface PassportNavigationProps {
 
 const PassportNavigation: React.FC<PassportNavigationProps> = ({ className }) => {
   return (
-    <TabsList className={`mb-6 bg-emirati-sandBeige/20 ${className}`}>
-      <TabsTrigger
-        value="passport"
-        className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white"
-      >
-        <Stamp size={16} className="mr-2" /> Passport
-      </TabsTrigger>
-      <TabsTrigger
-        value="milestones"
-        className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white"
-      >
-        <Trophy size={16} className="mr-2" /> Milestones
-      </TabsTrigger>
-      <TabsTrigger
-        value="challenges"
-        className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white"
-      >
-        <ListChecks size={16} className="mr-2" /> Challenges
-      </TabsTrigger>
-      <TabsTrigger
-        value="cultural"
-        className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white"
-      >
-        <Award size={16} className="mr-2" /> Cultural
-      </TabsTrigger>
-      <TabsTrigger
-        value="skill-gaps"
-        className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white"
-      >
-        <TrendingUp size={16} className="mr-2" /> Skill Gaps
-      </TabsTrigger>
-      <TabsTrigger
-        value="pathways"
-        className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white"
-      >
-        <GitBranch size={16} className="mr-2" /> Pathways
-      </TabsTrigger>
-    </TabsList>
+    <div className="relative bg-white rounded-lg p-1 border border-gray-100 shadow-sm mb-6">
+      <TabsList className={`bg-transparent w-full ${className}`}>
+        <TabsTrigger
+          value="passport"
+          className="flex items-center gap-2 px-4 py-2 rounded-md data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white transition-all duration-200"
+        >
+          <Stamp className="h-4 w-4" /> 
+          <span className="hidden md:inline">Passport</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="milestones"
+          className="flex items-center gap-2 px-4 py-2 rounded-md data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white transition-all duration-200"
+        >
+          <Trophy className="h-4 w-4" /> 
+          <span className="hidden md:inline">Milestones</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="challenges"
+          className="flex items-center gap-2 px-4 py-2 rounded-md data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white transition-all duration-200"
+        >
+          <ListChecks className="h-4 w-4" /> 
+          <span className="hidden md:inline">Challenges</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="cultural"
+          className="flex items-center gap-2 px-4 py-2 rounded-md data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white transition-all duration-200"
+        >
+          <Award className="h-4 w-4" /> 
+          <span className="hidden md:inline">Cultural</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="skill-gaps"
+          className="flex items-center gap-2 px-4 py-2 rounded-md data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white transition-all duration-200"
+        >
+          <TrendingUp className="h-4 w-4" /> 
+          <span className="hidden md:inline">Skill Gaps</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="pathways"
+          className="flex items-center gap-2 px-4 py-2 rounded-md data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white transition-all duration-200"
+        >
+          <GitBranch className="h-4 w-4" /> 
+          <span className="hidden md:inline">Pathways</span>
+        </TabsTrigger>
+      </TabsList>
+    </div>
   );
 };
 
