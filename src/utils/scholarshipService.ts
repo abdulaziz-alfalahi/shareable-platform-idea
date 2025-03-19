@@ -22,7 +22,12 @@ export const fetchScholarships = async (): Promise<Scholarship[]> => {
 
     if (error) throw error;
     
-    return data || [];
+    // Transform the response to match our TypeScript type
+    return (data || []).map(item => ({
+      ...item,
+      eligibility_criteria: item.eligibility_criteria as Record<string, any>,
+      documents: item.documents as Record<string, any> | null
+    })) as Scholarship[];
   } catch (error) {
     console.error("Error fetching scholarships:", error);
     return [];
@@ -42,7 +47,14 @@ export const fetchScholarshipById = async (id: string): Promise<Scholarship | nu
 
     if (error) throw error;
     
-    return data;
+    if (!data) return null;
+    
+    // Transform the response to match our TypeScript type
+    return {
+      ...data,
+      eligibility_criteria: data.eligibility_criteria as Record<string, any>,
+      documents: data.documents as Record<string, any> | null
+    } as Scholarship;
   } catch (error) {
     console.error(`Error fetching scholarship with ID ${id}:`, error);
     return null;
@@ -97,7 +109,15 @@ export const getOrCreateStudentProfile = async (): Promise<StudentScholarshipPro
       .eq('user_id', userData.user.id)
       .single();
 
-    if (existingProfile) return existingProfile;
+    if (existingProfile) {
+      // Transform to match our TypeScript type
+      return {
+        ...existingProfile,
+        academic_info: existingProfile.academic_info as Record<string, any> | null,
+        financial_info: existingProfile.financial_info as Record<string, any> | null,
+        documents: existingProfile.documents as Record<string, any> | null
+      } as StudentScholarshipProfile;
+    }
     
     // If no profile exists, create one
     const { data: newProfile, error: insertError } = await supabase
@@ -115,7 +135,15 @@ export const getOrCreateStudentProfile = async (): Promise<StudentScholarshipPro
 
     if (insertError) throw insertError;
     
-    return newProfile;
+    if (!newProfile) return null;
+    
+    // Transform to match our TypeScript type
+    return {
+      ...newProfile,
+      academic_info: newProfile.academic_info as Record<string, any> | null,
+      financial_info: newProfile.financial_info as Record<string, any> | null,
+      documents: newProfile.documents as Record<string, any> | null
+    } as StudentScholarshipProfile;
   } catch (error) {
     console.error("Error getting or creating student profile:", error);
     return null;
@@ -172,7 +200,12 @@ export const fetchMyApplications = async (): Promise<ScholarshipApplication[]> =
 
     if (error) throw error;
     
-    return data || [];
+    // Transform to match our TypeScript type
+    return (data || []).map(item => ({
+      ...item,
+      documents: item.documents as Record<string, any> | null,
+      answers: item.answers as Record<string, any> | null
+    })) as ScholarshipApplication[];
   } catch (error) {
     console.error("Error fetching applications:", error);
     return [];
@@ -207,13 +240,18 @@ export const saveApplication = async (
     
     let result;
     
+    // Prepare the status value to ensure it's a valid enum
+    const status = isSubmitting ? 'submitted' : (applicationData.status || 'draft');
+    // Ensure status is a valid enum value
+    const validStatus = ['draft', 'submitted', 'under_review', 'approved', 'rejected'].includes(status) 
+      ? status as ScholarshipApplication['status']
+      : 'draft';
+    
     // Set submitted_at if submitting
     const dataToSave = {
       ...applicationData,
-      ...(isSubmitting ? { 
-        status: 'submitted',
-        submitted_at: new Date().toISOString()
-      } : {})
+      status: validStatus,
+      ...(isSubmitting ? { submitted_at: new Date().toISOString() } : {})
     };
 
     if (existingApp) {
@@ -234,7 +272,7 @@ export const saveApplication = async (
         .insert({
           scholarship_id: scholarshipId,
           applicant_id: userData.user.id,
-          status: isSubmitting ? 'submitted' : 'draft',
+          status: validStatus,
           submitted_at: isSubmitting ? new Date().toISOString() : null,
           ...dataToSave
         })
@@ -323,10 +361,24 @@ export const createScholarship = async (
       return { success: false, message: "User not authenticated" };
     }
 
+    // Ensure required fields are present
+    if (!scholarshipData.title || !scholarshipData.award_amount || !scholarshipData.application_deadline || !scholarshipData.eligibility_criteria) {
+      return { success: false, message: "Missing required fields" };
+    }
+
     const { data, error } = await supabase
       .from('scholarships')
       .insert({
-        ...scholarshipData,
+        title: scholarshipData.title,
+        description: scholarshipData.description,
+        eligibility_criteria: scholarshipData.eligibility_criteria,
+        award_amount: scholarshipData.award_amount,
+        application_deadline: scholarshipData.application_deadline,
+        sponsor: scholarshipData.sponsor,
+        website_url: scholarshipData.website_url,
+        requirements: scholarshipData.requirements,
+        document_requirements: scholarshipData.document_requirements,
+        status: scholarshipData.status || 'active',
         created_by: userData.user.id
       })
       .select('id')
