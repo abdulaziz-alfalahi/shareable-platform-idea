@@ -1,7 +1,7 @@
 
 import { UserRole } from "@/components/notifications/types";
 
-export { UserRole };
+export type { UserRole };
 
 export interface OnboardingData {
   role: UserRole;
