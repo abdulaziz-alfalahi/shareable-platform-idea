@@ -11,19 +11,21 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   console.log(`Creating icon for ${iconName} with color ${color}`);
   const el = document.createElement('div');
   el.className = 'career-path-marker';
-  el.style.width = '36px';
-  el.style.height = '36px';
+  el.style.width = '40px'; // Increased size for better visibility
+  el.style.height = '40px';
   el.style.display = 'flex';
   el.style.alignItems = 'center';
   el.style.justifyContent = 'center';
   el.style.backgroundColor = color;
   el.style.borderRadius = '50%';
-  el.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+  el.style.boxShadow = '0 3px 6px rgba(0,0,0,0.3)';
+  el.style.border = '2px solid white';
+  el.style.cursor = 'pointer';
   
   // Create inline SVG icons using Lucide icon paths
   const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  iconSvg.setAttribute('width', '20');
-  iconSvg.setAttribute('height', '20');
+  iconSvg.setAttribute('width', '24');
+  iconSvg.setAttribute('height', '24');
   iconSvg.setAttribute('viewBox', '0 0 24 24');
   iconSvg.setAttribute('fill', 'none');
   iconSvg.setAttribute('stroke', 'white');
@@ -35,18 +37,23 @@ export const createCareerPathIconElement = (iconName: string, color: string): HT
   let iconPath = '';
   switch (iconName) {
     case 'cpu':
-      iconPath = 'M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9 2-2V6c0-1.1-.9-2-2-2zM9 16H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V6h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V6h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V6h2v2z';
+      // Computer chip icon
+      iconPath = 'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18';
       break;
     case 'trending-up':
+      // Trending up chart icon
       iconPath = 'M23 6l-9.5 9.5-5-5L1 18';
       break;
     case 'activity':
+      // Activity/healthcare icon
       iconPath = 'M22 12h-4l-3 9L9 3l-3 9H2';
       break;
     case 'utensils':
-      iconPath = 'M3 17h18M3 10h18M13 3l-2 3m6-3l-2 3M5 3a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5z';
+      // Food/hospitality icon
+      iconPath = 'M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20m14-9v7a2 2 0 0 1-2 2H9M17 2v7a2 2 0 0 1-2 2h-.5';
       break;
     case 'zap':
+      // Lightning/energy icon
       iconPath = 'M13 2L3 14h9l-1 8 10-12h-9l1-8z';
       break;
     default:

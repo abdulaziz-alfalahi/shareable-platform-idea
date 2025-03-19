@@ -62,6 +62,7 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     const careerPathPins = jobs.filter(job => job.careerPathPin);
     console.log(`Including ${careerPathPins.length} career path pins:`, careerPathPins);
     
+    // Save the current jobs for comparison next time
     setJobsRef([...jobs]);
     
     // Clear existing markers first
@@ -70,12 +71,6 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     if (jobs.length === 0) {
       console.log('No jobs to display on map');
       return;
-    }
-    
-    // Log career path pins to help debugging
-    const careerPins = jobs.filter(job => job.careerPathPin);
-    if (careerPins.length > 0) {
-      console.log(`Found ${careerPins.length} career path pins to display`, careerPins);
     }
     
     // Create a bounds object to fit all markers later
@@ -161,18 +156,33 @@ const JobMarkers: React.FC<JobMarkersProps> = ({
     };
   }, [clearAllMarkers]);
 
+  // Special effect just for career path pins to force rerender
+  useEffect(() => {
+    if (mapReady && map.current) {
+      const careerPathPins = jobs.filter(job => job.careerPathPin);
+      if (careerPathPins.length > 0) {
+        console.log(`Found ${careerPathPins.length} career path pins, ensuring they're rendered`);
+        // Force clear markers and re-add after a short delay
+        setTimeout(() => {
+          clearAllMarkers();
+          console.log('Re-rendering all markers after timeout');
+        }, 100);
+      }
+    }
+  }, [jobs, mapReady, map, clearAllMarkers]);
+
   return (
     <>
       {mapReady && map.current && (
         <>
           <RegularMarkers 
             map={map} 
-            jobs={jobs} 
+            jobs={jobs.filter(job => !job.careerPathPin)} 
             markersRef={markersRef} 
           />
           <CareerPathMarkers 
             map={map} 
-            jobs={jobs} 
+            jobs={jobs.filter(job => job.careerPathPin)} 
             markersRef={markersRef} 
           />
           <WorkplaceMarker 

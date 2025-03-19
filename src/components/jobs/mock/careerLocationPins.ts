@@ -1,7 +1,7 @@
 
 import { JobLocation } from "@/types/map";
 
-// Mock career location pins data with explicit coordinates
+// Mock career location pins data with coordinates near Al Fahidi Fort
 export const careerLocationPins: JobLocation[] = [
   {
     id: "career-tech-hub",
@@ -13,9 +13,9 @@ export const careerLocationPins: JobLocation[] = [
       color: "#3b82f6" // Blue
     },
     location: {
-      latitude: 25.2650,
-      longitude: 55.3010,
-      address: "Area 2071, Emirates Towers, Dubai"
+      latitude: 25.2647,
+      longitude: 55.2982,
+      address: "Near Al Fahidi Fort, Dubai"
     },
     matchPercentage: 95
   },
@@ -29,9 +29,9 @@ export const careerLocationPins: JobLocation[] = [
       color: "#10b981" // Green
     },
     location: {
-      latitude: 25.2644,
-      longitude: 55.2900,
-      address: "Dubai International Financial Centre"
+      latitude: 25.2627,
+      longitude: 55.3000,
+      address: "Near Al Fahidi Fort, Dubai"
     },
     matchPercentage: 88
   },
@@ -45,9 +45,9 @@ export const careerLocationPins: JobLocation[] = [
       color: "#ef4444" // Red
     },
     location: {
-      latitude: 25.2707,
-      longitude: 55.3200,
-      address: "Dubai Healthcare City"
+      latitude: 25.2657,
+      longitude: 55.2960,
+      address: "Near Al Fahidi Fort, Dubai"
     },
     matchPercentage: 75
   },
@@ -61,9 +61,9 @@ export const careerLocationPins: JobLocation[] = [
       color: "#f59e0b" // Amber
     },
     location: {
-      latitude: 25.2600,
-      longitude: 55.3050,
-      address: "Jumeirah Beach Road, Dubai"
+      latitude: 25.2637,
+      longitude: 55.2942,
+      address: "Near Al Fahidi Fort, Dubai"
     },
     matchPercentage: 82
   },
@@ -77,9 +77,9 @@ export const careerLocationPins: JobLocation[] = [
       color: "#8b5cf6" // Purple
     },
     location: {
-      latitude: 25.2730,
-      longitude: 55.3080,
-      address: "Al Quoz, Dubai"
+      latitude: 25.2617,
+      longitude: 55.2972,
+      address: "Near Al Fahidi Fort, Dubai"
     },
     matchPercentage: 90
   }

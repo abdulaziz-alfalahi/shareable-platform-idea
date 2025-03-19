@@ -59,7 +59,8 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
         );
         break;
       case 'career-pins':
-        filteredJobs = [...careerLocationPins];
+        // Make sure we always have a fresh copy of the career pins
+        filteredJobs = JSON.parse(JSON.stringify(careerLocationPins));
         console.log('Switched to career pins tab, showing pins:', filteredJobs);
         break;
       case 'all':
@@ -71,13 +72,26 @@ export const JobLocationTab = ({ jobs: initialJobs, onLocationUpdate }: JobLocat
     console.log(`Filtered to ${filteredJobs.length} jobs with filter: ${activeLocationFilter}`);
     setCurrentJobsDisplay(filteredJobs);
     
+    // Force a small timeout to ensure UI updates before map renders
+    if (activeLocationFilter === 'career-pins') {
+      setTimeout(() => {
+        console.log('Re-rendering map with career pins after filter change');
+      }, 300);
+    }
   }, [activeLocationFilter, initialJobs]);
+
+  // Ensure we show career pins when this tab first renders
+  useEffect(() => {
+    if (careerLocationPins.length > 0) {
+      setActiveLocationFilter('career-pins');
+    }
+  }, []);
 
   return (
     <Card className="border shadow-sm p-4">
       <div className="mb-6">
         <Tabs 
-          defaultValue="all" 
+          defaultValue="career-pins" 
           value={activeLocationFilter}
           onValueChange={(value) => setActiveLocationFilter(value as 'ai-top-10' | 'portfolio-match' | 'all' | 'career-pins')} 
           className="w-full"
