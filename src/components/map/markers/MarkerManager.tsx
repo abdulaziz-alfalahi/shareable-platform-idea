@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, ReactNode } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { JobLocation } from '@/types/map';
 import { useToast } from '@/components/ui/use-toast';
@@ -9,6 +9,7 @@ interface MarkerManagerProps {
   jobs: JobLocation[];
   onLocationUpdate?: (jobs: JobLocation[]) => void;
   reverseGeocode: (lat: number, lng: number) => Promise<void>;
+  children?: ReactNode;
 }
 
 const MarkerManager: React.FC<MarkerManagerProps> = ({
@@ -147,7 +148,6 @@ const MarkerManager: React.FC<MarkerManagerProps> = ({
         if (React.isValidElement(child)) {
           return React.cloneElement(child, { 
             map, 
-            jobs, 
             markersRef,
             onLocationUpdate, 
             reverseGeocode 

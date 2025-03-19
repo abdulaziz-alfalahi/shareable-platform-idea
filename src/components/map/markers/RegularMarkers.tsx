@@ -8,6 +8,8 @@ interface RegularMarkersProps {
   map?: React.MutableRefObject<mapboxgl.Map | null>;
   jobs: JobLocation[];
   markersRef?: React.MutableRefObject<mapboxgl.Marker[]>;
+  onLocationUpdate?: (jobs: JobLocation[]) => void;
+  reverseGeocode?: (lat: number, lng: number) => Promise<void>;
 }
 
 /**
