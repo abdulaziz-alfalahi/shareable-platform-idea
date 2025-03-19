@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { CareerStage } from "./types";
-import { servicesData } from "./serviceData";
+import { services } from "./serviceData";
 import ServiceFilterBar from "./ServiceFilterBar";
 import ServiceGrid from "./ServiceGrid";
 import DecorativeElement from "./DecorativeElement";
@@ -17,7 +17,7 @@ const ServicesSection: React.FC = () => {
       <ServiceFilterBar activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
       
       {/* Service cards grid */}
-      <ServiceGrid services={servicesData} activeFilter={activeFilter} />
+      <ServiceGrid services={services} activeFilter={activeFilter} />
       
       <DecorativeElement />
     </div>

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "./Logo";
@@ -64,7 +65,7 @@ const Header = () => {
           />
           
           {/* Mobile Navigation Trigger */}
-          <MobileNavigation isOpen={mobileMenuOpen} setIsOpen={setMobileMenuOpen} />
+          <MobileNavigation isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
         </div>
       </div>
     </header>

@@ -11,12 +11,41 @@ import {
   X 
 } from "lucide-react";
 import { Button } from "../ui/button";
-import { navItems } from "./header/DesktopNavigation";
+import DesktopNavigation, { NavItem } from "./header/DesktopNavigation";
 
 interface MobileNavigationProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+// Get the navItems from DesktopNavigation
+const navItems: NavItem[] = [
+  {
+    label: "Student Resources",
+    href: "/educational-resources",
+    icon: BookOpen,
+  },
+  {
+    label: "Job Opportunities",
+    href: "/job-applications",
+    icon: Briefcase,
+  },
+  {
+    label: "Career Mapping",
+    href: "/mindmap",
+    icon: Map,
+  },
+  {
+    label: "Training Centers",
+    href: "/training-centers",
+    icon: Building2,
+  },
+  {
+    label: "Scholarships",
+    href: "/scholarships",
+    icon: Award,
+  },
+];
 
 const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;

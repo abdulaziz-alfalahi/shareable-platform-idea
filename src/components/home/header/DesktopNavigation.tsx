@@ -18,7 +18,7 @@ export type NavItem = {
   icon?: LucideIcon;
 };
 
-const navItems: NavItem[] = [
+export const navItems: NavItem[] = [
   {
     label: "Student Resources",
     href: "/educational-resources",
@@ -46,7 +46,11 @@ const navItems: NavItem[] = [
   },
 ];
 
-const DesktopNavigation = () => {
+interface DesktopNavigationProps {
+  handleHomeClick?: () => void;
+}
+
+const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ handleHomeClick }) => {
   return (
     <nav className="hidden md:flex items-center space-x-2">
       {navItems.map((item) => (
@@ -54,6 +58,7 @@ const DesktopNavigation = () => {
           key={item.href}
           to={item.href}
           className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-100 hover:text-emirati-oasisGreen transition-colors"
+          onClick={handleHomeClick}
         >
           {item.icon && <item.icon className="h-4 w-4 mr-2 text-emirati-desertRed" />}
           {item.label}
