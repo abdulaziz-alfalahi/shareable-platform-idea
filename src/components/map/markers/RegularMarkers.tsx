@@ -1,27 +1,31 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { JobLocation } from '@/types/map';
 import { createJobPopupHtml } from '../utils/popupUtils';
 
 interface RegularMarkersProps {
-  map: React.MutableRefObject<mapboxgl.Map | null>;
+  map?: React.MutableRefObject<mapboxgl.Map | null>;
   jobs: JobLocation[];
-  markersRef: React.MutableRefObject<mapboxgl.Marker[]>;
+  markersRef?: React.MutableRefObject<mapboxgl.Marker[]>;
 }
 
-const RegularMarkers: React.FC<RegularMarkersProps> = ({ map, jobs, markersRef }) => {
+/**
+ * Component for rendering regular job markers on the map
+ */
+const RegularMarkers: React.FC<RegularMarkersProps> = ({ 
+  map, 
+  jobs, 
+  markersRef 
+}) => {
   // Add regular markers for jobs
   useEffect(() => {
-    if (!map.current) return;
+    if (!map?.current || !markersRef) return;
     
-    // Filter only regular job markers (not career path pins or workplace)
-    const regularJobs = jobs.filter(job => 
-      !job.careerPathPin && job.id !== 'workplace'
-    );
+    console.log(`Adding ${jobs.length} regular job markers to map`);
     
     // Create markers for regular jobs
-    regularJobs.forEach(job => {
+    jobs.forEach(job => {
       if (!job.location) {
         console.warn(`Job ${job.id} is missing location data`);
         return;

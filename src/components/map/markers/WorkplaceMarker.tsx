@@ -5,15 +5,20 @@ import { JobLocation } from '@/types/map';
 import { createWorkplacePopupHtml } from '../utils/popupUtils';
 
 interface WorkplaceMarkerProps {
-  map: React.MutableRefObject<mapboxgl.Map | null>;
+  map?: React.MutableRefObject<mapboxgl.Map | null>;
   jobs: JobLocation[];
+  markersRef?: React.MutableRefObject<mapboxgl.Marker[]>;
   onLocationUpdate?: (jobs: JobLocation[]) => void;
-  reverseGeocode: (lat: number, lng: number) => Promise<void>;
+  reverseGeocode?: (lat: number, lng: number) => Promise<void>;
 }
 
+/**
+ * Component for rendering the workplace marker on the map
+ */
 const WorkplaceMarker: React.FC<WorkplaceMarkerProps> = ({ 
   map, 
   jobs, 
+  markersRef,
   onLocationUpdate,
   reverseGeocode
 }) => {
@@ -21,7 +26,7 @@ const WorkplaceMarker: React.FC<WorkplaceMarkerProps> = ({
   
   // Add workplace marker
   useEffect(() => {
-    if (!map.current || !onLocationUpdate) return;
+    if (!map?.current || !onLocationUpdate || !reverseGeocode) return;
     
     // Find workplace job
     const workplaceJob = jobs.find(job => job.id === "workplace");
@@ -60,6 +65,11 @@ const WorkplaceMarker: React.FC<WorkplaceMarkerProps> = ({
       
       workplaceMarkerRef.current = workplace;
       
+      // Add to the markers ref if provided
+      if (markersRef) {
+        markersRef.current.push(workplace);
+      }
+      
       // Update job location when marker is dragged
       workplace.on('dragend', () => {
         const lngLat = workplace.getLngLat();
@@ -79,7 +89,7 @@ const WorkplaceMarker: React.FC<WorkplaceMarkerProps> = ({
         workplaceMarkerRef.current = null;
       }
     };
-  }, [map, jobs, onLocationUpdate, reverseGeocode]);
+  }, [map, jobs, onLocationUpdate, reverseGeocode, markersRef]);
 
   return null;
 };

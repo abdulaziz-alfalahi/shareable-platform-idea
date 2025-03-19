@@ -7,12 +7,19 @@ import { createCareerPathPopupHtml } from '../utils/popupUtils';
 import { useToast } from '@/components/ui/use-toast';
 
 interface CareerPathMarkersProps {
-  map: React.MutableRefObject<mapboxgl.Map | null>;
+  map?: React.MutableRefObject<mapboxgl.Map | null>;
   jobs: JobLocation[];
-  markersRef: React.MutableRefObject<mapboxgl.Marker[]>;
+  markersRef?: React.MutableRefObject<mapboxgl.Marker[]>;
 }
 
-const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, markersRef }) => {
+/**
+ * Component for rendering career path markers on the map
+ */
+const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ 
+  map, 
+  jobs, 
+  markersRef 
+}) => {
   const { toast } = useToast();
   const [markersAdded, setMarkersAdded] = useState(false);
   
@@ -26,8 +33,8 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
     
     // Wait for next render tick to ensure map is fully loaded
     const timer = setTimeout(() => {
-      if (!map.current) {
-        console.error('Career path markers: Map not initialized');
+      if (!map?.current || !markersRef) {
+        console.error('Career path markers: Map or markersRef not initialized');
         return;
       }
       
@@ -47,24 +54,22 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
     }, 1000); // Increased timeout
     
     function addCareerPathMarkers() {
-      if (!map.current) {
+      if (!map?.current || !markersRef) {
         console.error('Map reference lost when adding career path markers');
         return;
       }
       
-      // Filter only career path markers
-      const careerPathJobs = jobs.filter(job => job.careerPathPin);
-      console.log('Career path jobs found:', careerPathJobs.length, careerPathJobs);
+      console.log('Career path jobs found:', jobs.length, jobs);
       
-      if (careerPathJobs.length === 0) {
+      if (jobs.length === 0) {
         console.log('No career path jobs found in data');
         return;
       }
       
-      console.log(`Adding ${careerPathJobs.length} career path markers to the map`, careerPathJobs);
+      console.log(`Adding ${jobs.length} career path markers to the map`, jobs);
       
       // Create markers for career path jobs
-      careerPathJobs.forEach(job => {
+      jobs.forEach(job => {
         if (!job.location || !job.careerPathPin) {
           console.warn(`Career path job ${job.id} is missing location data or career path info`, job);
           return;
@@ -112,9 +117,6 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
             markersRef.current.push(marker);
             console.log(`Successfully added career path marker for ${job.title}`);
             
-            // Show popup on marker creation to debug
-            // marker.togglePopup();
-            
             // Force marker to appear by toggling visibility
             setTimeout(() => {
               const markerElement = marker.getElement();
@@ -142,10 +144,10 @@ const CareerPathMarkers: React.FC<CareerPathMarkersProps> = ({ map, jobs, marker
       setMarkersAdded(true);
       
       // Show success toast
-      if (careerPathJobs.length > 0) {
+      if (jobs.length > 0) {
         toast({
           title: "Career paths loaded",
-          description: `Added ${careerPathJobs.length} career paths to the map`,
+          description: `Added ${jobs.length} career paths to the map`,
         });
       }
     }
