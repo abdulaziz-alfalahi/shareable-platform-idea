@@ -48,6 +48,10 @@ export const routes: AppRouteObject[] = [
     element: lazy(() => import("./pages/CareerPassportPage")),
   },
   {
+    path: "/career-passport/:id",
+    element: lazy(() => import("./pages/CareerPassportPage")),
+  },
+  {
     path: "/achievements",
     element: lazy(() => import("./pages/Achievements")),
   },
@@ -82,6 +86,11 @@ export const routes: AppRouteObject[] = [
   {
     path: "/summer-camps",
     element: lazy(() => import("./pages/SummerCamps")),
+  },
+  // Add a NotFound page for any other routes
+  {
+    path: "*",
+    element: lazy(() => import("./pages/NotFound")),
   },
 ];
 
