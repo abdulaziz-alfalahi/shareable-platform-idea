@@ -146,11 +146,13 @@ const MarkerManager: React.FC<MarkerManagerProps> = ({
     <>
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, { 
-            map, 
+          // Properly type the props that we want to pass to children
+          return React.cloneElement(child, {
+            ...child.props,
+            map,
             markersRef,
-            onLocationUpdate, 
-            reverseGeocode 
+            onLocationUpdate,
+            reverseGeocode
           });
         }
         return child;
