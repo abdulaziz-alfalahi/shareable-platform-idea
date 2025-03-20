@@ -31,6 +31,9 @@ const StudentDashboard = () => {
   useEffect(() => {
     if (tabParam && ["overview", "courses", "assessments", "career", "mentors"].includes(tabParam)) {
       setActiveTab(tabParam);
+    } else if (!tabParam) {
+      // If no tab parameter is provided, default to overview
+      setActiveTab("overview");
     }
   }, [tabParam]);
 
@@ -58,9 +61,10 @@ const StudentDashboard = () => {
       variant: "secondary" as const
     },
     {
-      label: "Resume",
-      onClick: () => navigate("/resume-builder"),
-      icon: <FileText className="h-4 w-4" />
+      label: "Career Explorer",
+      onClick: () => navigate("/mindmap"),
+      icon: <Compass className="h-4 w-4" />,
+      variant: "default" as const
     }
   ];
 
@@ -77,7 +81,7 @@ const StudentDashboard = () => {
       case "mentors":
         return <MentorsTab />;
       default:
-        return null;
+        return <OverviewTab student={studentData} />;
     }
   };
 
