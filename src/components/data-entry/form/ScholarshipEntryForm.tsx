@@ -13,7 +13,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { CalendarIcon, Save, Plus, Trash2 } from "lucide-react";
-import { saveScholarship } from "@/services/scholarship/scholarshipService";
+import { saveScholarship } from "@/services/scholarship"; // Updated import
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 

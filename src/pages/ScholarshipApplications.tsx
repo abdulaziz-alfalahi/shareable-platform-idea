@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, FileText, CheckCircle, Clock, AlertCircle, Calendar } from "lucide-react";
-import { fetchUserApplications } from "@/services/scholarship/scholarshipService";
+import { fetchUserApplications } from "@/services/scholarship"; // Updated import
 import { ScholarshipApplication } from "@/types/scholarship";
 import { format } from "date-fns";
 

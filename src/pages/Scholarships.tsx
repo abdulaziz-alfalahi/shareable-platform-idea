@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar, Search, GraduationCap, Filter } from "lucide-react";
-import { fetchScholarships, getScholarshipMatches } from "@/services/scholarship/scholarshipService";
+import { fetchScholarships, getScholarshipMatches } from "@/services/scholarship"; // Updated import
 import { Scholarship, ScholarshipMatch } from "@/types/scholarship";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";

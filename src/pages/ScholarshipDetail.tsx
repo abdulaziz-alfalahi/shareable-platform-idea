@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Clock, Award, FileText, Briefcase, ExternalLink, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
-import { fetchScholarshipById, applyForScholarship } from "@/services/scholarship/scholarshipService";
+import { fetchScholarshipById, applyForScholarship } from "@/services/scholarship"; // Updated import
 import { Scholarship } from "@/types/scholarship";
 import { toast } from "sonner";
 
