@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { fetchStudentProfile, saveStudentProfile } from "@/services/scholarship/scholarshipService";
+import { fetchStudentProfile, saveStudentProfile } from "@/services/scholarship/profileService";
 import { StudentScholarshipProfile } from "@/types/scholarship";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
