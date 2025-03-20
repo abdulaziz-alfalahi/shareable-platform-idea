@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { Scholarship, ScholarshipApplication, ScholarshipMatch, StudentScholarshipProfile } from "@/types/scholarship";
 import { toast } from "sonner";
@@ -231,6 +232,7 @@ export const saveScholarship = async (scholarship: Partial<Scholarship>): Promis
         throw new Error('Missing required fields for scholarship');
       }
       
+      // Explicitly list fields to match the database schema
       const { data, error } = await supabase
         .from('scholarships')
         .insert({
