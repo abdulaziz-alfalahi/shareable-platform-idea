@@ -1,69 +1,44 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { 
-  LucideIcon, 
-  GraduationCap, 
-  BookOpen, 
-  Briefcase, 
-  Users, 
-  Building2, 
-  Map, 
-  Award
-} from "lucide-react";
-
-export type NavItem = {
-  label: string;
-  href: string;
-  icon?: LucideIcon;
-};
-
-export const navItems: NavItem[] = [
-  {
-    label: "Student Resources",
-    href: "/educational-resources",
-    icon: BookOpen,
-  },
-  {
-    label: "Job Opportunities",
-    href: "/job-applications",
-    icon: Briefcase,
-  },
-  {
-    label: "Career Mapping",
-    href: "/mindmap",
-    icon: Map,
-  },
-  {
-    label: "Training Centers",
-    href: "/training-centers",
-    icon: Building2,
-  },
-  {
-    label: "Scholarships",
-    href: "/scholarships",
-    icon: Award,
-  },
-];
+import { Home, Map, Database, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface DesktopNavigationProps {
-  handleHomeClick?: () => void;
+  handleHomeClick: () => void;
 }
 
 const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ handleHomeClick }) => {
   return (
-    <nav className="hidden md:flex items-center space-x-2">
-      {navItems.map((item) => (
-        <Link
-          key={item.href}
-          to={item.href}
-          className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-100 hover:text-emirati-oasisGreen transition-colors"
-          onClick={handleHomeClick}
-        >
-          {item.icon && <item.icon className="h-4 w-4 mr-2 text-emirati-desertRed" />}
-          {item.label}
-        </Link>
-      ))}
+    <nav className="hidden md:flex items-center space-x-6">
+      <Button 
+        variant="ghost" 
+        className="text-gray-700 hover:text-emirati-oasisGreen transition flex items-center"
+        onClick={handleHomeClick}
+      >
+        <Home className="w-4 h-4 mr-1" /> Home
+      </Button>
+      <Link to="/student-dashboard" className="text-gray-700 hover:text-emirati-oasisGreen transition">
+        Dashboard
+      </Link>
+      <Link to="/career-passport" className="text-gray-700 hover:text-emirati-oasisGreen transition">
+        Career Passport
+      </Link>
+      <Link to="/job-applications" className="text-gray-700 hover:text-emirati-oasisGreen transition">
+        Jobs
+      </Link>
+      <Link to="/job-location-matching" className="text-gray-700 hover:text-emirati-oasisGreen transition flex items-center">
+        <MapPin className="w-4 h-4 mr-1" /> Job Map
+      </Link>
+      <Link to="/training-centers" className="text-gray-700 hover:text-emirati-oasisGreen transition">
+        Training
+      </Link>
+      <Link to="/mindmap" className="text-gray-700 hover:text-emirati-oasisGreen transition flex items-center">
+        <Map className="w-4 h-4 mr-1" /> Mindmap
+      </Link>
+      <Link to="/data-entry" className="text-gray-700 hover:text-emirati-oasisGreen transition flex items-center">
+        <Database className="w-4 h-4 mr-1" /> Data Entry
+      </Link>
     </nav>
   );
 };

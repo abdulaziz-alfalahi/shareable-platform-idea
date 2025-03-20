@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { OnboardingData, UserRole } from "@/components/onboarding/types";
+import OnboardingFlow, { OnboardingData } from "./OnboardingFlow";
+import { UserRole } from "@/components/notifications/types";
 
 interface OnboardingWrapperProps {
   hasCompletedOnboarding?: boolean;
@@ -71,6 +71,7 @@ const OnboardingWrapper: React.FC<OnboardingWrapperProps> = ({
     <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900 bg-opacity-95">
       <div className="absolute top-0 left-0 w-full h-16 bg-gradient-to-r from-emirati-oasisGreen/20 to-emirati-desertGold/20"></div>
       <div className="absolute bottom-0 right-0 w-full h-16 bg-gradient-to-l from-emirati-oasisGreen/20 to-emirati-desertGold/20"></div>
+      <OnboardingFlow onComplete={handleOnboardingComplete} />
     </div>
   );
 };

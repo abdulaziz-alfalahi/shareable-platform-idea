@@ -1,4 +1,3 @@
-
 import React, { ReactNode } from "react";
 import Header from "@/components/home/Header";
 import { Card } from "@/components/ui/card";
@@ -6,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserRole } from "@/components/notifications/types";
 
 interface DashboardLayoutProps {
-  title?: string; // Make title optional
+  title: string;
   children: ReactNode;
   tabs?: Array<{
     value: string;
@@ -24,7 +23,7 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
-  title = "Dashboard", // Provide default value
+  title,
   children,
   tabs,
   activeTab,
@@ -97,4 +96,3 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 };
 
 export default DashboardLayout;
-export type { DashboardLayoutProps };

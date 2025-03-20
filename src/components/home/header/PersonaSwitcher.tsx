@@ -20,7 +20,7 @@ const personas = [
   { id: "recruiter", name: "Recruiter", path: "/recruiter-dashboard", icon: <Briefcase className="h-4 w-4 mr-2" /> },
   { id: "school", name: "School Administrator", path: "/data-entry", icon: <School className="h-4 w-4 mr-2" /> },
   { id: "university", name: "University", path: "/data-entry", icon: <GraduationCap className="h-4 w-4 mr-2" /> },
-  { id: "training", name: "Training Center", path: "/training-dashboard", icon: <Building className="h-4 w-4 mr-2" /> },
+  { id: "training", name: "Training Center", path: "/training-centers", icon: <Building className="h-4 w-4 mr-2" /> },
   { id: "assessment", name: "Assessment Center", path: "/assessment-centers", icon: <Target className="h-4 w-4 mr-2" /> },
   { id: "admin", name: "System Administrator", path: "/admin-dashboard", icon: <Database className="h-4 w-4 mr-2" /> },
 ];
@@ -65,16 +65,11 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        align="end" 
-        className="bg-white w-56 z-50 shadow-lg"
-        sideOffset={5}
-      >
+      <DropdownMenuContent align="end" className="bg-white w-56">
         <DropdownMenuItem className="py-2 px-3 text-sm text-muted-foreground" disabled>
           Switch Persona
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        
         {/* Home option */}
         <DropdownMenuItem 
           key="home" 
@@ -124,8 +119,6 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />
-        
-        {/* Personas list */}
         {personas.map((persona) => (
           <DropdownMenuItem 
             key={persona.id} 

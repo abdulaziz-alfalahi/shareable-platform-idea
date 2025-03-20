@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import RoleDashboardLayout, { DashboardTab } from "@/components/dashboard/RoleDashboardLayout";
-import { BookOpen, PlusCircle, FileText, Briefcase, GraduationCap, Award } from "lucide-react";
+import { BookOpen, PlusCircle, FileText, Briefcase } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { studentData } from "@/data/studentMockData";
 import { getStudentDashboardMetrics } from "@/components/student/dashboard/StudentDashboardMetrics";
@@ -12,7 +12,6 @@ import CoursesTab from "@/components/student/dashboard/tabs/CoursesTab";
 import AssessmentsTab from "@/components/student/dashboard/tabs/AssessmentsTab";
 import CareerPathTab from "@/components/student/dashboard/tabs/CareerPathTab";
 import MentorsTab from "@/components/student/dashboard/tabs/MentorsTab";
-import ScholarshipsTab from "@/components/student/dashboard/tabs/ScholarshipsTab";
 
 const StudentDashboard = () => {
   const location = useLocation();
@@ -30,7 +29,7 @@ const StudentDashboard = () => {
 
   // Update tab state if URL parameter changes
   useEffect(() => {
-    if (tabParam && ["overview", "courses", "assessments", "career", "mentors", "scholarships"].includes(tabParam)) {
+    if (tabParam && ["overview", "courses", "assessments", "career", "mentors"].includes(tabParam)) {
       setActiveTab(tabParam);
     }
   }, [tabParam]);
@@ -40,8 +39,7 @@ const StudentDashboard = () => {
     { value: "courses", label: "Courses" },
     { value: "assessments", label: "Assessments" },
     { value: "career", label: "Career Path" },
-    { value: "mentors", label: "Mentors" },
-    { value: "scholarships", label: "Scholarships" }
+    { value: "mentors", label: "Mentors" }
   ];
 
   const dashboardMetrics = getStudentDashboardMetrics(studentData);
@@ -78,8 +76,6 @@ const StudentDashboard = () => {
         return <CareerPathTab />;
       case "mentors":
         return <MentorsTab />;
-      case "scholarships":
-        return <ScholarshipsTab />;
       default:
         return null;
     }

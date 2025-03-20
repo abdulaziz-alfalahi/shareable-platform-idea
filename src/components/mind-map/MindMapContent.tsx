@@ -1,9 +1,9 @@
 
-import React from "react";
+import React, { useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabNavigation from "./TabNavigation";
-import PersonaTab from "./PersonaTab";
-import { motion } from "framer-motion";
-import { journeyData } from "./journeyData";
+import JourneyList from "./JourneyList";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface MindMapContentProps {
   activeTab: string;
@@ -11,29 +11,30 @@ interface MindMapContentProps {
 }
 
 const MindMapContent: React.FC<MindMapContentProps> = ({ activeTab, setActiveTab }) => {
-  // Find the persona with the matching ID from the journeyData
-  const currentPersona = journeyData.find(persona => persona.id === activeTab);
-  // Get the steps from the current persona or use an empty array if not found
-  const steps = currentPersona?.steps || [];
-
+  const location = useLocation();
+  const navigate = useNavigate();
+  const tabParam = new URLSearchParams(location.search).get("tab");
+  
+  // Set the active tab based on the URL parameter or default to "student"
+  const innerActiveTab = tabParam === "student" || tabParam === "parent" || tabParam === "adviser" ? tabParam : "student";
+  
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-emirati-oasisGreen mb-6">
-        Career Mind Map
-      </h1>
-      <p className="text-gray-700 mb-8">
-        Explore different career paths and opportunities based on your role and interests.
+    <div className="w-full max-w-5xl mx-auto">
+      <h2 className="text-2xl font-bold text-emirati-deepBrown mb-4">Mind Map Visualization</h2>
+      <p className="text-muted-foreground mb-6">
+        Explore different career journeys based on your persona and interests.
       </p>
       
-      <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+      <TabNavigation 
+        activeTab={innerActiveTab} 
+        onChange={(tab) => {
+          navigate(`/mindmap?tab=${tab}`, { replace: true });
+        }} 
+      />
       
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <PersonaTab journeyData={steps} />
-      </motion.div>
+      <div className="mt-6">
+        <JourneyList persona={innerActiveTab} />
+      </div>
     </div>
   );
 };

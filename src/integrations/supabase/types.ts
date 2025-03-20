@@ -670,152 +670,6 @@ export type Database = {
           },
         ]
       }
-      scholarship_applications: {
-        Row: {
-          admin_notes: string | null
-          answers: Json | null
-          applicant_id: string
-          created_at: string
-          documents: Json | null
-          id: string
-          scholarship_id: string
-          status: Database["public"]["Enums"]["application_status"]
-          submitted_at: string | null
-          updated_at: string
-        }
-        Insert: {
-          admin_notes?: string | null
-          answers?: Json | null
-          applicant_id: string
-          created_at?: string
-          documents?: Json | null
-          id?: string
-          scholarship_id: string
-          status?: Database["public"]["Enums"]["application_status"]
-          submitted_at?: string | null
-          updated_at?: string
-        }
-        Update: {
-          admin_notes?: string | null
-          answers?: Json | null
-          applicant_id?: string
-          created_at?: string
-          documents?: Json | null
-          id?: string
-          scholarship_id?: string
-          status?: Database["public"]["Enums"]["application_status"]
-          submitted_at?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "scholarship_applications_scholarship_id_fkey"
-            columns: ["scholarship_id"]
-            isOneToOne: false
-            referencedRelation: "scholarships"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      scholarship_notifications: {
-        Row: {
-          application_id: string | null
-          created_at: string
-          id: string
-          is_read: boolean
-          message: string
-          scholarship_id: string | null
-          title: string
-          user_id: string
-        }
-        Insert: {
-          application_id?: string | null
-          created_at?: string
-          id?: string
-          is_read?: boolean
-          message: string
-          scholarship_id?: string | null
-          title: string
-          user_id: string
-        }
-        Update: {
-          application_id?: string | null
-          created_at?: string
-          id?: string
-          is_read?: boolean
-          message?: string
-          scholarship_id?: string | null
-          title?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "scholarship_notifications_application_id_fkey"
-            columns: ["application_id"]
-            isOneToOne: false
-            referencedRelation: "scholarship_applications"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "scholarship_notifications_scholarship_id_fkey"
-            columns: ["scholarship_id"]
-            isOneToOne: false
-            referencedRelation: "scholarships"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      scholarships: {
-        Row: {
-          application_deadline: string
-          award_amount: number
-          created_at: string
-          created_by: string | null
-          description: string | null
-          document_requirements: string[] | null
-          eligibility_criteria: Json
-          id: string
-          requirements: string[] | null
-          sponsor: string | null
-          status: Database["public"]["Enums"]["scholarship_status"]
-          title: string
-          updated_at: string
-          website_url: string | null
-        }
-        Insert: {
-          application_deadline: string
-          award_amount: number
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          document_requirements?: string[] | null
-          eligibility_criteria: Json
-          id?: string
-          requirements?: string[] | null
-          sponsor?: string | null
-          status?: Database["public"]["Enums"]["scholarship_status"]
-          title: string
-          updated_at?: string
-          website_url?: string | null
-        }
-        Update: {
-          application_deadline?: string
-          award_amount?: number
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          document_requirements?: string[] | null
-          eligibility_criteria?: Json
-          id?: string
-          requirements?: string[] | null
-          sponsor?: string | null
-          status?: Database["public"]["Enums"]["scholarship_status"]
-          title?: string
-          updated_at?: string
-          website_url?: string | null
-        }
-        Relationships: []
-      }
       service_assignments: {
         Row: {
           assigned_by: string | null
@@ -1017,42 +871,6 @@ export type Database = {
           student_name?: string
           subjects?: Json | null
           updated_at?: string | null
-        }
-        Relationships: []
-      }
-      student_scholarship_profiles: {
-        Row: {
-          academic_info: Json | null
-          achievements: string[] | null
-          areas_of_interest: string[] | null
-          created_at: string
-          documents: Json | null
-          financial_info: Json | null
-          id: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          academic_info?: Json | null
-          achievements?: string[] | null
-          areas_of_interest?: string[] | null
-          created_at?: string
-          documents?: Json | null
-          financial_info?: Json | null
-          id?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          academic_info?: Json | null
-          achievements?: string[] | null
-          areas_of_interest?: string[] | null
-          created_at?: string
-          documents?: Json | null
-          financial_info?: Json | null
-          id?: string
-          updated_at?: string
-          user_id?: string
         }
         Relationships: []
       }
@@ -1262,25 +1080,9 @@ export type Database = {
         }
         Returns: Database["public"]["Enums"]["user_role"]
       }
-      match_student_with_scholarships: {
-        Args: {
-          student_id: string
-        }
-        Returns: {
-          scholarship_id: string
-          match_score: number
-        }[]
-      }
     }
     Enums: {
       access_level: "read_only" | "edit" | "admin"
-      application_status:
-        | "draft"
-        | "submitted"
-        | "under_review"
-        | "approved"
-        | "rejected"
-      scholarship_status: "active" | "inactive" | "draft" | "expired"
       user_role:
         | "school_student"
         | "university_student"
