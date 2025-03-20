@@ -227,6 +227,11 @@ export const saveScholarship = async (scholarship: Partial<Scholarship>): Promis
       return scholarship.id;
     } else {
       // Create new scholarship
+      // Ensure required fields are present
+      if (!scholarship.title || !scholarship.award_amount || !scholarship.application_deadline || !scholarship.eligibility_criteria) {
+        throw new Error('Missing required fields for scholarship');
+      }
+      
       const { data, error } = await supabase
         .from('scholarships')
         .insert({

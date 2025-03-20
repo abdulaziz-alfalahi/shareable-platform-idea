@@ -1,6 +1,6 @@
 
-export type ScholarshipStatus = 'active' | 'closed' | 'draft' | 'archived';
-export type ApplicationStatus = 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected' | 'waitlisted';
+export type ScholarshipStatus = 'active' | 'inactive' | 'draft' | 'expired';
+export type ApplicationStatus = 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected';
 
 export interface Scholarship {
   id: string;
