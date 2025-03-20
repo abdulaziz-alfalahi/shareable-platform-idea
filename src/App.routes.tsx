@@ -1,4 +1,3 @@
-
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 
@@ -99,7 +98,22 @@ export const routes: AppRouteObject[] = [
     path: "/work-life-balance",
     element: lazy(() => import("./pages/WorkLifeBalance")),
   },
-  // Add a NotFound page for any other routes
+  {
+    path: "/scholarships",
+    element: lazy(() => import("./pages/Scholarships")),
+  },
+  {
+    path: "/scholarships/:id",
+    element: lazy(() => import("./pages/ScholarshipDetail")),
+  },
+  {
+    path: "/scholarship-applications",
+    element: lazy(() => import("./pages/ScholarshipApplications")),
+  },
+  {
+    path: "/scholarship-profile",
+    element: lazy(() => import("./pages/ScholarshipProfile")),
+  },
   {
     path: "*",
     element: lazy(() => import("./pages/NotFound")),

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   Briefcase, 
@@ -15,7 +14,8 @@ import {
   Wallet,
   FileText,
   Globe,
-  Calendar
+  Calendar,
+  GraduationCap as ScholarshipIcon
 } from "lucide-react";
 import { ServiceData } from "./types";
 
@@ -154,5 +154,14 @@ export const servicesData: ServiceData[] = [
     iconBg: "bg-emirati-oasisGreen/10",
     stage: "late",
     hoverInfo: "Plan for a secure and fulfilling retirement with comprehensive financial planning tools and resources."
+  },
+  {
+    icon: <ScholarshipIcon className="w-8 h-8" />,
+    title: "Scholarships",
+    description: "Discover and apply for scholarships from government entities, educational institutions, and private companies.",
+    link: "/scholarships",
+    iconBg: "bg-emirati-desertGold/10",
+    stage: ["early", "mid"],
+    hoverInfo: "Find financial support for your educational journey through our comprehensive scholarship database."
   },
 ];
