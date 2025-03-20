@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Scholarship, ScholarshipApplication, ScholarshipMatch, StudentScholarshipProfile } from "@/types/scholarship";
 import { toast } from "sonner";
@@ -235,7 +234,16 @@ export const saveScholarship = async (scholarship: Partial<Scholarship>): Promis
       const { data, error } = await supabase
         .from('scholarships')
         .insert({
-          ...scholarship,
+          title: scholarship.title,
+          description: scholarship.description,
+          sponsor: scholarship.sponsor,
+          award_amount: scholarship.award_amount,
+          application_deadline: scholarship.application_deadline,
+          eligibility_criteria: scholarship.eligibility_criteria,
+          requirements: scholarship.requirements,
+          document_requirements: scholarship.document_requirements,
+          website_url: scholarship.website_url,
+          status: scholarship.status || 'draft',
           created_by: user.id
         })
         .select('id')
