@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { School, GraduationCap, Building, Target } from "lucide-react";
+import { School, GraduationCap, Building, Target, Award } from "lucide-react";
 import TrainingCenterForm from "@/components/data-entry/form/TrainingCenterForm";
 import AssessmentCenterForm from "@/components/data-entry/form/AssessmentCenterForm";
 import SchoolDataEntryForm from "@/components/data-entry/form/SchoolDataEntryForm";
 import UniversityDataEntryForm from "@/components/data-entry/form/UniversityDataEntryForm";
 import StudentForm from "@/components/data-entry/form/StudentForm";
+import ScholarshipEntryForm from "@/components/data-entry/form/ScholarshipEntryForm";
 
 const DataEntryPage = () => {
   const location = useLocation();
@@ -25,7 +26,7 @@ const DataEntryPage = () => {
       <h1 className="text-3xl font-bold text-emirati-deepBlue mb-6">Data Entry</h1>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-5 mb-8">
+        <TabsList className="grid grid-cols-6 mb-8">
           <TabsTrigger value="students" className="flex items-center">
             <School className="mr-2 h-4 w-4" />
             <span>Students</span>
@@ -45,6 +46,10 @@ const DataEntryPage = () => {
           <TabsTrigger value="assessment" className="flex items-center">
             <Target className="mr-2 h-4 w-4" />
             <span>Assessment</span>
+          </TabsTrigger>
+          <TabsTrigger value="scholarships" className="flex items-center">
+            <Award className="mr-2 h-4 w-4" />
+            <span>Scholarships</span>
           </TabsTrigger>
         </TabsList>
         
@@ -114,6 +119,20 @@ const DataEntryPage = () => {
             </CardHeader>
             <CardContent>
               <AssessmentCenterForm />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="scholarships">
+          <Card>
+            <CardHeader>
+              <CardTitle>Scholarship Management</CardTitle>
+              <CardDescription>
+                Create and manage scholarship opportunities for students
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ScholarshipEntryForm />
             </CardContent>
           </Card>
         </TabsContent>

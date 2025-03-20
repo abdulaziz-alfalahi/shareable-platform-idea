@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TrainingCenterForm from "./form/TrainingCenterForm";
 import AssessmentCenterForm from "./form/AssessmentCenterForm";
+import ScholarshipEntryForm from "./form/ScholarshipEntryForm";
 
 const ManualEntryForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
@@ -72,6 +73,24 @@ const ManualEntryForm = () => {
     }, 5000);
   };
 
+  const handleScholarshipSuccess = () => {
+    setSuccessMessage({
+      title: "Scholarship Saved Successfully!",
+      description: "The scholarship information has been saved to the platform database and will be available for students to view and apply."
+    });
+    setShowSuccess(true);
+    
+    toast({
+      title: "Success",
+      description: "Scholarship has been saved successfully",
+    });
+    
+    // Reset after 5 seconds
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 5000);
+  };
+
   if (showSuccess) {
     return (
       <Card className="p-6 text-center">
@@ -98,10 +117,11 @@ const ManualEntryForm = () => {
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
-      <TabsList className="mb-6 grid w-full grid-cols-3">
+      <TabsList className="mb-6 grid w-full grid-cols-4">
         <TabsTrigger value="student">Student Data</TabsTrigger>
         <TabsTrigger value="training">Training Centers</TabsTrigger>
         <TabsTrigger value="assessment">Assessment Centers</TabsTrigger>
+        <TabsTrigger value="scholarship">Scholarships</TabsTrigger>
       </TabsList>
       
       <TabsContent value="student">
@@ -114,6 +134,10 @@ const ManualEntryForm = () => {
       
       <TabsContent value="assessment">
         <AssessmentCenterForm onSuccess={handleAssessmentCenterSuccess} />
+      </TabsContent>
+      
+      <TabsContent value="scholarship">
+        <ScholarshipEntryForm onSuccess={handleScholarshipSuccess} />
       </TabsContent>
     </Tabs>
   );
