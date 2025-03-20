@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import RoleDashboardLayout, { DashboardTab } from "@/components/dashboard/RoleDashboardLayout";
-import { BookOpen, PlusCircle, FileText, Briefcase } from "lucide-react";
+import { BookOpen, PlusCircle, FileText, Briefcase, Compass } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { studentData } from "@/data/studentMockData";
 import { getStudentDashboardMetrics } from "@/components/student/dashboard/StudentDashboardMetrics";
