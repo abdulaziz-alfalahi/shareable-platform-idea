@@ -4,20 +4,15 @@ import Header from "@/components/home/Header";
 import Footer from "@/components/home/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Briefcase, 
-  GraduationCap, 
-  Building, 
   Compass, 
-  Lightbulb, 
-  Map
+  Lightbulb
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CareerExplorationContent from "@/components/mind-map/CareerExplorationContent";
-import MindMapContent from "@/components/mind-map/MindMapContent";
 import PathwaySimulator from "@/components/career/PathwaySimulator";
 import { studentData } from "@/data/studentMockData";
 
-const MindMap = () => {
+const CareerExploration = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("exploration");
@@ -25,7 +20,7 @@ const MindMap = () => {
   // Check URL parameters for tab selection
   useEffect(() => {
     const tabParam = new URLSearchParams(location.search).get("tab");
-    if (tabParam === "exploration" || tabParam === "mindmap" || tabParam === "simulator") {
+    if (tabParam === "exploration" || tabParam === "simulator") {
       setActiveTab(tabParam);
     }
   }, [location.search]);
@@ -48,21 +43,13 @@ const MindMap = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-          <TabsList className="bg-emirati-sandBeige/20 p-1 w-full max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-3">
+          <TabsList className="bg-emirati-sandBeige/20 p-1 w-full max-w-4xl mx-auto grid grid-cols-2">
             <TabsTrigger 
               value="exploration" 
               className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white"
             >
               <Compass className="mr-2 h-4 w-4" />
               <span className="hidden sm:inline">Career</span> Exploration
-            </TabsTrigger>
-            
-            <TabsTrigger 
-              value="mindmap" 
-              className="data-[state=active]:bg-emirati-oasisGreen data-[state=active]:text-white"
-            >
-              <Map className="mr-2 h-4 w-4" />
-              Mind Map
             </TabsTrigger>
             
             <TabsTrigger 
@@ -78,10 +65,6 @@ const MindMap = () => {
             <CareerExplorationContent />
           </TabsContent>
           
-          <TabsContent value="mindmap" className="pt-4">
-            <MindMapContent activeTab={activeTab} setActiveTab={setActiveTab} />
-          </TabsContent>
-          
           <TabsContent value="simulator" className="pt-4">
             <PathwaySimulator student={studentData} />
           </TabsContent>
@@ -92,4 +75,4 @@ const MindMap = () => {
   );
 };
 
-export default MindMap;
+export default CareerExploration;

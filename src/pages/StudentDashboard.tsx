@@ -61,7 +61,7 @@ const StudentDashboard = () => {
       variant: "secondary" as const
     },
     {
-      label: "Career Explorer",
+      label: "Career Exploration",
       onClick: () => navigate("/mindmap"),
       icon: <Compass className="h-4 w-4" />,
       variant: "default" as const
