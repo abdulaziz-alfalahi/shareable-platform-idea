@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import RoleDashboardLayout, { DashboardTab } from "@/components/dashboard/RoleDashboardLayout";
 import { BookOpen, PlusCircle, FileText, Briefcase, Compass } from "lucide-react";
@@ -6,7 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { studentData } from "@/data/studentMockData";
 import { getStudentDashboardMetrics } from "@/components/student/dashboard/StudentDashboardMetrics";
 
-// Import tab components
 import OverviewTab from "@/components/student/dashboard/tabs/OverviewTab";
 import CoursesTab from "@/components/student/dashboard/tabs/CoursesTab";
 import AssessmentsTab from "@/components/student/dashboard/tabs/AssessmentsTab";
@@ -21,18 +19,15 @@ const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState(tabParam || "overview");
   const navigate = useNavigate();
 
-  // Update URL when tab changes
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     navigate(`/student-dashboard?tab=${tab}`, { replace: true });
   };
 
-  // Update tab state if URL parameter changes
   useEffect(() => {
     if (tabParam && ["overview", "courses", "assessments", "career", "mentors"].includes(tabParam)) {
       setActiveTab(tabParam);
     } else if (!tabParam) {
-      // If no tab parameter is provided, default to overview
       setActiveTab("overview");
     }
   }, [tabParam]);
@@ -62,7 +57,7 @@ const StudentDashboard = () => {
     },
     {
       label: "Career Exploration",
-      onClick: () => navigate("/mindmap"),
+      onClick: () => navigate("/career-exploration"),
       icon: <Compass className="h-4 w-4" />,
       variant: "default" as const
     }

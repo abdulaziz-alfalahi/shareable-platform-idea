@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, GraduationCap, Briefcase, School, Building, Target, Database, ChevronDown, Home, Compass } from "lucide-react";
@@ -12,7 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Define our personas
 const personas = [
   { id: "student", name: "Student", path: "/student-dashboard", icon: <GraduationCap className="h-4 w-4 mr-2" /> },
   { id: "parent", name: "Parent", path: "/parent-dashboard", icon: <User className="h-4 w-4 mr-2" /> },
@@ -48,11 +46,10 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
   };
 
   const handleCareerExplorationClick = () => {
-    navigate('/mindmap');
+    navigate('/career-exploration');
   };
   
   const handleMentorsClick = () => {
-    // Navigate to student dashboard with mentors tab selected
     navigate('/student-dashboard?tab=mentors');
   };
 
@@ -70,7 +67,6 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
           Switch Persona
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        {/* Home option */}
         <DropdownMenuItem 
           key="home" 
           className="py-2"
@@ -82,7 +78,6 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
           </div>
         </DropdownMenuItem>
         
-        {/* Career Passport option */}
         <DropdownMenuItem 
           key="career-passport" 
           className="py-2"
@@ -94,7 +89,6 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
           </div>
         </DropdownMenuItem>
         
-        {/* Career Exploration option */}
         <DropdownMenuItem 
           key="career-exploration" 
           className="py-2"
@@ -106,7 +100,6 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
           </div>
         </DropdownMenuItem>
         
-        {/* Mentors option */}
         <DropdownMenuItem 
           key="mentors" 
           className="py-2"

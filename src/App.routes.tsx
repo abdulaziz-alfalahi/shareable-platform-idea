@@ -1,4 +1,3 @@
-
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 
@@ -68,7 +67,7 @@ export const routes: AppRouteObject[] = [
     element: lazy(() => import("./pages/EnhancedRetirementPlanning")),
   },
   {
-    path: "/mindmap",
+    path: "/career-exploration",
     element: lazy(() => import("./pages/MindMap")),
   },
   {
@@ -81,7 +80,7 @@ export const routes: AppRouteObject[] = [
   },
   {
     path: "/recruiter-calendar",
-    element: lazy(() => import("./pages/RecruiterDashboard")), // Fixed: changed to an existing page as placeholder
+    element: lazy(() => import("./pages/RecruiterDashboard")),
   },
   {
     path: "/summer-camps",
