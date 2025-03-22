@@ -1,6 +1,7 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
-import { Home, Map, Database, MapPin } from "lucide-react";
+import { Home, Map, Database, MapPin, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 interface DesktopNavigationProps {
   handleHomeClick: () => void;
@@ -27,7 +28,9 @@ const DesktopNavigation: React.FC<DesktopNavigationProps> = ({
       <Link to="/training-centers" className="text-gray-700 hover:text-emirati-oasisGreen transition">
         Training
       </Link>
-      
+      <Link to="/resume-builder" className="text-gray-700 hover:text-emirati-oasisGreen transition flex items-center">
+        <FileText className="w-4 h-4 mr-1" /> Resume Builder
+      </Link>
       <Link to="/data-entry" className="text-gray-700 hover:text-emirati-oasisGreen transition flex items-center">
         <Database className="w-4 h-4 mr-1" /> Data Entry
       </Link>

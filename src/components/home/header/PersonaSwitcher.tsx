@@ -1,6 +1,7 @@
+
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, GraduationCap, Briefcase, School, Building, Target, Database, ChevronDown, Home, Compass } from "lucide-react";
+import { User, GraduationCap, Briefcase, School, Building, Target, Database, ChevronDown, Home, Compass, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -53,6 +54,10 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
     navigate('/student-dashboard?tab=mentors');
   };
 
+  const handleResumeBuilderClick = () => {
+    navigate('/resume-builder');
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -97,6 +102,17 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
           <div className="flex items-center">
             <Compass className="h-4 w-4 mr-2" />
             <span>Career Exploration</span>
+          </div>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem 
+          key="resume-builder" 
+          className="py-2"
+          onClick={handleResumeBuilderClick}
+        >
+          <div className="flex items-center">
+            <FileText className="h-4 w-4 mr-2" />
+            <span>Resume Builder</span>
           </div>
         </DropdownMenuItem>
         

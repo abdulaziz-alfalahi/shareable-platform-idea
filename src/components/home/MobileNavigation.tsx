@@ -7,7 +7,7 @@ import {
   SheetTrigger,
   SheetClose
 } from "@/components/ui/sheet";
-import { Menu, X, Home, Briefcase, GraduationCap, Building, Map, Database, User, Award } from "lucide-react";
+import { Menu, X, Home, Briefcase, GraduationCap, Building, Map, Database, User, Award, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ThemeToggle from "./theme/ThemeToggle";
@@ -28,7 +28,8 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, setIsOpen }
     { to: "/training-centers", label: "Training", icon: <Building className="h-5 w-5 mr-3" /> },
     { to: "/student-dashboard?tab=mentors", label: "Mentors", icon: <User className="h-5 w-5 mr-3" /> },
     { to: "/portfolio-builder", label: "Portfolio", icon: <Award className="h-5 w-5 mr-3" /> },
-    { to: "/mindmap", label: "Mindmap", icon: <Map className="h-5 w-5 mr-3" /> },
+    { to: "/resume-builder", label: "Resume Builder", icon: <FileText className="h-5 w-5 mr-3" /> },
+    { to: "/career-exploration", label: "Career Exploration", icon: <Map className="h-5 w-5 mr-3" /> },
     { to: "/data-entry", label: "Data Entry", icon: <Database className="h-5 w-5 mr-3" /> },
   ];
 
