@@ -559,36 +559,27 @@ export type Database = {
       }
       profiles: {
         Row: {
-          access_level: Database["public"]["Enums"]["access_level"]
-          bio: string | null
+          avatar_url: string | null
           created_at: string
           email: string
+          full_name: string | null
           id: string
-          linked_user_id: string | null
-          name: string
-          role: Database["public"]["Enums"]["user_role"]
           updated_at: string
         }
         Insert: {
-          access_level?: Database["public"]["Enums"]["access_level"]
-          bio?: string | null
+          avatar_url?: string | null
           created_at?: string
           email: string
+          full_name?: string | null
           id: string
-          linked_user_id?: string | null
-          name: string
-          role: Database["public"]["Enums"]["user_role"]
           updated_at?: string
         }
         Update: {
-          access_level?: Database["public"]["Enums"]["access_level"]
-          bio?: string | null
+          avatar_url?: string | null
           created_at?: string
           email?: string
+          full_name?: string | null
           id?: string
-          linked_user_id?: string | null
-          name?: string
-          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
         }
         Relationships: []
@@ -1210,6 +1201,27 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_simulations: {
         Row: {
           challenge_level: string
@@ -1256,11 +1268,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_user_role: {
+      has_role: {
         Args: {
-          user_id: string
+          requested_user_id: string
+          required_role: Database["public"]["Enums"]["user_role"]
         }
-        Returns: Database["public"]["Enums"]["user_role"]
+        Returns: boolean
       }
       match_student_with_scholarships: {
         Args: {
@@ -1283,18 +1296,27 @@ export type Database = {
       scholarship_status: "active" | "inactive" | "draft" | "expired"
       user_role:
         | "school_student"
+        | "national_service_participant"
         | "university_student"
-        | "parent"
-        | "internship_coordinator"
-        | "advisor"
-        | "coach"
-        | "recruiter"
-        | "training_center_rep"
-        | "assessment_center_rep"
-        | "command_control_agent"
-        | "administrator"
-        | "leadership"
+        | "intern"
+        | "full_time_employee"
+        | "part_time_employee"
+        | "gig_worker"
         | "jobseeker"
+        | "lifelong_learner"
+        | "entrepreneur"
+        | "retiree"
+        | "educational_institution"
+        | "parent"
+        | "private_sector_recruiter"
+        | "government_representative"
+        | "retiree_advocate"
+        | "training_center"
+        | "assessment_center"
+        | "mentor"
+        | "career_advisor"
+        | "administrator"
+        | "super_user"
     }
     CompositeTypes: {
       [_ in never]: never

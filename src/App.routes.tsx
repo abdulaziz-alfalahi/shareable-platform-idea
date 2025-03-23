@@ -1,4 +1,3 @@
-
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 
@@ -122,6 +121,10 @@ export const routes: AppRouteObject[] = [
   {
     path: "*",
     element: lazy(() => import("./pages/NotFound")),
+  },
+  {
+    path: "/test-accounts",
+    element: <TestAccountsPage />,
   },
 ];
 

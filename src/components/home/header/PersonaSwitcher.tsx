@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, GraduationCap, Briefcase, School, Building, Target, Database, ChevronDown, Home, Compass, FileText } from "lucide-react";
@@ -56,6 +55,10 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
 
   const handleResumeBuilderClick = () => {
     navigate('/resume-builder');
+  };
+
+  const handleTestAccountsClick = () => {
+    navigate('/test-accounts');
   };
 
   return (
@@ -128,6 +131,19 @@ const PersonaSwitcher: React.FC<PersonaSwitcherProps> = ({ currentPersona, setCu
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />
+        {(currentPersona.id === "admin") && (
+          <DropdownMenuItem 
+            key="test-accounts" 
+            className="py-2"
+            onClick={handleTestAccountsClick}
+          >
+            <div className="flex items-center">
+              <Database className="h-4 w-4 mr-2" />
+              <span>Test Accounts</span>
+            </div>
+          </DropdownMenuItem>
+        )}
+        
         {personas.map((persona) => (
           <DropdownMenuItem 
             key={persona.id} 
