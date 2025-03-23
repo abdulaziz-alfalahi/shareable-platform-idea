@@ -21,6 +21,8 @@ export default {
 		extend: {
 			fontFamily: {
 				sans: ['Tajawal', 'sans-serif'],
+				display: ['Tajawal', 'sans-serif'],
+				serif: ['Amiri', 'serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -89,12 +91,20 @@ export default {
 					palmGreen: '#567d46',    // Palm leaves
 					sunsetOrange: '#ff914d', // Desert sunset
 					night: '#282c34',        // Arabian nights
+					// New colors from your example
+					navy: '#0a2342',         // Dark blue (emirati-navy)
+					teal: '#24a19c',         // Teal accent (emirati-teal)
+					gold: '#ffb400',         // Gold accent (emirati-gold)
+					sand: '#f6f5f1',         // Light sand color
+					charcoal: '#333333',     // Dark text color
 				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				sm: 'calc(var(--radius) - 4px)',
+				'3xl': '1.5rem',
+				full: '9999px'
 			},
 			keyframes: {
 				'accordion-down': {

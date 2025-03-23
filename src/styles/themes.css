@@ -41,16 +41,16 @@
 }
 
 .theme-modern .decorative-element div {
-  @apply bg-blue-600;
+  @apply bg-emirati-teal;
 }
 
 .theme-modern .decorative-element div div {
-  @apply bg-blue-400;
+  @apply bg-emirati-navy;
 }
 
 /* Brighter modern theme colors */
 .theme-modern .uae-button.variant-sea {
-  @apply bg-blue-500 hover:bg-blue-600 text-white;
+  @apply bg-emirati-teal hover:bg-emirati-teal/90 text-white;
 }
 
 .theme-modern .uae-button.variant-flag {
@@ -58,5 +58,34 @@
 }
 
 .theme-modern .uae-button.variant-gold {
-  @apply bg-yellow-400 hover:bg-yellow-500 text-yellow-900;
+  @apply bg-emirati-gold hover:bg-emirati-gold/90 text-emirati-navy;
+}
+
+/* New premium theme */
+.theme-premium {
+  @apply bg-emirati-sand;
+}
+
+.theme-premium .uae-card {
+  @apply bg-white border-emirati-gold/20 shadow-md rounded-xl;
+}
+
+.theme-premium .decorative-element div {
+  @apply bg-emirati-gold;
+}
+
+.theme-premium .decorative-element div div {
+  @apply bg-emirati-teal;
+}
+
+.theme-premium .uae-button.variant-primary {
+  @apply bg-emirati-navy hover:bg-emirati-navy/90 text-white rounded-full;
+}
+
+.theme-premium .uae-button.variant-secondary {
+  @apply bg-white border border-emirati-teal text-emirati-navy hover:bg-emirati-teal/10 rounded-full;
+}
+
+.theme-premium .uae-button.variant-accent {
+  @apply bg-emirati-gold hover:bg-emirati-gold/90 text-emirati-navy rounded-full;
 }

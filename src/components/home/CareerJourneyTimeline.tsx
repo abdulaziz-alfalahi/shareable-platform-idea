@@ -40,7 +40,7 @@ const CareerJourneyTimeline: React.FC = () => {
       icon: <Rocket className="h-8 w-8" />,
       title: "Career Launch",
       description: "Discover your path with internships, skill assessments, and entry-level opportunities.",
-      color: "bg-emirati-oasisGreen",
+      color: "bg-emirati-teal",
       link: "/job-location-matching",
       linkText: "Find Opportunities"
     },
@@ -48,7 +48,7 @@ const CareerJourneyTimeline: React.FC = () => {
       icon: <TrendingUp className="h-8 w-8" />,
       title: "Professional Growth",
       description: "Develop your skills and advance your career through training and mentorship.",
-      color: "bg-emirati-desertGold",
+      color: "bg-emirati-gold",
       link: "/training-centers",
       linkText: "Explore Training"
     },
@@ -82,7 +82,7 @@ const CareerJourneyTimeline: React.FC = () => {
     <div className="py-16 bg-emirati-sandstone/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-extrabold text-emirati-deepBrown mb-4 font-serif">
+          <h2 className="text-3xl font-extrabold text-emirati-navy mb-4 font-display">
             Your Personalized Career Journey
           </h2>
           <p className="text-lg text-gray-700 max-w-3xl mx-auto">
@@ -92,16 +92,16 @@ const CareerJourneyTimeline: React.FC = () => {
 
         {/* Decorative element */}
         <div className="flex justify-center mb-10">
-          <div className="h-px w-40 bg-emirati-desertGold relative">
-            <div className="absolute -bottom-2 h-1 w-full bg-emirati-oasisGreen"></div>
-            <div className="absolute -top-2 h-1 w-full bg-emirati-oasisGreen"></div>
+          <div className="h-px w-40 bg-emirati-gold relative">
+            <div className="absolute -bottom-2 h-1 w-full bg-emirati-teal"></div>
+            <div className="absolute -top-2 h-1 w-full bg-emirati-teal"></div>
           </div>
         </div>
 
         {/* Timeline */}
         <div className="relative">
           {/* Timeline line */}
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500 via-emirati-oasisGreen to-amber-500 rounded-full"></div>
+          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500 via-emirati-teal to-amber-500 rounded-full"></div>
 
           <div className="space-y-12 md:space-y-0">
             {timelineStages.map((stage, index) => (
@@ -122,12 +122,12 @@ const CareerJourneyTimeline: React.FC = () => {
                 <div className={`md:w-1/2 ${
                   index % 2 === 0 ? "md:pr-12 md:text-right" : "md:pl-12"
                 }`}>
-                  <div className={`p-6 bg-white rounded-lg shadow-md border-l-4 ${stage.color.replace('bg-', 'border-')} hover:shadow-lg transition-shadow`}>
-                    <h3 className="text-xl font-bold mb-2 text-emirati-deepBrown">{stage.title}</h3>
+                  <div className={`p-6 bg-white rounded-xl shadow-md border-l-4 ${stage.color.replace('bg-', 'border-')} hover:shadow-lg transition-shadow`}>
+                    <h3 className="text-xl font-bold mb-2 text-emirati-navy">{stage.title}</h3>
                     <p className="text-gray-600 mb-4">{stage.description}</p>
                     <Link to={stage.link}>
                       <Button 
-                        className={`${stage.color} hover:${stage.color.replace('bg-', 'bg-')}/90`}
+                        className={`${stage.color} hover:${stage.color.replace('bg-', 'bg-')}/90 rounded-full`}
                       >
                         {stage.linkText}
                       </Button>
@@ -158,12 +158,12 @@ const CareerJourneyTimeline: React.FC = () => {
 
         {/* Call to action */}
         <div className="text-center mt-16">
-          <h3 className="text-2xl font-bold text-emirati-deepBrown mb-4">Ready to start your journey?</h3>
+          <h3 className="text-2xl font-bold text-emirati-navy mb-4">Ready to start your journey?</h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
             Create your Career Passport today and begin tracking your progress through each stage of your professional development.
           </p>
           <Link to="/career-passport">
-            <Button className="bg-emirati-oasisGreen hover:bg-emirati-oasisGreen/90 px-8 py-6 text-lg">
+            <Button className="bg-emirati-navy hover:bg-emirati-navy/90 px-8 py-6 text-lg rounded-full">
               Create Your Career Passport
             </Button>
           </Link>

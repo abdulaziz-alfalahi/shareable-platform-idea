@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-export type UaeTheme = "default" | "desert" | "oasis" | "modern";
+export type UaeTheme = "default" | "desert" | "oasis" | "modern" | "premium";
 
 type ThemeContextType = {
   theme: UaeTheme;
@@ -25,14 +25,14 @@ interface ThemeProviderProps {
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [theme, setTheme] = useState<UaeTheme>(() => {
     const savedTheme = localStorage.getItem("uae-theme") as UaeTheme;
-    return savedTheme || "default";
+    return savedTheme || "premium"; // Default to premium theme
   });
 
   useEffect(() => {
     localStorage.setItem("uae-theme", theme);
     
     // Apply theme classes to the document body
-    document.body.classList.remove("theme-default", "theme-desert", "theme-oasis", "theme-modern");
+    document.body.classList.remove("theme-default", "theme-desert", "theme-oasis", "theme-modern", "theme-premium");
     document.body.classList.add(`theme-${theme}`);
     
   }, [theme]);

@@ -1,13 +1,13 @@
 
 /* Add UAE-inspired decorative elements */
 .uae-pattern-divider {
-  @apply h-px w-full bg-gradient-to-r from-transparent via-emirati-desertGold to-transparent my-8 relative;
+  @apply h-px w-full bg-gradient-to-r from-transparent via-emirati-gold to-transparent my-8 relative;
 }
 
 .uae-pattern-divider::before,
 .uae-pattern-divider::after {
   content: "";
-  @apply absolute h-2 w-2 rounded-full bg-emirati-oasisGreen top-1/2 transform -translate-y-1/2;
+  @apply absolute h-2 w-2 rounded-full bg-emirati-teal top-1/2 transform -translate-y-1/2;
 }
 
 .uae-pattern-divider::before {
@@ -20,12 +20,12 @@
 
 /* Card with UAE-inspired styling */
 .uae-card {
-  @apply bg-white rounded-lg shadow-md border border-emirati-sandstone/30 p-6 transition-all duration-300 relative overflow-hidden;
+  @apply bg-white rounded-xl shadow-md border border-emirati-sandstone/30 p-6 transition-all duration-300 relative overflow-hidden;
 }
 
 .uae-card::before {
   content: "";
-  @apply absolute top-0 right-0 w-20 h-20 bg-emirati-desertGold/10 -translate-x-1/2 -translate-y-1/2 rounded-full;
+  @apply absolute top-0 right-0 w-20 h-20 bg-emirati-gold/10 -translate-x-1/2 -translate-y-1/2 rounded-full;
 }
 
 /* Traditional Arabic patterns */
@@ -60,13 +60,31 @@
 
 /* UAE-inspired gradients */
 .uae-desert-gradient {
-  @apply bg-gradient-to-r from-emirati-sandBeige to-emirati-desertGold;
+  @apply bg-gradient-to-r from-emirati-sandBeige to-emirati-gold;
 }
 
 .uae-oasis-gradient {
-  @apply bg-gradient-to-r from-green-600 to-emirati-oasisGreen;
+  @apply bg-gradient-to-r from-emirati-teal to-emirati-palmGreen;
 }
 
 .uae-coastal-gradient {
-  @apply bg-gradient-to-r from-blue-300 to-blue-500;
+  @apply bg-gradient-to-r from-emirati-skyBlue to-emirati-deepBlue;
+}
+
+/* New premium components */
+.premium-section {
+  @apply relative py-16 rounded-3xl overflow-hidden;
+}
+
+.premium-section::before {
+  content: "";
+  @apply absolute inset-0 bg-gradient-to-br from-emirati-navy via-emirati-navy/95 to-emirati-navy/90 z-0;
+}
+
+.premium-card {
+  @apply bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 transition-all duration-300;
+}
+
+.premium-text {
+  @apply font-display text-emirati-gold;
 }

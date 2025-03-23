@@ -79,7 +79,7 @@ export default function Index() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-emirati-oasisGreen">Loading...</div>
+        <div className="animate-pulse text-emirati-teal">Loading...</div>
       </div>
     );
   }

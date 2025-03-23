@@ -91,15 +91,33 @@
 
   body {
     @apply bg-emirati-sandstone text-emirati-oasisGreen;
+    font-family: 'Tajawal', 'Dubai', sans-serif;
   }
   
   .font-serif {
     font-family: 'Amiri', 'Scheherazade New', serif;
   }
   
+  .font-display {
+    font-family: 'Tajawal', 'Dubai', sans-serif;
+    font-weight: 600;
+  }
+  
   /* For Arabic text */
   .arabic {
     font-family: 'Amiri', 'Scheherazade New', serif;
     direction: rtl;
+  }
+
+  /* Add premium button style */
+  .premium-button {
+    @apply bg-emirati-desertGold text-emirati-oasisGreen rounded-full font-medium 
+           hover:bg-emirati-desertGold/90 transition-all duration-300 shadow-md 
+           hover:shadow-lg transform hover:-translate-y-1;
+  }
+
+  /* Section styling */
+  .section {
+    @apply py-12 md:py-16 px-4 md:px-8;
   }
 }

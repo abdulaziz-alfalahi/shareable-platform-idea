@@ -24,7 +24,7 @@ const ThemeToggleOption: React.FC<ThemeToggleOptionProps> = ({
       size="sm"
       onClick={() => onSelect(option.id)}
       className={cn(
-        "transition-all duration-300",
+        "transition-all duration-300 rounded-full",
         isActive 
           ? "scale-105 shadow-md" 
           : "opacity-85 hover:opacity-100"

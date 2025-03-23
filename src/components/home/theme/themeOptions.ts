@@ -1,5 +1,5 @@
 
-import { Sun, Moon, TreePalm, Building } from "lucide-react";
+import { Sun, Moon, TreePalm, Building, Star } from "lucide-react";
 import { UaeTheme } from "./ThemeContext";
 import React from "react";
 
@@ -34,5 +34,11 @@ export const themeOptions: ThemeOption[] = [
     icon: React.createElement(Building, { className: "h-4 w-4" }), 
     label: "Modern",
     description: "Contemporary style reflecting UAE's innovation" 
+  },
+  { 
+    id: "premium" as UaeTheme, 
+    icon: React.createElement(Star, { className: "h-4 w-4" }), 
+    label: "Premium",
+    description: "Elegant premium design with gold accents" 
   }
 ];
