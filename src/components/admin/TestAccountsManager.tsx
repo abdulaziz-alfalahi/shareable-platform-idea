@@ -92,7 +92,7 @@ const TestAccountsManager: React.FC = () => {
       <CardContent>
         <div className="mb-6">
           <UaeButton 
-            variant={theme === 'premium' ? 'accent' : 'primary'} 
+            variant={theme === 'premium' ? 'gold' : 'desert'} 
             onClick={createTestAccounts}
             disabled={isLoading}
             className="w-full sm:w-auto"

@@ -1,3 +1,4 @@
+
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 
@@ -124,7 +125,7 @@ export const routes: AppRouteObject[] = [
   },
   {
     path: "/test-accounts",
-    element: <TestAccountsPage />,
+    element: lazy(() => import("./pages/TestAccounts")),
   },
 ];
 
